@@ -5,7 +5,7 @@
  *   quantiNemo2:
  *   quantiNemo2 is an individual-based, genetically explicit stochastic
  *   simulation program. It was developed to investigate the effects of
- *   selection, mutation, recombination, and drift on quantitative traits
+ *   selection, mutation, recombiantion, and drift on quantitative traits
  *   with varying architectures in structured populations connected by
  *   migration and located in a heterogeneous habitat.
  *
@@ -392,7 +392,7 @@ private:
             lp = i - 2;
             rp = i;
             
-            quicksort(a, left, lp, comp);
+            if (i>1) quicksort(a, left, lp, comp);
             quicksort(a, rp, right, comp);
         }
     }
@@ -430,7 +430,7 @@ private:
             lp = i - 2;
             rp = i;
             
-            quicksortIndex(a, left, lp, index, comp);
+            if (i>1) quicksortIndex(a, left, lp, index, comp);
             quicksortIndex(a, rp, right, index, comp);
         }
     }
@@ -476,7 +476,7 @@ private:
             lp = i - 2;
             rp = i;
             
-            quicksortBoth(a, left, lp, index, comp);
+            if (i>1) quicksortBoth(a, left, lp, index, comp);
             quicksortBoth(a, rp, right, index, comp);
         }
     }
