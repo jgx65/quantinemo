@@ -1617,7 +1617,7 @@ void LCE_Disperse::migrate_2D_ss_8Neighbour_full() {
 		else if (cur_y < y - 1) {
 			// left edge
 			if (cur_x == 0)
-				migrate_8_neighbours(*curPop, id, id - x - 1, id - x,
+				migrate_8_neighbours(*curPop, id, id - 1, id - x,
                                      id - x + 1, id + 1, id + x + 1, id + x, id + 2 * x - 1,
                                      id + x - 1, _migr_rateOut, _migr_rateIn, _migr_rateIn,
                                      _migr_rateIn, _migr_rateIn, _migr_rateIn, _migr_rateOut,
