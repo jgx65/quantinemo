@@ -242,17 +242,13 @@ getMother_func_ptr(0), getFather_func_ptr(0), _maleSex(MAL), _pSelection(0){
                   "  1: keep number (N_off = N_adlt)\n" \
                   "  2: fecundity (N_off = Poisson(F_f*f))\n" \
                   "  3: fecundity simple (N_off = round(N_f*f))\n" \
-                  "  4: fecundity binomial (N_off = floor(N_f*f) + Binomial(N_f*f - floor(N_f*f),1))\n" \
-                  "  5: fecundity limited (same as 'fecundity' but " \
+                  "  4: fecundity limited (same as 'fecundity' but " \
                   "population size may not exceed carrying capacity)\n" \
-                  "  6: fecundity simple & limited (same as 'fecundtiy simple' but " \
+                  "  5: fecundity simple & limited (same as 'fecundtiy simple' but " \
                   "population size may not exceed carrying capacity)\n" \
-                  "  7: fecundity binomial & limited (same as 'fecundity binomial' but " \
-                  "population size may not exceed carrying capacity)\n" \
-                  "  8: logistic regulation (N_off = N*K*(1+r)/(N*(1+r)-N+K))\n" \
-                  "  9: stochastic logistic regulation (N_off = Poisson(N*K*(1+r)/(N*(1+r)-N+K))).\n" \
+                  "  6: logistic regulation (N_off = N*K*(1+r)/(N*(1+r)-N+K))\n" \
+                  "  7: stochastic logistic regulation (N_off = Poisson(N*K*(1+r)/(N*(1+r)-N+K))).\n" \
                     ,0);
-    
     
     add_parameter("fitness_factor_zero_lethal",INT2,false,0,1,"0", false,
                   "How to thread a fitness of zero (0.0):\n" \
@@ -483,7 +479,7 @@ bool LCE_Breed::init(Metapop* popPtr)
                 getMother_func_ptr = &LCE_Breed::Random_Index_MatingFunc;
                 getFather_func_ptr = &LCE_Breed::Monogyny_MatingFunc;
                 break;
-            case 6:   	// no mating and reporduction occurs (used to just compute stats from a ini genotype file)
+            case 6:   	// no mating and reproduction occurs (used to just compute stats from a ini genotype file)
                 breed = &LCE_Breed::breed_none;
                 if(_popPtr->getGenerations()>1) error("No mating/reproduction takes place thus only a single generation makes sense!\n");
                 break;
