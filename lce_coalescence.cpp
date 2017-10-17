@@ -2987,7 +2987,7 @@ LCE_Coalescence::print_tree(TTNode* curNode)
 //// recombine_tree
 //// ----------------------------------------------------------------------------------------
 ///** alter tree following the number of recombinations
-// * The drawn recombiantion events are performed sequentially
+// * The drawn recombination events are performed sequentially
 // * during demographic sims the deme migrations are stored in disp_vec
 // * divergence has no entry in disp_vec
 // * in a generation coalescence occurs before migration!!!
@@ -3022,7 +3022,7 @@ LCE_Coalescence::print_tree(TTNode* curNode)
 //        test_tree(true);
 //        print_tree(_mrca);
 //        
-//        // draw the nex recombiantion position
+//        // draw the nex recombination position
 //        cur_pos += get_pop_ptr()->rand().Exponential(_treeSize*recomb_rate);
 //        if(cur_pos>recomb_rate) break;   // stop if the length is reached
 //        
@@ -3033,7 +3033,7 @@ LCE_Coalescence::print_tree(TTNode* curNode)
 //        if (!recombNode && _mrca->desc2) recombNode = _mrca->desc2->get_recombinationPosII(curSize, recombSize, _curGen);
 //        assert(recombNode);
 //        
-//        // if recombiantion happenes on time 0 after a coalescence event, this is problematic
+//        // if recombination happenes on time 0 after a coalescence event, this is problematic
 //        if(recombNode->time==_curGen) ++_curGen;
 //        
 //#ifdef _DEBUG
@@ -3283,7 +3283,7 @@ LCE_Coalescence::print_tree(TTNode* curNode)
 //// recombine_tree
 //// ----------------------------------------------------------------------------------------
 ///** alter tree following the number of recombinations
-// * The drawn recombiantion events are performed sequentially
+// * The drawn recombination events are performed sequentially
 // */
 //void LCE_CoalescenceRecombII::recombine_tree2(double locus_dist)
 //{
@@ -3315,7 +3315,7 @@ LCE_Coalescence::print_tree(TTNode* curNode)
 //        test_tree(true);
 //        print_tree(_mrca);
 //        
-//        // draw the nex recombiantion position
+//        // draw the nex recombination position
 //        cur_pos += get_pop_ptr()->rand().Exponential(_treeSize*recomb_rate);
 //        if(cur_pos>recomb_rate) break;   // stop if the length is reached
 //        
@@ -3326,7 +3326,7 @@ LCE_Coalescence::print_tree(TTNode* curNode)
 //        if (!recombNode && _mrca->desc2) recombNode = _mrca->desc2->get_recombinationPosII(curSize, recombSize, _curGen);
 //        assert(recombNode);
 //        
-//        // if recombiantion happenes on time 0 after a coalescence event, this is problematic
+//        // if recombination happenes on time 0 after a coalescence event, this is problematic
 //        if(recombNode->time==_curGen) ++_curGen;
 //        
 //#ifdef _DEBUG

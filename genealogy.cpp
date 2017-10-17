@@ -97,9 +97,9 @@ TTNode::get_recombinationPos(unsigned long& curSize, multimap<unsigned long, TTN
  * when successful the recombining node is returned and the recombTime is set,
  * optherwise NULL is returned and the recombTime is set to my_NAN
  * curSize: cumulative length of the already investigated branches
- * recombTime: the cumulative time of the recombiantion (was drawn randomly)
- * gen: the generation the recombiantion event occurs (gen is NaN if not reached)
- * the return value is the node below the recombiantion event and NULL if not yet reached
+ * recombTime: the cumulative time of the recombination (was drawn randomly)
+ * gen: the generation the recombination event occurs (gen is NaN if not reached)
+ * the return value is the node below the recombination event and NULL if not yet reached
  * */
 TTNode*
 TTNode::get_recombinationPosII(unsigned long& curSize, unsigned long recombTime, unsigned long& gen)

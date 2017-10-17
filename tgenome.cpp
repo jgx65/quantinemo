@@ -923,7 +923,7 @@ void TGenomeProto::ini_all()
 }
 
 // ----------------------------------------------------------------------------------------
-// ini_recombiantion_factor
+// ini_recombination_factor
 // ----------------------------------------------------------------------------------------
 /** initialization of the recombination factor
  */
@@ -937,7 +937,7 @@ void TGenomeProto::ini_recombination_factor()
 		if (_popPtr->get_sexInitRatio()) {
 			// get the male values
 			if (!ini_recombination_factor("recombination_factor_mal", MAL)) {
-				error("Only one sex specific recombiantion_factor is specified: both are required!\n");
+				error("Only one sex specific recombination_factor is specified: both are required!\n");
 			}
 		}
 		else {
@@ -968,7 +968,7 @@ void TGenomeProto::ini_recombination_factor()
 }
 
 // ----------------------------------------------------------------------------------------
-// ini_recombiantion_factor
+// ini_recombination_factor
 // ----------------------------------------------------------------------------------------
 /** initialization of the recombination factor
  * returns true if the parameter is set and false if not
@@ -1379,9 +1379,9 @@ void TGenomeProto::temporal_change(const unsigned int& gen)
 			// iterate through the map and perform the updates
 			map<string, Param*>::iterator pos = pMap->begin();
 			for (; pos != pMap->end(); ++pos) {
-				if (pos->first.find("recombiantion_factor") != string::npos
-                    || pos->first.find("recombiantion_factor_fem") != string::npos
-                    || pos->first.find("recombiantion_factor_mal") != string::npos) {
+				if (pos->first.find("recombination_factor") != string::npos
+                    || pos->first.find("recombination_factor_fem") != string::npos
+                    || pos->first.find("recombination_factor_mal") != string::npos) {
 					ini_recombination_factor();
 				}
 			}

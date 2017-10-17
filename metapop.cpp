@@ -110,7 +110,7 @@ Metapop::init_paramset()
                          "  0: individual based (forward in time)\n" \
                          "  1: population based (coalescence)\n" \
                          "  2: population based (coalescence, recombination, not functional)\n" \
-                         "  3: population based (coalescence, recombiantion II, not functional)" ,3);
+                         "  3: population based (coalescence, recombination II, not functional)" ,3);
     
     
     // carrying capacities

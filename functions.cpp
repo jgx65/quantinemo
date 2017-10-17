@@ -686,7 +686,7 @@ istream& safeIgnore(istream& is)
 }
 
 // ----------------------------------------------------------------------------------------
-// convertion between centiMorgan (cM) and r (recombiantion rate)
+// convertion between centiMorgan (cM) and r (recombination rate)
 // ----------------------------------------------------------------------------------------
 double cM2r(double cM){
     return (1-exp(-2*cM/100))/2;
