@@ -783,6 +783,7 @@ TSimulation::ini_stats(map<string, string> params, map<string, string> keys,
     // generate metapop in order to asses all stats
     _testRepl = new TReplicate(this);
     _allParams = &(_testRepl->get_allParams());
+    _testRepl->rand = randEngines;
     _testRepl->test_replicate_and_setUpStats(params, keys);
     
     //init the file services:
