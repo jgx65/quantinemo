@@ -218,7 +218,7 @@ bool LCE_Disperse::checkDispMatrix(TMatrix* mat, sex_t SEX) {
 				if(val<0) error("Parameter dispersal_rate cannot have negative numbers in the diagonal (residents)!");
 				continue;
 			}
-			if (val >= 1) {
+			if (val > 1) {
 				absolute = true;
 				sum += mat->get(i, j);
 			}  // [1;-[    absolute
@@ -1941,11 +1941,11 @@ void LCE_Disperse::setDispersalRate() {
 	}
     
 	// check if a dispersal rate or an absolute number of dispersers is defined
-	if (_migr_rate[FEM] >= 1)      _rel_abs_disp_rate[FEM] = 1;   // absolute
+	if (_migr_rate[FEM] > 1)      _rel_abs_disp_rate[FEM] = 1;   // absolute
 	else if (_migr_rate[FEM] > -1) _rel_abs_disp_rate[FEM] = 0;   // relative
 	else _rel_abs_disp_rate[FEM] = 1;   // absolute
     
-	if (_migr_rate[MAL] >= 1)      _rel_abs_disp_rate[MAL] = 1;   // absolute
+	if (_migr_rate[MAL] > 1)      _rel_abs_disp_rate[MAL] = 1;   // absolute
 	else if (_migr_rate[MAL] > -1) _rel_abs_disp_rate[MAL] = 0;   // relative
 	else _rel_abs_disp_rate[MAL] = 1;   // absolute
     
