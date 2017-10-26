@@ -106,65 +106,17 @@ _lattice_range(0), _disp_propagule_prob(0), _x_size(0), _y_size(0) {
     
     
 	// density dependent dispersal rate
-    add_parameter("dispersal_k_threshold", DBL, false, 0, 1, "0", false,
-                  "Density dependent dispersal: ", 3);
+    add_parameter("density_dependant_dispersal", INT2, false, 0, 1, "0", false,
+                  "If we want a density dependent dispersal (1 = yes): ", 1);
     
     
-    add_parameter("dispersal_k_min", DBL, false, my_NAN, my_NAN, "0", false,
-                  "Density dependent dispersal: lower asymptote of the generalized logistic slope.", 3);
+    add_parameter("density_dependant_dispersal_fem", INT2, false, 0, 1, "0", false,
+                  "If we want a density dependent dispersal for femal (1 = yes)", 4);
+  
+        
+    add_parameter("density_dependant_dispersal_mal", INT2, false, 0, 1, "0", false,
+                  "If we want a density dependent dispersal for male (1 = yes)", 4);
     
-    add_parameter("dispersal_k_max", DBL, false, my_NAN, my_NAN, "1", false,
-                  "Density dependent dispersal: upper asymptote of the generalized logistic slope.", 3);
-    
-	add_parameter("dispersal_k_max_growth", DBL, false, my_NAN, my_NAN,
-                  "-1", false,
-                  "Density dependent dispersal: density with maximal growth of the generalized logistic slope.", 3);
-    
-	add_parameter("dispersal_k_growth_rate", DBL, false, my_NAN, my_NAN,
-                  "1e4", false,
-                  "Density dependent dispersal: the slope of the generalized logistic slope.", 3);
-    
-	add_parameter("dispersal_k_symmetry", DBL, false, my_NAN, my_NAN,
-                  "1", false,
-                  "Density dependent dispersal: the symmetry of the generalized logistic slope.", 3);
-    
-    
-    add_parameter("dispersal_k_min_fem", DBL, false, my_NAN, my_NAN, "0", false,
-                  "Density dependent dispersal: lower asymptote for females of the generalized logistic slope.", 4);
-    
-    add_parameter("dispersal_k_max_fem", DBL, false, my_NAN, my_NAN, "1", false,
-                  "Density dependent dispersal: upper asymptote for females of the generalized logistic slope.", 4);
-    
-	add_parameter("dispersal_k_max_growth_fem", DBL, false, my_NAN,
-                  my_NAN, "-1", false,
-                  "Density dependent dispersal: density with maximal growth for females of the generalized logistic slope.", 4);
-    
-	add_parameter("dispersal_k_growth_rate_fem", DBL, false, my_NAN,
-                  my_NAN, "1e4", false,
-                  "Density dependent dispersal: the slope for females of the generalized logistic slope.", 4);
-    
-	add_parameter("dispersal_k_symmetry_fem", DBL, false, my_NAN, my_NAN,
-                  "1", false,
-                  "Density dependent dispersal: the symmetry for females of the generalized logistic slope.", 4);
-    
-    
-    add_parameter("dispersal_k_min_mal", DBL, false, my_NAN, my_NAN, "0", false,
-                  "Density dependent dispersal: lower asymptote for males of the generalized logistic slope.", 4);
-    
-    add_parameter("dispersal_k_max_mal", DBL, false, my_NAN, my_NAN, "1", false,
-                  "Density dependent dispersal: upper asymptote for males of the generalized logistic slope.", 4);
-    
-	add_parameter("dispersal_k_max_growth_mal", DBL, false, my_NAN,
-                  my_NAN, "-1", false,
-                  "Density dependent dispersal: density with maximal growth for males of the generalized logistic slope.", 4);
-    
-	add_parameter("dispersal_k_growth_rate_mal", DBL, false, my_NAN,
-                  my_NAN, "1e4", false,
-                  "Density dependent dispersal: the slope for males of the generalized logistic slope.", 4);
-    
-	add_parameter("dispersal_k_symmetry_mal", DBL, false, my_NAN, my_NAN,
-                  "1", false,
-                  "Density dependent dispersal: the symmetry for males of the generalized logistic slope.", 4);
     
     
     add_parameter("dispersal_direction", INT2, false, 0, 1,  "0", false,
@@ -1815,36 +1767,18 @@ void LCE_Disperse::_setDispersalFactor(const sex_t& SEX) {
     
 	string curSex = SEX == FEM ? "_fem" : "_mal";
     
-	if (_paramSet->get_param("dispersal_k_min" + curSex)->isSet())
-		_disp_factor[SEX][0] = _paramSet->getValue("dispersal_k_min" + curSex);
-	else _disp_factor[SEX][0] = _paramSet->getValue("dispersal_k_min");
-    
-	if (_paramSet->get_param("dispersal_k_max" + curSex)->isSet())
-		_disp_factor[SEX][1] = _paramSet->getValue("dispersal_k_max" + curSex);
-	else _disp_factor[SEX][1] = _paramSet->getValue("dispersal_k_max");
-    
-	if (_paramSet->get_param("dispersal_k_max_growth" + curSex)->isSet())
-		_disp_factor[SEX][2] = _paramSet->getValue(
-                                                   "dispersal_k_max_growth" + curSex);
-	else _disp_factor[SEX][2] = _paramSet->getValue("dispersal_k_max_growth");
-    
-	if (_paramSet->get_param("dispersal_k_growth_rate" + curSex)->isSet())
-		_disp_factor[SEX][3] = _paramSet->getValue(
-                                                   "dispersal_k_growth_rate" + curSex);
-	else _disp_factor[SEX][3] = _paramSet->getValue("dispersal_k_growth_rate");
-    
-	if (_paramSet->get_param("dispersal_k_symmetry" + curSex)->isSet())
-		_disp_factor[SEX][4] = _paramSet->getValue(
-                                                   "dispersal_k_symmetry" + curSex);
-	else _disp_factor[SEX][4] = _paramSet->getValue("dispersal_k_symmetry");
-	if (!_disp_factor[SEX][4])
-		error("Parameter 'dispersal_k_symmetry%s' cannot be zero!\n",
-              curSex.c_str());
-    
+	if (_paramSet->get_param("density_dependant_dispersal" + curSex)->isSet())
+		_disp_factor[SEX][0] = _paramSet->getValue("density_dependant_dispersal" + curSex);
+	else _disp_factor[SEX][0] = _paramSet->getValue("density_dependant_dispersal");
 
-
-			get_migr_factor_funcPtr[SEX] =
-            &LCE_Disperse::get_migr_factor_saturation;
+	if(_disp_factor[SEX][0] == 1){
+		get_migr_factor_funcPtr[SEX] =
+        &LCE_Disperse::get_migr_factor_saturation;
+	}
+	else{
+        get_migr_factor_funcPtr[SEX] =
+        &LCE_Disperse::get_migr_factor_one;
+	}
 
 	    
 	_setDispersalFactor_friction(SEX);
