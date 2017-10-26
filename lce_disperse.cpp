@@ -1841,56 +1841,12 @@ void LCE_Disperse::_setDispersalFactor(const sex_t& SEX) {
 		error("Parameter 'dispersal_k_symmetry%s' cannot be zero!\n",
               curSex.c_str());
     
-	// if the growth rate is too large/small, the logsitic function has a range problem (exp)
-	// -> change to threshold function
-	if (abs(_disp_factor[SEX][3])
-        >= strTo<double>(
-                         _paramSet->get_param("dispersal_k_growth_rate")->get_default_arg())) {
-            if (_disp_factor[SEX][3] < 0)
-                swap(_disp_factor[SEX][0], _disp_factor[SEX][1]); // swap min and max if slope is negative
-            
-            if (_disp_factor[SEX][2] < 0) { // where is the threshold?
-                if (abs(_disp_factor[SEX][1] - 1) < 1e-6) {
-                    get_migr_factor_funcPtr[SEX] =
-                    &LCE_Disperse::get_migr_factor_one;
-                }
-                else {
-                    get_migr_factor_funcPtr[SEX] =
-                    &LCE_Disperse::get_migr_factor_max;
-                }
-            }
-            else {   // the trheshold makes sense: use it
-                get_migr_factor_funcPtr[SEX] =
-                &LCE_Disperse::get_migr_factor_k_threshold;
-            }
-        }
-	else { // test if there is a change between 0 and 10 (populations may exceed K...)
-		double ten = generalLogisticCurve(10, _disp_factor[SEX][0],
-                                          _disp_factor[SEX][1], _disp_factor[SEX][2],
-                                          _disp_factor[SEX][3], _disp_factor[SEX][4]);
-		double zero = generalLogisticCurve(0, _disp_factor[SEX][0],
-                                           _disp_factor[SEX][1], _disp_factor[SEX][2],
-                                           _disp_factor[SEX][3], _disp_factor[SEX][4]);
-		if (abs(ten - zero) < 1e-6) {    // factor not influenced by pop density
-			if (abs(ten - 1) < 1e-6) {                   // factor = 1
-				get_migr_factor_funcPtr[SEX] =
-                &LCE_Disperse::get_migr_factor_one;
-			}
-			if (abs(ten - _disp_factor[SEX][0]) < 1e-6) {     // factor = min
-				get_migr_factor_funcPtr[SEX] =
-                &LCE_Disperse::get_migr_factor_min;
-			}
-			if (abs(ten - _disp_factor[SEX][1]) < 1e-6) {     // factor = max
-				get_migr_factor_funcPtr[SEX] =
-                &LCE_Disperse::get_migr_factor_max;
-			}
-		}
-		else {      // use the full general logistic function
+
+
 			get_migr_factor_funcPtr[SEX] =
-            &LCE_Disperse::get_migr_factor_k_logistic;
-		}
-	}
-    
+            &LCE_Disperse::get_migr_factor_saturation;
+
+	    
 	_setDispersalFactor_friction(SEX);
 }
 

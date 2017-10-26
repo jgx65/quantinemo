@@ -154,6 +154,7 @@ protected:
     }
     double (LCE_Disperse::* get_migr_factor_funcPtr[2])(Patch* p, sex_t s);
     inline double get_migr_factor_one(Patch* p, sex_t s){return 1.0;}
+
     inline double get_migr_factor_min(Patch* p, sex_t s){
         return _disp_factor[s][0];
     }
@@ -168,6 +169,13 @@ protected:
                                     _disp_factor[s][1], _disp_factor[s][2],
                                     _disp_factor[s][3], _disp_factor[s][4]);
     }
+    inline double get_migr_factor_saturation(Patch* p, sex_t s){
+		double K(double(p->get_K(s)));
+		double nb_ind(double(p->size(s, OFFSx)));
+		double factor(0);
+		if(nb_ind > 0) factor  = (nb_ind-K*(1-exp(-nb_ind/K)))/nb_ind;
+		return factor ;}
+    
     
     /** same as above but combined with the friction */
     inline double get_migr_factor_one_friction(Patch* p, sex_t s){
