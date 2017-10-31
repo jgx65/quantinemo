@@ -1272,6 +1272,8 @@ TTQuantiProto::set_initAlleleFreq(const string& trait)
     // if all populations are monomorph stop
     if(_ini_allele_model == INI_MONO) return;
     
+    
+    _ini_allele_model = INI_DIST;   
     // if the populations are maximal polymorph: _ini_allele_model = INI_DIST;
     // the allelic effects have to be set automatically
     Param* p = get_parameter("quanti_allelic_var"+trait);
