@@ -575,7 +575,7 @@ LCE_Disperse::_computeTotEmigrants(Patch* curPatch, const double& migrTotRate,
 	}
     
 	double m = migrTotRate * factor;            // compute total emigration rate
-	//assert(m>=0 && m<=1);
+    if(_paramSet->getValue("dispersal_rate_model")==2) m = factor;   
 	sum_m = m;                        // this is the sum of all emigration rates
 	if (!m) return 0;
     
@@ -600,6 +600,7 @@ bool LCE_DisperseCoalescence::_computeTotEmigrants(Patch* curPatch,
 		return 0;
 	}
 	double m = migrTotRate * factor;            // compute total emigration rate
+ 
     if(_paramSet->getValue("dispersal_rate_model")==2) m = factor;
 	
 	sum_m = m;                        // this is the sum of all emigration rates
@@ -679,6 +680,8 @@ unsigned int LCE_Disperse::_sendEmigrants(Patch* curPatch,
     
 	// compute the corrected migration rate (multinomial distribution)
 	double m = migrRate * factor;         // compute current migration rate
+    if(_paramSet->getValue("dispersal_rate_model")==2) m = factor;	
+	
 	if (!m) return totEmigr;               // check if migration occurs
     
 	// perform migration
