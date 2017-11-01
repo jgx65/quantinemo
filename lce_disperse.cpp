@@ -106,15 +106,18 @@ _lattice_range(0), _disp_propagule_prob(0), _x_size(0), _y_size(0) {
     
     
 	// density dependent dispersal rate
-    add_parameter("density_dependant_dispersal", INT2, false, 0, 1, "0", false,
-                  "If we want a density dependent dispersal (1 = yes): ", 1);
+    add_parameter("dispersal_rate_model", INT2, false, 0, 2, "0", false,
+                  "What model we use for the dispersal rate:\n "
+                  "  0: Flat rate\n" \
+                  "  1: Rate depend on density with an effective rate of migration_rate when the density is one \n" \
+                  "  2: Rate depend on density ans is smoothly adjusted so that after emigration, density is lower than one", 1);
     
     
-    add_parameter("density_dependant_dispersal_fem", INT2, false, 0, 1, "0", false,
+    add_parameter("dispersal_rate_model_fem", INT2, false, 0, 1, "0", false,
                   "If we want a density dependent dispersal for femal (1 = yes)", 4);
   
         
-    add_parameter("density_dependant_dispersal_mal", INT2, false, 0, 1, "0", false,
+    add_parameter("dispersal_rate_model_mal", INT2, false, 0, 1, "0", false,
                   "If we want a density dependent dispersal for male (1 = yes)", 4);
     
     
@@ -596,9 +599,9 @@ bool LCE_DisperseCoalescence::_computeTotEmigrants(Patch* curPatch,
 		totEmigr = 0;
 		return 0;
 	}
-    
 	double m = migrTotRate * factor;            // compute total emigration rate
-	// assert(m>=0 && m<=1);
+    if(_paramSet->getValue("dispersal_rate_model")==2) m = factor;
+	
 	sum_m = m;                        // this is the sum of all emigration rates
 	if (!m) return 0;
     
@@ -1767,17 +1770,21 @@ void LCE_Disperse::_setDispersalFactor(const sex_t& SEX) {
     
 	string curSex = SEX == FEM ? "_fem" : "_mal";
     
-	if (_paramSet->get_param("density_dependant_dispersal" + curSex)->isSet())
-		_disp_factor[SEX][0] = _paramSet->getValue("density_dependant_dispersal" + curSex);
-	else _disp_factor[SEX][0] = _paramSet->getValue("density_dependant_dispersal");
+	if (_paramSet->get_param("dispersal_rate_model" + curSex)->isSet())
+		_disp_factor[SEX][0] = _paramSet->getValue("dispersal_rate_model" + curSex);
+	else _disp_factor[SEX][0] = _paramSet->getValue("dispersal_rate_model");
 
 	if(_disp_factor[SEX][0] == 1){
 		get_migr_factor_funcPtr[SEX] =
-        &LCE_Disperse::get_migr_factor_saturation;
+        &LCE_Disperse::get_migr_factor_density_dependant;
+	}
+	else if(_disp_factor[SEX][0] == 0){
+        get_migr_factor_funcPtr[SEX] =
+        &LCE_Disperse::get_migr_factor_one;
 	}
 	else{
         get_migr_factor_funcPtr[SEX] =
-        &LCE_Disperse::get_migr_factor_one;
+        &LCE_Disperse::get_migr_factor_saturation;
 	}
 
 	    

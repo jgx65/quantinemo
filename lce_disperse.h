@@ -176,7 +176,13 @@ protected:
 		if(nb_ind > 0) factor  = (nb_ind-K*(1-exp(-nb_ind/K)))/nb_ind;
 		return factor ;}
     
-    
+    inline double get_migr_factor_density_dependant(Patch* p, sex_t s){
+		double K(double(p->get_K(s)));
+		double nb_ind(double(p->size(s, OFFSx)));
+		double factor(0);
+		if(nb_ind > 0) factor  = exp(1)*(nb_ind-K*(1-exp(-nb_ind/K)))/nb_ind;
+		return factor ;}
+
     /** same as above but combined with the friction */
     inline double get_migr_factor_one_friction(Patch* p, sex_t s){
         return p->get_friction(s);
