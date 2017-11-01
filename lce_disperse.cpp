@@ -570,7 +570,7 @@ LCE_Disperse::_computeTotEmigrants(Patch* curPatch, const double& migrTotRate,
                                    double& sum_m, const double& factor, const sex_t& SEX)
 {
 	unsigned int popSize = curPatch->size(SEX, OFFSx); // get current population size
-	if (!popSize || !migrTotRate) {               // pop size is 0: no emigrants
+	if (!popSize) {               // pop size is 0: no emigrants
 		return 0;
 	}
     
@@ -595,7 +595,7 @@ bool LCE_DisperseCoalescence::_computeTotEmigrants(Patch* curPatch,
                                                    unsigned int& totEmigr, const double& migrTotRate, double& sum_m,
                                                    const double& factor) {
 	unsigned int popSize = curPatch->size(FEM, OFFSx); // get current population size
-	if (!popSize || !migrTotRate) {               // pop size is 0: no emigrants
+	if (!popSize) {               // pop size is 0: no emigrants
 		totEmigr = 0;
 		return 0;
 	}
@@ -675,7 +675,7 @@ unsigned int LCE_Disperse::_sendEmigrants(Patch* curPatch,
                                           unsigned int& totEmigr, const double& migrRate, double& sum_m,
                                           const double& factor, const sex_t& SEX)
 {
-	if (!totEmigr || !migrRate) return totEmigr;
+	if (!totEmigr) return totEmigr;
 	assert(sum_m > 0);
     
 	// compute the corrected migration rate (multinomial distribution)
@@ -711,12 +711,13 @@ unsigned int LCE_DisperseCoalescence::_sendEmigrants(Patch* curPatch,
                                                      const unsigned int& home, const unsigned int& target,
                                                      unsigned int& totEmigr, const double& migrRate, double& sum_m,
                                                      const double& factor) {
-	if (!totEmigr || !migrRate) return totEmigr;
+	if (!totEmigr) return totEmigr;
 	assert(curPatch->get_ID()==home);
 	assert(sum_m > 0);
     
 	// compute the corrected migration rate (multinomial distribution)
 	double m = migrRate * factor;         // compute current migration rate
+	if(_paramSet->getValue("dispersal_rate_model")==2) m = factor;	
 	if (!m) return totEmigr;               // check if migration occurs
     
 	// perform migration
@@ -1944,11 +1945,6 @@ void LCE_Disperse::setDispersalRate() {
 	// general dispersal rate
 	else _migr_rate[FEM] = _migr_rate[MAL] = _paramSet->getValue("dispersal_rate");
     
-	// if there is no migration
-	if (!_migr_rate[MAL] && !_migr_rate[FEM]) {
-		migration_func_ptr = &LCE_Disperse::migrate_zeroMigration;
-		return;
-	}
     
 	// check if a dispersal rate or an absolute number of dispersers is defined
 	if (_migr_rate[FEM] > 1)      _rel_abs_disp_rate[FEM] = 1;   // absolute
