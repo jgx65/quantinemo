@@ -198,10 +198,11 @@ LCE_Extinction::extinction_homogenous_low_total()
 	// get the number of extinctions
 	unsigned int nbPatch = _popPtr->get_nbFullPatch();
    	unsigned int nbExt = (unsigned int)get_pop_ptr()->rand().Binomial(*_Xtion_rate, nbPatch);
-	if (nbExt) {
+    vector<unsigned int> PatchGoingExtinct = get_pop_ptr()->rand().Uniforms(nbPatch, nbExt);
+    if (nbExt) {
         vector<Patch*>::iterator curPos, endPos = _popPtr->get_vFullPatch().end();
 		for (unsigned int i = 0; i < nbExt; ++i, --nbPatch) {
-            curPos = _popPtr->get_vFullPatch().begin() + get_pop_ptr()->rand().Uniform(nbPatch); // curPos must be a non-const variable...
+            curPos = _popPtr->get_vFullPatch().begin() + PatchGoingExtinct[i]; // curPos must be a non-const variable...
             (*curPos)->flush();
             _popPtr->new_emptyPatch(curPos, endPos);                        // remove if now empty
         }
