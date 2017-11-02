@@ -116,6 +116,36 @@ public:
         //return (T) (max * next());
     }
     
+    
+    /** Returns N uniformly distributed entire random numbers from [0, max[.*/
+    vector<unsigned int> Uniforms(unsigned int max, unsigned int N)
+    {
+        vector<unsigned int> output;
+        //If the number of integer to draw is more than half of the interval, it is more efficient to draw the opposite list
+        if(N <= max/2){
+            while (output.size()<N) {
+                unsigned int ee = Uniform(max);
+                if(find(output.begin(),output.end(), ee)==output.end()) output.push_back(ee);
+            }
+        }
+        else {
+            vector<unsigned int> oppositeV = Uniforms(max, max - N);
+            list<unsigned int>  outputL(max);
+            unsigned int i(0);
+            for(list<unsigned int>::iterator it = outputL.begin(); it != outputL.end(); ++it){
+                *it= i;
+                i++;
+            }
+            for(vector<unsigned int>::iterator it = oppositeV.begin(); it != oppositeV.end(); ++it) {
+                outputL.remove(*it);
+            }
+            output.resize(N);
+            copy(outputL.begin(), outputL.end(), output.begin());
+        }
+        return(output);
+    }
+    
+    
     /** Returns a uniformly distributed entire random number from [0, max[.*/
     unsigned long Uniform(unsigned long max)
     {
