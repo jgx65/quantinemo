@@ -94,10 +94,11 @@ LCE_Extinction::extinction_homogenous_low_partial_1sex()
 	nbPatch = _popPtr->get_nbFullPatch();
 	nbExt = (unsigned int)get_pop_ptr()->rand().Binomial(*_Xtion_rate, nbPatch);
     vector<Patch*>::iterator curPos, endPos; // not really used
+    vector<unsigned int> PatchGoingExtinct = get_pop_ptr()->rand().Uniforms(nbPatch, nbExt);
 	if (nbExt) {
 		for (i = 0; i < nbExt;) {
 			rand = get_pop_ptr()->rand().Uniform(nbPatch);                               // get a patch randomly
-			current_patch = _popPtr->get_vFullPatch()[rand];
+			current_patch = _popPtr->get_vFullPatch()[PatchGoingExtinct[i]];
 			if(!(this->*survivors_func_ptr[FEM])(current_patch, FEM)){          // extinction female
 				assert(!current_patch->size());
 				curPos = _popPtr->get_vFullPatch().begin() + rand;              // curPos must be a non-const variable...
