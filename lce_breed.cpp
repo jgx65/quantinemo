@@ -236,19 +236,22 @@ getMother_func_ptr(0), getFather_func_ptr(0), _maleSex(MAL), _pSelection(0){
     add_parameter("sex_ratio",DBL,false,0,my_NAN,"1", false,
                   "Sex ratio of males to females.",5);
     
-    add_parameter("mating_nb_offspring_model",INT2,false,0,7,"0", false,
+    add_parameter("mating_nb_offspring_model",INT2,false,0,9,"0", false,
                   "How is the number of offspring computed:\n" \
                   "  0: carrying capacity (N_off = K)\n" \
                   "  1: keep number (N_off = N_adlt)\n" \
                   "  2: fecundity (N_off = Poisson(F_f*f))\n" \
                   "  3: fecundity simple (N_off = round(N_f*f))\n" \
-                  "  4: fecundity limited (same as 'fecundity' but " \
+                  "  4: fecundity binomial (N_off = floor(N_f*f) + Binomial(N_f*f - floor(N_f*f),1))\n" \
+                  "  5: fecundity limited (same as 'fecundity' but " \
                   "population size may not exceed carrying capacity)\n" \
-                  "  5: fecundity simple & limited (same as 'fecundtiy simple' but " \
+                  "  6: fecundity simple & limited (same as 'fecundtiy simple' but " \
                   "population size may not exceed carrying capacity)\n" \
-                  "  6: logistic regulation (N_off = N*K*(1+r)/(N*(1+r)-N+K))\n" \
-                  "  7: stochastic logistic regulation (N_off = Poisson(N*K*(1+r)/(N*(1+r)-N+K))).\n" \
-                    ,0);
+                  "  7: fecundity binomial & limited (same as 'fecundity binomial' but " \
+                  "population size may not exceed carrying capacity)\n" \
+                  "  8: logistic regulation (N_off = N*K*(1+r)/(N*(1+r)-N+K))\n" \
+                  "  9: stochastic logistic regulation (N_off = Poisson(N*K*(1+r)/(N*(1+r)-N+K))).\n" \
+                  ,0);
     
     add_parameter("fitness_factor_zero_lethal",INT2,false,0,1,"0", false,
                   "How to thread a fitness of zero (0.0):\n" \
@@ -583,22 +586,28 @@ void LCE_Breed::set_nbOffspring_model()
         case 0: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_CarryCapacity;  break;
         case 1: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_KeepNb;         break;
         case 2: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_Fecundity;
-            if(_mean_fecundity==my_NAN) error("Mating system: The fecundity has to be specified!\n");
+            if(_mean_fecundity==my_NAN) error("\nMating system: The fecundity has to be specified!");
             break;
         case 3: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_FecunditySimple;
-            if(_mean_fecundity==my_NAN) error("Mating system: The fecundity has to be specified!\n");
+            if(_mean_fecundity==my_NAN) error("\nMating system: The fecundity has to be specified!");
             break;
-        case 4: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_FecundityLimited;
-            if(_mean_fecundity==my_NAN) error("Mating system: The fecundity has to be specified!\n");
+        case 4: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_FecundityBinomial;
+            if(_mean_fecundity==my_NAN) error("\nMating system: The fecundity has to be specified!");
             break;
-        case 5: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_FecunditySimpleLimited;
-            if(_mean_fecundity==my_NAN) error("Mating system: The fecundity has to be specified!\n");
+        case 5: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_FecundityLimited;
+            if(_mean_fecundity==my_NAN) error("\nMating system: The fecundity has to be specified!");
             break;
-        case 6: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_Logistic;
-            if(_growth_rate==my_NAN) error("Mating system: The growth rate has to be specified!\n");
+        case 6: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_FecunditySimpleLimited;
+            if(_mean_fecundity==my_NAN) error("\nMating system: The fecundity has to be specified!");
             break;
-        case 7: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_RandLogistic;
-            if(_growth_rate==my_NAN) error("Mating system: The growth rate has to be specified!\n");
+        case 7: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_FecundityBinomialLimited;
+            if(_mean_fecundity==my_NAN) error("\nMating system: The fecundity has to be specified!");
+            break;
+        case 8: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_Logistic;
+            if(_growth_rate==my_NAN) error("\nMating system: The growth rate has to be specified!");
+            break;
+        case 9: setNbOffspring_func_ptr = &LCE_Breed::setNbOffspring_RandLogistic;
+            if(_growth_rate==my_NAN) error("\nMating system: The growth rate has to be specified!");
             break;
     }
 }
@@ -1465,38 +1474,7 @@ sex_t LCE_Breed::getRandomSex_KeepSexRatio(const unsigned int& nbMAL, const unsi
     else                                                     return FEM;
 }
 
-// ----------------------------------------------------------------------------------------
-// LCE_Breed::setNbOffspring
-// ----------------------------------------------------------------------------------------
-// function to compute the number of daugthers and sons (returns the total number of offspring)
-unsigned int LCE_Breed::setNbOffspring_KeepNb(double nbMAL, double nbFEM, unsigned int K){
-    return nbMAL+nbFEM;
-}
-unsigned int LCE_Breed::setNbOffspring_CarryCapacity(double nbMAL, double nbFEM, unsigned int K){
-    return K;
-}
-unsigned int LCE_Breed::setNbOffspring_Logistic(double nbMAL, double nbFEM, unsigned int K){
-    // return logisticGrowth(_growth_rate, K, nbMAL+nbFEM);
-    return my_round(beverton_hold(_growth_rate, K, nbMAL+nbFEM));
-}
-unsigned int LCE_Breed::setNbOffspring_RandLogistic(double nbMAL, double nbFEM, unsigned int K){
-    // return TReplicate::r.Poisson(logisticGrowth(_growth_rate, K, nbMAL+nbFEM));
-    return get_pop_ptr()->rand().Poisson(beverton_hold(_growth_rate, K, nbMAL+nbFEM));
-}
-unsigned int LCE_Breed::setNbOffspring_Fecundity(double nbMAL, double nbFEM, unsigned int K){
-    return get_pop_ptr()->rand().Poisson(nbFEM*_mean_fecundity);
-}
-unsigned int LCE_Breed::setNbOffspring_FecunditySimple(double nbMAL, double nbFEM, unsigned int K){
-    return my_round(nbFEM*_mean_fecundity);
-}
-unsigned int LCE_Breed::setNbOffspring_FecundityLimited(double nbMAL, double nbFEM, unsigned int K){
-    unsigned int size = get_pop_ptr()->rand().Poisson(nbFEM*_mean_fecundity);
-    return (size>K ? K : size);
-}
-unsigned int LCE_Breed::setNbOffspring_FecunditySimpleLimited(double nbMAL, double nbFEM, unsigned int K){
-    unsigned int size = my_round(nbFEM*_mean_fecundity);
-    return (size>K ? K : size);
-}
+
 
 /*_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/*/
 

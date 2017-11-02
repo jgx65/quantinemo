@@ -151,17 +151,45 @@ protected:
 
 public:
 
-	// function to compute the number of daugthers and sons (returns the total number of offspring)
-	unsigned int (LCE_Breed::* setNbOffspring_func_ptr) (double, double, unsigned int);
-    unsigned int setNbOffspring_KeepNb(double nbMAL, double nbFEM, unsigned int K);
-    unsigned int setNbOffspring_CarryCapacity(double nbMAL, double nbFEM, unsigned int K);
-    unsigned int setNbOffspring_Logistic(double nbMAL, double nbFEM, unsigned int K);
-    unsigned int setNbOffspring_RandLogistic(double nbMAL, double nbFEM, unsigned int K);
-    unsigned int setNbOffspring_Fecundity(double nbMAL, double nbFEM, unsigned int K);
-    unsigned int setNbOffspring_FecunditySimple(double nbMAL, double nbFEM, unsigned int K);
-    unsigned int setNbOffspring_FecundityLimited(double nbMAL, double nbFEM, unsigned int K);
-    unsigned int setNbOffspring_FecunditySimpleLimited(double nbMAL, double nbFEM, unsigned int K);
-    
+    // function to compute the number of daugthers and sons (returns the total number of offspring)
+    unsigned int (LCE_Breed::* setNbOffspring_func_ptr) (double, double, unsigned int);
+    unsigned int setNbOffspring_KeepNb(double nbMAL, double nbFEM, unsigned int K){
+        return nbMAL+nbFEM;
+    }
+    unsigned int setNbOffspring_CarryCapacity(double nbMAL, double nbFEM, unsigned int K){
+        return K;
+    }
+    unsigned int setNbOffspring_Logistic(double nbMAL, double nbFEM, unsigned int K){
+        // return logisticGrowth(_growth_rate, K, nbMAL+nbFEM);
+        return my_round(beverton_hold(_growth_rate, K, nbMAL+nbFEM));
+    }
+    unsigned int setNbOffspring_RandLogistic(double nbMAL, double nbFEM, unsigned int K){
+        // return SimRunner::r.Poisson(logisticGrowth(_growth_rate, K, nbMAL+nbFEM));
+        return get_pop_ptr()->rand().Poisson(beverton_hold(_growth_rate, K, nbMAL+nbFEM));
+    }
+    unsigned int setNbOffspring_Fecundity(double nbMAL, double nbFEM, unsigned int K){
+        return get_pop_ptr()->rand().Poisson(nbFEM*_mean_fecundity);
+    }
+    unsigned int setNbOffspring_FecunditySimple(double nbMAL, double nbFEM, unsigned int K){
+        return my_round(nbFEM*_mean_fecundity);
+    }
+    unsigned int setNbOffspring_FecundityBinomial(double nbMAL, double nbFEM, unsigned int K){
+        double valDbl = nbFEM*_mean_fecundity;
+        unsigned int valInt = (unsigned int)valDbl;
+        return valInt + get_pop_ptr()->rand().Binomial(valDbl - valInt, 1);
+    }
+    unsigned int setNbOffspring_FecundityLimited(double nbMAL, double nbFEM, unsigned int K){
+        unsigned int size = setNbOffspring_Fecundity(nbMAL, nbFEM, K);
+        return (size>K ? K : size);
+    }
+    unsigned int setNbOffspring_FecunditySimpleLimited(double nbMAL, double nbFEM, unsigned int K){
+        unsigned int size = setNbOffspring_FecunditySimple(nbMAL, nbFEM, K);
+        return (size>K ? K : size);
+    }
+    unsigned int setNbOffspring_FecundityBinomialLimited(double nbMAL, double nbFEM, unsigned int K){
+        unsigned int size = setNbOffspring_FecundityBinomial(nbMAL, nbFEM, K);
+        return (size>K ? K : size);
+    }
 
 	/**Link to the mating function, used to get the father from the mother in a Patch
     @param thePatch Patch instance of the current where the father has to be fetched
