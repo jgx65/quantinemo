@@ -841,7 +841,7 @@ void LCE_Breed::breed_offspring_soft2hard ()
         // create the offspring with neutral mating depending on the fecundity
         nbBaby = get_pop_ptr()->rand().Poisson(_mean_fecundity*_nbIndividuals[FEM]);
         (this->*setSexRatio_func_ptr)(nbBaby, nbSons, nbDaughters, _nbIndividuals[MAL], _nbIndividuals[FEM]);
-        createOffspring(*curPop, nbDaughters, nbSons);
+
         
         // compute the mean fitness of the current patch (offspring, 0: male, 1: female)
         _pSelection->set_fitness(*curPop, OFFSx); 	// do not sort or make the array cumulative
@@ -851,9 +851,12 @@ void LCE_Breed::breed_offspring_soft2hard ()
         nbBaby = _pSelection->get_SoftHardSelection(Kp, (unsigned int)(_pSelection->getMeanFitness()*Kp));
         (this->*setSexRatio_func_ptr)(nbBaby, nbSons, nbDaughters, _nbIndividuals[MAL], _nbIndividuals[FEM]);
         
+        createOffspring(*curPop, nbDaughters, nbSons);
+        
         // regulate pop size
         (*curPop)->regulate_selection_fitness(nbSons,      _pSelection, MAL, OFFSx);
         (*curPop)->regulate_selection_fitness(nbDaughters, _pSelection, FEM, OFFSx);
+        
     }//end_for_nbPatch
 }
 
