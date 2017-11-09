@@ -158,8 +158,8 @@ unsigned long LCE_Coalescence::build_tree_simple()
     
     // build the tree over the time period of the demographic simulation
     dbCoalescence* curDB;
-    for (_curGen = 0; _curGen < (unsigned long) _pCoalBase->get_nbGen(); ++_curGen) { // for each generation (starting with 1) in the db going backward in time
-        curDB = &_dbCoalescence[_pCoalBase->get_nbGen() - _curGen - 1]; // starting from the back
+    for (_curGen = 1; _curGen <= (unsigned long) _pCoalBase->get_nbGen(); ++_curGen) { // for each generation (starting with 1) in the db going backward in time
+        curDB = &_dbCoalescence[_pCoalBase->get_nbGen() - _curGen]; // starting from the back
         perform_popSize_regulation(curDB);     // Step 1: adapt population sizes
         perform_coalescence();                      // Step 3: Coalescence round
         if(_num_lineages==1) break;
