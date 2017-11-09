@@ -1770,8 +1770,8 @@ void Metapop::Loop_generation(time_t startTime)
     for(_currentGeneration = 1; _currentGeneration <= _generations; _currentGeneration++) {
         executeBeforeEachGeneration(_currentGeneration);
         
-        if(_currentGeneration>1) temporal_change();
-        
+   //     if(_currentGeneration>1) temporal_change();
+        temporal_change();
         // ouput to the console
         if(_currentGeneration<=10 || !(_currentGeneration % nbOutput)){
 #ifdef _SHOW_MEMORY
