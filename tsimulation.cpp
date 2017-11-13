@@ -37,7 +37,7 @@
 #include "version.h"
 #include <errno.h>
 #include <limits>
-
+#include <algorithm>
 #ifdef _THREAD
 #include <thread>
 #endif
@@ -790,8 +790,14 @@ TSimulation::ini_stats(map<string, string> params, map<string, string> keys,
     //->files check, false means the user wants to skip this simulation.
     //->save simparameters in log files
     if(!_testRepl->_FileServices->check_file_overwrite()) return false;
+
+    list< ParamSet* >& _ParamSet(_testRepl->_FileServices->get_params());
+    for(list< ParamSet* >::iterator Pit = _ParamSet.begin(); Pit != _ParamSet.end(); ++Pit) {
+        if((*Pit)->_name == "simulation") (*Pit)->set_param("seed",_vSeeds[0], _testRepl);
+
+    }
     
-    print_log_params(_testRepl->_FileServices->get_params());
+    print_log_params( _ParamSet);
     
     
 #ifdef _DEBUG
