@@ -1946,6 +1946,13 @@ void LCE_Disperse::setDispersalRate() {
 	else _migr_rate[FEM] = _migr_rate[MAL] = _paramSet->getValue("dispersal_rate");
     
     
+    // if there is no migration
+    int _disp_model = _paramSet->getValue("dispersal_rate_model");
+    if (!_migr_rate[MAL] && !_migr_rate[FEM] && _disp_model < 2) {
+        migration_func_ptr = &LCE_Disperse::migrate_zeroMigration;
+        return;
+    }
+    
 	// check if a dispersal rate or an absolute number of dispersers is defined
 	if (_migr_rate[FEM] > 1)      _rel_abs_disp_rate[FEM] = 1;   // absolute
 	else if (_migr_rate[FEM] > -1) _rel_abs_disp_rate[FEM] = 0;   // relative
