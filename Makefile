@@ -2,14 +2,15 @@
 #CC=g++ -static #-O3
 #CFLAGS= -O3 #-static
 #CFLAGS_DB="" #-static
-CC=/usr/local/Cellar/gcc/4.9.2_1/bin/g++-4.9 # for mac os x
+CC=g++ # for mac os x
 
-SOURCES=$(shell ls *.cpp)
+SOURCES=$(shell ls src/*.cpp)
 OBJECTS=$(shell for file in $(SOURCES);\
 do echo $$file | sed -e "s/\(.*\)\.cpp/\1\.o/"; echo " ";\
 done)
 
 PRGNAME=quantiNemo2
+PRGDIR=bin
 
 INCS      =     -I.  -D_SHOW_MEMORY
 
@@ -31,10 +32,10 @@ release: bin
 profile: CFLAGS += -pg
 profile: bin
 
-
+bin : CFLAGS  += -Iinclude
 bin : objects
 	echo $(OBJECTS)
-	$(CC)$(CFLAGS) *.o -o $(PRGNAME) $(LIBS)
+	$(CC)$(CFLAGS) src/*.o -o $(PRGDIR)/$(PRGNAME) $(LIBS)
 	
 objects : $(OBJECTS)
 
@@ -42,10 +43,13 @@ objects : $(OBJECTS)
 	$(CC)$(CFLAGS) -c -w $< -o $@ $(INCS)
 
 clean:
-	rm -f *.o $(PRGNAME) 
+	rm -f src/*.o $(PRGNAME) 
 	
 
 depend:
 	$(CC)$(CFLAGS) -M *.cpp > $@
 
 -include depend
+
+
+
