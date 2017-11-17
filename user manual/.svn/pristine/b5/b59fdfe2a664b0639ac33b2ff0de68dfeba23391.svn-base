@@ -1,0 +1,23 @@
+\documentclass{article}
+
+\title{Hello, Cruel World!}
+\author{Obedient Grad Student}
+
+\usepackage{graphicx}
+
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+This is where you tell people why they should bother reading your article.
+
+\section{Literature Review}
+This is the section that is invariably much longer than it should be, and
+where everyone tries to impress peers about how easy it is to locate various
+references in online databases.
+
+\section{Conclusion}
+Not much of a paper, but it's a start.
+
+\end{document}

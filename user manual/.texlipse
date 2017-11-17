@@ -1,0 +1,14 @@
+#TeXlipse project settings
+#Tue Nov 26 14:15:22 CET 2013
+markTmpDer=true
+builderNum=6
+outputDir=
+makeIndSty=quantiNemo.idx
+bibrefDir=
+outputFormat=pdf
+tempDir=tmp
+mainTexFile=quantiNemo.tex
+outputFile=quantiNemo.pdf
+langSpell=en
+markDer=true
+srcDir=

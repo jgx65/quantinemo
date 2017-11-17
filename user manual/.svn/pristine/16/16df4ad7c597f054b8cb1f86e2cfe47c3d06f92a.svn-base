@@ -1,0 +1,55 @@
+& %\documentclass{article}
+\documentclass[letterpaper,12pt,oneside]{book}
+
+\title{Hello, Cruel World!}
+\author{Obedient Grad Student}
+
+\usepackage{graphicx}
+
+
+\begin{document}
+\begin{titlepage}
+\vspace*{\stretch{1}}
+\begin{flushright}
+\bfseries\sffamily {\Huge q u a n t i N E M O 2}\\
+\Large release 0.9.0
+\end{flushright}
+\noindent\rule{\linewidth}{1.5pt}
+\vspace*{\stretch{1}}
+
+\sffamily{\LARGE \textbf{User Manual}}\\[40pt]
+\today\\[20pt]
+\textbf{authors}\\
+Samuel Neuenschwander\\
+\href{mailto:samuel.neuenschwander@unil.ch}{samuel.neuenschwander@unil.ch}\\
+\\
+J\'er\^ome Goudet\\
+\href{mailto:jerome.goudet@unil.ch}{jerome.goudet@unil.ch}\\
+\\
+\\
+\textbf{website}\\
+\url{http://www.unil.ch/popgen/softwares/quantinemo}\\
+
+\vspace*{\stretch{1}}
+\end{titlepage}
+
+%\maketitle
+
+\section{Introduction}
+This is where you tell people why they should bother reading your article.
+
+\section{Literature Review}
+This is the section that is invariably much longer than it should be, and
+where everyone tries to impress peers about how easy it is to locate various
+references in online databases.
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[width=0.80\textwidth]{life-cycle.eps}
+	\label{fig:life-cycle}
+\end{figure}
+
+\section{Conclusion}
+Not much of a paper, but it's a start.
+
+\end{document}

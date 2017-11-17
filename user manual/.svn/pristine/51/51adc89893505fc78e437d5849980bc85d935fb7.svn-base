@@ -1,0 +1,201 @@
+@techreport{Beverton_1957,
+   Author = {Beverton, R. J. H. and Holt, S. J.},
+   Title = {On the dynamics of exploited fish populations},
+   Institution = {U.K. Ministry of Agriculture and Fisherie},
+   Year = {1957} 
+}
+
+
+
+@book{Burger_2000,
+   Author = {B\"urger, R.},
+   Title = {The Mathematical Theory of Selection, Recombination, and Mutation},
+   Publisher = {Wiley},
+   Address = {Cichester, UK},
+   Year = {2000} 
+}
+
+
+
+@article{Estoup_2002,
+   Author = {Estoup, A. and Jarne, P. and Cornuet, J. M.},
+   Title = {Homoplasy and mutation model at microsatellite loci and their consequences for population genetics analysis},
+   Journal = {Molecular Ecology},
+   Volume = {11},
+   Number = {9},
+   Pages = {1591-1604},
+   Year = {2002} 
+}
+
+
+
+@article{Excoffier_2010,
+   Author = {Excoffier, L. Lischer. H.},
+   Title = {Arlequin suite ver 3.5: A new series of programs to perform population genetics analyses under Linux and Windows},
+   Journal = {Molecular Ecology Resources},
+   Volume = {10},
+   Number = {3},
+   Pages = {564-567},
+   Year = {2010} 
+}
+
+
+
+@article{Goudet_1995,
+   Author = {Goudet, J.},
+   Title = {FSTAT (Version 1.2): A computer program to calculate F-statistics},
+   Journal = {Journal of Heredity},
+   Volume = {86},
+   Number = {6},
+   Pages = {485-486},
+   Year = {1995} 
+}
+
+
+
+@article{Guillaume_2006,
+   Author = {Guillaume, F. and Rougemont, J.},
+   Title = {Nemo: an evolutionary and population genetics programming framework},
+   Journal = {Bioinformatics},
+   Volume = {22},
+   Number = {20},
+   Pages = {2556-2557},
+   Year = {2006} 
+}
+
+
+
+@article{Haldane_1919,
+   Author = {Haldane, J. B. S.},
+   Title = {The combination of linkage values, and the calculation of distances between loci of linked factors. Journal of Genetics},
+   Journal = {Journal of Genetics},
+   Volume = {8},
+   Pages = {299-309},
+   Year = {1919} 
+}
+
+
+
+@article{Nei_1983,
+   Author = {Nei, M. and Chesser, R. K.},
+   Title = {Estimation of Fixation Indexes and Gene Diversities},
+   Journal = {Annals of Human Genetics},
+   Volume = {47},
+   Number = {Jul},
+   Pages = {253-259},
+   Year = {1983}
+}
+
+
+
+@article{Ravigne_2004,
+   Author = {Ravigne, V. and Olivieri, I. and Dieckmann, U.},
+   Title = {Implications of habitat choice for protected polymorphisms},
+   Journal = {Evolutionary Ecology Research},
+   Volume = {6},
+   Number = {1},
+   Pages = {125-145},
+   Year = {2004} 
+}
+
+
+
+@incollection{Wallace_1968,
+   Author = {Wallace, B.},
+   Title = {Polymorphism, population size, and genetic load},
+   BookTitle = {Population biology and evolution},
+   Editor = {Lewontin, R. C.},
+   Publisher = {Syracuse University Press, Syracuse, N. Y.},
+   Pages = {87-108},
+   Year = {1968} 
+}
+
+@article{Wallace_1975,
+   Author = {Wallace , B.},
+   Title = {Hard and soft selection revisited},
+   Journal = {Evolution},
+   Volume = {29},
+   Pages = {465-473},
+   Year = {1975} 
+}
+
+@article{Weir_2002,
+   Author = {Weir, B. S. and Hill, W. G.},
+   Title = {Estimating F-statistics},
+   Journal = {Annual Review of Genetics},
+   Volume = {36},
+   Pages = {721-750},
+   Year = {2002} 
+}
+
+@article{Richards_1959,
+   Author = {Richards, F.J.},
+   Title = {A flexible growth function for empirical use},
+   Journal = {J. Exp. Bot},
+   Volume = {10},
+   Pages = {290-300},
+   Year = {1959} 
+}
+
+@book{Lynch_1998,
+   Author = {Lynch, M. and Walsh, B.},
+   Title = {Genetics and analysis of quantitative traits},
+   Publisher = {Publisher Sinauer Associates Inc},
+   Year = {1998} 
+}
+
+@book{Nei_1987,
+   Author = {Nei, M.},
+   Title = {Molecular Evolutionary Genetics},
+   Publisher = {Columbia University Press},
+   Year = {1987} 
+}
+
+@article{Weir_1984,
+   Author = {Weir, B. S. and Cockerham, C. C.},
+   Title = {Estimating F-statistics for the analysis of population structure},
+   Journal = {Evolution},
+   Volume = {38},
+   Pages = {1358 - 1370},
+   Year = {1984} 
+}
+
+@article{Bonnin_1996,
+   Author = {Bonnin, I. and Prosperi, J. M. and Olivieri, I.},
+   Title = {Genetic markers and quantitative genetic variation in Medicago truncatula (Leguminosae): A comparative analysis of population structure},
+   Journal = {Genetics},
+   Volume = {143},
+   Pages = {1795-1805},
+   Year = {1996} 
+}
+
+@article{Mousadik_1996,
+   Author = {El Mousadik, A. and Petit, R. J.},
+   Title = {High level of genetic differentiation for allelic richness among populations of the argan tree [argania spinosa (l.) skeels] endemic to morocco},
+   Journal = {Theoretical and Applied Genetics},
+   Volume = {92},
+   Pages = {832-839},
+   Year = {1996} 
+}
+
+
+@article{Garza_2001,
+   Author = {Garza, J. C. and Williamson, E. G.},
+   Title = {Detection of reduction in population size using data from microsatellite loci},
+   Journal = {Molecular Ecology},
+   Volume = {10},
+   Pages = {305-318},
+   Year = {2001} 
+}
+
+@article{Devlin_1995,
+   Author = {Devlin, B. and Risch, N.},
+   Title = {A Comparison of Linkage Disequilibrium Measures for Fine-Scale Mapping},
+   Journal = {Genomics},
+   Volume = {29},
+   Pages = {311-322},
+   Year = {1995}  
+}
+
+
+
