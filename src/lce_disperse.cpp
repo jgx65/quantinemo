@@ -1933,8 +1933,8 @@ void LCE_Disperse::setDispersalRate() {
     
     
     // if there is no migration
-    int _disp_model = _paramSet->getValue("dispersal_rate_model");
-    if (!_migr_rate[MAL] && !_migr_rate[FEM] && _disp_model < 2) {
+    int _disp_rate_model = _paramSet->getValue("dispersal_rate_model");
+    if (!_migr_rate[MAL] && !_migr_rate[FEM] && _disp_rate_model < 2) {
         migration_func_ptr = &LCE_Disperse::migrate_zeroMigration;
         return;
     }
