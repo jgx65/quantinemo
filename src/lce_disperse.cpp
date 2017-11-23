@@ -56,8 +56,7 @@ _lattice_range(0), _disp_propagule_prob(0), _x_size(0), _y_size(0) {
                   "  0: migration-pool island model\n" \
                   "  1: propagule-pool island model\n" \
                   "  2: 1D stepping-stone model\n" \
-                  "  3: 2D stepping-stone model\n" \
-                  "  4: 1D long range dispersal model.", 1);
+                  "  3: 2D stepping-stone model\n", 1);
     
     add_parameter("dispersal_border_model", INT2, false, 0, 2, "0", false,
                   "Border models for stepping-stone models:\n"
@@ -78,19 +77,6 @@ _lattice_range(0), _disp_propagule_prob(0), _x_size(0), _y_size(0) {
                   true,
                   "Specifies the probability that an emigrant migrates to the " \
                   "propagule-assigned patch. Only used for propagule-island migration model.", 3);
-    
-    
-    add_parameter("dispersal_long_range_coef", DBL, false, 0, 1, "0", false,
-                  "Specifies the geometric distribution parameter for long range " \
-                  "dispersal and at the same time the emigration rate.", 4);
-    
-    add_parameter("dispersal_long_range_coef_fem", DBL, false, 0, 1, "0", false,
-                  "Specifies the geometric distribution parameter for long range for females " \
-                  "dispersal and at the same time the emigration rate.", 4);
-    
-    add_parameter("dispersal_long_range_coef_mal", DBL, false, 0, 1, "0", false,
-                  "Specifies the geometric distribution parameter for long range for males " \
-                  "dispersal and at the same time the emigration rate.", 4);
     
     
     add_parameter("dispersal_rate", DBL_MAT, false, 0, my_NAN, "0", true,
