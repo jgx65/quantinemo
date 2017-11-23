@@ -352,10 +352,6 @@ Metapop::init_paramset()
                          "  1: metapop (fitness is relative to the other individuals  of the metapopulation)\n" \
                          "  2: hard (fitness is absolute)\n TODO " ,0);
     
-    _paramSet->add_param("selection_level_coef",			DBL,    false,0,	1,		"1", true,
-                         "The coefficient allows getting intermediate selection levels of the selection " \
-                         "level 'soft', 'metapop' and 'hard' (parameter 'selection_level').\n TODO ",5);
-    
     _paramSet->add_param("patch_mean_fitness",              INT2,	false,0,	2,		"0",false,
                          "Mean fitness of a patch id defined as:\n" \
                          "  0: the average fitness across all individuals  (females and males)\n" \
