@@ -108,9 +108,7 @@ Metapop::init_paramset()
     _paramSet->add_param("coalescence",INT2,false,0,4,"0",false,
                          "Mode of simulation:\n" \
                          "  0: individual based (forward in time)\n" \
-                         "  1: population based (coalescence)\n" \
-                         "  2: population based (coalescence, recombination, not functional)\n" \
-                         "  3: population based (coalescence, recombination II, not functional)" ,3);
+                         "  1: population based (coalescence)\n" ,3);
     
     
     // carrying capacities
