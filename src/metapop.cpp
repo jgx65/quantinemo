@@ -339,7 +339,7 @@ Metapop::init_paramset()
     _paramSet->add_param("selection_position",				INT2,   false,0,    5,		"0",false,
                          "Where does selection acts:\n" \
                          "  0: reproductive success (the fitter an individual is the more offspring it gets)\n" \
-                         "  1: juvenile survival (the number of offspring created " \
+                         "  1: Not functionnal " \
                          "is the same as for 'reproductive success', but reproduction is neutral " \
                          "and the fitness of the offspring is considered)\n" \
                          "  2: juvenile survival (offspring are created and only latter selection acts)\n" \
