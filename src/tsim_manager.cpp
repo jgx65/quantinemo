@@ -34,9 +34,7 @@
 #include "tsimulation.h"
 #include "functions.h"
 
-#ifdef _THREAD
-#include <thread>
-#endif
+
 
 //#include <iostream>
 using namespace std;
@@ -123,48 +121,8 @@ TSimManager::run()
     message("\n***** Run simulations ...");
 #endif
     
-    if(_nbThreadsTot==1 || _nbSims==1) run_sims_withinThread(this, 0, _nbSims, _nbThreadsTot);
-#ifdef _THREAD
-    else{   // multithreaded and several simulations
-        unsigned int restSims, nbThread, step, nbThreatPerSim, nbThreatPerSimRest, curNbThread;
-        
-        step= _nbSims/_nbThreadsTot;
-        if(!step){  // more threads than sims
-            step = 1;
-            restSims = 0;
-            nbThread = _nbSims;
-            nbThreatPerSim = _nbThreadsTot/_nbSims;
-            nbThreatPerSimRest = _nbThreadsTot - (nbThreatPerSim * _nbSims);
-        }
-        else {  // more sims than threads
-            restSims = _nbSims - (_nbThreadsTot * step);
-            nbThread = _nbThreadsTot;
-            nbThreatPerSim = 1;
-            nbThreatPerSimRest = 0;
-        }
-#ifdef _DEBUG
-        message("\nSimulations multithreaded on %i threads\n", nbThread);
-#endif
-        vector<thread> t;
-        for(unsigned int i=0, from=0, to=0; i<nbThread-1; ++i, from=to) {
-            to = i<restSims ? from+step+1 : from+step;
-            assert(to<=_nbSims);
-            curNbThread = from<nbThreatPerSimRest ? nbThreatPerSim+1 : nbThreatPerSim;
-            cout << "\nRun multithreaded simulation " << from+1 << " to " << to << " with " << curNbThread << " threads " << flush;
-            t.push_back(thread(run_sims_withinThread, this, from, to, curNbThread));
-        }
-        
-        // run one set of simulations in the local thread
-        run_sims_withinThread(this, _nbSims-step, _nbSims, curNbThread);
-        
-        // Wait until all threads finish
-        vector<thread>::iterator cur, end=t.end();
-        for (cur=t.begin(); cur!=end; ++cur) {
-            (*cur).join();
-        }
-        
-    }
-#endif
+    run_sims_withinThread(this, 0, _nbSims, _nbThreadsTot);
+
     
 #ifdef _DEBUG
     message("\n***** Run simulations ... done");
@@ -194,22 +152,7 @@ run_sims_withinThread(TSimManager* ptr, unsigned int from, unsigned int to, unsi
 unsigned int
 TSimManager::get_nbThreads()
 {
-#ifdef _THREAD
-    unsigned int curNb, nb=0;
-    vector<map<string, string> >::iterator curSim, endSim;
-    map<string, string>::iterator curSetting;
-    for(curSim=_simSettings.begin(), endSim=_simSettings.end(); curSim!=endSim; ++curSim){
-        curSetting = curSim->find("threads");
-        if (curSetting == curSim->end()) continue;
-        
-        curNb = strTo<unsigned int>(curSetting->second);
-        if(nb && curNb != nb) warning("There are more than one conflicting thread specification in the settings files!\n");
-        nb = curNb;
-    }
-    return (nb ? nb : 1);
-#else
     return 1;
-#endif
 }
 
 

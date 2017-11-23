@@ -77,11 +77,8 @@ int main (int argc, char **argv)
             }
 
 #ifdef _DEBUG
-#ifdef _THREAD
-            message("\n***** DEBUG MODE (MULTITHREADED) *****\n\n");
-#else
             message("\n***** DEBUG MODE *****\n\n");
-#endif
+
 #endif
             // read settings file(s) ///////////////////////////////////////////
             TSimManager simManager(argc, argv);

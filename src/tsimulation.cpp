@@ -38,9 +38,7 @@
 #include <errno.h>
 #include <limits>
 #include <algorithm>
-#ifdef _THREAD
-#include <thread>
-#endif
+
 
 using namespace std;
 
@@ -232,49 +230,8 @@ void TSimulation::run_sim(map<string, string> params,
     
     /////////////////////////////////////////////////////////////////////////////
     // for each replicate
-	if(_threads==1 || _replicates==1) run_replicates(this, params, keys,
-                                                     0, _replicates, 0, _threads);
-#ifdef _THREAD
-    else{   // multithreaded nad several replicates
-        unsigned int restSims, nbThread, step, nbThreatPerSim, nbThreatPerSimRest, curNbThread;
-        
-        step= _replicates/_threads;
-        if(!step){  // more threads than replicates
-            step = 1;
-            restSims = 0;
-            nbThread = _replicates;
-            nbThreatPerSim = _threads/_replicates;
-            nbThreatPerSimRest = _threads - (nbThreatPerSim * _replicates);
-        }
-        else {  // more replicates than threads
-            restSims = _replicates - (_threads * step);
-            nbThread = _threads;
-            nbThreatPerSim = 1;
-            nbThreatPerSimRest = 0;
-        }
-        vector<thread> t;
-#ifdef _DEBUG
-        message("\nReplicates multithreaded on %i threads\n", nbThread);
-#endif
-        unsigned int i=0, from=0, to=0;
-        for(; i<nbThread-1; ++i, from=to) {
-            to = i<restSims ? from+step+1 : from+step;
-            assert(to<=_replicates);
-            curNbThread = from<nbThreatPerSimRest ? nbThreatPerSim+1 : nbThreatPerSim;
-            cout << "\nRun multithreaded replicates " << from+1 << " to " << to << " with " << curNbThread << " threads " << flush;
-            t.push_back(thread(run_replicates, this, params, keys, from, to, i, curNbThread));
-        }
-        
-        // run one set of replicates in the local thread
-        run_replicates(this, params, keys, _replicates-step, _replicates, i, curNbThread);
-        
-        // Wait until all threads finish
-        vector<thread>::iterator cur, end=t.end();
-        for (cur=t.begin(); cur!=end; ++cur) {
-            (*cur).join();
-        }
-    }
-#endif
+    run_replicates(this, params, keys, 0, _replicates, 0, _threads);
+
     
     /////////////////////////////////////////////////////////////////////////////
     

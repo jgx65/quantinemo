@@ -37,9 +37,6 @@
 #include "lce_disperse.h"
 #include "version.h"
 
-#ifdef _THREAD
-#include <thread>
-#endif
 
 //#include <limits>
 //#include <algorithm>
@@ -208,49 +205,7 @@ void LCE_Coalescence_base::execute()
         unsigned int nbLocusThreads = nbChromosome + nbUnlinked;
         
         
-        if(threads==1 || nbLocusThreads==1) run_coal_locus(this, 0, nbLocusThreads, 0, threads);
-#ifdef _THREAD
-        else{   // multithreaded and several replicates
-            unsigned int restSims, nbThread, step, nbThreatPerSim, nbThreatPerSimRest, curNbThread;
-            
-            step= _nbLocus/threads;
-            if(!step){  // more threads than replicates
-                step = 1;
-                restSims = 0;
-                nbThread = nbLocusThreads;
-                nbThreatPerSim = threads/nbLocusThreads;
-                nbThreatPerSimRest = threads - (nbThreatPerSim * nbLocusThreads);
-            }
-            else {  // more replicates than threads
-                restSims = nbLocusThreads - (threads * step);
-                nbThread = threads;
-                nbThreatPerSim = 1;
-                nbThreatPerSimRest = 0;
-            }
-            vector<thread> t;
-#ifdef _DEBUG
-            message("\nCoalescence multithreaded on %i threads\n", nbThread);
-#endif
-            unsigned int i=0, from=0, to=0;
-            for(; i<nbThread-1; ++i, from=to) {
-                to = i<restSims ? from+step+1 : from+step;
-                assert(to<=nbLocusThreads);
-                curNbThread = from<nbThreatPerSimRest ? nbThreatPerSim+1 : nbThreatPerSim;
-                cout << "\nRun multithreaded coalescence " << from+1 << " to " << to << " with " << curNbThread << " threads " << flush;
-                t.push_back(thread(run_coal_locus, this, from, to, i, curNbThread));
-            }
-            
-            // run one set of replicates in the local thread
-            run_coal_locus(this, nbLocusThreads-step, nbLocusThreads, i, curNbThread);
-            
-            // Wait until all threads finish
-            vector<thread>::iterator cur, end=t.end();
-            for (cur=t.begin(); cur!=end; ++cur) {
-                (*cur).join();
-            }
-        }
-#endif
-
+        run_coal_locus(this, 0, nbLocusThreads, 0, threads);
         // post coalescence
         delete[] _dbCoalescence; _dbCoalescence = NULL;
         if (_writer) _writer->write_NEXUS();
