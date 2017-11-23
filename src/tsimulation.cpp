@@ -143,10 +143,6 @@ TSimulation::init_paramset()
     _paramSet.add_param("stat_NaN", STR, false, my_NAN, my_NAN, my_NANstr,false,
                         "String to use for incalculable statistics.",5);
     
-    _paramSet.add_param("threads", INT2, false, 1, my_NAN, "1",false,
-                        "Number of threads to use for multithreading. " \
-                        "Multithreading is implemented at the level of " \
-                        "simulations and replicates.",0);
     
     _paramSet.add_param("random_per_replicate", INT2, false, 0, 1, "0",false,
                         "How to treat random macros with multiple replicates:\n" \
