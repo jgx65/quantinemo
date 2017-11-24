@@ -289,6 +289,9 @@ TSimManager::program_args(map<string, string>& args, vector<string>& inputfiles)
     message("\n\nVersion:    %i.%i.%i%s [%s; %s]", RELEASE,
             REVISION, MINOR_VERSION, TEMP_VERSION, VERSION_DATE,
             VERSION_TIME, date.substr(date.rfind(' ') + 1).c_str());
+#ifdef VERSIONGIT
+    message("\nCommit N°:  %s",VERSIONGIT);
+#endif
     message("\n\nAuthors:    Samuel Neuenschwander (samuel.neuenschwander@unil.ch) &");
     message(  "\n            Jerome Goudet (jerome.goudet@unil.ch)");
     message(  "\n            Department of Ecology and Evolution");

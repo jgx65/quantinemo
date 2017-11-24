@@ -9,6 +9,8 @@ OBJECTS=$(shell for file in $(SOURCES);\
 do echo $$file | sed -e "s/\(.*\)\.cpp/\1\.o/"; echo " ";\
 done)
 
+GIT_VERSION := $(shell git describe --abbrev=7 --always --tags --dirty)
+
 PRGNAME=quantiNemo2
 PRGDIR=bin
 
@@ -27,6 +29,7 @@ debug: CFLAGS  += -Wall
 debug: bin
 
 release: CFLAGS  += -O3 #-static
+release: CFLAGS  += -DVERSIONGIT=\"$(GIT_VERSION)\"
 release: bin
 
 profile: CFLAGS += -pg
