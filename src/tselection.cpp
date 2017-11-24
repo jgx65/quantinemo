@@ -65,7 +65,7 @@ TSelection::~TSelection ( )
 // set_phenotype
 //-----------------------------------------------------------------------------
 void
-TSelection::set_phenotype(Individual* ind)
+TSelection::set_phenotype(TIndividual* ind)
 {
 	for(unsigned int t = 0; t<_vTraitsSize; ++t){
 		(_selTrait[t]->*(_selTrait[t]->func_ptr_set_phenotype))(ind);
@@ -77,7 +77,7 @@ TSelection::set_phenotype(Individual* ind)
 // set_phenotype
 //-----------------------------------------------------------------------------
 void
-TSelection::set_phenotype(Individual* ind, unsigned int qtraitID)
+TSelection::set_phenotype(TIndividual* ind, unsigned int qtraitID)
 {
 	(_selTrait[qtraitID]->*(_selTrait[qtraitID]->func_ptr_set_phenotype))(ind);
 }
@@ -89,18 +89,18 @@ TSelection::set_phenotype(Individual* ind, unsigned int qtraitID)
 void
 TSelection::set_phenotype_of_all_individuals(age_idx AGE)
 {
-	vector<Individual*>::iterator curInd, endInd;
+	vector<TIndividual*>::iterator curInd, endInd;
 	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
 	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for(;curPop!=endPop; ++curPop){                                 // for each patch
 		// females
-		vector<Individual*>& curFem = (*curPop)->get_sampled_inds(FEM, AGE);
+		vector<TIndividual*>& curFem = (*curPop)->get_sampled_inds(FEM, AGE);
 		for(curInd=curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd){
 			set_phenotype(*curInd);  // set the phenotype
 		}
 
 		// males
-		vector<Individual*>& curMal = (*curPop)->get_sampled_inds(MAL, AGE);
+		vector<TIndividual*>& curMal = (*curPop)->get_sampled_inds(MAL, AGE);
 		for(curInd=curMal.begin(), endInd=curMal.end(); curInd!=endInd; ++curInd){
 			set_phenotype(*curInd);  // set the phenotype
 		}
@@ -161,7 +161,7 @@ void
 TSelection::set_fitness(Patch* patch, sex_t sex, age_idx age)
 {
 	unsigned int i, newSize;
-	Individual* ind;
+	TIndividual* ind;
 
 	newSize = patch->size(sex, age);
 
@@ -180,7 +180,7 @@ TSelection::set_fitness(Patch* patch, sex_t sex, age_idx age)
 
 	// get the current arrays
 	double*      aFit = _fit[sex]->_aFit;
-	Individual** aInd = _fit[sex]->_aInd;
+	TIndividual** aInd = _fit[sex]->_aInd;
 
 	// for each individual
 	for(i=0; i<newSize; ++i){
@@ -207,7 +207,7 @@ TSelection::sort_fitness(sex_t SEX, int how, int subset)
 //-----------------------------------------------------------------------------
 /** fitness are multiplicative */
 double
-TSelection::_get_fitness_multiplicative(Individual* ind)
+TSelection::_get_fitness_multiplicative(TIndividual* ind)
 {
 	double cur_w, w = 1;
 	for(unsigned int t=0; t<_vTraitsSize; ++t){
@@ -236,14 +236,14 @@ TSelection::female_sex_allocation_fix(Patch* patch, age_idx age, int* sort, int 
     
     // get the "females" (they are set)
     double*      femFit = _fit[FEM]->_aFit;     // all females without sex allocation
-    Individual** femInd = _fit[FEM]->_aInd;     // all females without sex allocation
+    TIndividual** femInd = _fit[FEM]->_aInd;     // all females without sex allocation
     unsigned int nbFem = patch->size(FEM, age);
     
     // get the "males" (they are not yet set)
     if(!_fit[MAL]) _fit[MAL] = new TPatchFitness(_popPtr, nbFem);
     else _fit[MAL]->resize(nbFem);
     double*      malFit = _fit[MAL]->_aFit;
-    Individual** malInd = _fit[MAL]->_aInd;
+    TIndividual** malInd = _fit[MAL]->_aInd;
     
     // for each individualget the overall fitness and correct it for the sex allocation
     for(unsigned int i=0; i<nbFem; ++i){
@@ -273,14 +273,14 @@ TSelection::female_sex_allocation_G(Patch* patch, age_idx age, int* sort, int su
     
     // get the "females" (they are set)
     double*      femFit = _fit[FEM]->_aFit;     // all females without sex allocation
-    Individual** femInd = _fit[FEM]->_aInd;     // all females without sex allocation
+    TIndividual** femInd = _fit[FEM]->_aInd;     // all females without sex allocation
     unsigned int nbFem = patch->size(FEM, age);
     
     // get the "males" (they are not yet set)
     if(!_fit[MAL]) _fit[MAL] = new TPatchFitness(_popPtr, nbFem);
     else _fit[MAL]->resize(nbFem);
     double*      malFit = _fit[MAL]->_aFit;
-    Individual** malInd = _fit[MAL]->_aInd;
+    TIndividual** malInd = _fit[MAL]->_aInd;
     
     // for each individualget the overall fitness and correct it for the sex allocation
     double fem_alloc;
@@ -316,14 +316,14 @@ TSelection::female_sex_allocation_equation(Patch* patch, age_idx age, int* sort,
     
     // get the "females" (they are set)
     double*      femFit = _fit[FEM]->_aFit;     // all females without sex allocation
-    Individual** femInd = _fit[FEM]->_aInd;     // all females without sex allocation
+    TIndividual** femInd = _fit[FEM]->_aInd;     // all females without sex allocation
     unsigned int nbFem = patch->size(FEM, age);
     
     // get the "males" (they are not yet set)
     if(!_fit[MAL]) _fit[MAL] = new TPatchFitness(_popPtr, nbFem);
     else _fit[MAL]->resize(nbFem);
     double*      malFit = _fit[MAL]->_aFit;
-    Individual** malInd = _fit[MAL]->_aInd;
+    TIndividual** malInd = _fit[MAL]->_aInd;
     
     // for each individualget the overall fitness and correct it for the sex allocation
     double fem_alloc;
@@ -359,14 +359,14 @@ TSelection::female_sex_allocation_Z(Patch* patch, age_idx age, int* sort, int su
     
     // get the "females" (they are set)
     double*      femFit = _fit[FEM]->_aFit;     // all females without sex allocation
-    Individual** femInd = _fit[FEM]->_aInd;     // all females without sex allocation
+    TIndividual** femInd = _fit[FEM]->_aInd;     // all females without sex allocation
     unsigned int nbFem = patch->size(FEM, age);
     
     // get the "males" (they are not yet set)
     if(!_fit[MAL]) _fit[MAL] = new TPatchFitness(_popPtr, nbFem);
     else _fit[MAL]->resize(nbFem);
     double*      malFit = _fit[MAL]->_aFit;
-    Individual** malInd = _fit[MAL]->_aInd;
+    TIndividual** malInd = _fit[MAL]->_aInd;
     
     // for each individualget the overall fitness and correct it for the sex allocation
     double fem_alloc;

@@ -363,7 +363,7 @@ void MetapopSH::setReproductiveStats(bool sex)  // 0: MAL, 1: FEM
     vector<double> stat;
     vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
     vector<Patch*>::iterator endPop = get_vSamplePatch().end();
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     for(; curPop != endPop; ++curPop){                                          // for each patch
         curInd = (*curPop)->get_sampled_inds((sex_t)sex, ADLTx).begin();
         endInd = (*curPop)->get_sampled_inds((sex_t)sex, ADLTx).end();
@@ -404,10 +404,10 @@ void MetapopSH::setKinship(const age_idx& AGE)
     
     vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
     vector<Patch*>::iterator endPop = get_vSamplePatch().end();
-    vector<Individual*>::iterator curInd1, curInd2, endInd1, endInd2;
+    vector<TIndividual*>::iterator curInd1, curInd2, endInd1, endInd2;
     for(; curPop != endPop; ++curPop){                                          // for each patch
-        vector<Individual*>& curFem = (*curPop)->get_sampled_inds(FEM, AGE);
-        vector<Individual*>& curMal = (*curPop)->get_sampled_inds(MAL, AGE);
+        vector<TIndividual*>& curFem = (*curPop)->get_sampled_inds(FEM, AGE);
+        vector<TIndividual*>& curMal = (*curPop)->get_sampled_inds(MAL, AGE);
         tot_size += (unsigned int)(curFem.size() + curMal.size());
         
         //female-female
@@ -451,7 +451,7 @@ void MetapopSH::setKinship(const age_idx& AGE)
 // setKinClassCounter
 // ----------------------------------------------------------------------------------------
 /** sets the kinship */
-void MetapopSH::setKinClassCounter(Individual *I1, Individual *I2, const age_idx& AGE)
+void MetapopSH::setKinClassCounter(TIndividual *I1, TIndividual *I2, const age_idx& AGE)
 {
     if(I1->getMotherID() == I2->getMotherID()){
         if(I1->getFatherID() == I2->getFatherID()) _sib_prop[AGE][3]++;   // full sibs

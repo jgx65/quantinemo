@@ -37,7 +37,7 @@ src/tree.cpp
 src/indfactory.cpp
 src/newmat8.cpp
 src/treplicate.cpp
-src/individual.cpp
+src/tindividual.cpp
 src/newmat9.cpp
 src/tselection.cpp
 src/lce_breed.cpp
@@ -112,7 +112,7 @@ include/indfactory.h
 include/newmatio.h
 include/tarray.h
 include/ttquanti.h
-include/individual.h
+include/tindividual.h
 include/newmatnl.h
 include/tequation.h
 include/ttrait.h

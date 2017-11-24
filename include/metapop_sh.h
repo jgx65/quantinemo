@@ -36,7 +36,7 @@
 
 #include "stathandler.h"
 
-class Individual;
+class TIndividual;
 
 /**A StatHandler for the Metapop SimComponent.*/
 class MetapopSH : public StatHandler<MetapopSH> {
@@ -122,7 +122,7 @@ public:
     ///@name Kinship
     ///@{
     void   setKinship                 (const age_idx& AGE);
-    void   setKinClassCounter         (Individual *I1, Individual *I2, const age_idx& AGE);
+    void   setKinClassCounter         (TIndividual *I1, TIndividual *I2, const age_idx& AGE);
     double getSibProportion           (unsigned int i, const age_t& AGE) {
         age_idx curAGE = age_t2idx(AGE);
         setKinship(curAGE);

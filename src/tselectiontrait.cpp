@@ -200,7 +200,7 @@ double TSelectionTrait::_get_sdVe_mix(){
 //-----------------------------------------------------------------------------
 /** sets the phenotype of each trait of the individuum taking into account Va, Vd, Vep and Ve */
 void
-TSelectionTrait::set_phenotype_and_fitness_factor(Individual* ind)
+TSelectionTrait::set_phenotype_and_fitness_factor(TIndividual* ind)
 {
 	//_curInd = ind;      // is done in set_phenotype
 	set_phenotype(ind);
@@ -212,7 +212,7 @@ TSelectionTrait::set_phenotype_and_fitness_factor(Individual* ind)
 //-----------------------------------------------------------------------------
 /** sets the phenotype of each trait of the individuum without any Ve */
 void
-TSelectionTrait::set_phenotype_and_fitness_factor_noVe(Individual* ind)
+TSelectionTrait::set_phenotype_and_fitness_factor_noVe(TIndividual* ind)
 {
 	//_curInd = ind;      // is done in set_phenotype
 	set_phenotype_noVe(ind);
@@ -224,7 +224,7 @@ TSelectionTrait::set_phenotype_and_fitness_factor_noVe(Individual* ind)
 //-----------------------------------------------------------------------------
 /** sets the phenotype of each trait of the individual taking into account Va, Vd, Vep and Ve */
 void
-TSelectionTrait::set_phenotype(Individual* ind)
+TSelectionTrait::set_phenotype(TIndividual* ind)
 {
 	_curInd = ind;
 
@@ -242,7 +242,7 @@ TSelectionTrait::set_phenotype(Individual* ind)
 /** the phenotype is the genotypic value (no environmental variance)
  */
 void
-TSelectionTrait::set_phenotype_noVe(Individual* ind)
+TSelectionTrait::set_phenotype_noVe(TIndividual* ind)
 {
 	_curInd = ind;
 
@@ -256,7 +256,7 @@ TSelectionTrait::set_phenotype_noVe(Individual* ind)
 //-----------------------------------------------------------------------------
 /** sets the phenotype of each trait of the individual taking into account Va, Vd, Vep and Ve */
 void
-TSelectionTrait::set_fitness_factor(Individual* ind)
+TSelectionTrait::set_fitness_factor(TIndividual* ind)
 {
 	_curInd = ind;
 	_curInd->setFitnessFactor(_traitIndex);
@@ -267,7 +267,7 @@ TSelectionTrait::set_fitness_factor(Individual* ind)
 //-----------------------------------------------------------------------------
 /** sets the phenotype of each trait of the individual taking into account Va, Vd, Vep and Ve */
 double
-TSelectionTrait::set_get_fitness_factor(Individual* ind)
+TSelectionTrait::set_get_fitness_factor(TIndividual* ind)
 {
 	_curInd = ind;
 	return _curInd->set_getFitnessFactor(_traitIndex);

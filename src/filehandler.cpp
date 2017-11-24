@@ -244,9 +244,9 @@ void FileHandler::write_Fstat(const age_idx& AGE, const sex_t& SEX,
     unsigned char** seq;
     unsigned int nb_locus, k, l, t;
     
-    vector<Individual*>::iterator curInd =
+    vector<TIndividual*>::iterator curInd =
     curPop->get_sampled_inds(SEX, AGE).begin();
-    vector<Individual*>::iterator endInd =
+    vector<TIndividual*>::iterator endInd =
     curPop->get_sampled_inds(SEX, AGE).end();
     for (; curInd != endInd; ++curInd) {
         FILE << setfill('0') << setw(nbPatchDigit) << curPop->get_ID() + 1
@@ -275,7 +275,7 @@ void FileHandler::write_Fstat(const age_idx& AGE, const sex_t& SEX,
 // ----------------------------------------------------------------------------------------
 /** writes the information of the individual to the stream */
 void FileHandler::write_individual_info_to_stream(ostream& FILE,
-                                                  Individual* ind, const age_idx& cur_age, const sex_t& cur_sex, char sep)
+                                                  TIndividual* ind, const age_idx& cur_age, const sex_t& cur_sex, char sep)
 {
     FILE << cur_age + 1 << sep << cur_sex << sep << ind->getID() << sep
     << (ind->getMotherID() != "" ? ind->getMotherID() : my_NANstr )
@@ -384,9 +384,9 @@ void FileHandler::write_Arlequin(const age_idx& AGE, const sex_t& SEX,
     unsigned char** seq;
     unsigned int nb_locus, k, l, t;
     
-    vector<Individual*>::iterator curInd =
+    vector<TIndividual*>::iterator curInd =
     curPop->get_sampled_inds(SEX, AGE).begin();
-    vector<Individual*>::iterator endInd =
+    vector<TIndividual*>::iterator endInd =
     curPop->get_sampled_inds(SEX, AGE).end();
     for (unsigned int i = 1; curInd != endInd; ++curInd, ++i) {
         for (l = 0; l < ploidy; ++l) {
@@ -514,8 +514,8 @@ void FileHandler::write_Plink_ped(const age_idx& AGE, const sex_t& SEX,
     unsigned char** seq;
     unsigned int nb_locus, k, l, t;
     
-    vector<Individual*>::iterator curInd = curPop->get_sampled_inds(SEX, AGE).begin();
-    vector<Individual*>::iterator endInd = curPop->get_sampled_inds(SEX, AGE).end();
+    vector<TIndividual*>::iterator curInd = curPop->get_sampled_inds(SEX, AGE).begin();
+    vector<TIndividual*>::iterator endInd = curPop->get_sampled_inds(SEX, AGE).end();
     for (; curInd != endInd; ++curInd) {
         FILE << setfill('0') << setw(nbPatchDigit) << curPop->get_ID() + 1 << setfill(' ') << sep;
         FILE << (*curInd)->getID() << sep;
@@ -627,8 +627,8 @@ void FileHandler::write_Plink_pheno(const age_idx& AGE, const sex_t& SEX,
                                   const int& position, char sep)
 {
     double pheno;
-    vector<Individual*>::iterator curInd = curPop->get_sampled_inds(SEX, AGE).begin();
-    vector<Individual*>::iterator endInd = curPop->get_sampled_inds(SEX, AGE).end();
+    vector<TIndividual*>::iterator curInd = curPop->get_sampled_inds(SEX, AGE).begin();
+    vector<TIndividual*>::iterator endInd = curPop->get_sampled_inds(SEX, AGE).end();
     vector<int>::iterator curTrait, endTrait=_quantiTraitIndexes.end();
     for (; curInd != endInd; ++curInd) {
         FILE << setfill('0') << setw(nbPatchDigit) << curPop->get_ID() + 1 << setfill(' ') << sep;

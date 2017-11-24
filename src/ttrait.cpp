@@ -728,7 +728,7 @@ TTrait::ini_sequence (Patch* patch)
 // ----------------------------------------------------------------------------------------
 /** set pointers of the trait sequence to the genome sequence */
 void
-TTrait::ini(Individual* ind)
+TTrait::ini(TIndividual* ind)
 {
 	assert(ind->genome.get_sequence());
 	if(sequence){delete[] sequence; sequence=NULL;}

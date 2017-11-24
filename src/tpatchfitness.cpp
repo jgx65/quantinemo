@@ -42,7 +42,7 @@ TPatchFitness::init(TMetapop* ptr, int size)
     _pop=ptr;
     if(size){
         _nbInd = _capacity = size;
-        _aInd  = new Individual*[_nbInd];
+        _aInd  = new TIndividual*[_nbInd];
         _aFit  = new double[_nbInd];
     }
     else{
@@ -63,7 +63,7 @@ TPatchFitness::resize(const unsigned int& size)
     if(size > _capacity){
         if(_aInd) delete[] _aInd;
         if(_aFit) delete[] _aFit;
-        _aInd  = new Individual*[size];
+        _aInd  = new TIndividual*[size];
         _aFit  = new double[size];
         
     }
@@ -177,7 +177,7 @@ TPatchFitness::sort(int sort, unsigned int nbInd){
 // ----------------------------------------------------------------------------------------
 /** Randomize the order of the indivduals */
 void
-TPatchFitness::randomize_order_noFit(double* aFit, Individual** aInd, unsigned int& size, unsigned int nbSubset){
+TPatchFitness::randomize_order_noFit(double* aFit, TIndividual** aInd, unsigned int& size, unsigned int nbSubset){
     // we start randomly drawing individuals for the first position
     // this fiest individual is then swapted with the drawn individual
     unsigned int pos;
@@ -196,7 +196,7 @@ TPatchFitness::randomize_order_noFit(double* aFit, Individual** aInd, unsigned i
 // ----------------------------------------------------------------------------------------
 /** Randomize the order of the indivduals */
 void
-TPatchFitness::randomize_order_mostFit(double* aFit, Individual** aInd, unsigned int& size, unsigned int nbSubset){
+TPatchFitness::randomize_order_mostFit(double* aFit, TIndividual** aInd, unsigned int& size, unsigned int nbSubset){
     // we start randomly drawing individuals for the first position
     // this first individual is then swapted with the drawn individual
     unsigned int pos;
@@ -217,7 +217,7 @@ TPatchFitness::randomize_order_mostFit(double* aFit, Individual** aInd, unsigned
 // ----------------------------------------------------------------------------------------
 /** Randomize the order of the indivduals */
 void
-TPatchFitness::randomize_order_lessFit(double* aFit, Individual** aInd, unsigned int& size, unsigned int nbSubset){
+TPatchFitness::randomize_order_lessFit(double* aFit, TIndividual** aInd, unsigned int& size, unsigned int nbSubset){
     // we start randomly drawing individuals for the first position
     // this first individual is then swapted with the drawn individual
     unsigned int pos;
@@ -266,37 +266,37 @@ TPatchFitness::remove(unsigned int i){
 //////////////////////////////////////////////////////////////////////////////
 // functions to get an individual depending on its fitness
 // random not taking into account the fitness
-Individual* TPatchFitness::get_RAND_noFit(){                                          // of all individuals
+TIndividual* TPatchFitness::get_RAND_noFit(){                                          // of all individuals
     return _aInd[_pop->rand().Uniform(_nbInd)];
 }
-Individual* TPatchFitness::get_RAND_noFit_index(unsigned int& index){                                          // of all individuals
+TIndividual* TPatchFitness::get_RAND_noFit_index(unsigned int& index){                                          // of all individuals
     index = _pop->rand().Uniform(_nbInd);
     return _aInd[index];
 }
-Individual* TPatchFitness::get_RAND_noFit_subset(const int& nbInd){                   // of a subset of nbInd individuals
+TIndividual* TPatchFitness::get_RAND_noFit_subset(const int& nbInd){                   // of a subset of nbInd individuals
     return _aInd[_pop->rand().Uniform(_nbInd)];
 }
 
 // most fittest
-Individual* TPatchFitness::get_mostFit(){                                             // get the fittest
+TIndividual* TPatchFitness::get_mostFit(){                                             // get the fittest
     assert(_sort==-2);
     return _aInd[0];
 }
-Individual* TPatchFitness::get_RAND_mostFit(){                                        // get randomly the fittest
+TIndividual* TPatchFitness::get_RAND_mostFit(){                                        // get randomly the fittest
     assert(_sort<0);
     return _aInd[_pop->rand().AfterDistribution(_aFit, _nbInd)];
 }
-Individual* TPatchFitness::get_RAND_mostFit_index(unsigned int& index){               // "returns" the index of the individual
+TIndividual* TPatchFitness::get_RAND_mostFit_index(unsigned int& index){               // "returns" the index of the individual
     assert(_sort<0);
     index = _pop->rand().AfterDistribution(_aFit, _nbInd);
     return _aInd[index];
 }
-Individual* TPatchFitness::get_RAND_mostFit_of_mostFit(const unsigned int& nb){       // fixed subset
+TIndividual* TPatchFitness::get_RAND_mostFit_of_mostFit(const unsigned int& nb){       // fixed subset
     assert(_sort==-2);
     if(nb>_nbInd) return _aInd[_pop->rand().AfterDistribution(_aFit, _nbInd)];
     return               _aInd[_pop->rand().AfterDistribution(_aFit, nb)];
 }
-Individual* TPatchFitness::get_RAND_mostFit_of_RAND_mostFit(const unsigned int& nb){  // random subset
+TIndividual* TPatchFitness::get_RAND_mostFit_of_RAND_mostFit(const unsigned int& nb){  // random subset
     assert(_sort==-3);
     if(nb>_nbInd) return _aInd[_pop->rand().AfterDistribution(_aFit, _nbInd)];
     assert(nb==_nbSubset);
@@ -304,25 +304,25 @@ Individual* TPatchFitness::get_RAND_mostFit_of_RAND_mostFit(const unsigned int& 
 }
 
 // less fittest
-Individual* TPatchFitness::get_lessFit(){                                             // get the less fittest
+TIndividual* TPatchFitness::get_lessFit(){                                             // get the less fittest
     assert(_sort==2);
     return _aInd[0];
 }
-Individual* TPatchFitness::get_RAND_lessFit(){                                        // get randomly the less fittest
+TIndividual* TPatchFitness::get_RAND_lessFit(){                                        // get randomly the less fittest
     assert(_sort>0);
     return _aInd[_pop->rand().AfterDistribution(_aFit, _nbInd)];
 }
-Individual* TPatchFitness::get_RAND_lessFit_index(unsigned int& index){               // "returns" the index of the individual
+TIndividual* TPatchFitness::get_RAND_lessFit_index(unsigned int& index){               // "returns" the index of the individual
     assert(_sort>0);
     index = _pop->rand().AfterDistribution(_aFit, _nbInd);
     return _aInd[index];
 }
-Individual* TPatchFitness::get_RAND_lessFit_of_lessFit(const unsigned int& nb){      // fixed subset
+TIndividual* TPatchFitness::get_RAND_lessFit_of_lessFit(const unsigned int& nb){      // fixed subset
     assert(_sort==2);
     if(nb>_nbInd) return _aInd[_pop->rand().AfterDistribution(_aFit, _nbInd)];
     return               _aInd[_pop->rand().AfterDistribution(_aFit, nb)];
 }
-Individual* TPatchFitness::get_RAND_lessFit_of_RAND_lessFit(const unsigned int& nb){  // random subset
+TIndividual* TPatchFitness::get_RAND_lessFit_of_RAND_lessFit(const unsigned int& nb){  // random subset
     assert(_sort==3 && nb==_nbSubset);
     if(nb>_nbInd) return _aInd[_pop->rand().AfterDistribution(_aFit, _nbInd)];
     assert(nb==_nbSubset);

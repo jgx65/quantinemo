@@ -272,9 +272,9 @@ private:
     virtual void FHwrite (const age_idx& cur_age, const sex_t& cur_sex, ostream& FILE,
                           Patch* current_patch, const int& patch_id);
     
-    double (TTQuantiFHvalue::*get_value_func_ptr)(Individual* ind, const int& t);
-    double get_genotype(Individual* ind, const int& t);
-    double get_phenotype(Individual* ind, const int& t);
+    double (TTQuantiFHvalue::*get_value_func_ptr)(TIndividual* ind, const int& t);
+    double get_genotype(TIndividual* ind, const int& t);
+    double get_phenotype(TIndividual* ind, const int& t);
     
 
 public:

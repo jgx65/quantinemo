@@ -37,7 +37,7 @@
 #include "ttrait.h"
 
 class Patch;
-class Individual;
+class TIndividual;
 class TMetapop;
 
 /** Interface to handle file input/output for any SimComponent.
@@ -158,7 +158,7 @@ public:
     virtual void set_GenerationOccurrence  (unsigned int val){_GenerationOccurrence = val;}
     virtual void set_GenerationParam       (Param* p)        {_GenerationParam = p;}
     
-    void write_individual_info_to_stream(ostream& FILE, Individual* ind, const age_idx& cur_age, const sex_t& cur_sex, char sep=' ');
+    void write_individual_info_to_stream(ostream& FILE, TIndividual* ind, const age_idx& cur_age, const sex_t& cur_sex, char sep=' ');
     
     virtual string get_script ()            {return _script;}
     virtual void set_script (string val)    {_script = val;}

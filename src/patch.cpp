@@ -209,7 +209,7 @@ Patch::set_sampledInds(sex_t SEX, age_t AGE)
 unsigned int
 Patch::set_sampledInds(sex_t SEX, age_idx AGE)
 {
-	vector<Individual*>& vSample = _sampled_inds[SEX][AGE];
+	vector<TIndividual*>& vSample = _sampled_inds[SEX][AGE];
 	//assert(vSample.empty());
 	vSample.clear();
 	unsigned int curSize = size(SEX, AGE);                         // get the current patch size
@@ -274,8 +274,8 @@ Patch::set_isExtinct(bool status)
 void
 Patch::init_containers()
 {
-	_containers   = ARRAY::new_2D<vector<Individual*> >(2, NB_AGE_CLASSES);
-	_sampled_inds = ARRAY::new_2D<vector<Individual*> >(2, NB_AGE_CLASSES);
+	_containers   = ARRAY::new_2D<vector<TIndividual*> >(2, NB_AGE_CLASSES);
+	_sampled_inds = ARRAY::new_2D<vector<TIndividual*> >(2, NB_AGE_CLASSES);
 	_sizes        = ARRAY::new_2D<unsigned int>(2, NB_AGE_CLASSES, (unsigned int)0);
 
 	_sampleID = my_NAN;
@@ -614,7 +614,7 @@ Patch::setNewGeneration_coal(age_t AGE)
 unsigned int
 Patch::setNewGeneration(age_idx AGE)
 {
-	Individual *new_ind;
+	TIndividual *new_ind;
 	assert(!size(FEM, AGE));
 	for(unsigned int i = 0; i < _N_ini_sex[FEM]; i++) {
 		new_ind = _popPtr->makeNewIndividual(0,0,FEM,this);
@@ -751,7 +751,7 @@ Patch::individual_container_ok(){
 	@param AGE the index of the age class
 	@param at the index of the individual in the container
  */
-Individual*
+TIndividual*
 Patch::get(sex_t SEX, age_idx AGE, unsigned int at){
 	return  _containers[SEX][AGE][at];
 }
@@ -830,7 +830,7 @@ Patch::flush(){
 	@param ind the pointer to the individual
  */
 void
-Patch::set(sex_t SEX, age_idx AGE, unsigned int at, Individual* ind)
+Patch::set(sex_t SEX, age_idx AGE, unsigned int at, TIndividual* ind)
 {
 	cout << "\nPatch::set(): not yet changed!\n" << endl;
 	//_containers[SEX][AGE][at] = ind;
@@ -843,7 +843,7 @@ Patch::set(sex_t SEX, age_idx AGE, unsigned int at, Individual* ind)
 	@param ind the pointer to the individual
  */
 void
-Patch::add(const sex_t& SEX, const age_idx& AGE, Individual* idx)
+Patch::add(const sex_t& SEX, const age_idx& AGE, TIndividual* idx)
 {
 	assert(_sizes[SEX][AGE]<=_containers[SEX][AGE].size());
 	if(_sizes[SEX][AGE] < _containers[SEX][AGE].size()) _containers[SEX][AGE][_sizes[SEX][AGE]] = idx;
@@ -886,7 +886,7 @@ Patch::remove(sex_t SEX, age_idx AGE, unsigned int at)
 	@param ind pointer of an individual to remove
  */
 void
-Patch::remove(sex_t SEX, age_idx AGE, Individual* ind)
+Patch::remove(sex_t SEX, age_idx AGE, TIndividual* ind)
 {
 	for(unsigned int i=0; i<_sizes[SEX][AGE]; ++i){
 		if(ind == _containers[SEX][AGE][i]){
@@ -921,7 +921,7 @@ Patch::recycle(sex_t SEX, age_idx AGE, unsigned int at)
 	@param ind pointer of an individual to remove
  */
 void
-Patch::recycle(sex_t SEX, age_idx AGE, Individual* ind)
+Patch::recycle(sex_t SEX, age_idx AGE, TIndividual* ind)
 {
 	for(unsigned int i=0; i<_sizes[SEX][AGE]; ++i){
 		if(ind == _containers[SEX][AGE][i]){
@@ -1135,7 +1135,7 @@ Patch::swap_ind(sex_t SEX, age_idx from, age_idx to)
 	assert(!_sizes[SEX][to]);
 
 	//store values of the "to" container temporarily
-	vector<Individual*> temp_container = _containers[SEX][to];
+	vector<TIndividual*> temp_container = _containers[SEX][to];
 
 	// reassign the "from" container
 	_containers[SEX][to]    = _containers[SEX][from];
@@ -1236,7 +1236,7 @@ Patch::regulation_selection_draw_survivors(TSelection* pSelection, const unsigne
 	assert(K && K<=size(SEX, AGE));
 	// make the array cumulative to draw the MOST fittest
 	pSelection->sort_fitness(SEX, -3, K);
-	Individual** aInd = pSelection->get_aInd(SEX);
+	TIndividual** aInd = pSelection->get_aInd(SEX);
 
 	// remove the loosers (second part of the array)
 	for(unsigned int i = K, N = size(SEX, AGE); i<N; ++i){
@@ -1251,7 +1251,7 @@ Patch::regulation_selection_draw_loosers(TSelection* pSelection, const unsigned 
 	assert(K && K<=size(SEX, AGE));
 	// make the array cumulative to draw the MOST fittest
 	pSelection->sort_fitness(SEX, 3, K);
-	Individual** aInd = pSelection->get_aInd(SEX);
+	TIndividual** aInd = pSelection->get_aInd(SEX);
 
 	// remove the loosers (first sorted part of the array)
 	for(unsigned int i = 0; i<K; ++i){
@@ -1266,7 +1266,7 @@ Patch::regulation_selection_hard(age_idx AGE)
 {
 	_popPtr->get_pSelection()->set_fitness(this, AGE);    // compute the fitnesses, but don't sort or make yet the array cumulative
 	unsigned int SEX, nbInd;
-	Individual** aInd;
+	TIndividual** aInd;
 	double*      aFit;
 
 	for(SEX=0; SEX<2; ++SEX){                     // for each sex

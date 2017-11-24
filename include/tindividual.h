@@ -1,4 +1,4 @@
-/** @file individual.h
+/** @file tindividual.h
  *
  *   Copyright (C) 2006 Frederic Guillaume    <guillaum@zoology.ubc.ca>
  *   Copyright (C) 2008 Samuel Neuenschwander <samuel.neuenschwander@unil.ch>
@@ -53,12 +53,12 @@ using namespace std;
 class Patch;
 class TGenome;
 class LCE_Breed_fitness;
-class Individual {
+class TIndividual {
 private:
 	/**ID tag, unique for one simulation.*/
 	string _id;                         // "123_1": individual 123 of patch 1
 	sex_t _sex;                         /** Sex tag.*/
-	Individual *_mother, *_father;      /** Parents pointers.*/
+	TIndividual *_mother, *_father;      /** Parents pointers.*/
 	string _motherID, _fatherID;        /** ID tags of the parents ("123_1": individual 123 of patch 1) */
 	Patch *_natalPatch, *_currentPatch; /** Patch tag.*/
 	bool _isSelfed;                    	/** Selfing flag.*/
@@ -77,16 +77,16 @@ public:
 	/** the sequence, i.e. genetic map */
 	TGenome genome;
 
-	Individual ();
-	Individual (const Individual& ind);
-	~Individual () {
+	TIndividual ();
+	TIndividual (const TIndividual& ind);
+	~TIndividual () {
 		clearTraits();
 	}
 
 	/**Inits parameters and traits.
 		@callgraph
 	 **/
-	Individual*     init                    ();
+	TIndividual*     init                    ();
 
 	/**Resets parameters and traits values.
     @callgraph
@@ -97,8 +97,8 @@ public:
 	///@name Setters
 	///@{
 	void            setID                  (string value)         {_id = value;}
-	void            setFather              (Individual* f)        {_father = f; if(f){_fatherID = f->getID();}}
-	void            setMother              (Individual* m)        {_mother = m; if(m){_motherID = m->getID();}}
+	void            setFather              (TIndividual* f)        {_father = f; if(f){_fatherID = f->getID();}}
+	void            setMother              (TIndividual* m)        {_mother = m; if(m){_motherID = m->getID();}}
 	void            setFatherID            (string f)             {_fatherID = f;}
 	void            setMotherID            (string m)             {_motherID = m;}
 	void            setNatalPatch          (Patch* p)             {_natalPatch = p;}
@@ -112,8 +112,8 @@ public:
 	///@{
 	string          getID                  ()                      {return _id;}
 	unsigned int    getID_individual       ()                      {return strTo<unsigned int>(_id.substr(0,_id.find('_')));}
-	Individual*     getFather              ()                      {return _father;}
-	Individual*     getMother              ()                      {return _mother;}
+	TIndividual*     getFather              ()                      {return _father;}
+	TIndividual*     getMother              ()                      {return _mother;}
 	string          getFatherID            ()                      {return _fatherID;}
 	string          getMotherID            ()                      {return _motherID;}
 	Patch*          getNatalPatch          ()                      {return _natalPatch;}
@@ -249,7 +249,7 @@ public:
      @param pos the position where the trait should be added
 	 */
 	void  addTrait (TTrait* theTrait, IDX pos){
-		if((int)_trait_nb != pos) error("Individual::adding a trait to the wrong position (%i) (size %i)!\n",pos,_trait_nb);
+		if((int)_trait_nb != pos) error("TIndividual::adding a trait to the wrong position (%i) (size %i)!\n",pos,_trait_nb);
 		Traits.push_back(theTrait);
 		_trait_nb++;
 	}
@@ -270,7 +270,7 @@ public:
     @param mother the mother
     @param father the father
 	 **/
-	void create (IDX i, Individual* mother, Individual* father){
+	void create (IDX i, TIndividual* mother, TIndividual* father){
 		assert(mother && father);
 		TTrait* T = Traits[i];
 		T->set_value();
@@ -309,7 +309,7 @@ public:
 	 * @param mother the mother
 	 * @param father the father
 	 **/
-	void  create (Individual* mother, Individual* father)
+	void  create (TIndividual* mother, TIndividual* father)
 	{
 		assert(mother);
 
@@ -328,7 +328,7 @@ public:
 	 * @param mother the mother
 	 * @param father the father
 	 **/
-	void  inherit (Individual* mother, Individual* father);
+	void  inherit (TIndividual* mother, TIndividual* father);
 
 	/**Calls the mutation procedure of all the traits present in the individual. */
 	void mutate (){
@@ -340,15 +340,15 @@ public:
 	void  show_up();
 
 	/**Cloning procedure, clones all the traits present in the individual.*/
-	Individual*  clone ();
+	TIndividual*  clone ();
 
 	///@name Operators
 	///@{
 	/**Assignment, make a deep copy of the parameter values and traits.*/
-	Individual& operator=(const Individual& i);
+	TIndividual& operator=(const TIndividual& i);
 	/**Only checks for traits equivalence. */
-	bool operator==(const Individual& i);
-	bool operator!=(const Individual& i);
+	bool operator==(const TIndividual& i);
+	bool operator!=(const TIndividual& i);
 	///@}
 };
 

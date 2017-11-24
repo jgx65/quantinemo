@@ -36,7 +36,7 @@
 #include "tlocus.h"
 #include "simcomponent.h"
 
-class Individual;
+class TIndividual;
 class TGenomeProto;
 class Patch;
 class FileServices;
@@ -58,7 +58,7 @@ public:
 	TGenome(const TGenome& T): _protoGenome(T._protoGenome), sequence(0){}
 	~TGenome();
 	void clear();
-	void inherit(Individual* mother, Individual* father);
+	void inherit(TIndividual* mother, TIndividual* father);
 	void mutate();
 	void ini_sequence(Patch* p);
 	void ini_sequence(unsigned char** seq);
@@ -136,24 +136,24 @@ protected:
 	virtual void loadStatServices ( StatServices* loader ) {}
 
 	// inheritance functions
-	void (TGenomeProto::*_inherit_func_ptr)(Individual* mother, Individual* father, unsigned char** child);
-	void _inherit_linked  (Individual* mother, Individual* father, unsigned char** child);
-	void _inherit_unlinked(Individual* mother, Individual* father, unsigned char** child);
-	void _inherit_mixed   (Individual* mother, Individual* father, unsigned char** child);
+	void (TGenomeProto::*_inherit_func_ptr)(TIndividual* mother, TIndividual* father, unsigned char** child);
+	void _inherit_linked  (TIndividual* mother, TIndividual* father, unsigned char** child);
+	void _inherit_unlinked(TIndividual* mother, TIndividual* father, unsigned char** child);
+	void _inherit_mixed   (TIndividual* mother, TIndividual* father, unsigned char** child);
     
 	// recombination factor
 	void ini_recombination_factor();
 	bool ini_recombination_factor(string param_name, sex_t SEX);
 	void ini_recombination_qtrait(string param_name, sex_t SEX, double* vec, unsigned int size, TMatrix* m);
-	void (TGenomeProto::*_recombine_func_ptr[2])(Individual* parent, unsigned char** child, int index);
-	void _recombine_normal   (Individual* parent, unsigned char** child, int index = 0);
-	void _recombine_qtrait   (Individual* parent, unsigned char** child, int index = 0);
+	void (TGenomeProto::*_recombine_func_ptr[2])(TIndividual* parent, unsigned char** child, int index);
+	void _recombine_normal   (TIndividual* parent, unsigned char** child, int index = 0);
+	void _recombine_qtrait   (TIndividual* parent, unsigned char** child, int index = 0);
     
-	typedef double (TGenomeProto::*_func_ptr)(Individual* parent, sex_t SEX, unsigned int chrom);
+	typedef double (TGenomeProto::*_func_ptr)(TIndividual* parent, sex_t SEX, unsigned int chrom);
 	_func_ptr* _recombination_chrom_func_ptr[2];
-	double _recombination_chrom_factor(Individual* parent, sex_t SEX, unsigned int chrom);
-	double _recombination_chrom_qtraitZ(Individual* parent, sex_t SEX, unsigned int chrom);
-	double _recombination_chrom_qtraitG(Individual* parent, sex_t SEX, unsigned int chrom);
+	double _recombination_chrom_factor(TIndividual* parent, sex_t SEX, unsigned int chrom);
+	double _recombination_chrom_qtraitZ(TIndividual* parent, sex_t SEX, unsigned int chrom);
+	double _recombination_chrom_qtraitG(TIndividual* parent, sex_t SEX, unsigned int chrom);
     
     
 	// mutation functions
@@ -190,7 +190,7 @@ public:
 
 	TMatrixVar<double>* drawGeneticMapRandom(TMatrix* matrix, unsigned int& nbLocus);
 
-	void inherit(Individual* mother, Individual* father, unsigned char** child);
+	void inherit(TIndividual* mother, TIndividual* father, unsigned char** child);
 
 	void mutate(unsigned char** seq);
 	void ini_mutate();

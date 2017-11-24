@@ -389,7 +389,7 @@ public:
     
     virtual void loadStatServices ( StatServices* loader ) {loader->attach(&_statHandler);}
     
-  //  vector<Individual*>& getIndividuals(const sex_t& SEX, const age_idx& AG);
+  //  vector<TIndividual*>& getIndividuals(const sex_t& SEX, const age_idx& AG);
     unsigned int getGenerations        ( ) {return _generations;}
     unsigned int getPatchNbr           ( ) {return _patchNbr;}
     
@@ -524,7 +524,7 @@ public:
      @param AGE age class container index
      @param at the index of the individual in its container
      @param deme the patch where to grab the individual*/
-    Individual* get (const sex_t& SEX, const age_idx& AGE, unsigned int at, unsigned int deme);
+    TIndividual* get (const sex_t& SEX, const age_idx& AGE, unsigned int at, unsigned int deme);
     
     /**Moves an individual from a deme to an other one, both demes sizes are modified.
      @param SEX sex class container index
@@ -686,7 +686,7 @@ inline unsigned int TMetapop::sampleSize (sex_t SEX, age_t AGE, unsigned int dem
 }
 
 
-inline Individual* TMetapop::get (const sex_t& SEX, const age_idx& AGE, unsigned int at, unsigned int deme){
+inline TIndividual* TMetapop::get (const sex_t& SEX, const age_idx& AGE, unsigned int at, unsigned int deme){
     return get_vPatch(deme)->get(SEX, AGE, at);
 }
 

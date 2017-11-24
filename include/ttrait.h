@@ -39,7 +39,7 @@
 #include "tgenome.h"
 
 class Patch;
-class Individual;
+class TIndividual;
 
 class TTraitProto;
 
@@ -101,8 +101,8 @@ protected:
     void _copyTTraitParameters(const TTrait& T); // for the copy constructor
     
 public:
-    /**Called to allocate the trait's genotypic sequences. Called each time a new Individual is created (\c Individual::init())**/
-    virtual   void            ini(Individual* ind);
+    /**Called to allocate the trait's genotypic sequences. Called each time a new Individual is created (\c TIndividual::init())**/
+    virtual   void            ini(TIndividual* ind);
     
     /**Called at the end of each simulation/replicate, deallocates sequence memory. **/
     virtual   void            reset () = 0;
@@ -122,7 +122,7 @@ public:
     
     virtual   void            set_from_prototype(TTraitProto* T) = 0;
     
-    /**Called at the start of each replicate, sets the initial genotypes. Called by \c Individual::create(). **/
+    /**Called at the start of each replicate, sets the initial genotypes. Called by \c TIndividual::create(). **/
     virtual   void            ini_sequence (Patch* patch);
     
     /** Called to set the sequence pointer to an existing trait

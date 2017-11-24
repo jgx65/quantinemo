@@ -187,7 +187,7 @@ void LCE_Regulation::drawSuccessfullIndividuals(Patch* curPatch,
                                                 const unsigned int& K, const sex_t& SEX) {
 	unsigned int ind, cur_size = curPatch->size(SEX, _age);
     
-	vector<Individual*>vec;
+	vector<TIndividual*>vec;
 	vec.assign(K, NULL);
     
 	for (unsigned int i = 0; i < K; ++i, --cur_size) {
@@ -202,7 +202,7 @@ void LCE_Regulation::drawSuccessfullIndividuals(Patch* curPatch,
 	}
     
 	// reassign the container
-	vector<Individual*>&container = curPatch->get_containers()[SEX][_age];
+	vector<TIndividual*>&container = curPatch->get_containers()[SEX][_age];
 	delete &container; // delete the remaining individuals
 	container = vec; // assign the new array to the container
 	curPatch->get_sizes()[SEX][_age] = K;

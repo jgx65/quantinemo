@@ -110,9 +110,9 @@ protected:
 	unsigned int _nbLinkedTraits;
 
 	bool _isExtinct;                    /** Extinction flag */
-	vector<Individual*>** _containers;  /** Individuals containers, sex X age ([sex][age]) not used for coalescence */
+	vector<TIndividual*>** _containers;  /** Individuals containers, sex X age ([sex][age]) not used for coalescence */
 	unsigned int** _sizes;              /** Containers size counters, sex X age ([sex][age]  also used for coalescence */
-	vector<Individual*>** _sampled_inds;/** Individuals to sample for stats and output (_sampled_inds[sex][age]) */
+	vector<TIndividual*>** _sampled_inds;/** Individuals to sample for stats and output (_sampled_inds[sex][age]) */
 
 public:
 	//counters:
@@ -261,13 +261,13 @@ public:
 	double        get_density   (const age_idx& AGE)                {return (double)size(AGE)/_K;}
 
 	unsigned int**        &get_sizes        ()               {return _sizes;}
-	vector <Individual*>**&get_containers   ()               {return _containers;}
-	vector <Individual*>*& get_containers   (const sex_t& SEX) {return _containers[SEX];}
-	vector <Individual*>&  get_containers   (const sex_t& SEX, const age_idx& AGE){return _containers[SEX][AGE];}
-	vector <Individual*>&  get_all_inds     (const sex_t& SEX, const age_idx& AGE){return _containers[SEX][AGE];}
+	vector <TIndividual*>**&get_containers   ()               {return _containers;}
+	vector <TIndividual*>*& get_containers   (const sex_t& SEX) {return _containers[SEX];}
+	vector <TIndividual*>&  get_containers   (const sex_t& SEX, const age_idx& AGE){return _containers[SEX][AGE];}
+	vector <TIndividual*>&  get_all_inds     (const sex_t& SEX, const age_idx& AGE){return _containers[SEX][AGE];}
 
 	// current samples
-	vector<Individual*>& get_sampled_inds(const sex_t& SEX, const age_idx& AGE){return _sampled_inds[SEX][AGE];}
+	vector<TIndividual*>& get_sampled_inds(const sex_t& SEX, const age_idx& AGE){return _sampled_inds[SEX][AGE];}
 	unsigned int  sampleSize(const sex_t SEX, const age_idx& AGE);
 	unsigned int  sampleSize(const sex_t SEX, const age_t& AGE);
 	unsigned int  sampleSize(const age_idx& AGE){return sampleSize(FEM, AGE) + sampleSize(MAL,AGE);}
@@ -299,14 +299,14 @@ public:
 	unsigned int  size       (age_t AGE=ALL);
 	unsigned int  size       (sex_t SEX, age_idx AGE);
 	unsigned int  size       (age_idx AGE);
-	Individual*   get        (sex_t SEX, age_idx AGE, unsigned int at);
-	void          set        (sex_t SEX, age_idx AGE, unsigned int at, Individual* ind);
-	void          add        (const sex_t& SEX, const age_idx& AGE, Individual* ind);
+	TIndividual*   get        (sex_t SEX, age_idx AGE, unsigned int at);
+	void          set        (sex_t SEX, age_idx AGE, unsigned int at, TIndividual* ind);
+	void          add        (const sex_t& SEX, const age_idx& AGE, TIndividual* ind);
 	void          assign     (sex_t SEX, age_idx AGE, unsigned int n);
 	void          remove     (sex_t SEX, age_idx AGE, unsigned int at);
-	void          remove     (sex_t SEX, age_idx AGE, Individual* ind);
+	void          remove     (sex_t SEX, age_idx AGE, TIndividual* ind);
 	void          recycle    (sex_t SEX, age_idx AGE, unsigned int at);
-	void          recycle    (sex_t SEX, age_idx AGE, Individual* ind);
+	void          recycle    (sex_t SEX, age_idx AGE, TIndividual* ind);
 	void          clear      ();
 	void          clear      (age_idx AGE);
 	void          clear      (sex_t SEX, age_idx AGE);

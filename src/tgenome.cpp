@@ -67,7 +67,7 @@ void TGenome::clear()
 // ----------------------------------------------------------------------------------------
 // inherit
 // ----------------------------------------------------------------------------------------
-void TGenome::inherit(Individual* mother, Individual* father)
+void TGenome::inherit(TIndividual* mother, TIndividual* father)
 {
 	_protoGenome->inherit(mother, father, sequence);
 }
@@ -778,7 +778,7 @@ void TGenomeProto::printGeneticMapInfo()
 // inherit
 // ----------------------------------------------------------------------------------------
 /** public function for inheritance */
-void TGenomeProto::inherit(Individual* mother, Individual* father, unsigned char** child)
+void TGenomeProto::inherit(TIndividual* mother, TIndividual* father, unsigned char** child)
 {
 	(this->*_inherit_func_ptr)(mother, father, child);
 }
@@ -789,7 +789,7 @@ void TGenomeProto::inherit(Individual* mother, Individual* father, unsigned char
 /** inheritance with just unlinked loci
  * the genome containes first the linked loci, followed by the unlinked loci
  */
-void TGenomeProto::_inherit_unlinked(Individual* mother, Individual* father, unsigned char** child)
+void TGenomeProto::_inherit_unlinked(TIndividual* mother, TIndividual* father, unsigned char** child)
 {
 	unsigned char** mother_seq = mother->genome.get_sequence();
 	unsigned char** father_seq = father->genome.get_sequence();
@@ -803,7 +803,7 @@ void TGenomeProto::_inherit_unlinked(Individual* mother, Individual* father, uns
 // _inherit_linked
 // ----------------------------------------------------------------------------------------
 /** inheritance with just linked loci */
-void TGenomeProto::_inherit_linked(Individual* mother, Individual* father, unsigned char** child)
+void TGenomeProto::_inherit_linked(TIndividual* mother, TIndividual* father, unsigned char** child)
 {
 	(this->*_recombine_func_ptr[FEM])(mother, child, 0);
 	(this->*_recombine_func_ptr[MAL])(father, child, 1);
@@ -815,7 +815,7 @@ void TGenomeProto::_inherit_linked(Individual* mother, Individual* father, unsig
 /** inheritance where linked an unlinked loci are present
  * the genome contains first the linked loci, followed by the unlinked loci
  */
-void TGenomeProto::_inherit_mixed(Individual* mother, Individual* father,
+void TGenomeProto::_inherit_mixed(TIndividual* mother, TIndividual* father,
                                   unsigned char** child)
 {
 	_inherit_linked(mother, father, child);
@@ -830,7 +830,7 @@ void TGenomeProto::_inherit_mixed(Individual* mother, Individual* father,
  * - _chromosomeLength_temp: used to specify the total number of recombinations
  * - _locus_position_tot_temp: vector with the locus positions
  * */
-void TGenomeProto::_recombine_normal(Individual* parent, unsigned char** child, int index)
+void TGenomeProto::_recombine_normal(TIndividual* parent, unsigned char** child, int index)
 {
 	unsigned char** parent_seq = parent->genome.get_sequence();
 	sex_t SEX = parent->getSex();
@@ -873,7 +873,7 @@ void TGenomeProto::_recombine_normal(Individual* parent, unsigned char** child, 
  * single crossover per meiosis, on average."
  *
  * */
-void TGenomeProto::_recombine_qtrait(Individual* parent, unsigned char** child, int index)
+void TGenomeProto::_recombine_qtrait(TIndividual* parent, unsigned char** child, int index)
 {
 	unsigned char** parent_seq = parent->genome.get_sequence();
 	sex_t SEX = parent->getSex();
@@ -1094,7 +1094,7 @@ void TGenomeProto::ini_recombination_qtrait(string param_name, sex_t SEX,
 // ----------------------------------------------------------------------------------------
 /** a single recombination factor per chromosome is present
  */
-double TGenomeProto::_recombination_chrom_factor(Individual* parent, sex_t SEX,
+double TGenomeProto::_recombination_chrom_factor(TIndividual* parent, sex_t SEX,
                                                  unsigned int chrom)
 {
 	return _recombination_factor_chrom[SEX][chrom];
@@ -1105,7 +1105,7 @@ double TGenomeProto::_recombination_chrom_factor(Individual* parent, sex_t SEX,
 // ----------------------------------------------------------------------------------------
 /** recombination factor is specified by the phenotype of trait X
  */
-double TGenomeProto::_recombination_chrom_qtraitZ(Individual* parent, sex_t SEX,
+double TGenomeProto::_recombination_chrom_qtraitZ(TIndividual* parent, sex_t SEX,
                                                   unsigned int chrom)
 {
 	return parent->getTraitPhenotype(_recombination_factor_chrom[SEX][chrom]);
@@ -1116,7 +1116,7 @@ double TGenomeProto::_recombination_chrom_qtraitZ(Individual* parent, sex_t SEX,
 // ----------------------------------------------------------------------------------------
 /** recombination factor is specified by the genotypic value of trait X
  */
-double TGenomeProto::_recombination_chrom_qtraitG(Individual* parent, sex_t SEX,
+double TGenomeProto::_recombination_chrom_qtraitG(TIndividual* parent, sex_t SEX,
                                                   unsigned int chrom)
 {
 	return parent->getTraitGenotype(_recombination_factor_chrom[SEX][chrom]);

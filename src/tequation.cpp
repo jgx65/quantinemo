@@ -115,7 +115,7 @@ TEquation::read_input(string input, vector<int> qtrait)
 //-----------------------------------------------------------------------------
 /** return the the value of the equation */
 double
-TEquation::getValue(Individual* ind)
+TEquation::getValue(TIndividual* ind)
 {
     cur_arithmetic = arithmetic_vec.begin();
     cur_value = values_vec.begin();

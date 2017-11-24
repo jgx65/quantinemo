@@ -1065,14 +1065,14 @@ StatHandler<SH>::set_alleleFreq_ofPatch(Patch * curPatch,
     unsigned char** genes;
     
     // if patch is empty all frequencies are zero
-    vector<Individual*>&curFem = curPatch->get_sampled_inds(FEM, AGE);
-    vector<Individual*>&curMal = curPatch->get_sampled_inds(MAL, AGE);
+    vector<TIndividual*>&curFem = curPatch->get_sampled_inds(FEM, AGE);
+    vector<TIndividual*>&curMal = curPatch->get_sampled_inds(MAL, AGE);
     nbAllele = ((unsigned int)curFem.size() + (unsigned int)curMal.size()) * ploidy;
     if (!nbAllele) return 0; // patch is empty
     
     // get female allele counts
     map<unsigned char, double>::iterator poss;
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd;
          ++curInd) {
@@ -1126,14 +1126,14 @@ StatHandler<SH>::set_locusFreq_ofPatch(Patch * curPatch,
     unsigned int l, nbInds;
     
     // if patch is empty all frequencies are zero
-    vector<Individual*>&curFem = curPatch->get_sampled_inds(FEM, AGE);
-    vector<Individual*>&curMal = curPatch->get_sampled_inds(MAL, AGE);
+    vector<TIndividual*>&curFem = curPatch->get_sampled_inds(FEM, AGE);
+    vector<TIndividual*>&curMal = curPatch->get_sampled_inds(MAL, AGE);
     nbInds = ((unsigned int)curFem.size() + (unsigned int)curMal.size());
     if (!nbInds) return 0; // patch is empty
     
     // get female allele counts
     map<unsigned char, double>::iterator poss;
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     unsigned char a1, a2;
     unsigned char** genes;
     
@@ -1198,14 +1198,14 @@ StatHandler<SH>::set_alleleFreq_ofPatch_allInds(Patch * curPatch,
     unsigned char** genes;
     
     // if patch is empty all frequencies are zero
-    vector<Individual*>&curFem = curPatch->get_all_inds(FEM, AGE);
-    vector<Individual*>&curMal = curPatch->get_all_inds(MAL, AGE);
+    vector<TIndividual*>&curFem = curPatch->get_all_inds(FEM, AGE);
+    vector<TIndividual*>&curMal = curPatch->get_all_inds(MAL, AGE);
     nbAllele = ((unsigned int)curFem.size() + (unsigned int)curMal.size()) * ploidy;
     if (!nbAllele) return 0; // patch is empty
     
     // get female allele counts
     map<unsigned char, double>::iterator poss;
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd;
          ++curInd) {
@@ -1262,11 +1262,11 @@ StatHandler<SH>::get_locusGenotypeCounts_ofPatch_andSex(Patch * curPatch,
     assert(freqs);
     
     // if patch is empty all frequencies are zero
-    vector<Individual*>&curFem = curPatch->get_sampled_inds(SEX, AGE);
+    vector<TIndividual*>&curFem = curPatch->get_sampled_inds(SEX, AGE);
     if (curFem.empty()) return 0; // patch is empty
     
     // get locus genotype counts
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
         genes = (unsigned char**)(*curInd)->getTrait(traitID)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
@@ -1367,13 +1367,13 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch_allInds(Patch * curPatch, const 
     }
     
     // if patch is empty all frequencies are zero
-    vector<Individual*>&curFem = curPatch->get_all_inds(FEM, AGE);
-    vector<Individual*>&curMal = curPatch->get_all_inds(MAL, AGE);
+    vector<TIndividual*>&curFem = curPatch->get_all_inds(FEM, AGE);
+    vector<TIndividual*>&curMal = curPatch->get_all_inds(MAL, AGE);
     unsigned int nbInd = (unsigned int) (curFem.size() + curMal.size());
     if (!nbInd) return 0; // patch is empty
     
     // get locus genotype counts FEM
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     unsigned char** genes;
     unsigned char a1, a2;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
@@ -1474,10 +1474,10 @@ StatHandler<SH>::get_genotypeFreq(const age_idx & AGE, Patch* curPop, const unsi
     map<unsigned char, map<unsigned char, double> > *freqs = new map<unsigned char, map<unsigned char, double> >;
     unsigned int a;
     unsigned char ** genes;
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     
     // females
-    vector<Individual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
+    vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
         genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (a = 0; a < ploidy; ++a) {
@@ -1486,7 +1486,7 @@ StatHandler<SH>::get_genotypeFreq(const age_idx & AGE, Patch* curPop, const unsi
     }
     
     // males
-    vector<Individual*>&curMal = curPop->get_sampled_inds(MAL, AGE);
+    vector<TIndividual*>&curMal = curPop->get_sampled_inds(MAL, AGE);
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd; ++curInd) {
         genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (a = 0; a < ploidy; ++a) {
@@ -2191,8 +2191,8 @@ double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, Patch * cur
     unsigned int l;
     unsigned char** genes;
     
-    vector<Individual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
-    vector<Individual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
+    vector<TIndividual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
+    vector<TIndividual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
     unsigned int size = (unsigned int)curFem.size() + (unsigned int)curMal.size();
     
     // if patch is empty
@@ -2207,7 +2207,7 @@ double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, Patch * cur
     }
     
     // count heterozygote females
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
         genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
@@ -2241,8 +2241,8 @@ StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, Patch * cur_patch, 
 {
     unsigned char** genes;
     
-    vector<Individual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
-    vector<Individual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
+    vector<TIndividual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
+    vector<TIndividual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
     unsigned int ho = 0, size = (unsigned int)curFem.size() + (unsigned int)curMal.size();
     
     // if patch is empty
@@ -2250,7 +2250,7 @@ StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, Patch * cur_patch, 
         return my_NAN; // if patch is empty
     
     // count heterozygote females
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
         genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         ho += (genes[l][0] != genes[l][1]);
@@ -2279,15 +2279,15 @@ double> *StatHandler<SH>::getHo_ofPatchperAllele(const age_idx & AGE, Patch * cu
     unsigned int l;
     unsigned char** genes;
     
-    vector<Individual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
-    vector<Individual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
+    vector<TIndividual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
+    vector<TIndividual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
     unsigned int size = (unsigned int)curFem.size() + (unsigned int)curMal.size();
     
     // if patch is empty
     if (!size) return array; // if patch is empty
     
     // count heterozygote females
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
         genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
@@ -2339,15 +2339,15 @@ template<class SH>double* StatHandler<SH>::getHo_perLocus(const age_idx & AGE,
     // is returned and must be deleted in the calling function
     unsigned char** genes;
     
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     
     // compute Ho per patch
     vector<Patch*>::iterator curPop, endPop;
     for (curPop = vPatch.begin(), endPop = vPatch.end();
          curPop != endPop; ++curPop) {
         ARRAY::reset_1D(ho, _nb_locus, (unsigned int)0); // reset all ho to zero
-        vector<Individual*>&curFem = (*curPop)->get_sampled_inds(FEM, AGE);
-        vector<Individual*>&curMal = (*curPop)->get_sampled_inds(MAL, AGE);
+        vector<TIndividual*>&curFem = (*curPop)->get_sampled_inds(FEM, AGE);
+        vector<TIndividual*>&curMal = (*curPop)->get_sampled_inds(MAL, AGE);
         size = (unsigned int)(curFem.size() + curMal.size());
         if (!size)
             continue; // if patch is empty
@@ -3185,11 +3185,11 @@ StatHandler<SH>::setCoaMatrixTheta(const age_idx & AGE)
     
     // first fill the diagonale: within deme coancestry (theta)
     _mean_theta[AGE] = 0;
-    vector<Individual*>::iterator curInd1, curInd2, endInd;
+    vector<TIndividual*>::iterator curInd1, curInd2, endInd;
     vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (i = 0, curPop = get_vSamplePatch().begin(); curPop != endPop; ++i, ++curPop) {
-        vector<Individual*>&curFem = (*curPop)->get_sampled_inds(FEM, AGE);
-        vector<Individual*>&curMal = (*curPop)->get_sampled_inds(MAL, AGE);
+        vector<TIndividual*>&curFem = (*curPop)->get_sampled_inds(FEM, AGE);
+        vector<TIndividual*>&curMal = (*curPop)->get_sampled_inds(MAL, AGE);
         coa = 0;
         tot_size = (unsigned int)curFem.size() + (unsigned int)curMal.size();
         if (tot_size) {
@@ -3314,7 +3314,7 @@ template<class SH>double StatHandler<SH>::get_coancestry(Patch * P1,
                                                          const sex_t & SEX1, Patch * P2, const sex_t & SEX2, const age_idx & AGE)
 {
     double sum = 0;
-    vector<Individual*>::iterator cur1, cur2, end1, end2;
+    vector<TIndividual*>::iterator cur1, cur2, end1, end2;
     // for each individual of patch 1
     for (cur1 = P1->get_sampled_inds(SEX1, AGE).begin(),
          end1 = P1->get_sampled_inds(SEX1, AGE).end(); cur1 != end1; ++cur1) {
@@ -3340,7 +3340,7 @@ template<class SH>void StatHandler<SH>::setSexspecific_Theta
         return;
     
     vector<Patch*>::iterator curPop, endPop;
-    vector<Individual*>::iterator curInd1, curInd2, endInd1, endInd2;
+    vector<TIndividual*>::iterator curInd1, curInd2, endInd1, endInd2;
     unsigned int Fsize, Msize, FFsize, MMsize, FMsize, nbFullPatch = 0;
     
     double mean, grand_mean;
@@ -3350,8 +3350,8 @@ template<class SH>void StatHandler<SH>::setSexspecific_Theta
     
     for (curPop = get_vSamplePatch().begin(), endPop = get_vSamplePatch().end();
          curPop != endPop; ++curPop) {
-        vector<Individual*>&curFem = (*curPop)->get_sampled_inds(FEM, AGE);
-        vector<Individual*>&curMal = (*curPop)->get_sampled_inds(MAL, AGE);
+        vector<TIndividual*>&curFem = (*curPop)->get_sampled_inds(FEM, AGE);
+        vector<TIndividual*>&curMal = (*curPop)->get_sampled_inds(MAL, AGE);
         Fsize = (unsigned int)curFem.size();
         Msize = (unsigned int)curMal.size();
         
@@ -3452,11 +3452,11 @@ template<class SH>void StatHandler<SH>::setSibStats(const age_idx & AGE) {
     }
     
     vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
-    vector<Individual*>::iterator curInd1, curInd2, endInd1, endInd2;
+    vector<TIndividual*>::iterator curInd1, curInd2, endInd1, endInd2;
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         // for each patch
-        vector<Individual*>&curFem = (*curPop)->get_sampled_inds(FEM, AGE);
-        vector<Individual*>&curMal = (*curPop)->get_sampled_inds(MAL, AGE);
+        vector<TIndividual*>&curFem = (*curPop)->get_sampled_inds(FEM, AGE);
+        vector<TIndividual*>&curMal = (*curPop)->get_sampled_inds(MAL, AGE);
         tot_size = (unsigned int)curFem.size() + (unsigned int)curMal.size();
         
         // female - female
@@ -3508,8 +3508,8 @@ template<class SH>void StatHandler<SH>::setSibStats(const age_idx & AGE) {
 /** sets the sib coancestry and at the same time the kinship as it does n ot cost a lot of extra effort
  * (the kinship can separately been set by the function setKinship()
  */
-template<class SH>void StatHandler<SH>::setSibCoa(Individual * I1,
-                                                  Individual * I2, const age_idx & AGE) {
+template<class SH>void StatHandler<SH>::setSibCoa(TIndividual * I1,
+                                                  TIndividual * I2, const age_idx & AGE) {
     double coa = Coancestry((unsigned char**)I1->getTrait(_SHLinkedTraitIndex)
                             ->get_sequence(), (unsigned char**)I2->getTrait(_SHLinkedTraitIndex)
                             ->get_sequence());

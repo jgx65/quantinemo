@@ -2342,7 +2342,7 @@ TMetapop::setPopulation_FSTAT(const age_t& requiredAge)
     }
     
     // for each individual
-    Individual* cur_ind;
+    TIndividual* cur_ind;
     age_idx age;
     sex_t sex;
     Patch* pPatch;
@@ -3270,8 +3270,8 @@ TMetapop::copyMove_random_withReplacement(sex_t SEX, age_idx from_age, Patch* fr
     assert(size);
     for(unsigned int i=0; i<nbMigr; ++i){
         unsigned int at = rand().Uniform(size);
-        Individual* indOld = fromDeme->get(SEX, from_age, at);
-        Individual* indCopy = copyIndividual(indOld);
+        TIndividual* indOld = fromDeme->get(SEX, from_age, at);
+        TIndividual* indCopy = copyIndividual(indOld);
         //delete indCopy;
         toDeme->add(SEX, to_age, copyIndividual(indOld));
     }

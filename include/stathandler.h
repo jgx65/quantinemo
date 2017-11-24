@@ -38,7 +38,7 @@
 #include "stat_rec_base.h"
 
 class TTraitProto;
-class Individual;
+class TIndividual;
 class Patch;
 /**A class to compute and store the summary statistics associated with a SimComponent.
  * The template type must be the type of the class that declares the methods linked into the
@@ -183,7 +183,7 @@ protected:
 	}
     
 	void   setSibStats              (const age_idx& AGE);
-	void   setSibCoa                (Individual *I1, Individual *I2, const age_idx& AGE);
+	void   setSibCoa                (TIndividual *I1, TIndividual *I2, const age_idx& AGE);
 	double getSibProportions        (unsigned int i, const age_t& AGE) {
 		age_idx curAGE = age_t2idx(AGE);
 		setSibStats(curAGE);

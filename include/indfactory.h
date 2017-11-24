@@ -35,7 +35,7 @@
 #define indfactoryH
 
 #include <map>
-#include "individual.h"
+#include "tindividual.h"
 #include "types.h"
 #include "ttrait.h"
 #include <vector>
@@ -65,12 +65,12 @@ protected:
     
     
     /**Garbage collector for unused Individual's.*/
-    vector<Individual*> RecyclingPOOL;
+    vector<TIndividual*> RecyclingPOOL;
     
 public:
     
     /**The individuals prototype used to create any new individual in a simulation.*/
-    Individual _protoIndividual;
+    TIndividual _protoIndividual;
     
     IndFactory ( ):_popPtr(0) {
         _protoGenome = new TGenomeProto();
@@ -86,7 +86,7 @@ public:
     }
     
     /**Put an individual in the recycling pool.*/
-    void recycle(Individual* ind) {
+    void recycle(TIndividual* ind) {
         assert(ind);
         RecyclingPOOL.push_back(ind);
     }
@@ -110,7 +110,7 @@ public:
      * ID is set and new traits are allocated but no genetic data is created. Sex has to be set too.
      * @callgraph
      **/
-    Individual*             getNewIndividual() {return makeNewIndividual(NULL,NULL,MAL,NULL);}
+    TIndividual*             getNewIndividual() {return makeNewIndividual(NULL,NULL,MAL,NULL);}
     
     /**Creates an individual with pointers to parents, sex and home ID set but no genetic data.
      * No inheritance or mutations on the trait sequences are done.
@@ -120,8 +120,8 @@ public:
      * @param sex gender of the individual
      * @param homepatch ID of the Patch where this individual is born, usually the current position in the Patch array
      **/
-    Individual*    makeNewIndividual           (Individual* mother, Individual* father, sex_t sex, Patch* homepatch);
-    Individual*    copyIndividual(Individual* oldInd);
+    TIndividual*    makeNewIndividual           (TIndividual* mother, TIndividual* father, sex_t sex, Patch* homepatch);
+    TIndividual*    copyIndividual(TIndividual* oldInd);
 
     
     /**Completely creates an individual with inheritance and mutations on all traits.
@@ -131,10 +131,10 @@ public:
      * @param sex gender of the individual
      * @param homepatch ID of the Patch where this individual is born, usually the current position in the Patch array
      **/
-    Individual*     makeOffsprg (Individual* mother, Individual* father, sex_t sex, Patch* homepatch);
+    TIndividual*     makeOffsprg (TIndividual* mother, TIndividual* father, sex_t sex, Patch* homepatch);
     
     /**Individual prototype accessor.*/
-    const Individual*       getIndividualProtoype       ( )   {return &_protoIndividual;}
+    const TIndividual*       getIndividualProtoype       ( )   {return &_protoIndividual;}
     
     /**Accessor to the list of TTraitProto's.*/
     map< string,TTraitProto* >& getTraitPrototypes  ( )  {return _protoTraits;}

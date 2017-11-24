@@ -36,7 +36,7 @@
 #define tpatchfitnessH
 //---------------------------------------------------------------------------
 
-class Individual;
+class TIndividual;
 class TSelection;
 class TMetapop;
 
@@ -44,7 +44,7 @@ class TMetapop;
 class TPatchFitness{
     friend class TSelection;
 private:
-    Individual**  _aInd;      // an array of pointers to the individulas (don't delete the individuals here!)
+    TIndividual**  _aInd;      // an array of pointers to the individulas (don't delete the individuals here!)
     double*       _aFit;
     unsigned int  _nbInd;     // USED size of the array (i.e. number of individuals)
     unsigned int  _nbSubset;   // if a subset is used
@@ -77,28 +77,28 @@ private:
     //////////////////////////////////////////////////////////////////////////////
     // functions to get an individual depending on its fitness
     // random not taking into account the fitness
-    Individual* get_RAND_noFit();                                          // of all individuals
-    Individual* get_RAND_noFit_index(unsigned int& index);                                          // of all individuals
-    Individual* get_RAND_noFit_subset(const int& nbInd);                   // of a subset of nbInd individuals
+    TIndividual* get_RAND_noFit();                                          // of all individuals
+    TIndividual* get_RAND_noFit_index(unsigned int& index);                                          // of all individuals
+    TIndividual* get_RAND_noFit_subset(const int& nbInd);                   // of a subset of nbInd individuals
     
     // most fittest
-    Individual* get_mostFit();                                             // get the fittest
-    Individual* get_RAND_mostFit();                                        // get randomly the fittest
-    Individual* get_RAND_mostFit_index(unsigned int& index);               // "returns" the index of the individual
-    Individual* get_RAND_mostFit_of_mostFit(const unsigned int& nb);       // fixed subset
-    Individual* get_RAND_mostFit_of_RAND_mostFit(const unsigned int& nb);  // random subset
+    TIndividual* get_mostFit();                                             // get the fittest
+    TIndividual* get_RAND_mostFit();                                        // get randomly the fittest
+    TIndividual* get_RAND_mostFit_index(unsigned int& index);               // "returns" the index of the individual
+    TIndividual* get_RAND_mostFit_of_mostFit(const unsigned int& nb);       // fixed subset
+    TIndividual* get_RAND_mostFit_of_RAND_mostFit(const unsigned int& nb);  // random subset
 
     // less fittest
-    Individual* get_lessFit();                                            // get the less fittest
-    Individual* get_RAND_lessFit();                                        // get randomly the less fittest
-    Individual* get_RAND_lessFit_index(unsigned int& index);               // "returns" the index of the individual
-    Individual* get_RAND_lessFit_of_lessFit(const unsigned int& nb);      // fixed subset
-    Individual* get_RAND_lessFit_of_RAND_lessFit(const unsigned int& nb);  // random subset
+    TIndividual* get_lessFit();                                            // get the less fittest
+    TIndividual* get_RAND_lessFit();                                        // get randomly the less fittest
+    TIndividual* get_RAND_lessFit_index(unsigned int& index);               // "returns" the index of the individual
+    TIndividual* get_RAND_lessFit_of_lessFit(const unsigned int& nb);      // fixed subset
+    TIndividual* get_RAND_lessFit_of_RAND_lessFit(const unsigned int& nb);  // random subset
     
     void sort(int sort, unsigned int nbInd=0);
-    void randomize_order_noFit  (double* aFit, Individual** aInd, unsigned int& size, unsigned int nbSubset=0);
-    void randomize_order_mostFit(double* aFit, Individual** aInd, unsigned int& size, unsigned int nbSubset=0);
-    void randomize_order_lessFit(double* aFit, Individual** aInd, unsigned int& size, unsigned int nbSubset=0);
+    void randomize_order_noFit  (double* aFit, TIndividual** aInd, unsigned int& size, unsigned int nbSubset=0);
+    void randomize_order_mostFit(double* aFit, TIndividual** aInd, unsigned int& size, unsigned int nbSubset=0);
+    void randomize_order_lessFit(double* aFit, TIndividual** aInd, unsigned int& size, unsigned int nbSubset=0);
     
     
     double getMeanFitness();
@@ -106,7 +106,7 @@ private:
     
     void remove(unsigned int i);
     
-    Individual** get_aInd() {return _aInd;}
+    TIndividual** get_aInd() {return _aInd;}
     double*      get_aFit() {return _aFit;}
 };
 

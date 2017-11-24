@@ -32,14 +32,14 @@
 */
 
 
-#include "individual.h"
+#include "tindividual.h"
 #include "patch.h"
 
 
 // ----------------------------------------------------------------------------------------
 // constructor
 // ----------------------------------------------------------------------------------------
-Individual::Individual ( )
+TIndividual::TIndividual ( )
 : _sex(MAL),_mother(NULL),_father(NULL),
 	_natalPatch(NULL),_currentPatch(NULL),
 	_isSelfed(false),_fecundity(0),_trait_nb(0)
@@ -52,7 +52,7 @@ Individual::Individual ( )
 // copy constructor
 // ----------------------------------------------------------------------------------------
 /** copy constructor used to clone an individual */
-Individual::Individual(const Individual& ind)
+TIndividual::TIndividual(const TIndividual& ind)
 : _sex(MAL),_mother(NULL),_father(NULL),
 	_natalPatch(NULL),_currentPatch(NULL),
 	_isSelfed(false),_fecundity(0),_trait_nb(0)
@@ -66,7 +66,7 @@ Individual::Individual(const Individual& ind)
 // ----------------------------------------------------------------------------------------
 // init
 // ----------------------------------------------------------------------------------------
-Individual * Individual::init ()
+TIndividual * TIndividual::init ()
 {
 	_isSelfed = false;
   _mother = NULL;
@@ -91,7 +91,7 @@ Individual * Individual::init ()
 // ----------------------------------------------------------------------------------------
 /**Clears the traits container.**/
 void
-Individual::clearTraits ( )
+TIndividual::clearTraits ( )
 {
 	genome.clear();
 
@@ -105,7 +105,7 @@ Individual::clearTraits ( )
 // ----------------------------------------------------------------------------------------
 // reset
 // ----------------------------------------------------------------------------------------
-void Individual::reset ()
+void TIndividual::reset ()
 {
   _id.clear();
   _sex = MAL;
@@ -121,7 +121,7 @@ void Individual::reset ()
   _fitness = my_NAN;
 
   if(_trait_nb != Traits.size()){
-    error("Individual::reset: trait counter and table size differ, resetting\n");
+    error("TIndividual::reset: trait counter and table size differ, resetting\n");
     _trait_nb = (unsigned int)Traits.size();
   }
 
@@ -131,7 +131,7 @@ void Individual::reset ()
 // ----------------------------------------------------------------------------------------
 // reset_traits
 // ----------------------------------------------------------------------------------------
-void Individual::reset_traits ()
+void TIndividual::reset_traits ()
 {
   for(unsigned int i = 0; i < _trait_nb; i++){
     Traits[i]->reset();
@@ -144,7 +144,7 @@ void Individual::reset_traits ()
 /** change the sex of the individual.
   * The individual itself does not know its age, not its current index in the container ...
   */
-void Individual::switch_sex (age_idx AGE, const int& i){
+void TIndividual::switch_sex (age_idx AGE, const int& i){
   if(this->_sex == MAL){    // it is a male
       _sex = FEM;                           // change sex
       assert(_currentPatch->get(MAL, AGE, i)==this);
@@ -162,7 +162,7 @@ void Individual::switch_sex (age_idx AGE, const int& i){
 // ----------------------------------------------------------------------------------------
 // show_up
 // ----------------------------------------------------------------------------------------
-void Individual::show_up ()
+void TIndividual::show_up ()
 {
   message("\nIndividual ID: %s\n\
           sex: %i\n\
@@ -179,9 +179,9 @@ current patch: %i\n\
 // ----------------------------------------------------------------------------------------
 // clone
 // ----------------------------------------------------------------------------------------
-Individual* Individual::clone ()
+TIndividual* TIndividual::clone ()
 {
-	Individual* myClone = new Individual(*this);
+	TIndividual* myClone = new TIndividual(*this);
 
   for(unsigned int i = 0; i < _trait_nb; i++){
 		myClone->addTrait(Traits[i]->clone(), i);
@@ -198,20 +198,20 @@ Individual* Individual::clone ()
   * @param father the father
   **/
 void
-Individual::inherit (Individual* mother, Individual* father){
+TIndividual::inherit (TIndividual* mother, TIndividual* father){
 	genome.inherit(mother, father);
 }
 
 // ----------------------------------------------------------------------------------------
 // operator=
 // ----------------------------------------------------------------------------------------
-Individual& Individual::operator=(const Individual& i)
+TIndividual& TIndividual::operator=(const TIndividual& i)
 {
   if(this != &i) {
 
-    if(Traits.size() != i.Traits.size()) error("Individual::operator=:not same number of traits in left and right sides of assignment\n");
+    if(Traits.size() != i.Traits.size()) error("TIndividual::operator=:not same number of traits in left and right sides of assignment\n");
     if(_trait_nb != i._trait_nb) {
-      error("Individual::operator=:trait counters differ, restting\n");
+      error("TIndividual::operator=:trait counters differ, restting\n");
       _trait_nb = i._trait_nb;
     }
     _sex                  = i._sex;
@@ -228,7 +228,7 @@ Individual& Individual::operator=(const Individual& i)
 
     for(unsigned int t = 0; t < _trait_nb; t++){
       if(Traits[t]->pTraitProto->get_type_index() != i.Traits[t]->pTraitProto->get_type_index()){
-        error("Individual::operator=: not same kinds of traits in left and right sides of assignment\n");
+        error("TIndividual::operator=: not same kinds of traits in left and right sides of assignment\n");
       }
       (*Traits[t]) = (*i.Traits[t]);
     }
@@ -238,7 +238,7 @@ Individual& Individual::operator=(const Individual& i)
 // ----------------------------------------------------------------------------------------
 // operator==
 // ----------------------------------------------------------------------------------------
-bool Individual::operator==(const Individual& i)
+bool TIndividual::operator==(const TIndividual& i)
 {
   if(this != &i) {
     if(Traits.size() != i.Traits.size()) return false;
@@ -253,7 +253,7 @@ bool Individual::operator==(const Individual& i)
 // ----------------------------------------------------------------------------------------
 // operator!=
 // ----------------------------------------------------------------------------------------
-bool Individual::operator!=(const Individual& i)
+bool TIndividual::operator!=(const TIndividual& i)
 {
   if(!((*this) == i)) return true;
   return false;

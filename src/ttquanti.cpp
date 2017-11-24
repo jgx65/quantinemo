@@ -2405,7 +2405,7 @@ void TTQuantiFHvalue::FHwrite (const age_idx& cur_age, const sex_t& cur_sex, ost
     unsigned int nbInd = current_patch->size(cur_sex, cur_age);
     if(!nbInd) return;
     
-    Individual* ind;
+    TIndividual* ind;
     double value;
     unsigned int j, t;
     
@@ -2427,14 +2427,14 @@ void TTQuantiFHvalue::FHwrite (const age_idx& cur_age, const sex_t& cur_sex, ost
 // ----------------------------------------------------------------------------------------
 // get_genotype
 // ----------------------------------------------------------------------------------------
-double TTQuantiFHvalue::get_genotype(Individual* ind, const int& t){
+double TTQuantiFHvalue::get_genotype(TIndividual* ind, const int& t){
     return ind->getTraitGenotype(_TTidx[t]);
 }
 
 // ----------------------------------------------------------------------------------------
 // get_phenotype
 // ----------------------------------------------------------------------------------------
-double TTQuantiFHvalue::get_phenotype(Individual* ind, const int& t){
+double TTQuantiFHvalue::get_phenotype(TIndividual* ind, const int& t){
     return ind->getTraitPhenotype(_TTidx[t]);
 }
 
@@ -2581,8 +2581,8 @@ void
 TTQuantiSH::get_Va_ofPatch_random_mating(Patch* curPop, const age_idx& AGE,
                                          double& meanA, double& varA, map<unsigned char, double>* freqs)
 {
-    vector<Individual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
-    vector<Individual*>& curMal = curPop->get_sampled_inds(MAL, AGE);
+    vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
+    vector<TIndividual*>& curMal = curPop->get_sampled_inds(MAL, AGE);
     unsigned int sizeF = (unsigned int)curFem.size(),
     sizeM = (unsigned int)curMal.size();
     unsigned int size  = sizeF + sizeM;
@@ -2599,7 +2599,7 @@ TTQuantiSH::get_Va_ofPatch_random_mating(Patch* curPop, const age_idx& AGE,
     unsigned char** genes;
     
     // females
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     for(curInd= curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd) {
         meanG += G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotype
         genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // sequence
@@ -2691,8 +2691,8 @@ TTQuantiSH::get_Va_ofPatch_regression(Patch* curPop, const age_idx& AGE,
                                       double& meanA, double& varA,
                                       map<unsigned char, double>* freqs)
 {
-    vector<Individual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
-    vector<Individual*>& curMal = curPop->get_sampled_inds(MAL, AGE);
+    vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
+    vector<TIndividual*>& curMal = curPop->get_sampled_inds(MAL, AGE);
     unsigned int sizeF = (unsigned int)curFem.size(),
     sizeM = (unsigned int)curMal.size();
     unsigned int size  = sizeF + sizeM;
@@ -2721,7 +2721,7 @@ TTQuantiSH::get_Va_ofPatch_regression(Patch* curPop, const age_idx& AGE,
     map<unsigned char, int*>::iterator posM;
     
     // females
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     for(i=0, curInd= curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd, ++i) {
         // get the genotype and genotypic value
         meanG += arrayG[i] = G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotypic value
@@ -3108,8 +3108,8 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch_allInds(Patch* curPop, const age_idx& AGE,
                                              double& meanG, double& varG, map<unsigned char, double>* freqs)
 {
     // create a temporary array with all individuals
-    vector<Individual*>& curFem = curPop->get_containers(FEM, AGE);
-    vector<Individual*>& curMal = curPop->get_containers(MAL, AGE);
+    vector<TIndividual*>& curFem = curPop->get_containers(FEM, AGE);
+    vector<TIndividual*>& curMal = curPop->get_containers(MAL, AGE);
     unsigned int sizeF = (unsigned int)curFem.size(),
     sizeM = (unsigned int)curMal.size();
     unsigned int size  = sizeF + sizeM;
@@ -3119,7 +3119,7 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch_allInds(Patch* curPop, const age_idx& AGE,
     }
     
     double* array = new double[size];
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     unsigned int f=0;
     for(curInd=curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd, ++f) {
         array[f] = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);
@@ -3143,8 +3143,8 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch(Patch* curPop, const age_idx& AGE,
                                      double& meanG, double& varG, map<unsigned char, double>* freqs)
 {
     // create a temporary array with all individuals
-    vector<Individual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
-    vector<Individual*>& curMal = curPop->get_sampled_inds(MAL, AGE);
+    vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
+    vector<TIndividual*>& curMal = curPop->get_sampled_inds(MAL, AGE);
     unsigned int sizeF = (unsigned int)curFem.size(),
     sizeM = (unsigned int)curMal.size();
     unsigned int size  = sizeF + sizeM;
@@ -3154,7 +3154,7 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch(Patch* curPop, const age_idx& AGE,
     }
     
     double* array = new double[size];
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     unsigned int f=0;
     for(curInd=curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd, ++f) {
         array[f] = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);
@@ -3177,7 +3177,7 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch(Patch* curPop, const age_idx& AGE,
                                      double& meanG, double& varG, sex_t SEX, map<unsigned char, double>* freqs)
 {
     // create a temporary array with all individuals
-    vector<Individual*>& cur = curPop->get_sampled_inds(SEX, AGE);
+    vector<TIndividual*>& cur = curPop->get_sampled_inds(SEX, AGE);
     unsigned int size = (unsigned int)cur.size();
     if(!size){
         meanG = varG = my_NAN;
@@ -3185,7 +3185,7 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch(Patch* curPop, const age_idx& AGE,
     }
     
     double* array = new double[size];
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     unsigned int f=0;
     for(curInd=cur.begin(), endInd=cur.end(); curInd!=endInd; ++curInd, ++f) {
         array[f] = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);
@@ -3265,8 +3265,8 @@ TTQuantiSH::setMeanAndVar_Vp(sex_t SEX)
 void
 TTQuantiSH::setMeanAndVar_Vp_ofPatch(Patch* curPop, double& meanP, double& varP)
 {
-    vector<Individual*>& curFem = curPop->get_sampled_inds(FEM, ADLTx);
-    vector<Individual*>& curMal = curPop->get_sampled_inds(MAL, ADLTx);
+    vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, ADLTx);
+    vector<TIndividual*>& curMal = curPop->get_sampled_inds(MAL, ADLTx);
     unsigned int sizeF = (unsigned int)curFem.size(),
     sizeM = (unsigned int)curMal.size();
     unsigned int size  = sizeF + sizeM;
@@ -3280,7 +3280,7 @@ TTQuantiSH::setMeanAndVar_Vp_ofPatch(Patch* curPop, double& meanP, double& varP)
     
     double* array = new double[size];
     
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     unsigned int f=0;
     for(curInd=curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd, ++f) {
         array[f] = (*curInd)->getTraitPhenotype(_SHLinkedTraitIndex);
@@ -3301,7 +3301,7 @@ TTQuantiSH::setMeanAndVar_Vp_ofPatch(Patch* curPop, double& meanP, double& varP)
 void
 TTQuantiSH::setMeanAndVar_Vp_ofPatch(Patch* curPop, double& meanP, double& varP, sex_t SEX)
 {
-    vector<Individual*>& cur = curPop->get_sampled_inds(SEX, ADLTx);
+    vector<TIndividual*>& cur = curPop->get_sampled_inds(SEX, ADLTx);
     unsigned int size = (unsigned int)cur.size();
     
     // if the patch is empty or the phenotype is not yet computed -> stop
@@ -3312,7 +3312,7 @@ TTQuantiSH::setMeanAndVar_Vp_ofPatch(Patch* curPop, double& meanP, double& varP,
     
     double* array = new double[size];
     
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     unsigned int f=0;
     for(curInd=cur.begin(), endInd=cur.end(); curInd!=endInd; ++curInd, ++f) {
         array[f] = (*curInd)->getTraitPhenotype(_SHLinkedTraitIndex);
@@ -3392,8 +3392,8 @@ TTQuantiSH::setMeanAndVar_Wp(sex_t SEX)
 void
 TTQuantiSH::setMeanAndVar_Wp_ofPatch(Patch* curPop, double& meanW, double& varW)
 {
-    vector<Individual*>& curFem = curPop->get_sampled_inds(FEM, ADLTx);
-    vector<Individual*>& curMal = curPop->get_sampled_inds(MAL, ADLTx);
+    vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, ADLTx);
+    vector<TIndividual*>& curMal = curPop->get_sampled_inds(MAL, ADLTx);
     unsigned int sizeF = (unsigned int)curFem.size(),
     sizeM = (unsigned int)curMal.size();
     unsigned int size  = sizeF + sizeM;
@@ -3407,7 +3407,7 @@ TTQuantiSH::setMeanAndVar_Wp_ofPatch(Patch* curPop, double& meanW, double& varW)
     
     double* array = new double[size];
     
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     unsigned int f=0;
     for(curInd=curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd, ++f) {
         array[f] = (*curInd)->getTraitFitness(_SHLinkedTraitIndex);
@@ -3428,7 +3428,7 @@ TTQuantiSH::setMeanAndVar_Wp_ofPatch(Patch* curPop, double& meanW, double& varW)
 void
 TTQuantiSH::setMeanAndVar_Wp_ofPatch(Patch* curPop, double& meanW, double& varW, sex_t SEX)
 {
-    vector<Individual*>& cur = curPop->get_sampled_inds(SEX, ADLTx);
+    vector<TIndividual*>& cur = curPop->get_sampled_inds(SEX, ADLTx);
     unsigned int size = (unsigned int)cur.size();
     
     // if the patch is empty or the fitness is not yet computed -> stop
@@ -3439,7 +3439,7 @@ TTQuantiSH::setMeanAndVar_Wp_ofPatch(Patch* curPop, double& meanW, double& varW,
     
     double* array = new double[size];
     
-    vector<Individual*>::iterator curInd, endInd;
+    vector<TIndividual*>::iterator curInd, endInd;
     unsigned int f=0;
     for(curInd=cur.begin(), endInd=cur.end(); curInd!=endInd; ++curInd, ++f) {
         array[f] = (*curInd)->getTraitFitness(_SHLinkedTraitIndex);

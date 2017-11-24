@@ -252,7 +252,7 @@ void LCE_Coalescence_base::set_up_metapop()
     for (curPos = _iniSamples.begin(), endPos = _iniSamples.end(); curPos != endPos; ++curPos) {
         curPatch = _popPtr->get_vPatch(curPos->first);
         for (i = curPos->second; i > 0; --i, ++curSeq, ++curSeq) { // generate each individual (the seq has to be twice iterated)
-            Individual* new_ind = _popPtr->makeNewIndividual(NULL, NULL, FEM, curPatch);
+            TIndividual* new_ind = _popPtr->makeNewIndividual(NULL, NULL, FEM, curPatch);
             new_ind->create_dadFirst(curSeq);
             curPatch->add(FEM, ADLTx, new_ind);
         }

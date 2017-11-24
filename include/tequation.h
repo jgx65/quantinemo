@@ -35,20 +35,20 @@
 #define tequationH
 
 #include <vector>
-#include "individual.h"
+#include "tindividual.h"
 using namespace std;
 
 class TEquation{
 public:
     // containers
     vector<double (TEquation::*)(double val1, double val2)> arithmetic_vec;        // has one less argument
-    vector<double (TEquation::*)(Individual* ind, double val)> values_vec;    // G: genotpyic value, Z: phenotype, C: constant
+    vector<double (TEquation::*)(TIndividual* ind, double val)> values_vec;    // G: genotpyic value, Z: phenotype, C: constant
     vector<double> index_vec;          // the trait index or a constant
     unsigned int nb_values;         // number of values (values.size() & quantity.size()
     
     // iterators
     vector<double (TEquation::*)(double val1, double val2)>::iterator cur_arithmetic, end_arithmetic;
-    vector<double (TEquation::*)(Individual* ind, double val)>::iterator cur_value;
+    vector<double (TEquation::*)(TIndividual* ind, double val)>::iterator cur_value;
     vector<double>::iterator cur_index;
     
     TEquation(string input, vector<int> qtrait){
@@ -56,7 +56,7 @@ public:
     }
 
     void read_input(string input, vector<int> qtrait);
-    double getValue(Individual* ind);
+    double getValue(TIndividual* ind);
     void add_index(int index, string input, vector<int> qtrait);
     
     // sign
@@ -67,10 +67,10 @@ public:
     double div  (double val1, double val2){return val1 / val2;}
    
     // source
-    double (TEquation::*getValuePos)(Individual* ind, double val);
-    double getPheno(Individual* ind, double val){return ind->getTraitPhenotype((unsigned int)val);}
-    double getGeno (Individual* ind, double val){return ind->getTraitGenotype((unsigned int)val);}
-    double getConst(Individual* ind, double val){return val;}
+    double (TEquation::*getValuePos)(TIndividual* ind, double val);
+    double getPheno(TIndividual* ind, double val){return ind->getTraitPhenotype((unsigned int)val);}
+    double getGeno (TIndividual* ind, double val){return ind->getTraitGenotype((unsigned int)val);}
+    double getConst(TIndividual* ind, double val){return val;}
     
 };
 

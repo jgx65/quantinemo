@@ -43,7 +43,7 @@ class LCE_Breed;
 class LCE;
 class TMetapop;
 class Patch;
-class Individual;
+class TIndividual;
 class FileServices;
 class StatServices;
 class TSelectionTrait;
@@ -105,7 +105,7 @@ private:
 
 	bool  _Ve_mean_set;     // is there a constant environmental factor?
 	bool  _Ve_var_set;      // is there an environmental effect set for each patch separately?
-	double _get_fitness_multiplicative(Individual* ind);
+	double _get_fitness_multiplicative(TIndividual* ind);
 
 public:
 	// constructor
@@ -126,47 +126,47 @@ public:
 	//////////////////////////////////////////////////////////////////////////////
 	// functions to get an individual depending on its fitness
 	// random not taking into account the fitness
-	inline Individual* get_RAND_noFit(sex_t sex){
+	inline TIndividual* get_RAND_noFit(sex_t sex){
 		return _fit[sex]->get_RAND_noFit();
 	}
-	inline Individual* get_RAND_noFit_index(sex_t sex, unsigned int& index){
+	inline TIndividual* get_RAND_noFit_index(sex_t sex, unsigned int& index){
 		return _fit[sex]->get_RAND_noFit_index(index);
 	}
-	inline Individual* get_RAND_noFit(sex_t sex, unsigned int nb){
+	inline TIndividual* get_RAND_noFit(sex_t sex, unsigned int nb){
 		return _fit[sex]->get_RAND_noFit_subset(nb);
 	}
 
 	// most fittest
-	inline Individual* get_mostFit(sex_t sex){
+	inline TIndividual* get_mostFit(sex_t sex){
 		return _fit[sex]->get_mostFit();
 	}
-	inline Individual* get_RAND_mostFit(sex_t sex){
+	inline TIndividual* get_RAND_mostFit(sex_t sex){
 		return _fit[sex]->get_RAND_mostFit();
 	}
-	inline Individual* get_RAND_mostFit_index(sex_t sex, unsigned int& index){     // changes the index
+	inline TIndividual* get_RAND_mostFit_index(sex_t sex, unsigned int& index){     // changes the index
 		return _fit[sex]->get_RAND_mostFit_index(index);
 	}
-	inline Individual* get_RAND_mostFit_of_mostFit(sex_t sex, const unsigned int& nb){
+	inline TIndividual* get_RAND_mostFit_of_mostFit(sex_t sex, const unsigned int& nb){
 		return _fit[sex]->get_RAND_mostFit_of_mostFit(nb);
 	}
-	inline Individual* get_RAND_mostFit_of_RAND_mostFit(sex_t sex, const unsigned int& nb){
+	inline TIndividual* get_RAND_mostFit_of_RAND_mostFit(sex_t sex, const unsigned int& nb){
 		return _fit[sex]->get_RAND_mostFit_of_RAND_mostFit(nb);
 	}
 
 	// less fittest
-	inline Individual* get_lessFit(sex_t sex){
+	inline TIndividual* get_lessFit(sex_t sex){
 		return _fit[sex]->get_lessFit();
 	}
-	inline Individual* get_RAND_lessFit(sex_t sex){
+	inline TIndividual* get_RAND_lessFit(sex_t sex){
 		return _fit[sex]->get_RAND_lessFit();
 	}
-	inline Individual* get_RAND_lessFit_index(sex_t sex, unsigned int& index){
+	inline TIndividual* get_RAND_lessFit_index(sex_t sex, unsigned int& index){
 		return _fit[sex]->get_RAND_lessFit_index(index);
 	}
-	inline Individual* get_RAND_lessFit_of_lessFit(sex_t sex, const unsigned int& nb){
+	inline TIndividual* get_RAND_lessFit_of_lessFit(sex_t sex, const unsigned int& nb){
 		return _fit[sex]->get_RAND_lessFit_of_lessFit(nb);
 	}
-	inline Individual* get_RAND_lessFit_of_RAND_lessFit(sex_t sex, const unsigned int& nb){
+	inline TIndividual* get_RAND_lessFit_of_RAND_lessFit(sex_t sex, const unsigned int& nb){
 		return _fit[sex]->get_RAND_lessFit_of_RAND_lessFit(nb);
 	}
 
@@ -222,7 +222,7 @@ public:
 	void   set_selection_level_coef(double d){_selection_level_coef = d;}
 	double get_selection_level_coef(){return _selection_level_coef;}
 
-	Individual**  get_aInd(sex_t sex)  {return _fit[sex]->_aInd;}
+	TIndividual**  get_aInd(sex_t sex)  {return _fit[sex]->_aInd;}
 	double*       get_aFit(sex_t sex)  {return _fit[sex]->_aFit;}
 	unsigned int  get_nbInd(sex_t sex) {return _fit[sex]->_nbInd;}
 	void          remove(sex_t sex, unsigned int i){_fit[sex]->remove(i);}
@@ -233,8 +233,8 @@ public:
 
 	void sort_fitness(sex_t SEX, int how, int subset=0);
 
-    void    set_phenotype(Individual* ind, unsigned int qtraitID);
-	void    set_phenotype(Individual* ind);
+    void    set_phenotype(TIndividual* ind, unsigned int qtraitID);
+	void    set_phenotype(TIndividual* ind);
 	void    set_phenotype_of_all_individuals(age_idx AGE);
 
 	void executeBeforeEachReplicate(const unsigned int& rep);

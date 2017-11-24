@@ -132,10 +132,10 @@ vector<int> IndFactory::getTraitIndex (string type)
 // ----------------------------------------------------------------------------------------
 // makeNewIndividual
 // ----------------------------------------------------------------------------------------
-Individual*
-IndFactory::makeNewIndividual(Individual* mother, Individual* father, sex_t sex, Patch* homepatch)
+TIndividual*
+IndFactory::makeNewIndividual(TIndividual* mother, TIndividual* father, sex_t sex, Patch* homepatch)
 {
-  Individual* newind;
+  TIndividual* newind;
 
   if(RecyclingPOOL.empty()) {       //create new Individual
 		try{
@@ -165,14 +165,14 @@ IndFactory::makeNewIndividual(Individual* mother, Individual* father, sex_t sex,
 // ----------------------------------------------------------------------------------------
 // copyIndividual
 // ----------------------------------------------------------------------------------------
-Individual*
-IndFactory::copyIndividual(Individual* oldInd)
+TIndividual*
+IndFactory::copyIndividual(TIndividual* oldInd)
 {
-    Individual* newind;
+    TIndividual* newind;
     
     if(RecyclingPOOL.empty()) {       //create new Individual
         try{
-            newind = new Individual(_protoIndividual);
+            newind = new TIndividual(_protoIndividual);
         }
         catch(...){
             error("Out of memory!\n");
@@ -192,9 +192,9 @@ IndFactory::copyIndividual(Individual* oldInd)
 // ----------------------------------------------------------------------------------------
 // makeOffsprg
 // ----------------------------------------------------------------------------------------
-Individual* IndFactory::makeOffsprg(Individual* mother, Individual* father, sex_t sex, Patch* homepatch)
+TIndividual* IndFactory::makeOffsprg(TIndividual* mother, TIndividual* father, sex_t sex, Patch* homepatch)
 {
-  Individual* NewOffsprg = makeNewIndividual(mother,father,sex,homepatch);
+  TIndividual* NewOffsprg = makeNewIndividual(mother,father,sex,homepatch);
 
   NewOffsprg->create(mother,father);  // inherit and mutate the traits:
 	if(father){                         // normal inheritance

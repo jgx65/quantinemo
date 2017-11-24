@@ -40,7 +40,7 @@
 class TSelection;
 class TTQuantiProto;
 class Patch;
-class Individual;
+class TIndividual;
 
 
 class TSelectionTrait{
@@ -100,7 +100,7 @@ protected:
     // current settings
     Patch*      _curPatch;
     sex_t       _curSex;
-    Individual* _curInd;
+    TIndividual* _curInd;
     
     
     
@@ -159,13 +159,13 @@ public:
     
     /** phenotype specific functions ********************************************/
     double   get_phenotype();
-    void   (TSelectionTrait::* func_ptr_set_phenotype)(Individual* ind);
-    void    set_phenotype(Individual* ind);
-    void    set_phenotype_noVe(Individual* ind);
-    void    set_phenotype_and_fitness_factor(Individual* ind);
-    void    set_phenotype_and_fitness_factor_noVe(Individual* ind);
-    void    set_fitness_factor(Individual* ind);
-    double  set_get_fitness_factor(Individual* ind);
+    void   (TSelectionTrait::* func_ptr_set_phenotype)(TIndividual* ind);
+    void    set_phenotype(TIndividual* ind);
+    void    set_phenotype_noVe(TIndividual* ind);
+    void    set_phenotype_and_fitness_factor(TIndividual* ind);
+    void    set_phenotype_and_fitness_factor_noVe(TIndividual* ind);
+    void    set_fitness_factor(TIndividual* ind);
+    double  set_get_fitness_factor(TIndividual* ind);
     
     void    set_Ve();
     void    set_quantiHeritability();
