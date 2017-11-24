@@ -1,0 +1,3 @@
+src/*.o
+depend
+Makefile_thread
