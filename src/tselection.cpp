@@ -670,7 +670,7 @@ void
 TSelection::set_selection_level_coef()
 {
 	//_selection_level_coef = _popPtr->get_paramset()->getValue("selection_level_coef");
-    _selection_level_coef = 0;
+    _selection_level_coef = 1;
     if(_selection_level==0) _selection_level_coef = 0;    // this is soft selection
 	if(_selection_level_coef == 0)      get_SoftHardSelection_func_ptr = &TSelection::getSoft;
 	else if(_selection_level_coef == 1) get_SoftHardSelection_func_ptr = &TSelection::getHard;
