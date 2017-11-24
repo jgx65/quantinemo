@@ -81,7 +81,7 @@ public:
 	* contains the super chromosome with the positions of all loci
 	*/
 
-class Metapop;
+class TMetapop;
 
 class TGenomeProto: public SimComponent {
 friend class TGenome;
@@ -173,7 +173,7 @@ protected:
 public:
     
     static unsigned int MUTATION_TRIAL;        // the number of trials for the RMM model before giving up mutation
-	Metapop* _popPtr;
+	TMetapop* _popPtr;
 
 	void set_genome_positions(string type, TTraitProto* pTrait);
 	bool set_genome_positions_fix();                                // global (genome)
@@ -186,7 +186,7 @@ public:
 
 	void ini_all();
 
-	void set_metapop_ptr(Metapop* p){_popPtr = p;}
+	void set_metapop_ptr(TMetapop* p){_popPtr = p;}
 
 	TMatrixVar<double>* drawGeneticMapRandom(TMatrix* matrix, unsigned int& nbLocus);
 

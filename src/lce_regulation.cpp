@@ -42,7 +42,7 @@
 // ----------------------------------------------------------------------------------------
 // LCE_Regulation::init
 // ----------------------------------------------------------------------------------------
-bool LCE_Regulation::init(Metapop* popPtr) {
+bool LCE_Regulation::init(TMetapop* popPtr) {
 	LCE::init(popPtr);
     
 	TSelection* pSel = _popPtr->get_pSelection(); // if selection acts

@@ -76,7 +76,7 @@ public:
 	 **/
 	///@name Parameters handling
 	///@{
-	virtual void set_paramset(string name, string name_long, bool isRequired, Metapop* ptr) {
+	virtual void set_paramset(string name, string name_long, bool isRequired, TMetapop* ptr) {
 		if (_paramSet) delete _paramSet;
 		_paramSet = new ParamSet(name, name_long, isRequired, ptr);
 	}

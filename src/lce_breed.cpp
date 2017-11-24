@@ -333,7 +333,7 @@ void LCE_Breed::temporal_change(const unsigned int& gen)
 // ----------------------------------------------------------------------------------------
 // LCE_Breed::init
 // ----------------------------------------------------------------------------------------
-bool LCE_Breed::init(Metapop* popPtr)
+bool LCE_Breed::init(TMetapop* popPtr)
 {
     LCE::init(popPtr);
     
@@ -1337,7 +1337,7 @@ void LCE_Breed_coal::execute () {
 // ----------------------------------------------------------------------------------------
 // LCE_Breed::init
 // ----------------------------------------------------------------------------------------
-bool LCE_Breed_coal::init(Metapop* popPtr)
+bool LCE_Breed_coal::init(TMetapop* popPtr)
 {
     LCE::init(popPtr);
     

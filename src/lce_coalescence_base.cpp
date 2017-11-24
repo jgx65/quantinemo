@@ -224,6 +224,7 @@ void run_coal_locus(LCE_Coalescence_base* pCoalBase, unsigned int from,
             pCoal->run_coalescence(from, to);
             break; // new version here the deme sizes of the demes with lineages are just updated
         }
+    }
 }
 
 // ----------------------------------------------------------------------------------------
@@ -332,7 +333,7 @@ void LCE_Coalescence_base::temporal_change(const unsigned int& gen)
 }
 
 // ----------------------------------------------------------------------------------------
-void LCE_Coalescence_base::init(Metapop* popPtr, const unsigned int& i)
+void LCE_Coalescence_base::init(TMetapop* popPtr, const unsigned int& i)
 {
     _popPtr = popPtr;
     _nbGen = i;

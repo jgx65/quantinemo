@@ -61,7 +61,7 @@ public:
 		if(_survival_rate[MAL]) delete[] _survival_rate[MAL];
 	}
 
-	virtual bool init (Metapop* popPtr);
+	virtual bool init (TMetapop* popPtr);
 
 	virtual void execute (){(this->*extinction_func_ptr)();}
 

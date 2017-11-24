@@ -33,7 +33,7 @@
 
 
 #include "stat_rec_base.h"
-#include "metapop.h"
+#include "tmetapop.h"
 #include "tstat_db.h"
 #include "lce_misc.h"
 #include "lce_coalescence_base.h"
@@ -83,7 +83,7 @@ void StatRecBase::set(string T, string N, st_order Order, age_t AGE, unsigned in
 // ----------------------------------------------------------------------------------------
 /** initialize StatRecorder and link it to the Recorder object of main db */
 template<class S>
-void StatRecorder<S>::init_stat_rec(Metapop* pop)
+void StatRecorder<S>::init_stat_rec(TMetapop* pop)
 {
     if(pop->_current_replicate==my_NAN) _recAll = _pStat_db->add_statRecBase(this); // initialize the stat
     else{
@@ -115,7 +115,7 @@ _getStatAGE(0), _getStatBoolAGE(0), _getStatUIAGE(0), _stat(0), _recAll(0)
 // ----------------------------------------------------------------------------------------
 /** store te stats in the db */
 template<class S>
-void StatRecorder<S>::setStats(age_t AGE, int crnt_gen, int rpl_cntr, S* StatHandler, Metapop* pop)
+void StatRecorder<S>::setStats(age_t AGE, int crnt_gen, int rpl_cntr, S* StatHandler, TMetapop* pop)
 {
     double statValue=0;
     age_t age = getAge();

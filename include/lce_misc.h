@@ -170,7 +170,7 @@ public:
     
     virtual LCE_StatServiceNotifier* clone ( ) {return new LCE_StatServiceNotifier();}
     
-    virtual bool init (Metapop* popPtr);
+    virtual bool init (TMetapop* popPtr);
     
     //SimComponent overrides:
     virtual void loadFileServices ( FileServices* loader ) {loader->attach(&_fileHandler);}
@@ -225,7 +225,7 @@ public:
     
     virtual ~LCE_store_popSizes( ) { }
     
-    virtual bool init (Metapop* popPtr);
+    virtual bool init (TMetapop* popPtr);
     
     virtual void execute ();
     

@@ -94,7 +94,7 @@ public:
     
     void set_up_metapop();
     void set_up_metapop_empty();
-    void init(Metapop* popPtr, const unsigned int& i);
+    void init(TMetapop* popPtr, const unsigned int& i);
     void ini_paramset();
     void set_samples(const map<unsigned int, unsigned int>& m, const unsigned int& nb);
     

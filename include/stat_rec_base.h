@@ -41,7 +41,7 @@ using namespace std;
 class TStat_db;
 class StatRecBaseAll;
 class ParamRecBaseAll;
-class Metapop;
+class TMetapop;
 
 /**Base class for the StatRecorder's, stores the stat values in a matrix.
  * The way the stat values are stored in the _val matrix is set by the _ordering flag (see StatRecorder::setValDB()).
@@ -195,13 +195,13 @@ public:
      * @param rpl_cntr the current running replicate
      * @param StatHandler an instance of S
      **/
-    void setStats (age_t AGE,int crnt_gen,int rpl_cntr, S* StatHandler, Metapop* pop);  // to db
+    void setStats (age_t AGE,int crnt_gen,int rpl_cntr, S* StatHandler, TMetapop* pop);  // to db
     void setStats (age_t AGE,int crnt_gen,int rpl_cntr, S* StatHandler,  ostream& FH);  // to the stream/file
    
     double*         get_stat(){return _stat;}
     void            set_stat(double* a){_stat = a;}
-    void            init_stat_rec(Metapop* pop);
-    void            init_param_rec(Metapop* pop);
+    void            init_stat_rec(TMetapop* pop);
+    void            init_param_rec(TMetapop* pop);
     
 };
 /*_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/*/

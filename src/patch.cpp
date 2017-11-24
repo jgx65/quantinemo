@@ -32,7 +32,7 @@
  */
 
 #include "patch.h"
-#include "metapop.h"
+#include "tmetapop.h"
 //#include "random.h"
 //#include "functions.h"
 #include "tselectiontrait.h"
@@ -635,7 +635,7 @@ Patch::setNewGeneration(age_idx AGE)
 // ----------------------------------------------------------------------------------------
 // Patch
 // ----------------------------------------------------------------------------------------
-Patch::Patch(Metapop* p, unsigned int i) : _ID(0), _ID_individual(0), _K(0), _N_ini(0),
+Patch::Patch(TMetapop* p, unsigned int i) : _ID(0), _ID_individual(0), _K(0), _N_ini(0),
 _localSelection(0), _pSelectionType(0), _nbLinkedTraits(0), _isExtinct(1), _popPtr(0)
 {
     _popPtr = p;

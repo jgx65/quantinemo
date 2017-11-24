@@ -72,7 +72,7 @@ public:
     virtual ~LCE_Regulation( ) { }
     
 	virtual void execute ();
-    virtual bool init(Metapop* popPtr);
+    virtual bool init(TMetapop* popPtr);
 	virtual void regulation_neutral();
 	virtual void regulation_coalescence();
 	virtual void regulation_fitness_patch()  {_popPtr->regulate_selection_fitness_patch(_age);}

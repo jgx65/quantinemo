@@ -47,7 +47,7 @@ using namespace std;
 // ---------------------------------------------------------------------------
 ////////////////////////////////////////////////////////////////////////////////
 class TLocus;
-class Metapop;
+class TMetapop;
 class LCE_Coalescence_base;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ public:
     
     virtual void    init(LCE_Coalescence_base* pBase);
     
-    Metapop*        get_pop_ptr();
+    TMetapop*        get_pop_ptr();
     
     //    virtual void    ini_paramset();
     //	virtual void    init_base(Metapop* popPtr, const unsigned int& i);

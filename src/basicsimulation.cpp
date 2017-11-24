@@ -164,7 +164,7 @@ bool ParamManager::param_consistency_check ()
 /**  attribute the input to the parameters */
 void
 ParamManager::set_keywords (map< string,string >& simkeys, TReplicate* pRep,
-                                 Metapop* pPop, bool quiet=false)
+                                 TMetapop* pPop, bool quiet=false)
 {
     _inputKeys=simkeys;
     assert(!_paramSetKeys);

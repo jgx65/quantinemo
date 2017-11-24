@@ -45,7 +45,7 @@ using namespace std;
 
 class TLocus;
 class TDeme;
-class Metapop;
+class TMetapop;
 // ------------------------------------------------------------------------------
 /** node of the coalescence tree:
  *  - one ancestor
@@ -74,7 +74,7 @@ public:
 
 	unsigned int ID_Node; 			// id node starting at 0
 
-	void mutate(Metapop* pop, const TTNode& ancestor, TLocus** genome);   // recursively function
+	void mutate(TMetapop* pop, const TTNode& ancestor, TLocus** genome);   // recursively function
 	void write_tree(ostream& os, const unsigned int& tree_scale);   // recursively function
 	void get_nodeTimes(multimap<unsigned int, TTNode*>&);   // recursively function
 	void get_recombinationPos(unsigned long& curSize, multimap<unsigned long, TTNode*>& vecNodes,

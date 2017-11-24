@@ -32,7 +32,7 @@
  */
 
 #include "stathandlerbase.h"
-#include "metapop.h"
+#include "tmetapop.h"
 using namespace std;
 
 

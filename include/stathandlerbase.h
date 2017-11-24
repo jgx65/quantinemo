@@ -40,7 +40,7 @@
 #include "statservices.h"
 using namespace std;
 
-class Metapop;
+class TMetapop;
 class Patch;
 class TStat_db;
 
@@ -70,7 +70,7 @@ public:
     
     ///@name Accessors
     ///@{
-    Metapop*          get_pop_ptr_popHandler( )            {return _popPtr;}
+    TMetapop*          get_pop_ptr_popHandler( )            {return _popPtr;}
     void              set_service      (StatServices* srv) {_service = srv;}
     StatServices*     get_service      ( )                 {return _service;}
     unsigned int      getNbRecorders   ( )                 {return (unsigned int)_stats.size();}
@@ -132,7 +132,7 @@ public:
     
     virtual void      clear            ( ) = 0;
     
-    void set_popPtr(Metapop* pop){_popPtr=pop;}
+    void set_popPtr(TMetapop* pop){_popPtr=pop;}
     ///@}
 };
 

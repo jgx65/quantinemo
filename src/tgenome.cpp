@@ -31,7 +31,7 @@
  */
 //---------------------------------------------------------------------------
 #include "tgenome.h"
-#include "metapop.h"
+#include "tmetapop.h"
 
 
 unsigned int TGenomeProto::MUTATION_TRIAL;

@@ -41,7 +41,7 @@
 class TTQuantiProto;
 class LCE_Breed;
 class LCE;
-class Metapop;
+class TMetapop;
 class Patch;
 class Individual;
 class FileServices;
@@ -52,7 +52,7 @@ class TSelectionTrait;
 class TSelection: public SimComponent {
 private:
 	// object pointers
-	Metapop*            _popPtr;
+	TMetapop*            _popPtr;
 //	TTQuantiProto**     _pQuantiProto;
 
 
@@ -110,10 +110,10 @@ private:
 public:
 	// constructor
 	TSelection(){}
-	TSelection(Metapop* popPtr){init(popPtr);}
+	TSelection(TMetapop* popPtr){init(popPtr);}
 
-	bool init(Metapop* popPtr);
-	bool init2(Metapop* popPtr);
+	bool init(TMetapop* popPtr);
+	bool init2(TMetapop* popPtr);
 	void reset_selectionTypes();
 
 	// destructor
@@ -260,7 +260,7 @@ public:
 	void      set_ve_mean();
 	void      set_ve_var();
 
-	Metapop*  get_popPtr()                        {return _popPtr;}
+	TMetapop*  get_popPtr()                        {return _popPtr;}
 	int       get_vTraits(const int& i) const     {return _vTraits[i];}
 	vector<int> get_vTraits() const               {return _vTraits;}
 	TSelectionTrait* get_selTrait(const int& i)   {return _selTrait[i];}

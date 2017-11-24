@@ -1,4 +1,4 @@
-/** @file metapop.h
+/** @file tmetapop.h
  *
  *   Copyright (C) 2006 Frederic Guillaume    <guillaum@zoology.ubc.ca>
  *   Copyright (C) 2008 Samuel Neuenschwander <samuel.neuenschwander@unil.ch>
@@ -77,7 +77,7 @@ class TReplicate;
  * The OFFSPRNG age class has index OFFSx = 0, and the ADULTS age class has index ADLTx = 2.
  *
  */
-class Metapop: public SimComponent, public IndFactory
+class TMetapop: public SimComponent, public IndFactory
 {
 private:
     
@@ -96,10 +96,10 @@ private:
     
     unsigned int 			  _tot_sampled_patches; // the total/max number of patches to sample (set at the start of the sim)
     
-    vector<Patch*>&        (Metapop::*func_ptr_get_vFullPatch)();
+    vector<Patch*>&        (TMetapop::*func_ptr_get_vFullPatch)();
     inline vector<Patch*>& get_vFullPatch_eff()     {return _vFullPatch;}
     
-    vector<Patch*>&        (Metapop::*func_ptr_get_vSamplePatch)();
+    vector<Patch*>&        (TMetapop::*func_ptr_get_vSamplePatch)();
     inline vector<Patch*>& get_vSamplePatch_eff()     {return _vSamplePatch;}
     
 public:
@@ -220,8 +220,8 @@ public:
     
     bool  get_sampleAllOrNothing(){return _sampleAllOrNothing;}
     
-    Metapop(TReplicate* p, unsigned int rep);
-    virtual ~Metapop();
+    TMetapop(TReplicate* p, unsigned int rep);
+    virtual ~TMetapop();
     void init_paramset();
     
     /**Inits the population parameters from the ParamSet and builds the pop (adds patches), the prototypes and the life cycle.
@@ -576,16 +576,16 @@ public:
     void set_change_disp_rate_after_density();
     
     /** newly populated patch */
-    void (Metapop::*func_ptr_new_fullPatch)(Patch* curPatch);
-    inline void new_fullPatch(Patch* curPatch){(this->*Metapop::func_ptr_new_fullPatch)(curPatch);}
+    void (TMetapop::*func_ptr_new_fullPatch)(Patch* curPatch);
+    inline void new_fullPatch(Patch* curPatch){(this->*TMetapop::func_ptr_new_fullPatch)(curPatch);}
     inline void new_fullPatch_noSample_noFull(Patch* curPatch);
     inline void new_fullPatch_withSample_noFull(Patch* curPatch);
     inline void new_fullPatch_noSample_withFull(Patch* curPatch);
     inline void new_fullPatch_withSample_withFull(Patch* curPatch);
     
     /** newly freed patch */
-    void (Metapop::*func_ptr_new_emptyPatch)(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
-    inline void new_emptyPatch(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop){ return (this->*Metapop::func_ptr_new_emptyPatch)(curPop, endPop);}
+    void (TMetapop::*func_ptr_new_emptyPatch)(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
+    inline void new_emptyPatch(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop){ return (this->*TMetapop::func_ptr_new_emptyPatch)(curPop, endPop);}
     inline void new_emptyPatch_withSample_withFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
     inline void new_emptyPatch_withSample_noFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
     inline void new_emptyPatch_noSample_noFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
@@ -594,7 +594,7 @@ public:
     inline void new_emptyPatch_noSample_withFull_coal(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
     
     // add the _vTempPatch container to the _vFullPatch container
-    void (Metapop::*func_ptr_add_tempPatch)();
+    void (TMetapop::*func_ptr_add_tempPatch)();
     void add_tempPatch(){(this->*func_ptr_add_tempPatch)();}
     void add_tempPatch_withSample_withFull();
     void add_tempPatch_withSample_noFull();
@@ -626,7 +626,7 @@ public:
 };
 
 
-inline unsigned int Metapop::size ( sex_t SEX, age_t AGE )
+inline unsigned int TMetapop::size ( sex_t SEX, age_t AGE )
 {
     unsigned int size=0;
     vector<Patch*>::iterator curPop, endPop;
@@ -636,12 +636,12 @@ inline unsigned int Metapop::size ( sex_t SEX, age_t AGE )
     return size;
 }
 
-inline unsigned int Metapop::size (sex_t SEX, age_idx AGE, unsigned int deme)
+inline unsigned int TMetapop::size (sex_t SEX, age_idx AGE, unsigned int deme)
 {
     return get_vPatch(deme)->size(SEX, AGE);
 }
 
-inline unsigned int Metapop::size ( sex_t SEX, age_idx AGE )
+inline unsigned int TMetapop::size ( sex_t SEX, age_idx AGE )
 {
     unsigned int size=0;
     vector<Patch*>::iterator curPop, endPop;
@@ -651,12 +651,12 @@ inline unsigned int Metapop::size ( sex_t SEX, age_idx AGE )
     return size;
 }
 
-inline unsigned int Metapop::size (sex_t SEX, age_t AGE, unsigned int deme){
+inline unsigned int TMetapop::size (sex_t SEX, age_t AGE, unsigned int deme){
     return get_vPatch(deme)->size(SEX, AGE);
 }
 
 
-inline unsigned int Metapop::sampleSize ( sex_t SEX, age_t AGE )
+inline unsigned int TMetapop::sampleSize ( sex_t SEX, age_t AGE )
 {
     unsigned int size=0;
     vector<Patch*>::iterator curPop, endPop;
@@ -666,12 +666,12 @@ inline unsigned int Metapop::sampleSize ( sex_t SEX, age_t AGE )
     return size;
 }
 
-inline unsigned int Metapop::sampleSize (sex_t SEX, age_idx AGE, unsigned int deme)
+inline unsigned int TMetapop::sampleSize (sex_t SEX, age_idx AGE, unsigned int deme)
 {
     return get_vPatch(deme)->sampleSize(SEX, AGE);
 }
 
-inline unsigned int Metapop::sampleSize ( sex_t SEX, age_idx AGE )
+inline unsigned int TMetapop::sampleSize ( sex_t SEX, age_idx AGE )
 {
     unsigned int size=0;
     vector<Patch*>::iterator curPop, endPop;
@@ -681,23 +681,23 @@ inline unsigned int Metapop::sampleSize ( sex_t SEX, age_idx AGE )
     return size;
 }
 
-inline unsigned int Metapop::sampleSize (sex_t SEX, age_t AGE, unsigned int deme){
+inline unsigned int TMetapop::sampleSize (sex_t SEX, age_t AGE, unsigned int deme){
     return get_vPatch(deme)->sampleSize(SEX, AGE);
 }
 
 
-inline Individual* Metapop::get (const sex_t& SEX, const age_idx& AGE, unsigned int at, unsigned int deme){
+inline Individual* TMetapop::get (const sex_t& SEX, const age_idx& AGE, unsigned int at, unsigned int deme){
     return get_vPatch(deme)->get(SEX, AGE, at);
 }
 
-inline void Metapop::move (sex_t SEX, age_idx from_age, unsigned int from_deme,
+inline void TMetapop::move (sex_t SEX, age_idx from_age, unsigned int from_deme,
                            age_idx to_age, unsigned int to_deme, unsigned int at){
     _vPatch[to_deme]->add(SEX, to_age, get(SEX, from_age, at, from_deme));
     _vPatch[from_deme]->remove(SEX, from_age, at);
     
 }
 
-inline bool Metapop::individual_container_ok ()
+inline bool TMetapop::individual_container_ok ()
 {
     vector<Patch*>::iterator curPop, endPop;
     for(curPop=get_vFullPatch().begin(), endPop=get_vFullPatch().end(); curPop!=endPop; ++curPop) {

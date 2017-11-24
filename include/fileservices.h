@@ -38,7 +38,7 @@
 #include "service.h"
 #include "param.h"
 
-class Metapop;
+class TMetapop;
 
 class FileHandler;
 
@@ -52,7 +52,7 @@ class FileServices : public Service {
     
 private:
     /**a pointer to the current Metapop*/
-    Metapop*    _popPtr;
+    TMetapop*    _popPtr;
     
     /**the list of the FileHandler's registered by the SimComponent*/
     list< FileHandler* > _children;
@@ -84,10 +84,10 @@ public:
     /**
      * @return the pointer to current Metapop
      */
-    virtual Metapop*   get_pop_ptr ( )      {return _popPtr;}
+    virtual TMetapop*   get_pop_ptr ( )      {return _popPtr;}
     
     /**Sets the Metapop reference.*/
-    virtual void set_pop_ptr (Metapop* pop) {_popPtr=pop;}
+    virtual void set_pop_ptr (TMetapop* pop) {_popPtr=pop;}
     
     /**Saves the current simulation parameters in log files.
      * @param params a ref to the list of the current parameters of the simulation

@@ -270,7 +270,7 @@ public:
 
 	///@name Implementations
 	///@{
-	bool init(Metapop* popPtr);
+	bool init(TMetapop* popPtr);
     void set_nbOffspring_model
     ();
 	age_t removeAgeClass ( ) {return 0;}
@@ -328,7 +328,7 @@ public:
 	LCE_Breed_coal(int rank = my_NAN) : LCE_Breed(rank){};
 	~LCE_Breed_coal(){}
 	void execute();
-	bool init(Metapop* popPtr);
+	bool init(TMetapop* popPtr);
 	bool breed_coal();
 };
 

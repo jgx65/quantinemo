@@ -128,7 +128,7 @@ void LCE_StatServiceNotifier::execute()
 // -----------------------------------------------------------------------------
 // init
 // -----------------------------------------------------------------------------
-bool LCE_StatServiceNotifier::init(Metapop* popPtr) {
+bool LCE_StatServiceNotifier::init(TMetapop* popPtr) {
     LCE::init(popPtr);
     
     _pStat_db = get_pop_ptr()->get_pStat_db();
@@ -295,7 +295,7 @@ void LCE_store_popSizes::execute() {
 // -----------------------------------------------------------------------------
 // LCE_store_popSizes::init
 // -----------------------------------------------------------------------------
-bool LCE_store_popSizes::init(Metapop* popPtr) {
+bool LCE_store_popSizes::init(TMetapop* popPtr) {
     LCE::init(popPtr);
     return true;
 }

@@ -33,7 +33,7 @@
 //---------------------------------------------------------------------------
 #include "tselection.h"
 #include "tselectiontype.h"
-#include "metapop.h"
+#include "tmetapop.h"
 #include "stathandler.cpp"
 #include "ttquanti.h"
 
@@ -391,7 +391,7 @@ TSelection::female_sex_allocation_Z(Patch* patch, age_idx age, int* sort, int su
 //-----------------------------------------------------------------------------
 /** the function returns true if selection is used and false if not */
 bool
-TSelection::init(Metapop* popPtr)
+TSelection::init(TMetapop* popPtr)
 {
 #ifdef _DEBUG
 	message("TSelection::init\n");
@@ -511,7 +511,7 @@ TSelection::init(Metapop* popPtr)
 //-----------------------------------------------------------------------------
 /** the function returns true if selection is used and false if not */
 bool
-TSelection::init2(Metapop* popPtr)
+TSelection::init2(TMetapop* popPtr)
 {
 #ifdef _DEBUG
 	message("TSelection::init2\n");

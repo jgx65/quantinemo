@@ -41,7 +41,7 @@ using namespace std;
 
 // ----------------------------------------------------------------------------------------
 double LCE_Coalescence::get_model_threshold(){assert(_pCoalBase); return _pCoalBase->get_model_threshold();}
-Metapop* LCE_Coalescence::get_pop_ptr(){assert(_pCoalBase); return _pCoalBase->get_pop_ptr();}
+TMetapop* LCE_Coalescence::get_pop_ptr(){assert(_pCoalBase); return _pCoalBase->get_pop_ptr();}
 
 
 // ----------------------------------------------------------------------------------------

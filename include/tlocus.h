@@ -39,7 +39,7 @@
 #include "types.h"
 class TTraitProto;
 class Patch;
-class Metapop;
+class TMetapop;
 //---------------------------------------------------------------------------
 /** this class contains the information of a locus position charachterized by the chromosme and
 	* the genetic distance on in cM (separately for both sexes)
@@ -112,7 +112,7 @@ private:
     
     double* _allelic_effect;            // if quantitative trait this pointer points to the alleic effects
     TTraitProto* _pTrait;               // pointer to the corresponding trait
-    Metapop* _popPtr;
+    TMetapop* _popPtr;
     
     // mutations
     double _mut_rate;

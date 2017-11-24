@@ -36,7 +36,7 @@
 #include <sstream>
 #include <list>
 #include "stathandler.h"
-#include "metapop.h"
+#include "tmetapop.h"
 #include "functions.h"
 #include "tsimulation.h"
 #include "treplicate.h"

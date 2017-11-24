@@ -34,7 +34,7 @@
 #include "tselectiontype.h"
 #include "tselection.h"
 #include "ttquanti.h"
-#include "metapop.h"
+#include "tmetapop.h"
 #include "lce_breed.h"
 // ----------------------------------------------------------------------------------------
 // constructor

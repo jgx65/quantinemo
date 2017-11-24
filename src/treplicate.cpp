@@ -318,7 +318,7 @@ TReplicate::run_replicate_ind(map<string, string>& params, map<string, string>& 
     
     // create metapop
     assert(!_thePop);
-    _thePop = new Metapop(this, currentReplicate);
+    _thePop = new TMetapop(this, currentReplicate);
     _components.push_back(_thePop);
     _components.push_back(_thePop->get_protoGenome());
     
@@ -378,7 +378,7 @@ TReplicate::run_replicate_coal(map<string, string>& params, map<string, string>&
     
     // create metapop
     assert(!_thePop);
-    _thePop = new Metapop(this, currentReplicate);
+    _thePop = new TMetapop(this, currentReplicate);
     _components.push_back(_thePop);
     _components.push_back(_thePop->get_protoGenome());
     
@@ -443,7 +443,7 @@ TReplicate::test_replicate_and_setUpStats(map<string, string>& params,
 {
     // create metapop
     assert(!_thePop);
-    _thePop = new Metapop(this, my_NAN);
+    _thePop = new TMetapop(this, my_NAN);
     _components.push_back(_thePop);
     _components.push_back(_thePop->get_protoGenome());
     
@@ -481,7 +481,7 @@ TReplicate::print_help(ostream& os, unsigned int wide1, unsigned int wide2,
     // simulation
     get_paramset().print_help(os, wide1, wide2, fill, importance, arg);
     
-    Metapop pop(this,1);
+    TMetapop pop(this,1);
     pop.get_paramset()->print_help(os, wide1, wide2, fill, importance, arg);
     
     TTQuantiProto  quanti;
@@ -545,7 +545,7 @@ if(arg==""){
 // ----------------------------------------------------------------------------------------
 bool
 TReplicate::setup(map<string, string>& simparams, map<string, string>& simkeywords,
-                  Metapop* thePop)
+                  TMetapop* thePop)
 {
 #ifdef _DEBUG
     message("SimRunner::run:building current params\n");
@@ -584,7 +584,7 @@ TReplicate::setup(map<string, string>& simparams, map<string, string>& simkeywor
 // ----------------------------------------------------------------------------------------
 //StatServices: build the lists of stat recorders: (cannot be done before the traits and LCEs are registered)
 void
-TReplicate::build_stat_recorders(Metapop* thePop)
+TReplicate::build_stat_recorders(TMetapop* thePop)
 {
     if(_pSimulation->stats && _StatServices->init()) return;
     
@@ -617,7 +617,7 @@ TReplicate::build_stat_recorders(Metapop* thePop)
 // register_all
 // ----------------------------------------------------------------------------------------
 void
-TReplicate::register_all(Metapop* thePop)
+TReplicate::register_all(TMetapop* thePop)
 {
     // regsiter the metapop
     register_services(thePop);
@@ -641,7 +641,7 @@ TReplicate::register_all(Metapop* thePop)
 // print_info
 // ----------------------------------------------------------------------------------------
 void
-TReplicate::print_info(Metapop* thePop)
+TReplicate::print_info(TMetapop* thePop)
 {
     if(thePop->_current_replicate!=my_NAN) return;
     
@@ -773,7 +773,7 @@ TReplicate::register_services(SimComponent* cmpt)
 // build_pop
 // ----------------------------------------------------------------------------------------
 bool
-TReplicate::build_pop(Metapop* thePop)
+TReplicate::build_pop(TMetapop* thePop)
 {
     if (_isCoalescence)
         return thePop->init_coal(build_currentTraits(), build_currentLifeCycle());

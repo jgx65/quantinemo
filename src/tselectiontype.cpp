@@ -33,7 +33,7 @@
 
 #include "tselectiontype.h"
 #include "ttquanti.h"
-#include "metapop.h"
+#include "tmetapop.h"
 
 // ----------------------------------------------------------------------------------------
 // ini_neutral_selection

@@ -33,7 +33,7 @@
 
 
 #include "filehandler.h"
-#include "metapop.h"
+#include "tmetapop.h"
 #include "version.h"
 #include "tsimulation.h"
 #include <errno.h>
@@ -73,7 +73,7 @@ bool FileHandler::init()
 bool FileHandler::set (Param* gen_occ, unsigned int gen_occ_int, string path,
                        string filename, string script, int sex, int age, int format,
                        TTraitProto* trait, string name, string ext,
-                       FileServices* loader, Metapop* ptr)
+                       FileServices* loader, TMetapop* ptr)
 {
     assert(ptr);
     _popPtr = ptr;

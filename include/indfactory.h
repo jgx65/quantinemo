@@ -55,7 +55,7 @@ protected:
     
     TGenomeProto* _protoGenome; 		// pointer to the genetic map (has to be deleted)
     
-    Metapop* _popPtr;
+    TMetapop* _popPtr;
     
     /**Table containing the absolute index across all types of traits*/
     map< string, int > _TraitsIndex;
@@ -96,7 +96,7 @@ public:
      @callgraph
      @param TTlist the list of the current trait prototype selected from the current simulation parameters.
      **/
-    void                    makePrototype               (map< string,TTraitProto* >& TTlist, Metapop* pMetapop);
+    void                    makePrototype               (map< string,TTraitProto* >& TTlist, TMetapop* pMetapop);
     
     /**Resets the individuals prototype between replicates from the selected trait prototypes.
      Resets the individual's ID counter to 0 and sets the traits index table.

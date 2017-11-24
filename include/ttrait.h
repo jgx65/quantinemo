@@ -193,7 +193,7 @@ class TTraitProto : public SimComponent {
     
 protected:
     
-    Metapop* _popPtr;       /**The ptr to the current Metapop.*/
+    TMetapop* _popPtr;       /**The ptr to the current TMetapop.*/
     
     double***            _initAlleleFreq;     // _initAlleleFreq[patch][locus][allele] is cumulative
     unsigned int         _initAlleleFreqCols; // the number of columns used per allele, i.e. per patch
@@ -266,7 +266,7 @@ public:
     
     ///@name Getters
     ///@{
-    virtual Metapop*get_popPtr()                     const     {return _popPtr;}
+    virtual TMetapop*get_popPtr()                     const     {return _popPtr;}
     virtual string  get_type ()                      const     {return _type;}
     virtual string  get_type_index()                 const     {return _type+get_trait_indexStr_();}
     virtual unsigned int get_nb_allele(const unsigned int& l)const     {return _nb_allele[l];}
@@ -296,7 +296,7 @@ public:
     virtual double* get_ini_alleleFreq(Patch* patch, const unsigned& locus);
     
     /**Inits the parameters, called by \c IndFactory::makePrototype().*/
-    virtual   void            init (Metapop* pMetapop) = 0;
+    virtual   void            init (TMetapop* pMetapop) = 0;
     
     /**Re-inits the parameters, called by \c IndFactory::makePrototype().*/
     virtual   void            reset (){};            // between replicates
@@ -307,7 +307,7 @@ public:
     
     /**Returns a itself. \b Note: call the copy constructor and only copy the parameters state.*/
     virtual   TTraitProto* clone () = 0;
-    void    ini_base(Metapop* pMetapop, mut_model_t* mutation_models, unsigned int nbModels);
+    void    ini_base(TMetapop* pMetapop, mut_model_t* mutation_models, unsigned int nbModels);
     void    ini_paramset();
     
     /** These tasks are performed before/after each replicate */

@@ -33,7 +33,7 @@
 
 #include "genealogy.h"
 //#include "tarray.h"
-#include "metapop.h"
+#include "tmetapop.h"
 //#include "coal_deme.h"
 //#include <algorithm>
 using namespace std;
@@ -43,7 +43,7 @@ unsigned int TTNode::counter;
 //------------------------------------------------------------------------------
 /** recursive function to mutate through the tree */
 void
-TTNode::mutate(Metapop* pop, const TTNode& ancestor, TLocus** genome)
+TTNode::mutate(TMetapop* pop, const TTNode& ancestor, TLocus** genome)
 {
     sequence=ancestor.sequence;
     unsigned int nbMut;

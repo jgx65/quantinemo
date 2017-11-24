@@ -32,7 +32,7 @@
  */
 
 #include "ttquanti.h"
-#include "metapop.h"
+#include "tmetapop.h"
 
 #include "stathandler.cpp"
 #include "tree.cpp"
@@ -656,7 +656,7 @@ void TTQuantiProto::resetTotal()
 // ----------------------------------------------------------------------------------------
 // init
 // ----------------------------------------------------------------------------------------
-void TTQuantiProto::init (Metapop* pMetapop)
+void TTQuantiProto::init (TMetapop* pMetapop)
 {
     mut_model_t mutation_models[4] = {RMM, IMM, KAM, SSM};
     ini_base(pMetapop, mutation_models, 4);

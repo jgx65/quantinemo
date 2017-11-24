@@ -99,7 +99,7 @@ public:
     virtual ~TTNeutralProto ( );
     
     //implementation of TTraitProto:
-    virtual void                     init (Metapop* pMetapop);
+    virtual void                     init (TMetapop* pMetapop);
     
     virtual TTNeutral*          hatch ();
     

@@ -38,7 +38,7 @@
 
 class Patch;
 class Individual;
-class Metapop;
+class TMetapop;
 
 /** Interface to handle file input/output for any SimComponent.
  *  Stores the periodicity parameters and the file path and extension. The replicate file name
@@ -104,7 +104,7 @@ public:
     }
     
     FileHandler (Param* gen_occ, string path, string script, int sex, int age,
-                 int format, TTraitProto* trait, string name, string ext, Metapop* ptr)
+                 int format, TTraitProto* trait, string name, string ext, TMetapop* ptr)
     : _service(0), _GenerationParam(0), _GenerationOccurrence(0), last_generation(my_NAN)
     {
         set(gen_occ, 0, path, script, sex, age, format, trait, name, ext, NULL, ptr);
@@ -112,7 +112,7 @@ public:
     
     FileHandler (unsigned int gen_occ_int, string path, string filename, string script,
                  int sex, int age,
-                 int format, TTraitProto* trait, string name, string ext, Metapop* ptr)
+                 int format, TTraitProto* trait, string name, string ext, TMetapop* ptr)
     : _service(0), _GenerationParam(0), _GenerationOccurrence(0), last_generation(my_NAN)
     {
         set(NULL, gen_occ_int, path, filename, script, sex, age, format, trait, name, ext, NULL, ptr);
@@ -181,15 +181,15 @@ public:
      */
     virtual bool set (Param* gen_occ, string path, string filename, string script, int sex, int age,
                       int format, TTraitProto* trait, string name, string ext, FileServices* loader,
-                      Metapop* ptr) {
+                      TMetapop* ptr) {
         return set(gen_occ, 0, path, filename, script, sex, age, format, trait, name, ext, loader, ptr);
     }
     virtual bool set (unsigned int gen_occ_int, string path, string filename, string script,
                       int sex, int age, int format, TTraitProto* trait, string name,
-                      string ext, FileServices* loader, Metapop* ptr) {
+                      string ext, FileServices* loader, TMetapop* ptr) {
         return set(NULL, gen_occ_int, path, filename, script, sex, age, format, trait, name, ext, loader, ptr);
     }
-    virtual bool set (Param* gen_occ, unsigned int gen_occ_int, string path, string filename, string script, int sex, int age, int format, TTraitProto* trait, string name, string ext, FileServices* loader, Metapop* ptr);
+    virtual bool set (Param* gen_occ, unsigned int gen_occ_int, string path, string filename, string script, int sex, int age, int format, TTraitProto* trait, string name, string ext, FileServices* loader, TMetapop* ptr);
     
     virtual void set (TTraitProto* trait) {
         if(trait){

@@ -32,7 +32,7 @@
  */
 
 #include "stathandler.h"
-#include "metapop.h"
+#include "tmetapop.h"
 #include <limits>
 
 // ------------------------------------------------------------------------------

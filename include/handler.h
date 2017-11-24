@@ -37,7 +37,7 @@
 #include <fstream>
 using namespace std;
 
-class Metapop;
+class TMetapop;
 
 /**Service handler (an observer).
  * Interface for the FileHandler and StatHandler classes.
@@ -62,7 +62,7 @@ public:
     //virtual char getName() = 0;
     
     /**Link to the current population, set through the link to the StatService.*/
-    Metapop* _popPtr;
+    TMetapop* _popPtr;
 
     
     virtual ~Handler(){}

@@ -34,7 +34,7 @@
 #include "param.h"
 
 #include "basicsimulation.h"
-#include "metapop.h"
+#include "tmetapop.h"
 #include <sstream>
 #include <iostream>
 #include <string>
@@ -2161,7 +2161,7 @@ Param::macro_4args(const string& t, const string& name, double (Param::*pt2Func)
 // ----------------------------------------------------------------------------------------
 // ParamSet
 // ----------------------------------------------------------------------------------------
-ParamSet::ParamSet(string name, string name_long, bool isRequired, Metapop* p) :
+ParamSet::ParamSet(string name, string name_long, bool isRequired, TMetapop* p) :
 _isSet(0), _pParamManager(0)
 {
     _popPtr = p;

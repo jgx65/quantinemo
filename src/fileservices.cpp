@@ -35,7 +35,7 @@
 #include "fileservices.h"
 #include "simcomponent.h"
 #include "filehandler.h"
-#include "metapop.h"
+#include "tmetapop.h"
 
 using namespace std;
 

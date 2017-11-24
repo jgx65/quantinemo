@@ -33,7 +33,7 @@
 
 
 #include "metapop_sh.h"
-#include "metapop.h"
+#include "tmetapop.h"
 #include "stathandler.cpp"
 #include "tsimulation.h"
 

@@ -31,12 +31,12 @@
  */
 
 #include "tpatchfitness.h"
-#include "metapop.h"
+#include "tmetapop.h"
 //---------------------------------------------------------------------------
 // constructor
 // -----------------------------------------------------------------------------
 void
-TPatchFitness::init(Metapop* ptr, int size)
+TPatchFitness::init(TMetapop* ptr, int size)
 {
     assert(ptr);
     _pop=ptr;

@@ -240,7 +240,7 @@ public:
     
     ///@name Implementations
     ///@{
-    virtual bool init(Metapop* popPtr);
+    virtual bool init(TMetapop* popPtr);
     virtual LCE_Disperse* clone () {return new LCE_Disperse();}
     virtual void loadFileServices ( FileServices* loader ) {}
     virtual void loadStatServices ( StatServices* loader ) {}

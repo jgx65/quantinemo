@@ -32,13 +32,13 @@
 */
 
 #include "indfactory.h"
-#include "metapop.h"
+#include "tmetapop.h"
 
 // ----------------------------------------------------------------------------------------
 // makePrototype
 // ----------------------------------------------------------------------------------------
 /** generates the proto traits and thus a prototype individual */
-void IndFactory::makePrototype(map< string,TTraitProto* >& TTlist, Metapop* pMetapop){
+void IndFactory::makePrototype(map< string,TTraitProto* >& TTlist, TMetapop* pMetapop){
   #ifdef _DEBUG
    message("IndFactory::makePrototype\n");
   #endif

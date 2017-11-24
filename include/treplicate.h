@@ -48,7 +48,7 @@ private:
     TSimulation* _pSimulation;  // don't delete
     TStat_db*    _pStat_db;     // don't delete
     
-    Metapop* _thePop;
+    TMetapop* _thePop;
     
     /** time parameters */
     char      _startTime[20], _endTime[20];
@@ -97,13 +97,13 @@ public:
     StatServices* _StatServices;
     list<ParamSet*>* _allParams;
     
-    void print_info(Metapop* thePop);
-    bool setup(map<string, string>& simparams, map<string, string>& simkeaywords, Metapop* thePop);
+    void print_info(TMetapop* thePop);
+    bool setup(map<string, string>& simparams, map<string, string>& simkeaywords, TMetapop* thePop);
     void register_services(SimComponent* cmpt);
-    bool build_pop(Metapop* thePop);
+    bool build_pop(TMetapop* thePop);
     
-    void register_all(Metapop* thePop);
-    void build_stat_recorders(Metapop* thePop);
+    void register_all(TMetapop* thePop);
+    void build_stat_recorders(TMetapop* thePop);
     
     clock_t print_start_replicate(unsigned int currentReplicate);
     
@@ -115,7 +115,7 @@ public:
                     char fill='.', unsigned int importance=5, string arg="");
     clock_t  getMeanElapsedTimeRepl    ( ) {return _meanElapsedTimeRepl;}
     
-    Metapop* get_popPtr(){return _thePop;}
+    TMetapop* get_popPtr(){return _thePop;}
     unsigned int get_nbThreads(){return _nbThreads;}
 
 };

@@ -32,7 +32,7 @@
  */
 
 #include "ttneutral.h"
-#include "metapop.h"
+#include "tmetapop.h"
 #include "stathandler.cpp"
 
 // ----------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ TTNeutralProto::~TTNeutralProto()
 // ----------------------------------------------------------------------------------------
 // init
 // ----------------------------------------------------------------------------------------
-void TTNeutralProto::init(Metapop* pMetapop)
+void TTNeutralProto::init(TMetapop* pMetapop)
 {
 	mut_model_t mutation_models[2] = { KAM, SSM };
 	ini_base(pMetapop, mutation_models, 2);

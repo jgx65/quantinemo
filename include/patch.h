@@ -65,7 +65,7 @@ class Patch
 	unsigned int _ID;        // id of the patch (starting at 0)
 	string       _IDstr;     // same as _ID (but starting at 1), but stored as a string   num2str(_ID+1)
 	unsigned int _nbPatch;   // total number of patches
-	Metapop* _popPtr;
+	TMetapop* _popPtr;
 
 public:
 	inline void         set_size(sex_t SEX, age_idx AGE, const unsigned int& s){_sizes[SEX][AGE] = s;}
@@ -132,7 +132,7 @@ public:
 //		init_containers();
 //	}
     
-    Patch(Metapop* p, unsigned int i);
+    Patch(TMetapop* p, unsigned int i);
 
 
 	~Patch();
@@ -178,7 +178,7 @@ public:
 		_h2[1][i] = v;              // females are always present
 	}
 	void   set_nbPatch               (const unsigned int& n){_nbPatch=n;}
-	void   set_pMetapop              (Metapop* p)           {_popPtr=p;}
+	void   set_pMetapop              (TMetapop* p)           {_popPtr=p;}
 
 	template <typename T>
 	void set_localParameter(T value, void (Patch::*pt2Func)(T)){

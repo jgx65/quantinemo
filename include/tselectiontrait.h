@@ -107,7 +107,7 @@ protected:
     
     
 public:
-    Metapop*    _popPtr;      // pointer to the metapopulation
+    TMetapop*    _popPtr;      // pointer to the metapopulation
 
     TSelectionTrait();
     virtual ~TSelectionTrait(){

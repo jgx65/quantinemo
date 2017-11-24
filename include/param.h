@@ -293,7 +293,7 @@ public:
 
 
 /**Parameters container, implemented in each SimComponent. **/
-class Metapop;
+class TMetapop;
 class ParamManager;
 class ParamSet
 {
@@ -312,10 +312,10 @@ public:
     multimap<int, map<string, Param*>* > _temporalParams;
     
 public:
-    Metapop*                _popPtr;    // used for random numbers
+    TMetapop*                _popPtr;    // used for random numbers
     
     ParamSet                       ( );
-    ParamSet                       (string name, string name_long, bool isRequired, Metapop* p);
+    ParamSet                       (string name, string name_long, bool isRequired, TMetapop* p);
     ~ParamSet                      ( );
     
     /**@brief Put the container in the unset state, reset each Param it contains**/

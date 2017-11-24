@@ -176,7 +176,7 @@ public:
 	 *@callgraph
 	 **/
     bool set_parameters(map<string, string>& simparams, TReplicate* pRep, bool quiet);
-    void set_keywords(map<string, string>& simkeys, TReplicate* , Metapop* pPop,  bool quiet);
+    void set_keywords(map<string, string>& simkeys, TReplicate* , TMetapop* pPop,  bool quiet);
 //	void check_parameter_names(map<string, vector<string> >& inputParam);
 //	void check_parameter_names(map<string, string>& inputParam);
 

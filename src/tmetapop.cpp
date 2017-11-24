@@ -31,7 +31,7 @@
  *   along with quantiNemo2.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "metapop.h"
+#include "tmetapop.h"
 #include <algorithm>
 
 #include "ttquanti.h"
@@ -52,10 +52,10 @@
 using namespace std;
 
 
-unsigned int Metapop::getReplicates   ( ) {assert(_pSimulation); return _pSimulation->get_replicates();}
-TSimulation* Metapop::get_pSimulation(){return _pSimulation;}
-TStat_db*    Metapop::get_pStat_db(){assert(_pSimulation); return _pSimulation->stats;}
-void         Metapop::set_pStat_db(TStat_db* p){_pSimulation->stats = p;}
+unsigned int TMetapop::getReplicates   ( ) {assert(_pSimulation); return _pSimulation->get_replicates();}
+TSimulation* TMetapop::get_pSimulation(){return _pSimulation;}
+TStat_db*    TMetapop::get_pStat_db(){assert(_pSimulation); return _pSimulation->stats;}
+void         TMetapop::set_pStat_db(TStat_db* p){_pSimulation->stats = p;}
 
 
 
@@ -63,7 +63,7 @@ void         Metapop::set_pStat_db(TStat_db* p){_pSimulation->stats = p;}
 // ----------------------------------------------------------------------------------------
 // constructor
 // ----------------------------------------------------------------------------------------
-Metapop::Metapop(TReplicate* p, unsigned int rep) :_statHandler(), _tot_sampled_patches(0), _patchNbr(0),
+TMetapop::TMetapop(TReplicate* p, unsigned int rep) :_statHandler(), _tot_sampled_patches(0), _patchNbr(0),
 _generations(0), _currentGeneration(0),
 _currentAge(NONE),  _sexInitRatio(0.5), _service(0), _pSelection(0),
 _total_carrying_capacity(my_NAN), _pReplicate(p),
@@ -98,7 +98,7 @@ func_ptr_new_emptyPatch(0), func_ptr_add_tempPatch(0)
 // init_paramset
 // ----------------------------------------------------------------------------------------
 void
-Metapop::init_paramset()
+TMetapop::init_paramset()
 {
     set_paramset("metapop", "metapopulation", true, this);
     
@@ -366,7 +366,7 @@ Metapop::init_paramset()
 // ----------------------------------------------------------------------------------------
 // destructor
 // ----------------------------------------------------------------------------------------
-Metapop::~Metapop()
+TMetapop::~TMetapop()
 {
     clear();
 #ifdef _DEBUG
@@ -380,7 +380,7 @@ Metapop::~Metapop()
 /** set the sample sizes
  * every time the sampling schema changes time this function is called
  */
-bool Metapop::setSampleSizes(bool set_sampleID)
+bool TMetapop::setSampleSizes(bool set_sampleID)
 {
     if(setPatchParam<double>("patch_sample_size", // parameter name (without "_fem" or "_mal")
                              &Patch::set_N_sample,           // set a sex specific value
@@ -413,7 +413,7 @@ bool Metapop::setSampleSizes(bool set_sampleID)
 // ----------------------------------------------------------------------------------------
 /** set the carrying capacities
  */
-void Metapop::setCarryingCapacities()
+void TMetapop::setCarryingCapacities()
 {
     if(!setPatchParam<unsigned int>("patch_capacity", // parameter name (without "_fem" or "_mal")
                                     &Patch::set_K,                      // set a sex specific value
@@ -431,7 +431,7 @@ void Metapop::setCarryingCapacities()
 // ----------------------------------------------------------------------------------------
 /** set the friction of the patches
  */
-void Metapop::setFriction()
+void TMetapop::setFriction()
 {
     _frictionUsed = setPatchParam<double>("patch_friction",// parameter name (without "_fem" or "_mal")
                                           &Patch::set_friction,   			 // set a sex specific value
@@ -452,7 +452,7 @@ void Metapop::setFriction()
 // ----------------------------------------------------------------------------------------
 /** set the initial populations
  */
-void Metapop::setInitPopulationSizes()
+void TMetapop::setInitPopulationSizes()
 {
     if(!setPatchParam<unsigned int>("patch_ini_size", // parameter name (without "_fem" or "_mal")
                                     &Patch::set_N_ini,                  // set a sex specific value
@@ -482,7 +482,7 @@ void Metapop::setInitPopulationSizes()
  * returns true if all patches are sampled at any time
  */
 bool
-Metapop::set_sampled_patches(bool allGens)
+TMetapop::set_sampled_patches(bool allGens)
 {
     // reset the patches state ///////////////////////////////////////////////////
     unsigned int i;
@@ -624,7 +624,7 @@ Metapop::set_sampled_patches(bool allGens)
 // ----------------------------------------------------------------------------------------
 /** calls all "temporal_change" functions to be called */
 void
-Metapop::temporal_change()
+TMetapop::temporal_change()
 {
     // keywords
     if(_pReplicate->get_paramSetKeys()){
@@ -659,7 +659,7 @@ Metapop::temporal_change()
 // ----------------------------------------------------------------------------------------
 /** parameters which may change over time */
 void
-Metapop::temporal_change(const unsigned int& gen)
+TMetapop::temporal_change(const unsigned int& gen)
 {
     map<string, Param*>* pParam = _paramSet->getTemporalParams(gen);
     
@@ -766,7 +766,7 @@ Metapop::temporal_change(const unsigned int& gen)
 // ----------------------------------------------------------------------------------------
 // ini_globs
 // ----------------------------------------------------------------------------------------
-bool Metapop::init_coal(map< string,TTraitProto* >& traits, map< int,LCE* >& LCEs)
+bool TMetapop::init_coal(map< string,TTraitProto* >& traits, map< int,LCE* >& LCEs)
 {
 #ifdef _DEBUG
     message("Metapop::init_coal\n");
@@ -795,7 +795,7 @@ bool Metapop::init_coal(map< string,TTraitProto* >& traits, map< int,LCE* >& LCE
 // ----------------------------------------------------------------------------------------
 // ini_globs
 // ----------------------------------------------------------------------------------------
-bool Metapop::init(map< string,TTraitProto* >& traits, map< int,LCE* >& LCEs)
+bool TMetapop::init(map< string,TTraitProto* >& traits, map< int,LCE* >& LCEs)
 {
 #ifdef _DEBUG
     message("Metapop::init\n");
@@ -853,7 +853,7 @@ bool Metapop::init(map< string,TTraitProto* >& traits, map< int,LCE* >& LCEs)
  * The parameter storeState allows to call the function without that the gen, rep and age are stored (used for temporal parameter)
  */
 void
-Metapop::set_sampledInds(age_t AGE, bool storeState)
+TMetapop::set_sampledInds(age_t AGE, bool storeState)
 {
     _generations = (unsigned int) _paramSet->getValue("generations");
     
@@ -903,7 +903,7 @@ Metapop::set_sampledInds(age_t AGE, bool storeState)
  *        pops have to be populated with all age classes
  *
  unsigned int
- Metapop::get_current_nbPops(const age_idx& AGE)
+ TMetapop::get_current_nbPops(const age_idx& AGE)
  {
  unsigned int i, size=0;
  vector<Patch*>::iterator cur, end;
@@ -921,7 +921,7 @@ Metapop::set_sampledInds(age_t AGE, bool storeState)
  *        pops have to be populated with all age classes
  *
  unsigned int
- Metapop::get_current_nbPops(const age_t& AGE)
+ TMetapop::get_current_nbPops(const age_t& AGE)
  {
  unsigned int size=0;
  vector<Patch*>::iterator cur, end;
@@ -940,7 +940,7 @@ Metapop::set_sampledInds(age_t AGE, bool storeState)
  @param pop the pointer to the metapop for access to the recycling pool
  */
 void
-Metapop::flush(sex_t SEX, age_idx AGE)
+TMetapop::flush(sex_t SEX, age_idx AGE)
 {
     vector<Patch*>::iterator curPatch, endPatch;
     for(curPatch=get_vFullPatch().begin(), endPatch=get_vFullPatch().end(); curPatch!=endPatch; ++curPatch){
@@ -950,7 +950,7 @@ Metapop::flush(sex_t SEX, age_idx AGE)
 
 //---------------------------------------------------------------------------
 void
-Metapop::flush(age_idx AGE)
+TMetapop::flush(age_idx AGE)
 {
     flush(FEM, AGE);
     flush(MAL, AGE);
@@ -963,7 +963,7 @@ Metapop::flush(age_idx AGE)
  @see flush()
  */
 void
-Metapop::flush(age_t AGE)
+TMetapop::flush(age_t AGE)
 {
     for(unsigned int i = 0, mask = 1; i < NB_AGE_CLASSES; i++, mask <<= 1) {
         if(mask & AGE) {
@@ -976,7 +976,7 @@ Metapop::flush(age_t AGE)
 //---------------------------------------------------------------------------
 /**Removes all individual pointers of all sex and age classes and flush them into the recycling pool.*/
 void
-Metapop::flush(){
+TMetapop::flush(){
     for(unsigned int i = 0; i < NB_AGE_CLASSES; i++)
     {
         flush(static_cast<age_idx>(i));
@@ -988,7 +988,7 @@ Metapop::flush(){
 // ----------------------------------------------------------------------------------------
 /** sets the pointer to the LCE breeding and dispersal */
 void
-Metapop::set_LCE_pointers(map< int,LCE* >& LCEs)
+TMetapop::set_LCE_pointers(map< int,LCE* >& LCEs)
 {
     _pDisperse_LCE = NULL;
     _pBreed_LCE = NULL;
@@ -1009,7 +1009,7 @@ Metapop::set_LCE_pointers(map< int,LCE* >& LCEs)
  * input parameter "sex_ratio"=nMmal/nbFem                1:=  nbFem=nbMal
  * internal parameter "_sexInitRatio"=nbMal/(nbMal+nbFem) 0.5:=nbFem=nbMal
  */
-void Metapop::set_SexInitRatio(map< int,LCE* >& LCEs)
+void TMetapop::set_SexInitRatio(map< int,LCE* >& LCEs)
 {
     assert(_pBreed_LCE);     // the breed LCE must be present!
     if(_pBreed_LCE->get_parameter_value("mating_system") < 3
@@ -1026,7 +1026,7 @@ void Metapop::set_SexInitRatio(map< int,LCE* >& LCEs)
 // ----------------------------------------------------------------------------------------
 // buildPopulation
 // ----------------------------------------------------------------------------------------
-void Metapop::createPopulations()
+void TMetapop::createPopulations()
 {
     assert(_vFullPatch.empty());
     assert(_vSamplePatch.empty());
@@ -1047,7 +1047,7 @@ void Metapop::createPopulations()
 // ----------------------------------------------------------------------------------------
 // buildPopulation
 // ----------------------------------------------------------------------------------------
-void Metapop::createPopulations_coal()
+void TMetapop::createPopulations_coal()
 {
     assert(_vFullPatch.empty());
     assert(_vSamplePatch.empty());
@@ -1079,7 +1079,7 @@ void Metapop::createPopulations_coal()
  */
 template<typename T>
 bool
-Metapop::setPatchParam(string name,                                // parameter name (without "_fem" or "_mal")
+TMetapop::setPatchParam(string name,                                // parameter name (without "_fem" or "_mal")
                        void (Patch::*setSexSpecific)(T, sex_t),   // set a sex specific value
                        void (Patch::*setGeneral)(T),              // set a general value
                        void (Patch::*reset)(T, T, T),             // function to set all three params at once
@@ -1130,7 +1130,7 @@ Metapop::setPatchParam(string name,                                // parameter 
  */
 template<typename T>
 bool
-Metapop::setPatchParam(string name, sex_t SEX,
+TMetapop::setPatchParam(string name, sex_t SEX,
                        void (Patch::*pt2Func)(T, sex_t),
                        void (Patch::*pt2reset)(T, T, T))
 {
@@ -1151,7 +1151,7 @@ Metapop::setPatchParam(string name, sex_t SEX,
  */
 template<typename T>
 void
-Metapop::setPatchParam(string name, TMatrix* m, sex_t SEX,
+TMetapop::setPatchParam(string name, TMatrix* m, sex_t SEX,
                        void (Patch::*pt2Func)(T, sex_t),
                        void (Patch::*pt2reset)(T, T, T))
 {
@@ -1196,7 +1196,7 @@ Metapop::setPatchParam(string name, TMatrix* m, sex_t SEX,
 // all patches have the same sex specific value
 template<typename T>
 void
-Metapop::setPatchParam(string name, T value, sex_t SEX,
+TMetapop::setPatchParam(string name, T value, sex_t SEX,
                        void (Patch::*pt2Func)(T, sex_t))
 {
     for(unsigned int i = 0; i < _patchNbr; ++i){
@@ -1212,7 +1212,7 @@ Metapop::setPatchParam(string name, T value, sex_t SEX,
  */
 template<typename T>
 bool
-Metapop::setPatchParam(string name,
+TMetapop::setPatchParam(string name,
                        void (Patch::*pt2Func)(T),
                        void (Patch::*pt2reset)(T, T, T))
 {
@@ -1229,7 +1229,7 @@ Metapop::setPatchParam(string name,
 // the general patch values are defined by a matrix
 template<typename T>
 void
-Metapop::setPatchParam(string name, TMatrix* m,
+TMetapop::setPatchParam(string name, TMatrix* m,
                        void (Patch::*pt2Func)(T),
                        void (Patch::*pt2reset)(T, T, T))
 {
@@ -1272,7 +1272,7 @@ Metapop::setPatchParam(string name, TMatrix* m,
 // all patches have the same general value
 template<typename T>
 void
-Metapop::setPatchParam(string name,	T value,
+TMetapop::setPatchParam(string name,	T value,
                        void (Patch::*pt2Func)(T))
 {
     for(unsigned int i = 0; i < _patchNbr; ++i){
@@ -1288,7 +1288,7 @@ Metapop::setPatchParam(string name,	T value,
  *  - value: same value for all patches
  *  - matrix: matrixes may be expanded to meet the number of patches and traits
  */
-void Metapop::set_patch_parameter(unsigned int nbTrait,
+void TMetapop::set_patch_parameter(unsigned int nbTrait,
                                   string name,             // "patch_dir_sel_slope"
                                   string name_full,        // "slope"
                                   void (Patch::*pt2Func)(double*, sex_t))
@@ -1334,7 +1334,7 @@ void Metapop::set_patch_parameter(unsigned int nbTrait,
  *  - value: same value for all patches
  *  - matrix: matrixes may be expanded to meet the number of patches and traits
  */
-void Metapop::set_patch_parameter_ofTrait(TTraitProto* pTrait,
+void TMetapop::set_patch_parameter_ofTrait(TTraitProto* pTrait,
                                           unsigned int curTrait,   // 1
                                           string trait,            // "_2"
                                           string name,             // "patch_dir_sel_slope"
@@ -1378,7 +1378,7 @@ void Metapop::set_patch_parameter_ofTrait(TTraitProto* pTrait,
 // set_patch_value_by_value
 // ----------------------------------------------------------------------------------------
 /** this function sets the same value for each patch and trait*/
-void Metapop::set_patch_value_byValue(unsigned int nbTrait,
+void TMetapop::set_patch_value_byValue(unsigned int nbTrait,
                                       double value,
                                       sex_t SEX,
                                       void (Patch::*pt2Func)(double*, sex_t))
@@ -1400,7 +1400,7 @@ void Metapop::set_patch_value_byValue(unsigned int nbTrait,
 // set_patch_value_by_value
 // ----------------------------------------------------------------------------------------
 /** this function sets the same value for each patch and trait*/
-void Metapop::set_patch_value_byValue_ofTrait(unsigned int curTrait,
+void TMetapop::set_patch_value_byValue_ofTrait(unsigned int curTrait,
                                               double value,
                                               sex_t SEX,
                                               void (Patch::*pt2Func)(unsigned int, double, sex_t))
@@ -1415,7 +1415,7 @@ void Metapop::set_patch_value_byValue_ofTrait(unsigned int curTrait,
 // v
 // ----------------------------------------------------------------------------------------
 /** this function sets the value to each patch based on a matrix */
-void Metapop::set_patch_value_byMatrix(unsigned int nbTrait,
+void TMetapop::set_patch_value_byMatrix(unsigned int nbTrait,
                                        TMatrix* m,
                                        sex_t SEX,
                                        string name_full,        // "slope"
@@ -1455,7 +1455,7 @@ void Metapop::set_patch_value_byMatrix(unsigned int nbTrait,
 // set_patch_array_byMatrix_ofTrait
 // ----------------------------------------------------------------------------------------
 /** this function sets the array to each patch based on a matrix */
-void Metapop::set_patch_array_byMatrix_ofTrait(unsigned int curTrait,
+void TMetapop::set_patch_array_byMatrix_ofTrait(unsigned int curTrait,
                                                TMatrix* m,
                                                sex_t SEX,
                                                string name_full,        // "slope"
@@ -1487,7 +1487,7 @@ void Metapop::set_patch_array_byMatrix_ofTrait(unsigned int curTrait,
 // set_patch_value_byMatrix_ofTrait
 // ----------------------------------------------------------------------------------------
 /** this function sets the value to each patch based on a matrix */
-void Metapop::set_patch_value_byMatrix_ofTrait(unsigned int curTrait,
+void TMetapop::set_patch_value_byMatrix_ofTrait(unsigned int curTrait,
                                                TMatrix* m,
                                                sex_t SEX,
                                                string name_full,        // "slope"
@@ -1516,7 +1516,7 @@ void Metapop::set_patch_value_byMatrix_ofTrait(unsigned int curTrait,
  *  - value: same value for all patches
  *  - matrix: matrixes may be expanded to meet the number of patches and traits
  */
-void Metapop::set_patch_parameter_array(unsigned int nbTrait,
+void TMetapop::set_patch_parameter_array(unsigned int nbTrait,
                                         string name,             // "patch_dir_sel_slope"
                                         string name_full,        // "slope"
                                         void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
@@ -1565,7 +1565,7 @@ void Metapop::set_patch_parameter_array(unsigned int nbTrait,
  *  - value: same value for all patches
  *  - matrix: matrixes may be expanded to meet the number of patches and traits
  */
-void Metapop::set_patch_parameter_array_ofTrait(TTraitProto* pTrait,
+void TMetapop::set_patch_parameter_array_ofTrait(TTraitProto* pTrait,
                                                 unsigned int curTrait,
                                                 string trait,
                                                 string name,             // "patch_dir_sel_slope"
@@ -1607,7 +1607,7 @@ void Metapop::set_patch_parameter_array_ofTrait(TTraitProto* pTrait,
 // set_patch_array_by_array
 // ----------------------------------------------------------------------------------------
 /** this function sets the same array for each patch and trait*/
-void Metapop::set_patch_array_byArray(unsigned int nbTrait,
+void TMetapop::set_patch_array_byArray(unsigned int nbTrait,
                                       TTree<unsigned int, double>* m,
                                       sex_t SEX,
                                       void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
@@ -1632,7 +1632,7 @@ void Metapop::set_patch_array_byArray(unsigned int nbTrait,
 // v
 // ----------------------------------------------------------------------------------------
 /** this function sets the array to each patch based on a 1D matrix */
-void Metapop::set_patch_array_byArray_ofTrait(unsigned int curTrait,
+void TMetapop::set_patch_array_byArray_ofTrait(unsigned int curTrait,
                                               TMatrix* m,
                                               sex_t SEX,
                                               string name_full,        // "slope"
@@ -1653,7 +1653,7 @@ void Metapop::set_patch_array_byArray_ofTrait(unsigned int curTrait,
  * tree[trait][patch][value]
  */
 
-void Metapop::set_patch_array_byMatrix(unsigned int nbTrait,
+void TMetapop::set_patch_array_byMatrix(unsigned int nbTrait,
                                        TTree<unsigned int, double>* m,
                                        sex_t SEX,
                                        string name_full,        // "slope"
@@ -1709,7 +1709,7 @@ void Metapop::set_patch_array_byMatrix(unsigned int nbTrait,
 // setLifeCycle
 // ----------------------------------------------------------------------------------------
 /** */
-void Metapop::setLifeCycle_coal(map< int, LCE*>& lifeCycle)
+void TMetapop::setLifeCycle_coal(map< int, LCE*>& lifeCycle)
 {
     string name;
     _theCycle.clear();
@@ -1727,7 +1727,7 @@ void Metapop::setLifeCycle_coal(map< int, LCE*>& lifeCycle)
 // setLifeCycle
 // ----------------------------------------------------------------------------------------
 /** */
-void Metapop::setLifeCycle(map< int, LCE*>& lifeCycle)
+void TMetapop::setLifeCycle(map< int, LCE*>& lifeCycle)
 {
     string name;
     _theCycle.clear();
@@ -1743,7 +1743,7 @@ void Metapop::setLifeCycle(map< int, LCE*>& lifeCycle)
 // Loop_generation
 // ----------------------------------------------------------------------------------------
 /* performs the generation loop for current replicate */
-void Metapop::Loop_generation(time_t startTime)
+void TMetapop::Loop_generation(time_t startTime)
 {
     vector< LCE* >::iterator LCE;
     
@@ -1809,7 +1809,7 @@ void Metapop::Loop_generation(time_t startTime)
 // Loop_generation
 // ----------------------------------------------------------------------------------------
 /* performs the generation loop for current replicate */
-void Metapop::Loop_generation_coal(time_t startTime)
+void TMetapop::Loop_generation_coal(time_t startTime)
 {
     vector< LCE* >::iterator LCE;
     
@@ -1873,7 +1873,7 @@ void Metapop::Loop_generation_coal(time_t startTime)
 // executeBeforeEachGeneration
 //------------------------------------------------------------------------------
 void
-Metapop::executeBeforeEachGeneration(const unsigned int& gen)
+TMetapop::executeBeforeEachGeneration(const unsigned int& gen)
 {
     // density dependent temporal change of the dispersal rate
     change_disp_rate_after_density(gen);
@@ -1904,7 +1904,7 @@ Metapop::executeBeforeEachGeneration(const unsigned int& gen)
 // executeAfterEachGeneration
 //------------------------------------------------------------------------------
 void
-Metapop::executeAfterEachGeneration(const unsigned int& gen)
+TMetapop::executeAfterEachGeneration(const unsigned int& gen)
 {
     // proto traits
     map< string,TTraitProto* >::iterator iter = getTraitPrototypes().begin();
@@ -1923,7 +1923,7 @@ Metapop::executeAfterEachGeneration(const unsigned int& gen)
 // executeBeforeEachReplicate
 //------------------------------------------------------------------------------
 void
-Metapop::executeBeforeEachReplicate(const unsigned int& rep)
+TMetapop::executeBeforeEachReplicate(const unsigned int& rep)
 {
     // genetic map
     _protoGenome->executeBeforeEachReplicate(rep);
@@ -1951,7 +1951,7 @@ Metapop::executeBeforeEachReplicate(const unsigned int& rep)
 // executeBeforeAfterReplicate
 //------------------------------------------------------------------------------
 void
-Metapop::executeAfterEachReplicate(const unsigned int& rep)
+TMetapop::executeAfterEachReplicate(const unsigned int& rep)
 {
     // traits
     map< string,TTraitProto* >::iterator iter = getTraitPrototypes().begin();
@@ -1974,7 +1974,7 @@ Metapop::executeAfterEachReplicate(const unsigned int& rep)
  * _density_threshold[n][3] = 0: patch, 1: density, 2: change   //n is the number of changes
  */
 void
-Metapop::change_disp_rate_after_density(const int& gen)
+TMetapop::change_disp_rate_after_density(const int& gen)
 {
     if(!_density_threshold) return;
     
@@ -2015,7 +2015,7 @@ Metapop::change_disp_rate_after_density(const int& gen)
  * _density_threshold[n][4] = 0: patch, 1: density, 2: delay, 3: change   //n is the number of changes
  */
 void
-Metapop::set_change_disp_rate_after_density()
+TMetapop::set_change_disp_rate_after_density()
 {
     Param* p = _paramSet->get_param("temporal_change_following_density");
     if(_density_threshold){delete[] _density_threshold; _density_threshold=NULL;}
@@ -2081,7 +2081,7 @@ Metapop::set_change_disp_rate_after_density()
 // get_total_carrying_capacity_bothSex
 // ----------------------------------------------------------------------------------------
 unsigned int
-Metapop::get_total_carrying_capacity_bothSex(){
+TMetapop::get_total_carrying_capacity_bothSex(){
     unsigned int size = 0;
     for(unsigned int home = 0; home < _patchNbr; ++home) {
         size += _vPatch[home]->get_K();
@@ -2093,7 +2093,7 @@ Metapop::get_total_carrying_capacity_bothSex(){
 // get_settingsStats
 // ----------------------------------------------------------------------------------------
 void
-Metapop::get_settingsStats(unsigned int& nbPatchK,unsigned int& K,
+TMetapop::get_settingsStats(unsigned int& nbPatchK,unsigned int& K,
                            unsigned int& NiniPatch, unsigned int& Nini,
                            unsigned int& samplePatch, unsigned int& nbSample)
 {
@@ -2125,7 +2125,7 @@ Metapop::get_settingsStats(unsigned int& nbPatchK,unsigned int& K,
 // set_total_carrying_capacity
 // ----------------------------------------------------------------------------------------
 unsigned int
-Metapop::get_total_carrying_capacity(const sex_t& SEX){
+TMetapop::get_total_carrying_capacity(const sex_t& SEX){
     unsigned int sum = 0;
     for(unsigned int home = 0; home < _patchNbr; ++home) {
         sum += _vPatch[home]->get_K(SEX);
@@ -2137,7 +2137,7 @@ Metapop::get_total_carrying_capacity(const sex_t& SEX){
 // get_total_iniSize_bothSex
 // ----------------------------------------------------------------------------------------
 unsigned int
-Metapop::get_total_iniSize_bothSex(){
+TMetapop::get_total_iniSize_bothSex(){
     unsigned int size = 0;
     for(unsigned int home = 0; home < _patchNbr; ++home) {
         size += _vPatch[home]->get_N_ini();
@@ -2150,7 +2150,7 @@ Metapop::get_total_iniSize_bothSex(){
 //------------------------------------------------------------------------------
 /* remove all individuals of each pop and reset the counters */
 void
-Metapop::reset_metapopulation()
+TMetapop::reset_metapopulation()
 {
     
     for(unsigned int i = 0; i < _patchNbr; ++i) {
@@ -2172,7 +2172,7 @@ Metapop::reset_metapopulation()
 //------------------------------------------------------------------------------
 /* get the required age class to start a simulation */
 age_t
-Metapop::get_requiredAgeClass()
+TMetapop::get_requiredAgeClass()
 {
     age_t requiredAge = NONE;
     vector< LCE* >::iterator IT = _theCycle.begin();
@@ -2191,7 +2191,7 @@ Metapop::get_requiredAgeClass()
  * Caution: currently it is not checked if over time carrying capacity is changing
  */
 bool
-Metapop::allPatchPopulated_atInitialization()
+TMetapop::allPatchPopulated_atInitialization()
 {
     vector<Patch*>::iterator curPop, endPop = _vPatch.end();
     for(curPop=_vPatch.begin(); curPop!=endPop; ++curPop){
@@ -2206,7 +2206,7 @@ Metapop::allPatchPopulated_atInitialization()
 //------------------------------------------------------------------------------
 /** Metapop::setPopulation */
 void
-Metapop::setPopulation(const age_t& requiredAge)
+TMetapop::setPopulation(const age_t& requiredAge)
 {
 #ifdef _DEBUG
     message("Metapop::setPopulation: required age is %i ",requiredAge);
@@ -2232,7 +2232,7 @@ Metapop::setPopulation(const age_t& requiredAge)
 //------------------------------------------------------------------------------
 /** Metapop::setPopulation_coal */
 void
-Metapop::setPopulation_coal(const age_t& requiredAge)
+TMetapop::setPopulation_coal(const age_t& requiredAge)
 {
 #ifdef _DEBUG
     message("Metapop::setPopulationCoal: required age is %i ",requiredAge);
@@ -2273,7 +2273,7 @@ Metapop::setPopulation_coal(const age_t& requiredAge)
  *       v[ind][loc+6][all] (compulsory)  // allele starting at 0
  */
 bool
-Metapop::setPopulation_FSTAT(const age_t& requiredAge)
+TMetapop::setPopulation_FSTAT(const age_t& requiredAge)
 {
     // read all initial genotype files (a single file for each trait type)
     vector<unsigned int**> *vAny, *vAny2;
@@ -2477,7 +2477,7 @@ Metapop::setPopulation_FSTAT(const age_t& requiredAge)
 /* Metapop::reset
  * resets each Patch, all individuals are moved to the POOL
  */
-void Metapop::reset()
+void TMetapop::reset()
 {
     for(unsigned int i = 0; i < _patchNbr; ++i) {
         _vPatch[i]->flush();
@@ -2488,7 +2488,7 @@ void Metapop::reset()
 // ----------------------------------------------------------------------------------------
 // clear
 // ----------------------------------------------------------------------------------------
-void Metapop::clear()
+void TMetapop::clear()
 {
    // cout << endl << "delete patches" << endl;
     vector<Patch*>::iterator curPop, endPop;
@@ -2508,17 +2508,17 @@ void Metapop::clear()
 // getGenerationCounter
 // ----------------------------------------------------------------------------------------
 string
-Metapop::getGenerationCounter (){
+TMetapop::getGenerationCounter (){
     return toStr(_currentGeneration, _generations);
 }
 // ----------------------------------------------------------------------------------------
 string
-Metapop::getGenerationCounter_ (){
+TMetapop::getGenerationCounter_ (){
     return "_" + getGenerationCounter();
 }
 // ----------------------------------------------------------------------------------------
 string
-Metapop::getGenerationCounter_g (){
+TMetapop::getGenerationCounter_g (){
     return "_g" + getGenerationCounter();
 }
 // ----------------------------------------------------------------------------------------
@@ -2526,7 +2526,7 @@ Metapop::getGenerationCounter_g (){
  * the order of the Kmal and Kfem arrays are only for the populated pops
  */
 void
-Metapop::regulate_selection_fitness_patch(age_idx AGE, unsigned int* Kmal, unsigned int* Kfem)
+TMetapop::regulate_selection_fitness_patch(age_idx AGE, unsigned int* Kmal, unsigned int* Kfem)
 {
     assert(_pSelection);
     if(Kmal && Kfem){       // the size to regulate to is given
@@ -2550,7 +2550,7 @@ Metapop::regulate_selection_fitness_patch(age_idx AGE, unsigned int* Kmal, unsig
 // ----------------------------------------------------------------------------------------
 /** soft selection (at the metapopulation level) to K */
 void
-Metapop::regulate_selection_fitness_metapop(age_idx AGE)
+TMetapop::regulate_selection_fitness_metapop(age_idx AGE)
 {
     // array to buffer the fitness arrays for each patch (female and male)
     double totFitnessM = 0;                              // total fitness
@@ -2611,7 +2611,7 @@ Metapop::regulate_selection_fitness_metapop(age_idx AGE)
  * thus a indivdual with a fitness of 0.5 has a survival probability of 0.5
  */
 void
-Metapop::regulate_selection_fitness_hard(age_idx AGE)
+TMetapop::regulate_selection_fitness_hard(age_idx AGE)
 {
     vector<Patch*>::iterator curPop, endPop;
     for(curPop=get_vFullPatch().begin(), endPop=get_vFullPatch().end(); curPop!=endPop; ++curPop) {
@@ -2624,7 +2624,7 @@ Metapop::regulate_selection_fitness_hard(age_idx AGE)
  * samleID is in this case the index of the patch in _vFullPatch!!!
  */
 void
-Metapop::add_tempPatch_noSample_withFull()
+TMetapop::add_tempPatch_noSample_withFull()
 {
     if(_vTempPatch.empty()) return;
     
@@ -2645,7 +2645,7 @@ Metapop::add_tempPatch_noSample_withFull()
 /** adds the _vTempPatch container to the _vFullPatch container
  */
 void
-Metapop::add_tempPatch_noSample_withFull_coal()
+TMetapop::add_tempPatch_noSample_withFull_coal()
 {
     if(_vTempPatch.empty()) return;
     
@@ -2658,7 +2658,7 @@ Metapop::add_tempPatch_noSample_withFull_coal()
 /** adds the _vTempPatch container to the _vFullPatch container
  */
 void
-Metapop::add_tempPatch_withSample_withFull()
+TMetapop::add_tempPatch_withSample_withFull()
 {
     if(_vTempPatch.empty()) return;
     
@@ -2680,7 +2680,7 @@ Metapop::add_tempPatch_withSample_withFull()
 /** since jsut the vector _vPatch is used the sampleIid is set to the index of that patch
  */
 void
-Metapop::add_tempPatch_noSample_noFull()
+TMetapop::add_tempPatch_noSample_noFull()
 {
     vector<Patch*>::iterator curPop=_vPatch.begin(), endPop=_vPatch.end();
     for(unsigned int i=0; curPop!=endPop; ++curPop){
@@ -2693,7 +2693,7 @@ Metapop::add_tempPatch_noSample_noFull()
 /** since jsut the vector _vPatch is used the sampleIid is set to the index of that patch
  */
 void
-Metapop::add_tempPatch_noSample_noFull_coal()
+TMetapop::add_tempPatch_noSample_noFull_coal()
 {
     return;
 }
@@ -2703,7 +2703,7 @@ Metapop::add_tempPatch_noSample_noFull_coal()
  * only called at initizialisation of the pops
  */
 void
-Metapop::add_tempPatch_withSample_noFull()
+TMetapop::add_tempPatch_withSample_noFull()
 {
     if(_vTempPatch.empty()) return;
     
@@ -2724,7 +2724,7 @@ Metapop::add_tempPatch_withSample_noFull()
 // ----------------------------------------------------------------------------------------
 /** newly populated patch: without _vSamplePatch and with _vFullPatch */
 void
-Metapop::new_fullPatch_noSample_withFull(Patch* curPatch)
+TMetapop::new_fullPatch_noSample_withFull(Patch* curPatch)
 {
     assert(curPatch->size(ALL));
     curPatch->set_isExtinct(false);
@@ -2734,7 +2734,7 @@ Metapop::new_fullPatch_noSample_withFull(Patch* curPatch)
 // ----------------------------------------------------------------------------------------
 /** newly populated patch:  with _vSamplePatch and _vFullPatch */
 void
-Metapop::new_fullPatch_withSample_withFull(Patch* curPatch)
+TMetapop::new_fullPatch_withSample_withFull(Patch* curPatch)
 {
     assert(curPatch->size(ALL));
     curPatch->set_isExtinct(false);
@@ -2744,7 +2744,7 @@ Metapop::new_fullPatch_withSample_withFull(Patch* curPatch)
 // ----------------------------------------------------------------------------------------
 /** newly populated patch: without _vSamplePatch and without _vFullPatch */
 void
-Metapop::new_fullPatch_noSample_noFull(Patch* curPatch)
+TMetapop::new_fullPatch_noSample_noFull(Patch* curPatch)
 {
     assert(curPatch->size(ALL));
     curPatch->set_isExtinct(false);
@@ -2755,7 +2755,7 @@ Metapop::new_fullPatch_noSample_noFull(Patch* curPatch)
  * only called when pops are initialized
  */
 void
-Metapop::new_fullPatch_withSample_noFull(Patch* curPatch)
+TMetapop::new_fullPatch_withSample_noFull(Patch* curPatch)
 {
     assert(curPatch->size(ALL));
     curPatch->set_isExtinct(false);
@@ -2769,7 +2769,7 @@ Metapop::new_fullPatch_withSample_noFull(Patch* curPatch)
  * endPop remains the same
  */
 void
-Metapop::new_emptyPatch_noSample_noFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
+TMetapop::new_emptyPatch_noSample_noFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
 {
     ++curPop;
     assert(endPop==get_vFullPatch().end());
@@ -2782,7 +2782,7 @@ Metapop::new_emptyPatch_noSample_noFull(vector<Patch*>::iterator& curPop, vector
  * endPop remains the same
  */
 void
-Metapop::new_emptyPatch_withSample_noFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
+TMetapop::new_emptyPatch_withSample_noFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
 {
     assert(!(*curPop)->size(ALL));
     (*curPop)->set_isExtinct(true);
@@ -2803,7 +2803,7 @@ Metapop::new_emptyPatch_withSample_noFull(vector<Patch*>::iterator& curPop, vect
  * endPop is decreased by one!
  */
 void
-Metapop::new_emptyPatch_noSample_withFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
+TMetapop::new_emptyPatch_noSample_withFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
 {
     assert(!(*curPop)->size(ALL));
     (*curPop)->set_isExtinct(true);
@@ -2832,7 +2832,7 @@ Metapop::new_emptyPatch_noSample_withFull(vector<Patch*>::iterator& curPop, vect
  * endPop is decreased by one!
  */
 void
-Metapop::new_emptyPatch_noSample_withFull_coal(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
+TMetapop::new_emptyPatch_noSample_withFull_coal(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
 {
     assert(!(*curPop)->size(ALL));
     (*curPop)->set_isExtinct(true);
@@ -2851,7 +2851,7 @@ Metapop::new_emptyPatch_noSample_withFull_coal(vector<Patch*>::iterator& curPop,
  * endPop is decreased by one!
  */
 void
-Metapop::new_emptyPatch_withSample_withFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
+TMetapop::new_emptyPatch_withSample_withFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
 {
     assert(!(*curPop)->size(ALL));
     (*curPop)->set_isExtinct(true);
@@ -2876,7 +2876,7 @@ Metapop::new_emptyPatch_withSample_withFull(vector<Patch*>::iterator& curPop, ve
  * (exchange the patch by the last one and remove the last element
  */
 void
-Metapop::erase_vSamplePatch(Patch* curPop)
+TMetapop::erase_vSamplePatch(Patch* curPop)
 {
     unsigned int sampleID = curPop->get_sampleID();
     assert(sampleID!=my_NAN);
@@ -2892,7 +2892,7 @@ Metapop::erase_vSamplePatch(Patch* curPop)
 // ----------------------------------------------------------------------------------------
 /** add the immigrants to the db for coalescence simulations */
 void
-Metapop::add_immigrants(const unsigned int& to, const unsigned int& from, const unsigned int& nb)
+TMetapop::add_immigrants(const unsigned int& to, const unsigned int& from, const unsigned int& nb)
 {
     assert(_pCoalescence_LCE);
     _pCoalescence_LCE->add_immigrants(_currentGeneration, to, from, nb);
@@ -2901,7 +2901,7 @@ Metapop::add_immigrants(const unsigned int& to, const unsigned int& from, const 
 // ----------------------------------------------------------------------------------------
 /** add the current pop sizes to the db for coalescence simulations, but only if it is not empty */
 void
-Metapop::store_popSizes()
+TMetapop::store_popSizes()
 {
     assert(_pCoalescence_LCE);
     _pCoalescence_LCE->store_popSizes(_currentGeneration);
@@ -2912,7 +2912,7 @@ Metapop::store_popSizes()
  * cannot be used, since we want to know how many inds/pops cannot be sampled.
  */
 bool
-Metapop::set_samples_coalescence()
+TMetapop::set_samples_coalescence()
 {
     assert(_pCoalescence_LCE);
     unsigned int size, N, nbSampledPatches=0, notSampledPatches=0, notSampledInds=0, nbSampledInds=0;
@@ -2962,7 +2962,7 @@ Metapop::set_samples_coalescence()
 
 // ----------------------------------------------------------------------------------------
 void
-Metapop::set_func_pointer()
+TMetapop::set_func_pointer()
 {
     for(unsigned int p=0; p<_patchNbr; ++p){
         _vPatch[p]->set_func_pointer();
@@ -2972,7 +2972,7 @@ Metapop::set_func_pointer()
 // ----------------------------------------------------------------------------------------
 /** run the coalescence simulations scaled by the db */
 void
-Metapop::run_coalescence()
+TMetapop::run_coalescence()
 {
     vector< LCE* >::iterator LCE;
     for(LCE = _theCycleCoal.begin(); LCE != _theCycleCoal.end(); ++LCE) {
@@ -2984,7 +2984,7 @@ Metapop::run_coalescence()
 
 // ----------------------------------------------------------------------------------------
 void
-Metapop::set_func_pointer_coal()
+TMetapop::set_func_pointer_coal()
 {
     for(unsigned int p=0; p<_patchNbr; ++p){
         _vPatch[p]->set_func_pointer_coal();
@@ -2993,18 +2993,18 @@ Metapop::set_func_pointer_coal()
 
 // ----------------------------------------------------------------------------------------
 void
-Metapop::set_func_ptr_noSample_noFull()
+TMetapop::set_func_ptr_noSample_noFull()
 {
 #ifdef _DEBUG
     message("Containers used: _vPatch\n");
 #endif
     
-    func_ptr_get_vSamplePatch = &Metapop::get_vPatch;  _vSamplePatchUsed=false;
-    func_ptr_get_vFullPatch   = &Metapop::get_vPatch;  _vFullPatchUsed=false;
+    func_ptr_get_vSamplePatch = &TMetapop::get_vPatch;  _vSamplePatchUsed=false;
+    func_ptr_get_vFullPatch   = &TMetapop::get_vPatch;  _vFullPatchUsed=false;
     
-    func_ptr_add_tempPatch    = &Metapop::add_tempPatch_noSample_noFull;
-    func_ptr_new_emptyPatch   = &Metapop::new_emptyPatch_noSample_noFull;
-    func_ptr_new_fullPatch    = &Metapop::new_fullPatch_noSample_noFull;
+    func_ptr_add_tempPatch    = &TMetapop::add_tempPatch_noSample_noFull;
+    func_ptr_new_emptyPatch   = &TMetapop::new_emptyPatch_noSample_noFull;
+    func_ptr_new_fullPatch    = &TMetapop::new_fullPatch_noSample_noFull;
     
     assert(_pDisperse_LCE);
     _pDisperse_LCE->set_func_ptr_noSample_noFull();
@@ -3012,18 +3012,18 @@ Metapop::set_func_ptr_noSample_noFull()
 
 // ----------------------------------------------------------------------------------------
 void
-Metapop::set_func_ptr_noSample_noFull_coal()
+TMetapop::set_func_ptr_noSample_noFull_coal()
 {
 #ifdef _DEBUG
     message("Containers used: _vPatch\n");
 #endif
     
-    func_ptr_get_vSamplePatch = &Metapop::get_vPatch;  _vSamplePatchUsed=false;
-    func_ptr_get_vFullPatch   = &Metapop::get_vPatch;  _vFullPatchUsed=false;
+    func_ptr_get_vSamplePatch = &TMetapop::get_vPatch;  _vSamplePatchUsed=false;
+    func_ptr_get_vFullPatch   = &TMetapop::get_vPatch;  _vFullPatchUsed=false;
     
-    func_ptr_add_tempPatch    = &Metapop::add_tempPatch_noSample_noFull_coal;
-    func_ptr_new_emptyPatch   = &Metapop::new_emptyPatch_noSample_noFull;
-    func_ptr_new_fullPatch    = &Metapop::new_fullPatch_noSample_noFull;
+    func_ptr_add_tempPatch    = &TMetapop::add_tempPatch_noSample_noFull_coal;
+    func_ptr_new_emptyPatch   = &TMetapop::new_emptyPatch_noSample_noFull;
+    func_ptr_new_fullPatch    = &TMetapop::new_fullPatch_noSample_noFull;
     
     assert(_pDisperse_LCE);
     _pDisperse_LCE->set_func_ptr_noSample_noFull();
@@ -3031,18 +3031,18 @@ Metapop::set_func_ptr_noSample_noFull_coal()
 
 // ----------------------------------------------------------------------------------------
 void
-Metapop::set_func_ptr_withSample_noFull()
+TMetapop::set_func_ptr_withSample_noFull()
 {
 #ifdef _DEBUG
     message("Containers used: _vPatch, _vSamplePatch\n");
 #endif
     
-    func_ptr_get_vSamplePatch = &Metapop::get_vSamplePatch_eff;  _vSamplePatchUsed=true;
-    func_ptr_get_vFullPatch   = &Metapop::get_vPatch;            _vFullPatchUsed=false;
+    func_ptr_get_vSamplePatch = &TMetapop::get_vSamplePatch_eff;  _vSamplePatchUsed=true;
+    func_ptr_get_vFullPatch   = &TMetapop::get_vPatch;            _vFullPatchUsed=false;
     
-    func_ptr_add_tempPatch    = &Metapop::add_tempPatch_withSample_noFull;
-    func_ptr_new_emptyPatch   = &Metapop::new_emptyPatch_withSample_noFull;
-    func_ptr_new_fullPatch    = &Metapop::new_fullPatch_withSample_noFull;
+    func_ptr_add_tempPatch    = &TMetapop::add_tempPatch_withSample_noFull;
+    func_ptr_new_emptyPatch   = &TMetapop::new_emptyPatch_withSample_noFull;
+    func_ptr_new_fullPatch    = &TMetapop::new_fullPatch_withSample_noFull;
     
     assert(_pDisperse_LCE);
     _pDisperse_LCE->set_func_ptr_withSample_noFull();
@@ -3050,18 +3050,18 @@ Metapop::set_func_ptr_withSample_noFull()
 
 // ----------------------------------------------------------------------------------------
 void
-Metapop::set_func_ptr_noSample_withFull()
+TMetapop::set_func_ptr_noSample_withFull()
 {
 #ifdef _DEBUG
     message("Containers used: _vPatch, _vFullPatch\n");
 #endif
     
-    func_ptr_get_vSamplePatch = &Metapop::get_vFullPatch_eff;     _vSamplePatchUsed=false;
-    func_ptr_get_vFullPatch   = &Metapop::get_vFullPatch_eff;     _vFullPatchUsed=true;
+    func_ptr_get_vSamplePatch = &TMetapop::get_vFullPatch_eff;     _vSamplePatchUsed=false;
+    func_ptr_get_vFullPatch   = &TMetapop::get_vFullPatch_eff;     _vFullPatchUsed=true;
     
-    func_ptr_add_tempPatch    = &Metapop::add_tempPatch_noSample_withFull;
-    func_ptr_new_emptyPatch   = &Metapop::new_emptyPatch_noSample_withFull;
-    func_ptr_new_fullPatch    = &Metapop::new_fullPatch_noSample_withFull;
+    func_ptr_add_tempPatch    = &TMetapop::add_tempPatch_noSample_withFull;
+    func_ptr_new_emptyPatch   = &TMetapop::new_emptyPatch_noSample_withFull;
+    func_ptr_new_fullPatch    = &TMetapop::new_fullPatch_noSample_withFull;
     
     assert(_pDisperse_LCE);
     _pDisperse_LCE->set_func_ptr_noSample_withFull();
@@ -3069,18 +3069,18 @@ Metapop::set_func_ptr_noSample_withFull()
 
 // ----------------------------------------------------------------------------------------
 void
-Metapop::set_func_ptr_noSample_withFull_coal()
+TMetapop::set_func_ptr_noSample_withFull_coal()
 {
 #ifdef _DEBUG
     message("Containers used: _vPatch, _vFullPatch\n");
 #endif
     
-    func_ptr_get_vSamplePatch = &Metapop::get_vFullPatch_eff;    _vSamplePatchUsed=false;
-    func_ptr_get_vFullPatch   = &Metapop::get_vFullPatch_eff;    _vFullPatchUsed=true;
+    func_ptr_get_vSamplePatch = &TMetapop::get_vFullPatch_eff;    _vSamplePatchUsed=false;
+    func_ptr_get_vFullPatch   = &TMetapop::get_vFullPatch_eff;    _vFullPatchUsed=true;
     
-    func_ptr_add_tempPatch    = &Metapop::add_tempPatch_noSample_withFull_coal;
-    func_ptr_new_emptyPatch   = &Metapop::new_emptyPatch_noSample_withFull_coal;
-    func_ptr_new_fullPatch    = &Metapop::new_fullPatch_noSample_withFull;
+    func_ptr_add_tempPatch    = &TMetapop::add_tempPatch_noSample_withFull_coal;
+    func_ptr_new_emptyPatch   = &TMetapop::new_emptyPatch_noSample_withFull_coal;
+    func_ptr_new_fullPatch    = &TMetapop::new_fullPatch_noSample_withFull;
     
     assert(_pDisperse_LCE);
     _pDisperse_LCE->set_func_ptr_noSample_withFull();
@@ -3088,18 +3088,18 @@ Metapop::set_func_ptr_noSample_withFull_coal()
 
 // ----------------------------------------------------------------------------------------
 void
-Metapop::set_func_ptr_withSample_withFull()
+TMetapop::set_func_ptr_withSample_withFull()
 {
 #ifdef _DEBUG
     message("Containers used: _vPatch, _vFullPatch, _vSamplePatch\n");
 #endif
     
-    func_ptr_get_vSamplePatch = &Metapop::get_vSamplePatch_eff;    _vSamplePatchUsed=true;
-    func_ptr_get_vFullPatch   = &Metapop::get_vFullPatch_eff;      _vFullPatchUsed=true;
+    func_ptr_get_vSamplePatch = &TMetapop::get_vSamplePatch_eff;    _vSamplePatchUsed=true;
+    func_ptr_get_vFullPatch   = &TMetapop::get_vFullPatch_eff;      _vFullPatchUsed=true;
     
-    func_ptr_add_tempPatch    = &Metapop::add_tempPatch_withSample_withFull;
-    func_ptr_new_emptyPatch   = &Metapop::new_emptyPatch_withSample_withFull;
-    func_ptr_new_fullPatch    = &Metapop::new_fullPatch_withSample_withFull;
+    func_ptr_add_tempPatch    = &TMetapop::add_tempPatch_withSample_withFull;
+    func_ptr_new_emptyPatch   = &TMetapop::new_emptyPatch_withSample_withFull;
+    func_ptr_new_fullPatch    = &TMetapop::new_fullPatch_withSample_withFull;
     
     assert(_pDisperse_LCE);
     _pDisperse_LCE->set_func_ptr_withSample_withFull();
@@ -3110,7 +3110,7 @@ Metapop::set_func_ptr_withSample_withFull()
 // ------------------------------------------------------------------------------
 /** ouput of the first two columns for the stat file */
 void
-Metapop::printGenRep2File(ostream& FH)
+TMetapop::printGenRep2File(ostream& FH)
 {
     FH.width(12);
     FH.setf(ios::left, ios::adjustfield);
@@ -3126,7 +3126,7 @@ Metapop::printGenRep2File(ostream& FH)
 /** updates the patche vectors of the colonized patches
 	* must be called once before stats are computed
 	*/
-void Metapop::update_patch_states()
+void TMetapop::update_patch_states()
 {
     // get the number of patches to sample
     if(_current_nbSamplePatch) 	_last_nbSamplePatch = _current_nbSamplePatch; // the last non-zero sampled patch number
@@ -3140,7 +3140,7 @@ void Metapop::update_patch_states()
 // getReplicateCounter
 // ----------------------------------------------------------------------------------------
 string
-Metapop::getReplicateCounter (){
+TMetapop::getReplicateCounter (){
     if (getReplicates()==1) return "";
     return toStr(_current_replicate+1, getReplicates());
 }
@@ -3149,7 +3149,7 @@ Metapop::getReplicateCounter (){
 // getReplicateCounter_
 // ----------------------------------------------------------------------------------------
 string
-Metapop::getReplicateCounter_ (){
+TMetapop::getReplicateCounter_ (){
     if (getReplicates()==1) return "";
     return "_" + toStr(_current_replicate+1, getReplicates());
 }
@@ -3158,7 +3158,7 @@ Metapop::getReplicateCounter_ (){
 // getReplicateCounter_r
 // ----------------------------------------------------------------------------------------
 string
-Metapop::getReplicateCounter_r (){
+TMetapop::getReplicateCounter_r (){
     if (getReplicates()==1) return "";
     return "_r" + toStr(_current_replicate+1, getReplicates());
 }
@@ -3167,7 +3167,7 @@ Metapop::getReplicateCounter_r (){
 // get_working_directory
 // ----------------------------------------------------------------------------------------
 string
-Metapop::get_working_directory(){
+TMetapop::get_working_directory(){
     assert(_pSimulation);
     return _pSimulation->get_working_directory();
 }
@@ -3176,7 +3176,7 @@ Metapop::get_working_directory(){
 // getSimfolder
 // ----------------------------------------------------------------------------------------
 string
-Metapop::getSimfolder(){
+TMetapop::getSimfolder(){
     assert(_pSimulation);
     return _pSimulation->get_simfolder();
 }
@@ -3185,7 +3185,7 @@ Metapop::getSimfolder(){
 // getBaseFileName
 // ----------------------------------------------------------------------------------------
 string
-Metapop::getBaseFileName(){
+TMetapop::getBaseFileName(){
     assert(_pSimulation);
     return _pSimulation->get_basename();
 }
@@ -3194,7 +3194,7 @@ Metapop::getBaseFileName(){
 // get_iniFile_directory
 // ----------------------------------------------------------------------------------------
 string
-Metapop::get_iniFile_directory(){
+TMetapop::get_iniFile_directory(){
     assert(_pSimulation);
     return _pSimulation->get_iniFile_directory();
 }
@@ -3203,7 +3203,7 @@ Metapop::get_iniFile_directory(){
 // get_exe_directory
 // ----------------------------------------------------------------------------------------
 string
-Metapop::get_exe_directory(){
+TMetapop::get_exe_directory(){
     assert(_pSimulation);
     return _pSimulation->get_exe_directory();
 }
@@ -3212,7 +3212,7 @@ Metapop::get_exe_directory(){
 // getSimfolderShort
 // ----------------------------------------------------------------------------------------
 string
-Metapop::getSimfolderShort (){
+TMetapop::getSimfolderShort (){
     assert(_pSimulation);
     return _pSimulation->get_simfolder_short();
 }
@@ -3221,7 +3221,7 @@ Metapop::getSimfolderShort (){
 // getSimfolderShort
 // ----------------------------------------------------------------------------------------
 RAND&
-Metapop::rand()
+TMetapop::rand()
 {
     assert(_pReplicate);
     return *_pReplicate->rand;
@@ -3230,7 +3230,7 @@ Metapop::rand()
 // ------------------------------------------------------------------------------
 /** move randomly 'nbMigr' individuals  fom patch 'from_deme' to patch 'to_deme' */
 void
-Metapop::move_random(sex_t SEX, age_idx from_age, unsigned int from_deme,
+TMetapop::move_random(sex_t SEX, age_idx from_age, unsigned int from_deme,
                      age_idx to_age, unsigned int to_deme, unsigned int nbMigr)
 {
     unsigned int size = get_vPatch(from_deme)->size(SEX, from_age);
@@ -3246,7 +3246,7 @@ Metapop::move_random(sex_t SEX, age_idx from_age, unsigned int from_deme,
 // ------------------------------------------------------------------------------
 /** move randomly 'nbMigr' individuals  fom patch 'from_deme' to patch 'to_deme' */
 void
-Metapop::move_random(sex_t SEX, age_idx from_age, Patch* fromDeme,
+TMetapop::move_random(sex_t SEX, age_idx from_age, Patch* fromDeme,
                      age_idx to_age, Patch* toDeme, unsigned int nbMigr)
 {
     unsigned int size = fromDeme->size(SEX, from_age);
@@ -3263,7 +3263,7 @@ Metapop::move_random(sex_t SEX, age_idx from_age, Patch* fromDeme,
  * "move with replacement"!
  */
 void
-Metapop::copyMove_random_withReplacement(sex_t SEX, age_idx from_age, Patch* fromDeme,
+TMetapop::copyMove_random_withReplacement(sex_t SEX, age_idx from_age, Patch* fromDeme,
                                          age_idx to_age, Patch* toDeme, unsigned int nbMigr)
 {
     unsigned int size = fromDeme->size(SEX, from_age);

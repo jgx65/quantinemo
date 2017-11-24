@@ -1683,7 +1683,7 @@ void LCE_Disperse::migrate_2D_ss_geometric(const sex_t& SEX) {
 // ----------------------------------------------------------------------------------------
 // LCE_Disperse::init
 // ----------------------------------------------------------------------------------------
-bool LCE_Disperse::init(Metapop* popPtr) {
+bool LCE_Disperse::init(TMetapop* popPtr) {
 	LCE::init(popPtr);
     
 	// if only one patch is used there is simply no migration

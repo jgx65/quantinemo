@@ -39,7 +39,7 @@
 
 
 
-class Metapop;
+class TMetapop;
 class TStat_db;
 class Param;
 
@@ -49,7 +49,7 @@ class StatServices : public Service {
     
 private:
     
-    Metapop* _popPtr;
+    TMetapop* _popPtr;
     TStat_db* _pStat_db;
     list< StatHandlerBase* > _children;
     string _statArg;
@@ -81,9 +81,9 @@ public:
     virtual bool init_statArgs ( );
     virtual bool init_paramArgs ( );
     
-    Metapop* get_pop_ptr          ( )      {return _popPtr;}
+    TMetapop* get_pop_ptr          ( )      {return _popPtr;}
     
-    void set_pop_ptr              (Metapop* pop) {_popPtr=pop;}
+    void set_pop_ptr              (TMetapop* pop) {_popPtr=pop;}
     
     void set_statArg  (string& str) {_statArg = str;}
     void set_paramArg (string& str) {_paramArg = str;}

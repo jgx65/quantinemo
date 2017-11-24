@@ -145,7 +145,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////
 //template <class <NODE> class LCE_Coalescence;
 //class LCE_CoalescenceRecomb;
-class Metapop;
+class TMetapop;
 class LCE_Disperse;
 class LCE_Coalescence;
 class LCE_CoalescenceRecomb;
@@ -160,11 +160,11 @@ protected:
 	vector<TTNode*> ChainNodeList_temp; // temporal chained list of Nodes used for recombination purposes
 
 public:
-    Metapop* _popPtr;
+    TMetapop* _popPtr;
     
 	TDeme() : _deme_size(0), _lineages(0), _id(my_NAN), _popPtr(0) {
 	}
-	TDeme(Metapop* p, unsigned int id) : _deme_size(0), _lineages(0), _id(id), _popPtr(p) {
+	TDeme(TMetapop* p, unsigned int id) : _deme_size(0), _lineages(0), _id(id), _popPtr(p) {
 	}
 	~TDeme(){
         if(!ChainNodeList.empty()){

@@ -35,7 +35,7 @@
 #define lifecycleH
 
 #include "simcomponent.h"
-#include "metapop.h"
+#include "tmetapop.h"
 
 /**Base class of the Life Cycle Events, declares the LCE interface.
  * A Life Cycle Event (LCE) is a kind of population operator that modifies the population state. It declares the execute() method
@@ -62,7 +62,7 @@ private:
     
 protected:
     /**The ptr to the current Metapop.*/
-    Metapop* _popPtr;
+    TMetapop* _popPtr;
     
     /**The name of the linked trait.*/
     string        _linkedTraitType;
@@ -93,7 +93,7 @@ public:
      * @param popPtr the pointer to the current instance of \c Metapop
      * @callgraph
      */
-    virtual bool init(Metapop* popPtr){
+    virtual bool init(TMetapop* popPtr){
         _popPtr = popPtr;
         if(!_linkedTraitType.empty()) {
             _linkedTraitIndex = popPtr->getTraitIndex(_linkedTraitType.c_str());
@@ -122,8 +122,8 @@ public:
     /**Accessors for the population pointer
      * @param popPtr The pointer to the current Metapop
      */
-    virtual void set_pop_ptr (Metapop* popPtr) {_popPtr=popPtr;}
-    virtual Metapop*   get_pop_ptr ( ) {return _popPtr;}
+    virtual void set_pop_ptr (TMetapop* popPtr) {_popPtr=popPtr;}
+    virtual TMetapop*   get_pop_ptr ( ) {return _popPtr;}
     virtual vector<int>* get_linkedTraitIndex()   {return &_linkedTraitIndex;}
     
     ///@name LCE interface

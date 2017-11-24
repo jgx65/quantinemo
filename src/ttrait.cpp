@@ -33,7 +33,7 @@
 
 #include "ttrait.h"
 #include "patch.h"
-#include "metapop.h"
+#include "tmetapop.h"
 
 
 //#include <algorithm>
@@ -591,7 +591,7 @@ TTraitProto::ini_paramset()
 // init
 // ----------------------------------------------------------------------------------------
 void
-TTraitProto::ini_base(Metapop* pMetapop, mut_model_t* mutation_models, unsigned int nbModels)
+TTraitProto::ini_base(TMetapop* pMetapop, mut_model_t* mutation_models, unsigned int nbModels)
 {
 	_popPtr = pMetapop;
 	_protoGenome = _popPtr->get_protoGenome();

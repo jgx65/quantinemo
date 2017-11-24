@@ -38,7 +38,7 @@
 
 class Individual;
 class TSelection;
-class Metapop;
+class TMetapop;
 
 
 class TPatchFitness{
@@ -58,14 +58,14 @@ private:
     //  2: incremental sort (lowest fitness first) subset fix less fittest
     //  3: incremental sort (lowest fitness first) subset random less fittest
     
-    Metapop* _pop;
+    TMetapop* _pop;
     
-    void init(Metapop* ptr, int size);
+    void init(TMetapop* ptr, int size);
     void resize(const unsigned int& size);
     
     // constructors
     TPatchFitness(){init(0, 0);}
-    TPatchFitness(Metapop* ptr, const unsigned int& size){init(ptr, size);}
+    TPatchFitness(TMetapop* ptr, const unsigned int& size){init(ptr, size);}
     
     // destructor
     ~TPatchFitness(){

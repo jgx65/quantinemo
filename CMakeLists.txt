@@ -64,7 +64,7 @@ src/ttneutral.cpp
 src/main.cpp
 src/stathandlerbase.cpp 
 src/ttquanti.cpp
-src/metapop.cpp
+src/tmetapop.cpp
 src/stathandler.cpp 
 src/ttrait.cpp
 src/metapop_sh.cpp
@@ -85,7 +85,7 @@ include/lifecycleevent.h
 include/random.h
 include/tselectiontrait.h
 include/filehandler.h
-include/metapop.h
+include/tmetapop.h
 include/service.h
 include/tselectiontype.h
 include/fileservices.h

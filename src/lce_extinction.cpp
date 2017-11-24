@@ -446,7 +446,7 @@ LCE_Extinction::survivors_all(Patch* curPatch, const sex_t & SEX)
 // LCE_Extinction::init
 // -----------------------------------------------------------------------------
 /** returns true if at any stage extinction may occur */
-bool LCE_Extinction::init(Metapop* popPtr)
+bool LCE_Extinction::init(TMetapop* popPtr)
 {
 	LCE::init(popPtr);
 	if (!set_extinction_rate()) {
