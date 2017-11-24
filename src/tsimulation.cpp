@@ -217,15 +217,11 @@ void TSimulation::run_sim(map<string, string> params,
     ARRAY::create_1D(_elapsedTimeRepl, _replicates,(double) my_NAN);
     ARRAY::create_1D(_genLength, _replicates,(unsigned int) my_NAN);
     
-    //stats = new TStat_db(params, _replicates);
+
     
     //-------------------------------------------------------------------------------------
     message("\n\nSIMULATION");
     
-    // mutlithreading info
-    //  On GCC compile with -std=c++11.
-    //  On GCC versions below 4.7, use -std=c++0x -pthread (instead of -std=c++0x).
-    // This should work for any operating-system, granted your compiler supports this (C++11) feature.
     
     
     /////////////////////////////////////////////////////////////////////////////

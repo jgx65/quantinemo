@@ -197,15 +197,13 @@ void LCE_Coalescence_base::execute()
         assert(get_pop_ptr());
         assert(get_pop_ptr()->get_protoGenome());
         TGenomeProto* pGenome = get_pop_ptr()->get_protoGenome();
-        unsigned int  threads = get_pop_ptr()->get_pReplicate()->get_nbThreads();
         unsigned int  nbChromosome = pGenome->get_nb_chromosome();
-        unsigned int* locusPerChrom = pGenome->get_nb_locus_per_chromosome();
         unsigned int  nbUnlinked = pGenome->get_nb_locus_unlinked();
         
         unsigned int nbLocusThreads = nbChromosome + nbUnlinked;
         
         
-        run_coal_locus(this, 0, nbLocusThreads, 0, threads);
+        run_coal_locus(this, 0, nbLocusThreads, 0);
         // post coalescence
         delete[] _dbCoalescence; _dbCoalescence = NULL;
         if (_writer) _writer->write_NEXUS();
@@ -218,8 +216,7 @@ void LCE_Coalescence_base::execute()
 
 // ----------------------------------------------------------------------------------------
 void run_coal_locus(LCE_Coalescence_base* pCoalBase, unsigned int from,
-                    unsigned int to, unsigned int curThread,
-                    unsigned int nbThreads)
+                    unsigned int to, unsigned int curThread)
 {
     switch (pCoalBase->get_pop_ptr()->get_pReplicate()->get_isCoalescence()) {
         case 1:{
@@ -227,16 +224,6 @@ void run_coal_locus(LCE_Coalescence_base* pCoalBase, unsigned int from,
             pCoal->run_coalescence(from, to);
             break; // new version here the deme sizes of the demes with lineages are just updated
         }
-            //        case 2:{
-            //            LCE_CoalescenceRecomb* pCoal = new LCE_CoalescenceRecomb(101);
-            //            break; // coalescence version based on LCE_CoaelscenceII supporting recombination
-            //        }
-            //        case 3:{
-            //            LCE_CoalescenceRecombII* pCoal = new LCE_CoalescenceRecombII(101);
-            //            break; // coalescence version based on LCE_CoaelscenceII supporting recombination (sequential recombinations)
-            //        }
-    }
-    
 }
 
 // ----------------------------------------------------------------------------------------

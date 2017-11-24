@@ -124,8 +124,7 @@ public:
 };
 
 void run_coal_locus(LCE_Coalescence_base* pCoal, unsigned int from,
-                            unsigned int to, unsigned int curThread,
-                            unsigned int nbThreads);
+                            unsigned int to, unsigned int curThread);
 
 
 ////////////////////////////////////////////////////////////////////////////////
