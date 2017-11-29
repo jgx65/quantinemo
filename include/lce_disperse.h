@@ -142,7 +142,7 @@ protected:
     }
     
 public:
-    void _setDispersalFactor_friction(const sex_t& SEX);
+
     void _setDispersal_direction();
 
     void immigrate(Patch* curPatch, vector<Patch*> vNeighbours, unsigned int totSize, unsigned int nb_mgir, sex_t SEX, age_idx fromAge=OFFSx, age_idx toAge=ADLTx);
@@ -183,24 +183,7 @@ protected:
 		if(nb_ind > 0) factor  = exp(1)*(nb_ind-K*(1-exp(-nb_ind/K)))/nb_ind;
 		return factor ;}
 
-    /** same as above but combined with the friction */
-    inline double get_migr_factor_one_friction(Patch* p, sex_t s){
-        return p->get_friction(s);
-    }
-    inline double get_migr_factor_min_friction(Patch* p, sex_t s){
-        return _disp_factor[s][0] * p->get_friction(s);
-    }
-    inline double get_migr_factor_max_friction(Patch* p, sex_t s){
-        return _disp_factor[s][1] * p->get_friction(s);
-    }
-    inline double get_migr_factor_k_threshold_friction(Patch* p, sex_t s){
-        return (p->get_friction(s)*p->get_density(OFFSx)<_disp_factor[s][2]) ? get_migr_factor_min_friction(p,s) : get_migr_factor_min_friction(p,s);
-    }
-    inline double get_migr_factor_k_logistic_friction(Patch* p, sex_t s){
-        return p->get_friction(s)*generalLogisticCurve(p->get_density(OFFSx), _disp_factor[s][0],
-                                                       _disp_factor[s][1], _disp_factor[s][2],
-                                                       _disp_factor[s][3], _disp_factor[s][4]);
-    }
+   
     
 public:
     void (LCE_Disperse::* migration_func_ptr) ();

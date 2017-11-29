@@ -67,7 +67,7 @@ TMetapop::TMetapop(TReplicate* p, unsigned int rep) :_statHandler(), _tot_sample
 _generations(0), _currentGeneration(0),
 _currentAge(NONE),  _sexInitRatio(0.5), _service(0), _pSelection(0),
 _total_carrying_capacity(my_NAN), _pReplicate(p),
-_density_threshold(0), _density_threshold_param(0), _frictionUsed(0), _sampleAllOrNothingCur(0),
+_density_threshold(0), _density_threshold_param(0),  _sampleAllOrNothingCur(0),
 _current_replicate(rep), _current_index_stat_db(my_NAN), func_ptr_new_fullPatch(0),
 func_ptr_new_emptyPatch(0), func_ptr_add_tempPatch(0)
 {
@@ -426,26 +426,7 @@ void TMetapop::setCarryingCapacities()
     }
 }
 
-// ----------------------------------------------------------------------------------------
-// setFriction
-// ----------------------------------------------------------------------------------------
-/** set the friction of the patches
- */
-void TMetapop::setFriction()
-{
-    _frictionUsed = setPatchParam<double>("patch_friction",// parameter name (without "_fem" or "_mal")
-                                          &Patch::set_friction,   			 // set a sex specific value
-                                          &Patch::set_friction,   			 // set a general value
-                                          &Patch::set_friction,   			 // function to set all three params at once
-                                          &Patch::get_friction,   			 // get a sex specific value
-                                          &Patch::get_friction);				 // get a general value
-    
-    if(!_frictionUsed){
-        for(unsigned int i = 0; i < _patchNbr; ++i){// no parameter set: default initialization
-            _vPatch[i]->set_friction(1, 1, 1);
-        }
-    }
-}
+
 
 // ----------------------------------------------------------------------------------------
 // setInitPopulationSizes
@@ -672,12 +653,12 @@ TMetapop::temporal_change(const unsigned int& gen)
             bool optima = false, intensity = false, carCap = false,
             growth_rate = false, max_growth = false, symmetry = false,
             min = false, max = false, meanVe = false, h2 = false, fit_land = false,
-            stabVar = false, dirVar = false, friction = false, samples = false;
+            stabVar = false, dirVar = false, samples = false;
             map<string, Param*>::iterator pos = pMap->begin();
             for(; pos != pMap->end(); ++pos){
                 if(pos->first.find("patch_capacity") != string::npos)               	 carCap =      true;
                 
-                else if(pos->first.find("patch_friction") != string::npos)               friction =    true;
+
                 
                 else if(pos->first.find("patch_sample_size") != string::npos)            samples =     true;
                 
@@ -715,11 +696,7 @@ TMetapop::temporal_change(const unsigned int& gen)
                 if(_total_carrying_capacity != my_NAN) set_total_carrying_capacity();
             }
             
-            if(friction){
-                setFriction();
-                _pDisperse_LCE->_setDispersalFactor_friction(FEM);
-                if(_sexInitRatio) _pDisperse_LCE->_setDispersalFactor_friction(FEM);
-            }
+        
             
             if(samples){
                 if(!_vSamplePatchUsed)	setSampleSizes(false);	// do not alter the sampleID's
@@ -1074,7 +1051,6 @@ void TMetapop::createPopulations_coal()
  *   - patch_capacity
  *   - patch_ini_size
  *   - patch_sample_size
- *   - patch_friction
  * returns false if none of the parameters was explicitly set and true if it was
  */
 template<typename T>

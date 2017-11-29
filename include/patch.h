@@ -85,8 +85,6 @@ protected:
 	 * if not sampled at all it is NaN
 	 */
 
-	double _friction, _friction_sex[2];       /** Friction of the patch (i.e. disp_final = _friction*disp_rate) */
-
 	// selection pressure  selection[sex][trait][param]
 	double*** _localSelection;         // if stabilizing selection:     _localSelection[sex][trait][param]
 	//   0. pos: optima       (default: 0)
@@ -142,7 +140,6 @@ public:
 	void          init_containers           ( );
 	inline void   set_ID_individual         (unsigned int i) {_ID_individual = i;}   // used when genotypes are passed
 	void          set_PopSizes_ini          (unsigned int nbfem, unsigned int nbmal);
-	void          set_friction              (double nbfem, double nbmal);
 	void          set_PopSizes_ini_carrying_capacity();
 
 
@@ -273,8 +270,7 @@ public:
 	unsigned int  sampleSize(const age_idx& AGE){return sampleSize(FEM, AGE) + sampleSize(MAL,AGE);}
 	unsigned int  sampleSize(const age_t& AGE){return sampleSize(FEM, AGE) + sampleSize(MAL,AGE);}
 
-	double        get_friction              ( )              {return _friction;}
-	double        get_friction              (sex_t SEX)      {return _friction_sex[SEX];}
+
 
 	bool          get_isExtinct             ()               {return _isExtinct;}
 	double**      get_localSelection        (sex_t SEX)      {return _localSelection[SEX];}
@@ -380,10 +376,6 @@ public:
 	void set_N_ini(unsigned int N, sex_t sex){_N_ini_sex[sex] = N;}
 	void set_N_ini(unsigned int N){_N_ini = N;}
 
-	void set_friction(double Kfem, double Kmal, double K){
-		_friction_sex[FEM] = Kfem; _friction_sex[MAL] = Kmal; _friction = K;
-	}
-	void set_friction(double K, sex_t sex){_friction_sex[sex] = K;}
-	void set_friction(double K){_friction = K;}
+
 };
 #endif

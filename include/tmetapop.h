@@ -195,8 +195,6 @@ private:
     double** _density_threshold;					// allows to change the disp rate depending on the density (0: patch, 1: density, 2: change)
     Param**  _density_threshold_param;    // pointer to the param
     unsigned int _density_threshold_nbChanges;
-    
-    bool     _frictionUsed;             // is a friction specified?
     bool     _vSamplePatchUsed;
     bool     _vFullPatchUsed;
     bool     _sampleAllOrNothing;       // 0: compute stats always if possible; 1: compute only stats if entire sampling can be performed
@@ -339,10 +337,6 @@ public:
         }
     }
     
-    
-    /** function to set the friction */
-    void setFriction();
-    bool get_frictionUsed(){return _frictionUsed;}
     
     /**Sets the first generation of each replicates.
      @callgraph

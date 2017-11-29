@@ -1777,56 +1777,8 @@ void LCE_Disperse::_setDispersalFactor(const sex_t& SEX) {
         &LCE_Disperse::get_migr_factor_saturation;
 	}
 
-	    
-	_setDispersalFactor_friction(SEX);
 }
 
-// ----------------------------------------------------------------------------------------
-// LCE_Disperse::_setDispersalFactor_friction
-// ----------------------------------------------------------------------------------------
-void LCE_Disperse::_setDispersalFactor_friction(const sex_t& SEX) {
-    
-	if (_popPtr->get_frictionUsed()) {      // add the friction if used
-		if (get_migr_factor_funcPtr[SEX] == &LCE_Disperse::get_migr_factor_one)
-			get_migr_factor_funcPtr[SEX] =
-            &LCE_Disperse::get_migr_factor_one_friction;
-		else if (get_migr_factor_funcPtr[SEX]
-                 == &LCE_Disperse::get_migr_factor_min)
-			get_migr_factor_funcPtr[SEX] =
-            &LCE_Disperse::get_migr_factor_min_friction;
-		else if (get_migr_factor_funcPtr[SEX]
-                 == &LCE_Disperse::get_migr_factor_max)
-			get_migr_factor_funcPtr[SEX] =
-            &LCE_Disperse::get_migr_factor_max_friction;
-		else if (get_migr_factor_funcPtr[SEX]
-                 == &LCE_Disperse::get_migr_factor_k_threshold)
-			get_migr_factor_funcPtr[SEX] =
-            &LCE_Disperse::get_migr_factor_k_threshold_friction;
-		else if (get_migr_factor_funcPtr[SEX]
-                 == &LCE_Disperse::get_migr_factor_k_logistic)
-			get_migr_factor_funcPtr[SEX] =
-            &LCE_Disperse::get_migr_factor_k_logistic_friction;
-	}
-	else {                                	// remove friction if not used
-		if (get_migr_factor_funcPtr[SEX]
-            == &LCE_Disperse::get_migr_factor_one_friction)
-			get_migr_factor_funcPtr[SEX] = &LCE_Disperse::get_migr_factor_one;
-		else if (get_migr_factor_funcPtr[SEX]
-                 == &LCE_Disperse::get_migr_factor_min_friction)
-			get_migr_factor_funcPtr[SEX] = &LCE_Disperse::get_migr_factor_min;
-		else if (get_migr_factor_funcPtr[SEX]
-                 == &LCE_Disperse::get_migr_factor_max_friction)
-			get_migr_factor_funcPtr[SEX] = &LCE_Disperse::get_migr_factor_max;
-		else if (get_migr_factor_funcPtr[SEX]
-                 == &LCE_Disperse::get_migr_factor_k_threshold_friction)
-			get_migr_factor_funcPtr[SEX] =
-            &LCE_Disperse::get_migr_factor_k_threshold;
-		else if (get_migr_factor_funcPtr[SEX]
-                 == &LCE_Disperse::get_migr_factor_k_logistic_friction)
-			get_migr_factor_funcPtr[SEX] =
-            &LCE_Disperse::get_migr_factor_k_logistic;
-	}
-}
 
 // ----------------------------------------------------------------------------------------
 // LCE_Disperse::_setDispersal_direction

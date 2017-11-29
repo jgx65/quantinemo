@@ -280,7 +280,6 @@ Patch::init_containers()
 
 	_sampleID = my_NAN;
 	_N_sample = my_NAN;
-	_friction = 1;
 	for(unsigned int i = 0; i < 2; i++) {  // for each sex
 		_meanVe[i]= NULL;
 		_sdVe[i]  = NULL;
@@ -288,7 +287,6 @@ Patch::init_containers()
 		_Ksex[i]  = 0;
 		_N_ini_sex[i] = 0;
 		_N_sample_sex[i] = my_NAN;
-		_friction_sex[i] = 1;
 	}
 }
 
