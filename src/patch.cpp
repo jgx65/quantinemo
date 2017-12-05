@@ -544,7 +544,7 @@ void TPatch::set_fitnessLandscape_phenotype (unsigned int trait,  double *array,
 // set_localParameter
 // ----------------------------------------------------------------------------------------
 void TPatch::set_localParameter(double* array, sex_t sex,
-		void (Patch::*pt2Func)(double*, sex_t))
+		void (TPatch::*pt2Func)(double*, sex_t))
 {
 	(this->*pt2Func)(array, sex);
 }
@@ -553,7 +553,7 @@ void TPatch::set_localParameter(double* array, sex_t sex,
 // set_localParameter
 // ----------------------------------------------------------------------------------------
 void TPatch::set_localParameter_matrix(unsigned int trait, double* array, unsigned int size, sex_t sex,
-		void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
+		void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
 {
 	(this->*pt2Func)(trait, array, size, sex);
 }
@@ -562,7 +562,7 @@ void TPatch::set_localParameter_matrix(unsigned int trait, double* array, unsign
 // set_localParameter
 // ----------------------------------------------------------------------------------------
 void TPatch::set_localParameter_matrix_ofTrait(unsigned int t, double* array, unsigned int size, sex_t sex,
-		void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
+		void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
 {
 	(this->*pt2Func)(t, array, size, sex);
 }

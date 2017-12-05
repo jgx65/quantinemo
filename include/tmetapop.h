@@ -287,51 +287,51 @@ public:
     
     template<typename T>
     bool setPatchParam(string name,                                // parameter name (without "_fem" or "_mal")
-                       void (Patch::*setSexSpecific)(T, sex_t), // set a sex specific value
-                       void (Patch::*setGeneral)(T),            // set a general value
-                       void (Patch::*reset)(T, T, T),           // function to set all three params at once
-                       T (Patch::*getSexSpecific)(sex_t),       // get a sex specific value
-                       T (Patch::*getGeneral)());               // get a general value
+                       void (TPatch::*setSexSpecific)(T, sex_t), // set a sex specific value
+                       void (TPatch::*setGeneral)(T),            // set a general value
+                       void (TPatch::*reset)(T, T, T),           // function to set all three params at once
+                       T (TPatch::*getSexSpecific)(sex_t),       // get a sex specific value
+                       T (TPatch::*getGeneral)());               // get a general value
     
     // sex specific parameter
     template<typename T>
     bool setPatchParam(string name, sex_t SEX,
-                       void (Patch::*pt2Func)(T, sex_t),
-                       void (Patch::*pt2reset)(T, T, T));
+                       void (TPatch::*pt2Func)(T, sex_t),
+                       void (TPatch::*pt2reset)(T, T, T));
     template<typename T>
     void setPatchParam(string name, TMatrix* m, sex_t SEX,
-                       void (Patch::*pt2Func)(T, sex_t),
-                       void (Patch::*pt2reset)(T, T, T));
+                       void (TPatch::*pt2Func)(T, sex_t),
+                       void (TPatch::*pt2reset)(T, T, T));
     template<typename T>
     void setPatchParam(string name, T val, sex_t SEX,
-                       void (Patch::*pt2Func)(T, sex_t));
+                       void (TPatch::*pt2Func)(T, sex_t));
     
     // general parameter
     template<typename T>
-    bool setPatchParam(string name, void (Patch::*pt2Func)(T) ,
-                       void (Patch::*pt2reset)(T, T, T));
+    bool setPatchParam(string name, void (TPatch::*pt2Func)(T) ,
+                       void (TPatch::*pt2reset)(T, T, T));
     template<typename T>
-    void setPatchParam(string name, TMatrix* m, void (Patch::*pt2Func)(T),
-                       void (Patch::*pt2reset)(T, T, T));
+    void setPatchParam(string name, TMatrix* m, void (TPatch::*pt2Func)(T),
+                       void (TPatch::*pt2reset)(T, T, T));
     template<typename T>
-    void setPatchParam(string name, T val, void (Patch::*pt2Func)(T));
+    void setPatchParam(string name, T val, void (TPatch::*pt2Func)(T));
     
     template <typename T>
-    void setSexSpecificPatchParam_sexRatio(T (Patch::*getter)(), void (Patch::*setter)(T, sex_t)){
+    void setSexSpecificPatchParam_sexRatio(T (TPatch::*getter)(), void (TPatch::*setter)(T, sex_t)){
         for(unsigned int i = 0; i < _patchNbr; ++i){
             _vPatch[i]->setSexSpecificPatchParam_sexRatio(getter, setter, _sexInitRatio);
         }
     }
     
     template <typename T>
-    void setGeneralPatchParam_fem(T (Patch::*getter)(sex_t), void (Patch::*setter)(T)){
+    void setGeneralPatchParam_fem(T (TPatch::*getter)(sex_t), void (TPatch::*setter)(T)){
         for(unsigned int i = 0; i < _patchNbr; ++i){
             _vPatch[i]->setGeneralPatchParam_fem(getter, setter);
         }
     }
     
     template <typename T>
-    void setGeneralPatchParam_sum(T (Patch::*getter)(sex_t), void (Patch::*setter)(T)){
+    void setGeneralPatchParam_sum(T (TPatch::*getter)(sex_t), void (TPatch::*setter)(T)){
         for(unsigned int i = 0; i < _patchNbr; ++i){
             _vPatch[i]->setGeneralPatchParam_sum(getter, setter);
         }
@@ -351,30 +351,30 @@ public:
     /**Sets the Patch trait optima.
      @param optima a matrix containing the patches optima and intensity (see manual). */
     void set_patch_parameter(unsigned int nbTrait, string name, string name_full,
-                             void (Patch::*pt2Func)(double*, sex_t));
+                             void (TPatch::*pt2Func)(double*, sex_t));
     void set_patch_value_byValue(unsigned int nbTrait, double value, sex_t SEX,
-                                 void (Patch::*pt2Func)(double*, sex_t));
+                                 void (TPatch::*pt2Func)(double*, sex_t));
     void set_patch_value_byMatrix(unsigned int nbTrait, TMatrix* m, sex_t SEX, string name,
-                                  void (Patch::*pt2Func)(double*, sex_t));
+                                  void (TPatch::*pt2Func)(double*, sex_t));
     void set_patch_parameter_array(unsigned int nbTrait, string name, string name_full,
-                                   void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
+                                   void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
     void set_patch_array_byArray(unsigned int nbTrait, TTree<unsigned int, double>* m, sex_t SEX,
-                                 void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
+                                 void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
     void set_patch_array_byMatrix(unsigned int nbTrait, TTree<unsigned int, double>* m, sex_t SEX, string name,
-                                  void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
+                                  void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
     
     void set_patch_parameter_ofTrait(TTraitProto* pTrait, unsigned int curTrait, string trait, string name,
-                                     string name_full, void (Patch::*pt2Func)(unsigned int, double, sex_t));
+                                     string name_full, void (TPatch::*pt2Func)(unsigned int, double, sex_t));
     void set_patch_value_byValue_ofTrait(unsigned int curTrait, double value, sex_t SEX,
-                                         void (Patch::*pt2Func)(unsigned int, double, sex_t));
+                                         void (TPatch::*pt2Func)(unsigned int, double, sex_t));
     void set_patch_value_byMatrix_ofTrait(unsigned int curTrait, TMatrix* m, sex_t SEX, string name,
-                                          void (Patch::*pt2Func)(unsigned int, double, sex_t));
+                                          void (TPatch::*pt2Func)(unsigned int, double, sex_t));
     void set_patch_parameter_array_ofTrait(TTraitProto* pTrait, unsigned int curTrait, string trait, string name, string name_full,
-                                           void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
+                                           void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
     void set_patch_array_byArray_ofTrait(unsigned int curTrait, TMatrix* m, sex_t SEX, string name,
-                                         void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
+                                         void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
     void set_patch_array_byMatrix_ofTrait(unsigned int curTrait, TMatrix* m, sex_t SEX, string name,
-                                          void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
+                                          void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
     
     ///@name Implementations
     ///@{

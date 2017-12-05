@@ -1056,11 +1056,11 @@ void TMetapop::createPopulations_coal()
 template<typename T>
 bool
 TMetapop::setPatchParam(string name,                                // parameter name (without "_fem" or "_mal")
-                       void (Patch::*setSexSpecific)(T, sex_t),   // set a sex specific value
-                       void (Patch::*setGeneral)(T),              // set a general value
-                       void (Patch::*reset)(T, T, T),             // function to set all three params at once
-                       T (Patch::*getSexSpecific)(sex_t),         // get a sex specific value
-                       T (Patch::*getGeneral)())
+                       void (TPatch::*setSexSpecific)(T, sex_t),   // set a sex specific value
+                       void (TPatch::*setGeneral)(T),              // set a general value
+                       void (TPatch::*reset)(T, T, T),             // function to set all three params at once
+                       T (TPatch::*getSexSpecific)(sex_t),         // get a sex specific value
+                       T (TPatch::*getGeneral)())
 {
     
     // hermaphrodites
@@ -1107,8 +1107,8 @@ TMetapop::setPatchParam(string name,                                // parameter
 template<typename T>
 bool
 TMetapop::setPatchParam(string name, sex_t SEX,
-                       void (Patch::*pt2Func)(T, sex_t),
-                       void (Patch::*pt2reset)(T, T, T))
+                       void (TPatch::*pt2Func)(T, sex_t),
+                       void (TPatch::*pt2reset)(T, T, T))
 {
     Param* pParam = _paramSet->get_param(name);
     if(!pParam->isSet()) return false;                                                         // not set
@@ -1128,8 +1128,8 @@ TMetapop::setPatchParam(string name, sex_t SEX,
 template<typename T>
 void
 TMetapop::setPatchParam(string name, TMatrix* m, sex_t SEX,
-                       void (Patch::*pt2Func)(T, sex_t),
-                       void (Patch::*pt2reset)(T, T, T))
+                       void (TPatch::*pt2Func)(T, sex_t),
+                       void (TPatch::*pt2reset)(T, T, T))
 {
     if(!m->get_oneDims() && m->getNbCols()==2){        // the patches are directly addressed ({{patchID value}{patchID value}})
         unsigned int i, id,  nbRows = m->getNbRows();
@@ -1173,7 +1173,7 @@ TMetapop::setPatchParam(string name, TMatrix* m, sex_t SEX,
 template<typename T>
 void
 TMetapop::setPatchParam(string name, T value, sex_t SEX,
-                       void (Patch::*pt2Func)(T, sex_t))
+                       void (TPatch::*pt2Func)(T, sex_t))
 {
     for(unsigned int i = 0; i < _patchNbr; ++i){
         _vPatch[i]->set_localParameter(value, SEX, pt2Func);
@@ -1189,8 +1189,8 @@ TMetapop::setPatchParam(string name, T value, sex_t SEX,
 template<typename T>
 bool
 TMetapop::setPatchParam(string name,
-                       void (Patch::*pt2Func)(T),
-                       void (Patch::*pt2reset)(T, T, T))
+                       void (TPatch::*pt2Func)(T),
+                       void (TPatch::*pt2reset)(T, T, T))
 {
     Param* pParam = _paramSet->get_param(name);
     if(!pParam->isSet()) return false;                                                    // not set
@@ -1206,8 +1206,8 @@ TMetapop::setPatchParam(string name,
 template<typename T>
 void
 TMetapop::setPatchParam(string name, TMatrix* m,
-                       void (Patch::*pt2Func)(T),
-                       void (Patch::*pt2reset)(T, T, T))
+                       void (TPatch::*pt2Func)(T),
+                       void (TPatch::*pt2reset)(T, T, T))
 {
     if(!m->get_oneDims() && m->getNbCols()==2){        // the patches are directly addressed ({{patchID value}{patchID value}})
         unsigned int i, id,  nbRows = m->getNbRows();
@@ -1249,7 +1249,7 @@ TMetapop::setPatchParam(string name, TMatrix* m,
 template<typename T>
 void
 TMetapop::setPatchParam(string name,	T value,
-                       void (Patch::*pt2Func)(T))
+                       void (TPatch::*pt2Func)(T))
 {
     for(unsigned int i = 0; i < _patchNbr; ++i){
         _vPatch[i]->set_localParameter(value, pt2Func);
@@ -1267,7 +1267,7 @@ TMetapop::setPatchParam(string name,	T value,
 void TMetapop::set_patch_parameter(unsigned int nbTrait,
                                   string name,             // "patch_dir_sel_slope"
                                   string name_full,        // "slope"
-                                  void (Patch::*pt2Func)(double*, sex_t))
+                                  void (TPatch::*pt2Func)(double*, sex_t))
 {
     // sex specific settings have precedence
     if(_paramSet->isSet(name+"_fem")){
@@ -1315,7 +1315,7 @@ void TMetapop::set_patch_parameter_ofTrait(TTraitProto* pTrait,
                                           string trait,            // "_2"
                                           string name,             // "patch_dir_sel_slope"
                                           string name_full,        // "slope"
-                                          void (Patch::*pt2Func)(unsigned int, double, sex_t))
+                                          void (TPatch::*pt2Func)(unsigned int, double, sex_t))
 {
     // sex specific settings have precedence
     if(pTrait->get_parameter_isSet(name+"_fem"+trait)){
@@ -1357,7 +1357,7 @@ void TMetapop::set_patch_parameter_ofTrait(TTraitProto* pTrait,
 void TMetapop::set_patch_value_byValue(unsigned int nbTrait,
                                       double value,
                                       sex_t SEX,
-                                      void (Patch::*pt2Func)(double*, sex_t))
+                                      void (TPatch::*pt2Func)(double*, sex_t))
 {
     // get the slope for each patch/trait
     double *array = new double[nbTrait];
@@ -1379,7 +1379,7 @@ void TMetapop::set_patch_value_byValue(unsigned int nbTrait,
 void TMetapop::set_patch_value_byValue_ofTrait(unsigned int curTrait,
                                               double value,
                                               sex_t SEX,
-                                              void (Patch::*pt2Func)(unsigned int, double, sex_t))
+                                              void (TPatch::*pt2Func)(unsigned int, double, sex_t))
 {
     // set each patch
     for(unsigned int p = 0; p < _patchNbr; ++p) {
@@ -1395,7 +1395,7 @@ void TMetapop::set_patch_value_byMatrix(unsigned int nbTrait,
                                        TMatrix* m,
                                        sex_t SEX,
                                        string name_full,        // "slope"
-                                       void (Patch::*pt2Func)(double*, sex_t))
+                                       void (TPatch::*pt2Func)(double*, sex_t))
 {
     unsigned int p, t;
     
@@ -1435,7 +1435,7 @@ void TMetapop::set_patch_array_byMatrix_ofTrait(unsigned int curTrait,
                                                TMatrix* m,
                                                sex_t SEX,
                                                string name_full,        // "slope"
-                                               void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
+                                               void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
 {
     unsigned int p;
     
@@ -1467,7 +1467,7 @@ void TMetapop::set_patch_value_byMatrix_ofTrait(unsigned int curTrait,
                                                TMatrix* m,
                                                sex_t SEX,
                                                string name_full,        // "slope"
-                                               void (Patch::*pt2Func)(unsigned int t, double, sex_t))
+                                               void (TPatch::*pt2Func)(unsigned int t, double, sex_t))
 {
     double* mat = m->get();
     unsigned int size = m->length();
@@ -1495,7 +1495,7 @@ void TMetapop::set_patch_value_byMatrix_ofTrait(unsigned int curTrait,
 void TMetapop::set_patch_parameter_array(unsigned int nbTrait,
                                         string name,             // "patch_dir_sel_slope"
                                         string name_full,        // "slope"
-                                        void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
+                                        void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
 {
     TTree<unsigned int, double>* tree;
     
@@ -1546,7 +1546,7 @@ void TMetapop::set_patch_parameter_array_ofTrait(TTraitProto* pTrait,
                                                 string trait,
                                                 string name,             // "patch_dir_sel_slope"
                                                 string name_full,        // "slope"
-                                                void (Patch::*pt2Func)(unsigned int t, double*, unsigned int, sex_t))
+                                                void (TPatch::*pt2Func)(unsigned int t, double*, unsigned int, sex_t))
 {
     // sex specific settings have precedence
     TMatrix* m;
@@ -1586,7 +1586,7 @@ void TMetapop::set_patch_parameter_array_ofTrait(TTraitProto* pTrait,
 void TMetapop::set_patch_array_byArray(unsigned int nbTrait,
                                       TTree<unsigned int, double>* m,
                                       sex_t SEX,
-                                      void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
+                                      void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
 {
     assert(m->get_depth()==1);
     
@@ -1612,7 +1612,7 @@ void TMetapop::set_patch_array_byArray_ofTrait(unsigned int curTrait,
                                               TMatrix* m,
                                               sex_t SEX,
                                               string name_full,        // "slope"
-                                              void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
+                                              void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
 {
     assert(m->get_oneDims());
     
@@ -1633,7 +1633,7 @@ void TMetapop::set_patch_array_byMatrix(unsigned int nbTrait,
                                        TTree<unsigned int, double>* m,
                                        sex_t SEX,
                                        string name_full,        // "slope"
-                                       void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
+                                       void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
 {
     assert(m->get_depth()==3);
     // get and check the number of traits

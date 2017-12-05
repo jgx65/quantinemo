@@ -178,54 +178,54 @@ public:
 	void   set_pMetapop              (TMetapop* p)           {_popPtr=p;}
 
 	template <typename T>
-	void set_localParameter(T value, void (Patch::*pt2Func)(T)){
+    void set_localParameter(T value, void (TPatch::*pt2Func)(T)){
 		(this->*pt2Func)(value);
 	}
 
 	template <typename T>
-	void set_localParameter(T value, sex_t sex, void (Patch::*pt2Func)(T, sex_t)){
+    void set_localParameter(T value, sex_t sex, void (TPatch::*pt2Func)(T, sex_t)){
 		(this->*pt2Func)(value, sex);
 	}
 
 	template <typename T>
-	void set_localParameter(T fem, T mal, T gen, void (Patch::*pt2Func)(T, T, T)){
+	void set_localParameter(T fem, T mal, T gen, void (TPatch::*pt2Func)(T, T, T)){
 		(this->*pt2Func)(fem, mal, gen);
 	}
 
 	template <typename T>
-	void set_localParameter_ofTrait(unsigned int t, T value, void (Patch::*pt2Func)(unsigned int, T)){
+	void set_localParameter_ofTrait(unsigned int t, T value, void (TPatch::*pt2Func)(unsigned int, T)){
 		(this->*pt2Func)(t, value);
 	}
 
 	template <typename T>
-	void set_localParameter_ofTrait(unsigned int t, T value, sex_t sex, void (Patch::*pt2Func)(unsigned int, T, sex_t)){
+	void set_localParameter_ofTrait(unsigned int t, T value, sex_t sex, void (TPatch::*pt2Func)(unsigned int, T, sex_t)){
 		(this->*pt2Func)(t, value, sex);
 	}
 
 	template <typename T>
-	void set_localParameter_ofTrait(unsigned int t, T fem, T mal, T gen, void (Patch::*pt2Func)(unsigned int, T, T, T)){
+	void set_localParameter_ofTrait(unsigned int t, T fem, T mal, T gen, void (TPatch::*pt2Func)(unsigned int, T, T, T)){
 		(this->*pt2Func)(t, fem, mal, gen);
 	}
 
-	void set_localParameter(double* array, sex_t sex, void (Patch::*pt2Func)(double*, sex_t));
+	void set_localParameter(double* array, sex_t sex, void (TPatch::*pt2Func)(double*, sex_t));
 	void set_localParameter_matrix(unsigned int t, double* array, unsigned int size, sex_t sex,
-			void (Patch::*pt2Func)(unsigned int,  double*, unsigned int, sex_t));
+			void (TPatch::*pt2Func)(unsigned int,  double*, unsigned int, sex_t));
 	void set_localParameter_matrix_ofTrait(unsigned int t, double* array, unsigned int size, sex_t sex,
-			void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
+			void (TPatch::*pt2Func)(unsigned int, double*, unsigned int, sex_t));
 	template<typename T>
-	void setSexSpecificPatchParam_sexRatio(T (Patch::*getGeneral)(),
-			void (Patch::*setSexSpecific)(T, sex_t), double sexRatio){
+	void setSexSpecificPatchParam_sexRatio(T (TPatch::*getGeneral)(),
+			void (TPatch::*setSexSpecific)(T, sex_t), double sexRatio){
 		T val = (this->*getGeneral)();
 		T malVal = (T)(val * sexRatio);
 		(this->*setSexSpecific)(malVal, MAL);
 		(this->*setSexSpecific)(val-malVal, FEM);
 	}
 	template<typename T>
-	void setGeneralPatchParam_fem(T (Patch::*getSexSpecific)(sex_t), void (Patch::*setGeneral)(T)){
+	void setGeneralPatchParam_fem(T (TPatch::*getSexSpecific)(sex_t), void (TPatch::*setGeneral)(T)){
 		(this->*setGeneral)((this->*getSexSpecific)(FEM));
 	}
 	template<typename T>
-	void setGeneralPatchParam_sum(T (Patch::*getSexSpecific)(sex_t), void (Patch::*setGeneral)(T)){
+	void setGeneralPatchParam_sum(T (TPatch::*getSexSpecific)(sex_t), void (TPatch::*setGeneral)(T)){
 		(this->*setGeneral)((this->*getSexSpecific)(FEM) + (this->*getSexSpecific)(MAL));
 	}
 
@@ -308,7 +308,7 @@ public:
 	void          clear      (sex_t SEX, age_idx AGE);
     bool          individual_container_ok();
 
-	void 	        (Patch::*func_ptr_swap)(sex_t SEX, age_idx from, age_idx to);
+	void 	        (TPatch::*func_ptr_swap)(sex_t SEX, age_idx from, age_idx to);
 	void          swap       (sex_t SEX, age_idx from, age_idx to);
 	void          swap_ind  (sex_t SEX, age_idx from, age_idx to);
 	void          swap_coal  (sex_t SEX, age_idx from, age_idx to);
@@ -318,7 +318,7 @@ public:
 	void          move       (sex_t SEX, age_idx from, age_idx to);
 	void          move_ind   (sex_t SEX, age_idx from, age_idx to);
 	void          move_coal  (sex_t SEX, age_idx from, age_idx to);
-	void 	        (Patch::*func_ptr_move)(sex_t SEX, age_idx from, age_idx to);
+	void 	        (TPatch::*func_ptr_move)(sex_t SEX, age_idx from, age_idx to);
 	void          move       (age_idx from, age_idx to);
 
 	void          survive_randomly_inds_relative(sex_t SEX, age_idx AGE, double ratio);
@@ -331,7 +331,7 @@ public:
 	void          set_func_pointer();
 	void          set_func_pointer_coal();
 
-	void          (Patch::*func_ptr_flush)(sex_t SEX, age_idx AGE);
+	void          (TPatch::*func_ptr_flush)(sex_t SEX, age_idx AGE);
 	void          flush      ();
 	void          flush      (age_t AGE);
 	void          flush      (age_idx AGE);
