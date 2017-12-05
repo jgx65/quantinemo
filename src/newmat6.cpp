@@ -428,7 +428,9 @@ void CroutMatrix::operator=(const CroutMatrix& gm)
 {
    if (&gm == this) { REPORT tag_val = -1; return; }
    REPORT
-   if (indx > 0) { delete [] indx; indx = 0; }
+   //if (indx > 0) { delete [] indx; indx = 0; }
+   //Commented (by F. Michaud) since it does not compile under clang 9
+   // This should not introduce bug since this type of matrix is not used in QN. 
    ((CroutMatrix&)gm).get_aux(*this);
    Eq(gm);
 }
