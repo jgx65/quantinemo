@@ -38,7 +38,7 @@
 //---------------------------------------------------------------------------
 #include "types.h"
 class TTraitProto;
-class Patch;
+class TPatch;
 class TMetapop;
 //---------------------------------------------------------------------------
 /** this class contains the information of a locus position charachterized by the chromosme and
@@ -130,10 +130,10 @@ private:
     
     // sequence initialization
     double** _ini_frequencies; 	// frequencies to initialize a locus _ini_frequencies[patch][allele](only used for _ini_sequence_dist())
-    void (TLocus::*_ini_seq_model_func_ptr)(unsigned char* seq, Patch* patch, unsigned int size);
-    void  _ini_sequence_monomorph      (unsigned char* seq, Patch* patch, unsigned int size=ploidy);
-    void  _ini_sequence_uniform        (unsigned char* seq, Patch* patch, unsigned int size=ploidy);
-    void  _ini_sequence_dist           (unsigned char* seq, Patch* patch, unsigned int size=ploidy);
+    void (TLocus::*_ini_seq_model_func_ptr)(unsigned char* seq, TPatch* patch, unsigned int size);
+    void  _ini_sequence_monomorph      (unsigned char* seq, TPatch* patch, unsigned int size=ploidy);
+    void  _ini_sequence_uniform        (unsigned char* seq, TPatch* patch, unsigned int size=ploidy);
+    void  _ini_sequence_dist           (unsigned char* seq, TPatch* patch, unsigned int size=ploidy);
     
     // mutational correlation
 private:
@@ -169,7 +169,7 @@ public:
     void mutate(unsigned char* seq);
     void mutate_now(unsigned char* seq);
     bool mutate_now(unsigned char* seq, const double& rand);
-    void ini_sequence(unsigned char* seq, Patch* p, unsigned int s=ploidy){(this->*_ini_seq_model_func_ptr)(seq, p, s);}
+    void ini_sequence(unsigned char* seq, TPatch* p, unsigned int s=ploidy){(this->*_ini_seq_model_func_ptr)(seq, p, s);}
     
     void reset();
     

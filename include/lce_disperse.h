@@ -70,39 +70,39 @@ protected:
     double _migr_rate_propagule[2];
     double _disp_long_range_coef[2];// long range disperssal coefficient (currently for geometric function)
     
-    virtual	bool _computeTotEmigrants(Patch* curPatch, unsigned int* nbEmigrants,
+    virtual	bool _computeTotEmigrants(TPatch* curPatch, unsigned int* nbEmigrants,
                                       double* migrTotRate, double* sum_m, double* factor);
-    virtual unsigned int _computeTotEmigrants(Patch* curPatch, const double& migrTotRate,
+    virtual unsigned int _computeTotEmigrants(TPatch* curPatch, const double& migrTotRate,
                                               double& sum_m, const double& factor,
                                               const sex_t& SEX);
     
-    virtual bool _sendEmigrants(Patch* curPatch,const unsigned int& home,
+    virtual bool _sendEmigrants(TPatch* curPatch,const unsigned int& home,
                                 const unsigned int& target, unsigned int* totEmigr,
                                 double* migrRate, double* sum_m, double* factor);
-    virtual unsigned int _sendEmigrants(Patch* curPatch, const unsigned int& home,
+    virtual unsigned int _sendEmigrants(TPatch* curPatch, const unsigned int& home,
                                         const unsigned int& target, unsigned int& totEmigr,
                                         const double& migrRate, double& sum_m,
                                         const double& factor, const sex_t& SEX);
     
-    virtual void _sendEmigrant(Patch*, const unsigned int&,const unsigned int&,
+    virtual void _sendEmigrant(TPatch*, const unsigned int&,const unsigned int&,
                                const unsigned int&,const sex_t&,const unsigned int&);
-    virtual void _sendEmigrant(Patch*, const unsigned int&, const unsigned int&,
+    virtual void _sendEmigrant(TPatch*, const unsigned int&, const unsigned int&,
                                const unsigned int&,const sex_t&);
     
-    virtual void _absorbEmigrant(Patch* curPatch, const unsigned int& nbEmigr,
+    virtual void _absorbEmigrant(TPatch* curPatch, const unsigned int& nbEmigr,
                                  const sex_t& SEX, const unsigned int& popSize);
-    virtual void _absorbEmigrant(Patch* curPatch, const unsigned int& nbEmigr,
+    virtual void _absorbEmigrant(TPatch* curPatch, const unsigned int& nbEmigr,
                                  const sex_t& SEX);
     
-    virtual void migrate_2_neighbours(Patch* curPatch, const unsigned int& home,
+    virtual void migrate_2_neighbours(TPatch* curPatch, const unsigned int& home,
                                       const unsigned int& n1, const unsigned int& n2,
                                       double* m1, double* m2, double* tot_m);
-    virtual void migrate_4_neighbours(Patch* curPatch, const unsigned int& home,
+    virtual void migrate_4_neighbours(TPatch* curPatch, const unsigned int& home,
                                       const unsigned int& n1, const unsigned int& n2,
                                       const unsigned int& n3, const unsigned int& n4,
                                       double* m1, double* m2, double* m3, double* m4,
                                       double* tot_m);
-    virtual void migrate_8_neighbours(Patch* curPatch, const unsigned int& home,
+    virtual void migrate_8_neighbours(TPatch* curPatch, const unsigned int& home,
                                       const unsigned int& n1, const unsigned int& n2,
                                       const unsigned int& n3, const unsigned int& n4,
                                       const unsigned int& n5, const unsigned int& n6,
@@ -145,38 +145,38 @@ public:
 
     void _setDispersal_direction();
 
-    void immigrate(Patch* curPatch, vector<Patch*> vNeighbours, unsigned int totSize, unsigned int nb_mgir, sex_t SEX, age_idx fromAge=OFFSx, age_idx toAge=ADLTx);
+    void immigrate(TPatch* curPatch, vector<TPatch*> vNeighbours, unsigned int totSize, unsigned int nb_mgir, sex_t SEX, age_idx fromAge=OFFSx, age_idx toAge=ADLTx);
     
 protected:
-    inline void get_migr_factor(Patch* p, double* factor){
+    inline void get_migr_factor(TPatch* p, double* factor){
         factor[FEM] = (this->*get_migr_factor_funcPtr[FEM])(p, FEM); // female factor
         factor[MAL] = (this->*get_migr_factor_funcPtr[MAL])(p, MAL); // male factor
     }
-    double (LCE_Disperse::* get_migr_factor_funcPtr[2])(Patch* p, sex_t s);
-    inline double get_migr_factor_one(Patch* p, sex_t s){return 1.0;}
+    double (LCE_Disperse::* get_migr_factor_funcPtr[2])(TPatch* p, sex_t s);
+    inline double get_migr_factor_one(TPatch* p, sex_t s){return 1.0;}
 
-    inline double get_migr_factor_min(Patch* p, sex_t s){
+    inline double get_migr_factor_min(TPatch* p, sex_t s){
         return _disp_factor[s][0];
     }
-    inline double get_migr_factor_max(Patch* p, sex_t s){
+    inline double get_migr_factor_max(TPatch* p, sex_t s){
         return _disp_factor[s][1];
     }
-    inline double get_migr_factor_k_threshold(Patch* p, sex_t s){
+    inline double get_migr_factor_k_threshold(TPatch* p, sex_t s){
         return (p->get_density(OFFSx)<_disp_factor[s][2]) ? get_migr_factor_min(p,s) : get_migr_factor_max(p,s);
     }
-    inline double get_migr_factor_k_logistic(Patch* p, sex_t s){
+    inline double get_migr_factor_k_logistic(TPatch* p, sex_t s){
         return generalLogisticCurve(p->get_density(OFFSx), _disp_factor[s][0],
                                     _disp_factor[s][1], _disp_factor[s][2],
                                     _disp_factor[s][3], _disp_factor[s][4]);
     }
-    inline double get_migr_factor_saturation(Patch* p, sex_t s){
+    inline double get_migr_factor_saturation(TPatch* p, sex_t s){
 		double K(double(p->get_K(s)));
 		double nb_ind(double(p->size(s, OFFSx)));
 		double factor(0);
 		if(nb_ind > 0) factor  = (nb_ind-K*(1-exp(-nb_ind/K)))/nb_ind;
 		return factor ;}
     
-    inline double get_migr_factor_density_dependant(Patch* p, sex_t s){
+    inline double get_migr_factor_density_dependant(TPatch* p, sex_t s){
 		double K(double(p->get_K(s)));
 		double nb_ind(double(p->size(s, OFFSx)));
 		double factor(0);
@@ -213,7 +213,7 @@ public:
     virtual void immigrate_island( );
     
     vector<unsigned int> get_neighbours(const unsigned int& curPatch);
-    vector<Patch*>       get_neighbours(Patch* curPatch);
+    vector<TPatch*>       get_neighbours(TPatch* curPatch);
     
     LCE_Disperse(int rank = my_NAN);
     
@@ -273,32 +273,32 @@ public:
     };
     ~LCE_DisperseCoalescence(){}
     
-    void _sendEmigrant(Patch* curPatch, const unsigned int& home, const unsigned int& target,
+    void _sendEmigrant(TPatch* curPatch, const unsigned int& home, const unsigned int& target,
                        const unsigned int& nbEmigr);
-    void _sendEmigrant(Patch* curPatch, const unsigned int& home, const unsigned int& target,
+    void _sendEmigrant(TPatch* curPatch, const unsigned int& home, const unsigned int& target,
                        const unsigned int& nbEmigr, const sex_t& SEX, const unsigned int& popSize);
     void migrate_zeroMigration();
     void migrate_island_propagule();
     void migrate_matrix();
-    unsigned int _sendEmigrants(Patch* curPatch, const unsigned int& home, const unsigned int& target,
+    unsigned int _sendEmigrants(TPatch* curPatch, const unsigned int& home, const unsigned int& target,
                                 unsigned int& totEmigr, const double& migrRate, double& sum_m,
                                 const double& factor);
     void migrate_island();
-    bool _computeTotEmigrants(Patch* curPatch, unsigned int& totEmigr, const double& migrTotRate,
+    bool _computeTotEmigrants(TPatch* curPatch, unsigned int& totEmigr, const double& migrTotRate,
                               double& sum_m, const double& factor);
     void postDispersal_noSample_withFull();
     void postDispersal_noSample_noFull();
-    void migrate_8_neighbours(Patch* curPatch, const unsigned int& home,
+    void migrate_8_neighbours(TPatch* curPatch, const unsigned int& home,
                               const unsigned int& n1, const unsigned int& n2, const unsigned int& n3, const unsigned int& n4,
                               const unsigned int& n5, const unsigned int& n6, const unsigned int& n7, const unsigned int& n8,
                               double* m1, double* m2, double* m3, double* m4,
                               double* m5, double* m6, double* m7, double* m8,
                               double* tot_m);
-    void migrate_4_neighbours(Patch* curPatch, const unsigned int& home,
+    void migrate_4_neighbours(TPatch* curPatch, const unsigned int& home,
                               const unsigned int& n1, const unsigned int& n2, const unsigned int& n3, const unsigned int& n4,
                               double* m1, double* m2, double* m3, double* m4,
                               double* tot_m);
-    void migrate_2_neighbours(Patch* curPatch, const unsigned int& home,
+    void migrate_2_neighbours(TPatch* curPatch, const unsigned int& home,
                               const unsigned int& n1, const unsigned int& n2,
                               double* m1, double* m2, double* tot_m);
     

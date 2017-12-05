@@ -41,7 +41,7 @@
 using namespace std;
 
 class TMetapop;
-class Patch;
+class TPatch;
 class TStat_db;
 
 class StatRecBase;
@@ -89,8 +89,8 @@ public:
     virtual void      reset            ( );
     
     // all sampled patch (empty or populated)
-    vector<Patch*>&   get_vPatch();
-    Patch*            get_vPatch(const unsigned int& i);
+    vector<TPatch*>&   get_vPatch();
+    TPatch*            get_vPatch(const unsigned int& i);
     unsigned int      get_nbPatch();
     unsigned int      get_nbTotSamplePatch();
     
@@ -103,7 +103,7 @@ public:
     
     
     // just sampled and populated patches
-    vector<Patch*>&   get_vSamplePatch();
+    vector<TPatch*>&   get_vSamplePatch();
     unsigned int      get_nbSamplePatch();
     
     ///@name Stat recorder interface

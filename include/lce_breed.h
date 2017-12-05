@@ -69,8 +69,8 @@ public:
 protected:
 	void (LCE_Breed::* breed)();
 
-	void create_mating_pairs(Patch* cur_patch);
-	void createOffspring(Patch* cur_patch, unsigned int nbDaugthers, unsigned int nbSons);
+	void create_mating_pairs(TPatch* cur_patch);
+	void createOffspring(TPatch* cur_patch, unsigned int nbDaugthers, unsigned int nbSons);
 
 	TIndividual**  _aMatingPairs[2];      // 0: the male, 1: the female (used for the monogamy mating system
 	unsigned int  _aMatingPairs_size;    // the size of aMatingPairs
@@ -114,20 +114,20 @@ protected:
 	//                         2: get random less fittest;
 	//                         3: get random less fittest of a subset of less fittest;
 
-	TIndividual* (LCE_Breed::* getMother_func_ptr)(Patch*, unsigned int&, sex_t sex);///< A pointer to a mating function for females
-	TIndividual* (LCE_Breed::* getFather_func_ptr)(Patch*, unsigned int&, sex_t sex);///< A pointer to a mating function for males
+	TIndividual* (LCE_Breed::* getMother_func_ptr)(TPatch*, unsigned int&, sex_t sex);///< A pointer to a mating function for females
+	TIndividual* (LCE_Breed::* getFather_func_ptr)(TPatch*, unsigned int&, sex_t sex);///< A pointer to a mating function for males
 
 
-	void preMating(Patch* cur_patch);
+	void preMating(TPatch* cur_patch);
 
 	/** function to set the number of females and males and checks if the conditions are met for mating */
-    bool (LCE_Breed::* isMatingPossible_func_ptr)(Patch*);
-    bool isMatingPossible_1_sex(Patch* cur_patch);
-    bool isMatingPossible_2_sex(Patch* cur_patch);
-    bool isMatingPossible_sex_allocation_fix(Patch* cur_patch);
-    bool isMatingPossible_sex_allocation_G(Patch* cur_patch);
-    bool isMatingPossible_sex_allocation_Z(Patch* cur_patch);
-    bool isMatingPossible_sex_allocation_equation(Patch* cur_patch);
+    bool (LCE_Breed::* isMatingPossible_func_ptr)(TPatch*);
+    bool isMatingPossible_1_sex(TPatch* cur_patch);
+    bool isMatingPossible_2_sex(TPatch* cur_patch);
+    bool isMatingPossible_sex_allocation_fix(TPatch* cur_patch);
+    bool isMatingPossible_sex_allocation_G(TPatch* cur_patch);
+    bool isMatingPossible_sex_allocation_Z(TPatch* cur_patch);
+    bool isMatingPossible_sex_allocation_equation(TPatch* cur_patch);
     
 	/** function to compute the number of sons/daugthers depending on the total number of childs
 	 * nbSons and nbDaughters are changed
@@ -196,9 +196,9 @@ public:
     @param mother index of the mother in the current Patch, used in the \a polyginy an \a monoginy mating systems
     @return the pointer to the father chosen following the mating scheme chosen
 	 **/
-	virtual TIndividual* getMotherPtr (Patch* thePatch, unsigned int& index)
+	virtual TIndividual* getMotherPtr (TPatch* thePatch, unsigned int& index)
 	{ return (this->*getMother_func_ptr)(thePatch, index, FEM);  }
-	virtual TIndividual* getFatherPtr (Patch* thePatch, unsigned int& index)
+	virtual TIndividual* getFatherPtr (TPatch* thePatch, unsigned int& index)
 	{ return (this->*getFather_func_ptr)(thePatch, index, _maleSex);  }
 
 	///@name getter
@@ -222,49 +222,49 @@ public:
 	///@name Mating functions
 	///@{
 	// get the individual of the index ///////////////////////////////////////////
-	TIndividual* Index_MatingFunc                        (Patch*, unsigned int&, sex_t); // get the individual of the index
-	TIndividual* NULL_pointer                            (Patch*, unsigned int&, sex_t); // used for cloning
+	TIndividual* Index_MatingFunc                        (TPatch*, unsigned int&, sex_t); // get the individual of the index
+	TIndividual* NULL_pointer                            (TPatch*, unsigned int&, sex_t); // used for cloning
 
 	// random mating /////////////////////////////////////////////////////////////
-	TIndividual* Random_MatingFunc                       (Patch*, unsigned int&, sex_t);
-	TIndividual* Random_Index_MatingFunc                 (Patch*, unsigned int&, sex_t); // return the index of the selected individual
+	TIndividual* Random_MatingFunc                       (TPatch*, unsigned int&, sex_t);
+	TIndividual* Random_Index_MatingFunc                 (TPatch*, unsigned int&, sex_t); // return the index of the selected individual
 
-	TIndividual* Random_S_MatingFunc                     (Patch*, unsigned int&, sex_t);
-	TIndividual* Random_Index_S_MatingFunc               (Patch*, unsigned int&, sex_t);
+	TIndividual* Random_S_MatingFunc                     (TPatch*, unsigned int&, sex_t);
+	TIndividual* Random_Index_S_MatingFunc               (TPatch*, unsigned int&, sex_t);
 
 	// full polygyny /////////////////////////////////////////////////////////////
-	TIndividual* fullPolygyny_oneMale_MatingFunc         (Patch*, unsigned int&, sex_t);
-	TIndividual* fullPolygyny_manyMales_MatingFunc       (Patch*, unsigned int&, sex_t);
+	TIndividual* fullPolygyny_oneMale_MatingFunc         (TPatch*, unsigned int&, sex_t);
+	TIndividual* fullPolygyny_manyMales_MatingFunc       (TPatch*, unsigned int&, sex_t);
 
-	TIndividual* fullPolygyny_oneMale_S_MatingFunc       (Patch*, unsigned int&, sex_t); // the most fittest (not random)
-	TIndividual* fullPolygyny_manyMales_S_MatingFunc     (Patch*, unsigned int&, sex_t); // get the x most fittest (not random)
+	TIndividual* fullPolygyny_oneMale_S_MatingFunc       (TPatch*, unsigned int&, sex_t); // the most fittest (not random)
+	TIndividual* fullPolygyny_manyMales_S_MatingFunc     (TPatch*, unsigned int&, sex_t); // get the x most fittest (not random)
 
-	TIndividual* fullPolygyny_oneMale_S_MatingFunc2      (Patch*, unsigned int&, sex_t); // get the randomly chosen most fittest
-	TIndividual* fullPolygyny_manyMales_S_MatingFunc2    (Patch*, unsigned int&, sex_t); // get the randomly chosen x most fittest
+	TIndividual* fullPolygyny_oneMale_S_MatingFunc2      (TPatch*, unsigned int&, sex_t); // get the randomly chosen most fittest
+	TIndividual* fullPolygyny_manyMales_S_MatingFunc2    (TPatch*, unsigned int&, sex_t); // get the randomly chosen x most fittest
 
 	// partial polygyny //////////////////////////////////////////////////////////
-	TIndividual* partialPolygyny_oneMale_MatingFunc      (Patch*, unsigned int&, sex_t);
-	TIndividual* partialPolygyny_manyMales_MatingFunc    (Patch*, unsigned int&, sex_t);
+	TIndividual* partialPolygyny_oneMale_MatingFunc      (TPatch*, unsigned int&, sex_t);
+	TIndividual* partialPolygyny_manyMales_MatingFunc    (TPatch*, unsigned int&, sex_t);
 
-	TIndividual* partialPolygyny_oneMale_S_MatingFunc    (Patch*, unsigned int&, sex_t); // the most fittest (not random)
-	TIndividual* partialPolygyny_manyMales_S_MatingFunc  (Patch*, unsigned int&, sex_t); // get the x most fittest (not random)
+	TIndividual* partialPolygyny_oneMale_S_MatingFunc    (TPatch*, unsigned int&, sex_t); // the most fittest (not random)
+	TIndividual* partialPolygyny_manyMales_S_MatingFunc  (TPatch*, unsigned int&, sex_t); // get the x most fittest (not random)
 
-	TIndividual* partialPolygyny_oneMale_S_MatingFunc2   (Patch*, unsigned int&, sex_t); // get the randomly chosen most fittest
-	TIndividual* partialPolygyny_manyMales_S_MatingFunc2 (Patch*, unsigned int&, sex_t); // get the randomly chosen x most fittest
+	TIndividual* partialPolygyny_oneMale_S_MatingFunc2   (TPatch*, unsigned int&, sex_t); // get the randomly chosen most fittest
+	TIndividual* partialPolygyny_manyMales_S_MatingFunc2 (TPatch*, unsigned int&, sex_t); // get the randomly chosen x most fittest
 
 	// monogamy //////////////////////////////////////////////////////////////////
-	TIndividual* Monogyny_MatingFunc                     (Patch*, unsigned int&, sex_t); // mating pairs have to be first fixed
-	TIndividual* Monogyny_S_MatingFunc                   (Patch*, unsigned int&, sex_t); // mating pairs have to be first fixed
+	TIndividual* Monogyny_MatingFunc                     (TPatch*, unsigned int&, sex_t); // mating pairs have to be first fixed
+	TIndividual* Monogyny_S_MatingFunc                   (TPatch*, unsigned int&, sex_t); // mating pairs have to be first fixed
 
 	// one sex ///////////////////////////////////////////////////////////////////
-	TIndividual* oneSex_notSameIndex_MatingFunc          (Patch*, unsigned int&, sex_t); // get random individual, but not the same index
-	TIndividual* partialSelfing_MatingFunc               (Patch*, unsigned int&, sex_t); // partial sefling, the rest is random mating
+	TIndividual* oneSex_notSameIndex_MatingFunc          (TPatch*, unsigned int&, sex_t); // get random individual, but not the same index
+	TIndividual* partialSelfing_MatingFunc               (TPatch*, unsigned int&, sex_t); // partial sefling, the rest is random mating
 
-	TIndividual* oneSex_notSameIndex_S_MatingFunc        (Patch*, unsigned int&, sex_t); // get random individual, but not the same index
-	TIndividual* partialSelfing_S_MatingFunc             (Patch*, unsigned int&, sex_t); // partial sefling, the rest is random mating
+	TIndividual* oneSex_notSameIndex_S_MatingFunc        (TPatch*, unsigned int&, sex_t); // get random individual, but not the same index
+	TIndividual* partialSelfing_S_MatingFunc             (TPatch*, unsigned int&, sex_t); // partial sefling, the rest is random mating
 
-	TIndividual* partialCloning_MatingFunc               (Patch*, unsigned int&, sex_t); // partial sefling, the rest is random mating
-	TIndividual* partialCloning_S_MatingFunc             (Patch*, unsigned int&, sex_t); // partial sefling, the rest is random mating
+	TIndividual* partialCloning_MatingFunc               (TPatch*, unsigned int&, sex_t); // partial sefling, the rest is random mating
+	TIndividual* partialCloning_S_MatingFunc             (TPatch*, unsigned int&, sex_t); // partial sefling, the rest is random mating
 
 	///@}
 

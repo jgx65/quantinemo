@@ -98,8 +98,8 @@ void IndFactory::resetPrototype()
   #endif
 
 	//first, reset the ID counters of the individuals in the patch container:
-	vector<Patch*>::iterator curPop = _popPtr->get_vPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vPatch().end();
 	for(; curPop!=endPop; ++curPop){
 		(*curPop)->reset_ID_individual();
 	}
@@ -133,7 +133,7 @@ vector<int> IndFactory::getTraitIndex (string type)
 // makeNewIndividual
 // ----------------------------------------------------------------------------------------
 TIndividual*
-IndFactory::makeNewIndividual(TIndividual* mother, TIndividual* father, sex_t sex, Patch* homepatch)
+IndFactory::makeNewIndividual(TIndividual* mother, TIndividual* father, sex_t sex, TPatch* homepatch)
 {
   TIndividual* newind;
 
@@ -192,7 +192,7 @@ IndFactory::copyIndividual(TIndividual* oldInd)
 // ----------------------------------------------------------------------------------------
 // makeOffsprg
 // ----------------------------------------------------------------------------------------
-TIndividual* IndFactory::makeOffsprg(TIndividual* mother, TIndividual* father, sex_t sex, Patch* homepatch)
+TIndividual* IndFactory::makeOffsprg(TIndividual* mother, TIndividual* father, sex_t sex, TPatch* homepatch)
 {
   TIndividual* NewOffsprg = makeNewIndividual(mother,father,sex,homepatch);
 

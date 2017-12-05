@@ -42,7 +42,7 @@ class TTQuantiProto;
 class LCE_Breed;
 class LCE;
 class TMetapop;
-class Patch;
+class TPatch;
 class TIndividual;
 class FileServices;
 class StatServices;
@@ -228,8 +228,8 @@ public:
 	void          remove(sex_t sex, unsigned int i){_fit[sex]->remove(i);}
 
 	// function setting the fitness for individuals of an entire patch
-	void set_fitness(Patch*, age_idx, int* sort=NULL, int subset=0);
-	void set_fitness(Patch*, sex_t, age_idx); // only for a single sex
+	void set_fitness(TPatch*, age_idx, int* sort=NULL, int subset=0);
+	void set_fitness(TPatch*, sex_t, age_idx); // only for a single sex
 
 	void sort_fitness(sex_t SEX, int how, int subset=0);
 
@@ -243,13 +243,13 @@ public:
     
     // female sex allocation
     TEquation*  _female_sex_allocation;
-    void (TSelection::*female_sex_allocation_func_ptr)(Patch* patch, age_idx age, int* sort, int subset);
-    void female_sex_allocation_equation(Patch* patch, age_idx age, int* sort, int subset);
-    void female_sex_allocation_none(Patch* patch, age_idx age, int* sort, int subset){};
+    void (TSelection::*female_sex_allocation_func_ptr)(TPatch* patch, age_idx age, int* sort, int subset);
+    void female_sex_allocation_equation(TPatch* patch, age_idx age, int* sort, int subset);
+    void female_sex_allocation_none(TPatch* patch, age_idx age, int* sort, int subset){};
 
-    void female_sex_allocation_fix(Patch* patch, age_idx age, int* sort, int subset);
-    void female_sex_allocation_G(Patch* patch, age_idx age, int* sort, int subset);
-    void female_sex_allocation_Z(Patch* patch, age_idx age, int* sort, int subset);
+    void female_sex_allocation_fix(TPatch* patch, age_idx age, int* sort, int subset);
+    void female_sex_allocation_G(TPatch* patch, age_idx age, int* sort, int subset);
+    void female_sex_allocation_Z(TPatch* patch, age_idx age, int* sort, int subset);
     void set_fem_sex_allocation(unsigned int model, double value);
     void set_fem_sex_allocation(TEquation* p){
         _female_sex_allocation=p;

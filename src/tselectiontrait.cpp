@@ -280,7 +280,7 @@ TSelectionTrait::set_get_fitness_factor(TIndividual* ind)
  * have to be copied to the _selection_pressure array (this array has thus also to be created and deleted!)
  */
 void
-TSelectionTrait::_get_selection_pressure_tot_var(Patch* patch, sex_t SEX)
+TSelectionTrait::_get_selection_pressure_tot_var(TPatch* patch, sex_t SEX)
 {
 	_curPatch = patch;
 	_curSex = SEX;
@@ -297,7 +297,7 @@ TSelectionTrait::_get_selection_pressure_tot_var(Patch* patch, sex_t SEX)
  * pointer to the corresponding patch array (_selection_pressure must not be created nor deleted!)
  */
 void
-TSelectionTrait::_get_selection_pressure_tot_const(Patch* patch, sex_t SEX)
+TSelectionTrait::_get_selection_pressure_tot_const(TPatch* patch, sex_t SEX)
 {
 	_curPatch = patch;
 	_curSex = SEX;

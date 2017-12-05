@@ -50,7 +50,7 @@ using namespace std;
  * All individuals in a simulation are instantiated by a call to the IndFactory class (through its derived class Metapop)
  * which contains the individual and traits prototypes.
  */
-class Patch;
+class TPatch;
 class TGenome;
 class LCE_Breed_fitness;
 class TIndividual {
@@ -60,7 +60,7 @@ private:
 	sex_t _sex;                         /** Sex tag.*/
 	TIndividual *_mother, *_father;      /** Parents pointers.*/
 	string _motherID, _fatherID;        /** ID tags of the parents ("123_1": individual 123 of patch 1) */
-	Patch *_natalPatch, *_currentPatch; /** Patch tag.*/
+	TPatch *_natalPatch, *_currentPatch; /** Patch tag.*/
 	bool _isSelfed;                    	/** Selfing flag.*/
 	double _fecundity;                  /** Assigned fecundity*/
 	double _fitness;                  	/** current fitness of the individual */
@@ -101,8 +101,8 @@ public:
 	void            setMother              (TIndividual* m)        {_mother = m; if(m){_motherID = m->getID();}}
 	void            setFatherID            (string f)             {_fatherID = f;}
 	void            setMotherID            (string m)             {_motherID = m;}
-	void            setNatalPatch          (Patch* p)             {_natalPatch = p;}
-	void            setCurrentPatch        (Patch* p)             {_currentPatch = p;}
+	void            setNatalPatch          (TPatch* p)             {_natalPatch = p;}
+	void            setCurrentPatch        (TPatch* p)             {_currentPatch = p;}
 	void            setSex                 (sex_t sex)            {_sex = sex;}
 	void            setIsSelfed            (bool s)               {_isSelfed = s;}
 	void            setFitness             (double value)         {_fitness = value;}
@@ -116,8 +116,8 @@ public:
 	TIndividual*     getMother              ()                      {return _mother;}
 	string          getFatherID            ()                      {return _fatherID;}
 	string          getMotherID            ()                      {return _motherID;}
-	Patch*          getNatalPatch          ()                      {return _natalPatch;}
-	Patch*          getCurrentPatch        ()                      {return _currentPatch;}
+	TPatch*          getNatalPatch          ()                      {return _natalPatch;}
+	TPatch*          getCurrentPatch        ()                      {return _currentPatch;}
 	sex_t           getSex                 ()                      {return _sex;}
 	bool            isFemale               ()                      {return (_sex == FEM);}
 	/**@param cat the mating category, 0 = between Patch, 1 = within Patch*/

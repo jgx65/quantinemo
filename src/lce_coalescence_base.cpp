@@ -248,7 +248,7 @@ void LCE_Coalescence_base::set_up_metapop()
     map<unsigned int, unsigned int>::iterator curPos, endPos;
     unsigned char** curSeq = _seq;  // iterator
     unsigned int i;
-    Patch* curPatch;
+    TPatch* curPatch;
     for (curPos = _iniSamples.begin(), endPos = _iniSamples.end(); curPos != endPos; ++curPos) {
         curPatch = _popPtr->get_vPatch(curPos->first);
         for (i = curPos->second; i > 0; --i, ++curSeq, ++curSeq) { // generate each individual (the seq has to be twice iterated)
@@ -473,7 +473,7 @@ void LCE_Coalescence_base::set_popSize(const unsigned int& gen, const unsigned i
 void LCE_Coalescence_base::store_popSizes(const unsigned int& curGen)
 {
     unsigned int size;
-    vector<Patch*>::iterator curPop, endPop = get_pop_ptr()->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_pop_ptr()->get_vFullPatch().end();
     for (curPop = get_pop_ptr()->get_vFullPatch().begin(); curPop != endPop; ++curPop) {
         size = (*curPop)->size(FEM, ADLTx);
         if (size) set_popSize(curGen, (*curPop)->get_ID(), size);

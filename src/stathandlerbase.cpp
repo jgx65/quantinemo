@@ -41,13 +41,13 @@ using namespace std;
 // functions to get patches
 // ----------------------------------------------------------------------------------------
 // all patch (empty or populated, i corresponds to the id of the patch
-vector<Patch*>& StatHandlerBase::get_vPatch() {return _popPtr->get_vPatch();}
-Patch*          StatHandlerBase::get_vPatch(const unsigned int& i) {return _popPtr->get_vPatch(i);}
+vector<TPatch*>& StatHandlerBase::get_vPatch() {return _popPtr->get_vPatch();}
+TPatch*          StatHandlerBase::get_vPatch(const unsigned int& i) {return _popPtr->get_vPatch(i);}
 unsigned int    StatHandlerBase::get_nbPatch() {return _popPtr->get_nbPatch();}
 
 // sampled AND currently populated patches (i does not correspond to anything)
 unsigned int    StatHandlerBase::get_nbTotSamplePatch() {return _popPtr->get_nbTotSamplePatch();}
-vector<Patch*>& StatHandlerBase::get_vSamplePatch() {return _popPtr->get_vSamplePatch();}
+vector<TPatch*>& StatHandlerBase::get_vSamplePatch() {return _popPtr->get_vSamplePatch();}
 
 
 // ----------------------------------------------------------------------------------------
@@ -57,8 +57,8 @@ unsigned int
 StatHandlerBase::get_nbSamplePatch(const sex_t& SEX)
 {
     unsigned int size=0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(; curPop != endPop; ++curPop){
         if((*curPop)->size(SEX, ALL)) ++size;
     }
@@ -69,8 +69,8 @@ unsigned int
 StatHandlerBase::get_nbSamplePatch(const sex_t& SEX, const age_idx& AGE)
 {
     unsigned int size=0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(; curPop != endPop; ++curPop){
         if((*curPop)->size(SEX, AGE)) ++size;
     }
@@ -81,8 +81,8 @@ unsigned int
 StatHandlerBase::get_nbSamplePatch(const sex_t& SEX, const age_t& AGE)
 {
     unsigned int size=0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(; curPop != endPop; ++curPop){
         if((*curPop)->size(SEX, AGE)) ++size;
     }
@@ -93,8 +93,8 @@ unsigned int
 StatHandlerBase::get_nbSamplePatch(const age_idx& AGE)
 {
     unsigned int size=0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(; curPop != endPop; ++curPop){
         if((*curPop)->size(AGE)) ++size;
     }
@@ -105,8 +105,8 @@ unsigned int
 StatHandlerBase::get_nbSamplePatch(const age_t& AGE)
 {
     unsigned int size=0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(; curPop != endPop; ++curPop){
         if((*curPop)->size( AGE)) ++size;
     }

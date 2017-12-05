@@ -754,27 +754,27 @@ TTQuantiProto::temporal_change(const unsigned int& gen)
             for(; pos != pMap->end(); ++pos){
                 // stabilizing selection
                 if(pos->first == "quanti_stab_sel_optima"+trait){
-                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_stab_sel_optima",     "optima", &Patch::set_localOptima);    // default 0
+                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_stab_sel_optima",     "optima", &TPatch::set_localOptima);    // default 0
                 }
                 else if(pos->first == "quanti_stab_sel_intensity"+trait){
-                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_stab_sel_intensity",  "intensity", &Patch::set_localIntensity);    // default 1
+                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_stab_sel_intensity",  "intensity", &TPatch::set_localIntensity);    // default 1
                 }
                 
                 // directional selection
                 else if(pos->first == "quanti_dir_sel_growth_rate"+trait){
-                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_dir_sel_growth_rate", "growth_rate", &Patch::set_localGrowthRate);  // default 1
+                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_dir_sel_growth_rate", "growth_rate", &TPatch::set_localGrowthRate);  // default 1
                 }
                 else if(pos->first == "quanti_dir_sel_max_growth"+trait){
-                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_dir_sel_max_growth",  "max_growth",  &Patch::set_localMaxGrowth);   // default 1
+                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_dir_sel_max_growth",  "max_growth",  &TPatch::set_localMaxGrowth);   // default 1
                 }
                 else if(pos->first == "quanti_dir_sel_symmetry"+trait){
-                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_dir_sel_symmetry",    "symmetry",    &Patch::set_localSymmetry);    // default 0.5
+                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_dir_sel_symmetry",    "symmetry",    &TPatch::set_localSymmetry);    // default 0.5
                 }
                 else if(pos->first == "quanti_dir_sel_min"+trait){
-                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_dir_sel_min",         "min",         &Patch::set_localMin);         // default 0
+                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_dir_sel_min",         "min",         &TPatch::set_localMin);         // default 0
                 }
                 else if(pos->first == "quanti_dir_sel_max"+trait){
-                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_dir_sel_max",         "max",         &Patch::set_localMax);         // default 1
+                    _popPtr->set_patch_parameter_ofTrait(this, traitIndex, trait, "quanti_dir_sel_max",         "max",         &TPatch::set_localMax);         // default 1
                 }
                 
                 // fitness landscape (both have to be changed at the satraitIndexme time: do it later)
@@ -796,8 +796,8 @@ TTQuantiProto::temporal_change(const unsigned int& gen)
             
             // temporal changes have been made: perform if necessary the last changes
             if(fit_land){   // (phenotype has to be set after fitness due to sorting)
-                _popPtr->set_patch_parameter_array_ofTrait(this, traitIndex, trait, "patch_fitness_landscape",   "fitness_landscape", &Patch::set_fitnessLandscape_fitness);
-                _popPtr->set_patch_parameter_array_ofTrait(this, traitIndex, trait, "patch_phenotype_landscape", "phenotype_landscape", &Patch::set_fitnessLandscape_phenotype);
+                _popPtr->set_patch_parameter_array_ofTrait(this, traitIndex, trait, "patch_fitness_landscape",   "fitness_landscape", &TPatch::set_fitnessLandscape_fitness);
+                _popPtr->set_patch_parameter_array_ofTrait(this, traitIndex, trait, "patch_phenotype_landscape", "phenotype_landscape", &TPatch::set_fitnessLandscape_phenotype);
             }
         }
     }
@@ -2384,8 +2384,8 @@ TTQuantiFHvalue::FHwrite ()
     FILE.precision(4);
     
     unsigned int a, mask;
-    vector<Patch*>::iterator curPop = _popPtr->get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vSamplePatch().end();
     for(i=0; curPop!=endPop; ++curPop) {
         for(a = 0, mask=1; a < NB_AGE_CLASSES; ++a, mask <<= 1) {
             if(mask & _age){
@@ -2400,7 +2400,7 @@ TTQuantiFHvalue::FHwrite ()
 // FHwrite
 // ----------------------------------------------------------------------------------------
 void TTQuantiFHvalue::FHwrite (const age_idx& cur_age, const sex_t& cur_sex, ostream& FILE,
-                               Patch* current_patch, const int& patch_id)
+                               TPatch* current_patch, const int& patch_id)
 {
     unsigned int nbInd = current_patch->size(cur_sex, cur_age);
     if(!nbInd) return;
@@ -2563,8 +2563,8 @@ TTQuantiSH::setVar_Va(const age_idx& AGE)
     double mean; // not really used...
     
     // for each population
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(unsigned int i=0; curPop!=endPop; ++curPop, ++i){ // for each patch
         (this->*get_Va_ofPatch_func_ptr)(*curPop, AGE, mean, _varA[i], _alleleFreq_local[AGE][i]);
     }
@@ -2578,7 +2578,7 @@ TTQuantiSH::setVar_Va(const age_idx& AGE)
  * meanA is not computed. But needed for function pointer
  */
 void
-TTQuantiSH::get_Va_ofPatch_random_mating(Patch* curPop, const age_idx& AGE,
+TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
                                          double& meanA, double& varA, map<unsigned char, double>* freqs)
 {
     vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
@@ -2687,7 +2687,7 @@ TTQuantiSH::get_Va_ofPatch_random_mating(Patch* curPop, const age_idx& AGE,
 // ----------------------------------------------------------------------------------------
 /** computation of the additive genetic variance (for any case)  */
 void
-TTQuantiSH::get_Va_ofPatch_regression(Patch* curPop, const age_idx& AGE,
+TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
                                       double& meanA, double& varA,
                                       map<unsigned char, double>* freqs)
 {
@@ -2951,7 +2951,7 @@ TTQuantiSH::compute_alpha(double* y, const map<unsigned char, int*>& x, const un
  * returns true if it was able to compute Va otherwise false
  */
 bool
-TTQuantiSH::remove_private_alleles_compute_alpha(Patch* crnt_patch, const unsigned int& sizeF,
+TTQuantiSH::remove_private_alleles_compute_alpha(TPatch* crnt_patch, const unsigned int& sizeF,
                                                  const unsigned int& sizeM, map<unsigned char, double>& alpha,
                                                  double* arrayG, const age_idx& age_pos,
                                                  map<unsigned char, double>& allele_freq, const unsigned int& l)
@@ -3060,8 +3060,8 @@ TTQuantiSH::setMeanAndVar_Vg(const age_idx& AGE)
     
     
     // for each population
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(unsigned int i=0; curPop!=endPop; ++curPop, ++i){
         setMeanAndVar_Vg_ofPatch(*curPop, AGE, _meanG[2][i], _varG[2][i]);
     }
@@ -3092,8 +3092,8 @@ TTQuantiSH::setMeanAndVar_Vg(const age_idx& AGE, sex_t SEX)
     
     
     // for each population
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(unsigned int i=0; curPop!=endPop; ++curPop, ++i){
         setMeanAndVar_Vg_ofPatch(*curPop, AGE, _meanG[SEX][i], _varG[SEX][i], SEX);
     }
@@ -3104,7 +3104,7 @@ TTQuantiSH::setMeanAndVar_Vg(const age_idx& AGE, sex_t SEX)
 // ----------------------------------------------------------------------------------------
 /** compute Vg across all individuals of the patch */
 void
-TTQuantiSH::setMeanAndVar_Vg_ofPatch_allInds(Patch* curPop, const age_idx& AGE,
+TTQuantiSH::setMeanAndVar_Vg_ofPatch_allInds(TPatch* curPop, const age_idx& AGE,
                                              double& meanG, double& varG, map<unsigned char, double>* freqs)
 {
     // create a temporary array with all individuals
@@ -3139,7 +3139,7 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch_allInds(Patch* curPop, const age_idx& AGE,
 // ----------------------------------------------------------------------------------------
 /** compute Vg for the sampled individuals */
 void
-TTQuantiSH::setMeanAndVar_Vg_ofPatch(Patch* curPop, const age_idx& AGE,
+TTQuantiSH::setMeanAndVar_Vg_ofPatch(TPatch* curPop, const age_idx& AGE,
                                      double& meanG, double& varG, map<unsigned char, double>* freqs)
 {
     // create a temporary array with all individuals
@@ -3173,7 +3173,7 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch(Patch* curPop, const age_idx& AGE,
 // setMeanAndVarGenotyp
 // ----------------------------------------------------------------------------------------
 void
-TTQuantiSH::setMeanAndVar_Vg_ofPatch(Patch* curPop, const age_idx& AGE,
+TTQuantiSH::setMeanAndVar_Vg_ofPatch(TPatch* curPop, const age_idx& AGE,
                                      double& meanG, double& varG, sex_t SEX, map<unsigned char, double>* freqs)
 {
     // create a temporary array with all individuals
@@ -3221,8 +3221,8 @@ TTQuantiSH::setMeanAndVar_Vp()
     }
     
     // for each population
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(unsigned int i=0; curPop!=endPop; ++curPop, ++i){ // for each patch
         setMeanAndVar_Vp_ofPatch(*curPop, _meanP[2][i], _varP[2][i]);
     }
@@ -3252,8 +3252,8 @@ TTQuantiSH::setMeanAndVar_Vp(sex_t SEX)
     }
     
     // for each population
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(unsigned int i=0; curPop!=endPop; ++curPop, ++i){ // for each patch
         setMeanAndVar_Vp_ofPatch(*curPop, _meanP[SEX][i], _varP[SEX][i], SEX);
     }
@@ -3263,7 +3263,7 @@ TTQuantiSH::setMeanAndVar_Vp(sex_t SEX)
 // setMeanAndVarPhenotype
 // ----------------------------------------------------------------------------------------
 void
-TTQuantiSH::setMeanAndVar_Vp_ofPatch(Patch* curPop, double& meanP, double& varP)
+TTQuantiSH::setMeanAndVar_Vp_ofPatch(TPatch* curPop, double& meanP, double& varP)
 {
     vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, ADLTx);
     vector<TIndividual*>& curMal = curPop->get_sampled_inds(MAL, ADLTx);
@@ -3299,7 +3299,7 @@ TTQuantiSH::setMeanAndVar_Vp_ofPatch(Patch* curPop, double& meanP, double& varP)
 // setMeanAndVarPhenotype
 // ----------------------------------------------------------------------------------------
 void
-TTQuantiSH::setMeanAndVar_Vp_ofPatch(Patch* curPop, double& meanP, double& varP, sex_t SEX)
+TTQuantiSH::setMeanAndVar_Vp_ofPatch(TPatch* curPop, double& meanP, double& varP, sex_t SEX)
 {
     vector<TIndividual*>& cur = curPop->get_sampled_inds(SEX, ADLTx);
     unsigned int size = (unsigned int)cur.size();
@@ -3348,8 +3348,8 @@ TTQuantiSH::setMeanAndVar_Wp()
     }
     
     // for each population
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(unsigned int i=0; curPop!=endPop; ++curPop, ++i){ // for each patch
         setMeanAndVar_Wp_ofPatch(*curPop, _meanW[2][i], _varW[2][i]);
     }
@@ -3379,8 +3379,8 @@ TTQuantiSH::setMeanAndVar_Wp(sex_t SEX)
     }
     
     // for each population
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(unsigned int i=0; curPop!=endPop; ++curPop, ++i){ // for each patch
         setMeanAndVar_Wp_ofPatch(*curPop, _meanW[SEX][i], _varW[SEX][i], SEX);
     }
@@ -3390,7 +3390,7 @@ TTQuantiSH::setMeanAndVar_Wp(sex_t SEX)
 // setMeanAndVarFitness
 // ----------------------------------------------------------------------------------------
 void
-TTQuantiSH::setMeanAndVar_Wp_ofPatch(Patch* curPop, double& meanW, double& varW)
+TTQuantiSH::setMeanAndVar_Wp_ofPatch(TPatch* curPop, double& meanW, double& varW)
 {
     vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, ADLTx);
     vector<TIndividual*>& curMal = curPop->get_sampled_inds(MAL, ADLTx);
@@ -3426,7 +3426,7 @@ TTQuantiSH::setMeanAndVar_Wp_ofPatch(Patch* curPop, double& meanW, double& varW)
 // setMeanAndVarFitness
 // ----------------------------------------------------------------------------------------
 void
-TTQuantiSH::setMeanAndVar_Wp_ofPatch(Patch* curPop, double& meanW, double& varW, sex_t SEX)
+TTQuantiSH::setMeanAndVar_Wp_ofPatch(TPatch* curPop, double& meanW, double& varW, sex_t SEX)
 {
     vector<TIndividual*>& cur = curPop->get_sampled_inds(SEX, ADLTx);
     unsigned int size = (unsigned int)cur.size();
@@ -3503,7 +3503,7 @@ TTQuantiSH::setQst_perPatchPair(const age_idx& AGE)
     
     // for each pair of pops
     unsigned int i, j;
-    vector<Patch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
     for(i=0, curPop1=get_vSamplePatch().begin(); curPop1!=endPop; ++i, ++curPop1){ // for each patch
         if(_meanP[2][i] == my_NAN) continue;                   // both pops have to be populated
         array[0] = _meanP[2][i];
@@ -3580,7 +3580,7 @@ TTQuantiSH::setQstF_perPatchPair(const age_idx& AGE)
     // get Ho and Hs for each pop
     double * hs_pop = new double[get_current_nbSamplePatch()];
     double * ho_pop = new double[get_current_nbSamplePatch()];
-    vector<Patch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
     for(i=0, curPop1=get_vSamplePatch().begin(); curPop1!=endPop; ++i, ++curPop1){
         ho_pop[i] = getHo_ofPatch(*curPop1, AGE);
         hs_pop[i] = getHs_ofPatch(*curPop1, AGE);

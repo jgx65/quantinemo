@@ -383,11 +383,11 @@ TMetapop::~TMetapop()
 bool TMetapop::setSampleSizes(bool set_sampleID)
 {
     if(setPatchParam<double>("patch_sample_size", // parameter name (without "_fem" or "_mal")
-                             &Patch::set_N_sample,           // set a sex specific value
-                             &Patch::set_N_sample,           // set a general value
-                             &Patch::set_N_sample,           // function to set all three params at once
-                             &Patch::get_N_sample,           // get a sex specific value
-                             &Patch::get_N_sample))          // get a general value
+                             &TPatch::set_N_sample,           // set a sex specific value
+                             &TPatch::set_N_sample,           // set a general value
+                             &TPatch::set_N_sample,           // function to set all three params at once
+                             &TPatch::get_N_sample,           // get a sex specific value
+                             &TPatch::get_N_sample))          // get a general value
     {
         if(set_sampleID){
             for(unsigned int i = 0; i < _patchNbr; ++i){  // no parameter set: default initialization
@@ -416,11 +416,11 @@ bool TMetapop::setSampleSizes(bool set_sampleID)
 void TMetapop::setCarryingCapacities()
 {
     if(!setPatchParam<unsigned int>("patch_capacity", // parameter name (without "_fem" or "_mal")
-                                    &Patch::set_K,                      // set a sex specific value
-                                    &Patch::set_K,                      // set a general value
-                                    &Patch::set_K,                      // function to set all three params at once
-                                    &Patch::get_K,                      // get a sex specific value
-                                    &Patch::get_K))                     // get a general value
+                                    &TPatch::set_K,                      // set a sex specific value
+                                    &TPatch::set_K,                      // set a general value
+                                    &TPatch::set_K,                      // function to set all three params at once
+                                    &TPatch::get_K,                      // get a sex specific value
+                                    &TPatch::get_K))                     // get a general value
     {
         error("Carrying capacity: the carrying capacity has to be set!\n");
     }
@@ -436,11 +436,11 @@ void TMetapop::setCarryingCapacities()
 void TMetapop::setInitPopulationSizes()
 {
     if(!setPatchParam<unsigned int>("patch_ini_size", // parameter name (without "_fem" or "_mal")
-                                    &Patch::set_N_ini,                  // set a sex specific value
-                                    &Patch::set_N_ini,                  // set a general value
-                                    &Patch::set_N_ini,                  // function to set all three params at once
-                                    &Patch::get_N_ini,                  // get a sex specific value
-                                    &Patch::get_N_ini))                 // get a general value
+                                    &TPatch::set_N_ini,                  // set a sex specific value
+                                    &TPatch::set_N_ini,                  // set a general value
+                                    &TPatch::set_N_ini,                  // function to set all three params at once
+                                    &TPatch::get_N_ini,                  // get a sex specific value
+                                    &TPatch::get_N_ini))                 // get a general value
     {
         for(unsigned int i = 0; i < _patchNbr; ++i){    // no parameter set: default initialization
             _vPatch[i]->set_PopSizes_ini_carrying_capacity();
@@ -467,7 +467,7 @@ TMetapop::set_sampled_patches(bool allGens)
 {
     // reset the patches state ///////////////////////////////////////////////////
     unsigned int i;
-    vector<Patch*>::iterator curPatch, endPatch;
+    vector<TPatch*>::iterator curPatch, endPatch;
     for(curPatch=_vPatch.begin(), endPatch=_vPatch.end(); curPatch!=endPatch; ++curPatch){
         (*curPatch)->set_sampleID(my_NAN);
     }
@@ -475,7 +475,7 @@ TMetapop::set_sampled_patches(bool allGens)
     // set by "patch_sample_size" ////////////////////////////////////////////////
     if(setSampleSizes(false)){ // dont set the default values if not set
         // assign the sampleID of all sampled patches
-        Patch* curPatch;
+        TPatch* curPatch;
         for(i=0, _tot_sampled_patches=0; i<_patchNbr; ++i){
             curPatch = get_vPatch(i);
             if(curPatch->get_N_sample()==my_NAN || !curPatch->get_N_sample()) continue;
@@ -514,7 +514,7 @@ TMetapop::set_sampled_patches(bool allGens)
                 // set the samples and update the sampleIDs
                 if(setSampleSizes(false)){ // dont set the default values if not set
                     // assign the sampleID of all sampled patches
-                    Patch* curPatch;
+                    TPatch* curPatch;
                     for(i=0; i<_patchNbr; ++i){
                         curPatch = get_vPatch(i);
                         if(curPatch->get_N_sample()==my_NAN || !curPatch->get_N_sample()) continue;
@@ -540,7 +540,7 @@ TMetapop::set_sampled_patches(bool allGens)
                 // set the samples and update the sampleIDs
                 if(setSampleSizes(false)){ // dont set the default values if not set
                     // assign the sampleID of all sampled patches
-                    Patch* curPatch;
+                    TPatch* curPatch;
                     for(i=0; i<_patchNbr; ++i){
                         curPatch = get_vPatch(i);
                         if(curPatch->get_N_sample()==my_NAN || !curPatch->get_N_sample()) continue;
@@ -704,7 +704,7 @@ TMetapop::temporal_change(const unsigned int& gen)
                     setSampleSizes(true);                         // set as well the sample IDs
                     set_sampledInds(ALL, false);                  // a newly not sampled pop has to be somehow reset (do not store the state as it will be recalled!!!)
                     _vSamplePatch.clear();
-                    vector<Patch*>::iterator curPop, endPop = get_vFullPatch().end();
+                    vector<TPatch*>::iterator curPop, endPop = get_vFullPatch().end();
                     unsigned int i=0;
                     for(curPop = get_vFullPatch().begin(); curPop!= endPop; ++curPop){
                         if((*curPop)->get_sampleID()==my_NAN) continue;
@@ -717,24 +717,24 @@ TMetapop::temporal_change(const unsigned int& gen)
             unsigned int linkedTraits = _vPatch[0]->get_nbLinkedTraits();
             if(meanVe) _pSelection->set_ve_mean();
             if(h2){
-                set_patch_parameter(linkedTraits, "patch_ve_var", "heritability", &Patch::set_localh2Ve);
+                set_patch_parameter(linkedTraits, "patch_ve_var", "heritability", &TPatch::set_localh2Ve);
                 _pSelection->reset_Ve();
             }
             
             if(stabVar)     _pSelection->reset_selectionTypes();
-            if(optima)      set_patch_parameter(linkedTraits, "patch_stab_sel_optima", "optima", &Patch::set_localOptima);
-            if(intensity)   set_patch_parameter(linkedTraits, "patch_stab_sel_intensity", "intensity", &Patch::set_localIntensity);
+            if(optima)      set_patch_parameter(linkedTraits, "patch_stab_sel_optima", "optima", &TPatch::set_localOptima);
+            if(intensity)   set_patch_parameter(linkedTraits, "patch_stab_sel_intensity", "intensity", &TPatch::set_localIntensity);
             
             if(dirVar)     _pSelection->reset_selectionTypes();
-            if(min)         set_patch_parameter(linkedTraits, "patch_dir_sel_min", "min", &Patch::set_localMin);
-            if(max)         set_patch_parameter(linkedTraits, "patch_dir_sel_max", "max", &Patch::set_localMax);
-            if(growth_rate) set_patch_parameter(linkedTraits, "patch_dir_sel_growth_rate", "growth rate", &Patch::set_localGrowthRate);
-            if(max_growth)  set_patch_parameter(linkedTraits, "patch_dir_sel_max_growth", "max growth", &Patch::set_localMaxGrowth);
-            if(symmetry)    set_patch_parameter(linkedTraits, "patch_dir_sel_symmetry", "symmetry", &Patch::set_localSymmetry);
+            if(min)         set_patch_parameter(linkedTraits, "patch_dir_sel_min", "min", &TPatch::set_localMin);
+            if(max)         set_patch_parameter(linkedTraits, "patch_dir_sel_max", "max", &TPatch::set_localMax);
+            if(growth_rate) set_patch_parameter(linkedTraits, "patch_dir_sel_growth_rate", "growth rate", &TPatch::set_localGrowthRate);
+            if(max_growth)  set_patch_parameter(linkedTraits, "patch_dir_sel_max_growth", "max growth", &TPatch::set_localMaxGrowth);
+            if(symmetry)    set_patch_parameter(linkedTraits, "patch_dir_sel_symmetry", "symmetry", &TPatch::set_localSymmetry);
             
             if(fit_land){   // (phenotype has to be set after fitness due to sorting)
-                set_patch_parameter_array(linkedTraits, "patch_fitness_landscape",   "fitness_landscape", &Patch::set_fitnessLandscape_fitness);
-                set_patch_parameter_array(linkedTraits, "patch_phenotype_landscape", "phenotype_landscape", &Patch::set_fitnessLandscape_phenotype);
+                set_patch_parameter_array(linkedTraits, "patch_fitness_landscape",   "fitness_landscape", &TPatch::set_fitnessLandscape_fitness);
+                set_patch_parameter_array(linkedTraits, "patch_phenotype_landscape", "phenotype_landscape", &TPatch::set_fitnessLandscape_phenotype);
             }
         }
     }
@@ -859,8 +859,8 @@ TMetapop::set_sampledInds(age_t AGE, bool storeState)
     assert(AGE!=NONE);
     
     
-    Patch* curPatch;
-    vector<Patch*>::iterator curPop, endPop = _popPtr->get_vSamplePatch().end();
+    TPatch* curPatch;
+    vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vSamplePatch().end();
     for(curPop=_popPtr->get_vSamplePatch().begin(); curPop!=endPop; ++curPop){
         curPatch = *curPop;
         curPatch->set_sampledInds(FEM, AGE);                    // females
@@ -919,7 +919,7 @@ TMetapop::set_sampledInds(age_t AGE, bool storeState)
 void
 TMetapop::flush(sex_t SEX, age_idx AGE)
 {
-    vector<Patch*>::iterator curPatch, endPatch;
+    vector<TPatch*>::iterator curPatch, endPatch;
     for(curPatch=get_vFullPatch().begin(), endPatch=get_vFullPatch().end(); curPatch!=endPatch; ++curPatch){
         (*curPatch)->flush(SEX, AGE);
     }
@@ -1015,7 +1015,7 @@ void TMetapop::createPopulations()
     // create the patches
     _vPatch.reserve(_patchNbr);
     for(unsigned int i=0; i<_patchNbr; ++i){
-        _vPatch.push_back(new Patch(this, i));
+        _vPatch.push_back(new TPatch(this, i));
     }
     
     set_func_pointer();
@@ -1035,7 +1035,7 @@ void TMetapop::createPopulations_coal()
  
     _vPatch.reserve(_patchNbr);
     for(unsigned int i=0; i<_patchNbr; ++i){
-        _vPatch.push_back(new Patch(this, i));
+        _vPatch.push_back(new TPatch(this, i));
         _vPatch[i]->init_coal(i);
     }
     
@@ -1955,7 +1955,7 @@ TMetapop::change_disp_rate_after_density(const int& gen)
     if(!_density_threshold) return;
     
     double density;
-    Patch* curPatch;
+    TPatch* curPatch;
     map<int, string>::iterator iter_tempParam;
     for(unsigned int i=0; i<_density_threshold_nbChanges; ++i){
         if(_density_threshold[i][0] == my_NAN) continue;		// if already used
@@ -2074,9 +2074,9 @@ TMetapop::get_settingsStats(unsigned int& nbPatchK,unsigned int& K,
                            unsigned int& samplePatch, unsigned int& nbSample)
 {
     nbPatchK = K = NiniPatch = Nini = samplePatch = nbSample =0;
-    Patch* curPatch;
+    TPatch* curPatch;
     double curSample;
-    vector<Patch*>::iterator curPop, endPop=_vPatch.end();
+    vector<TPatch*>::iterator curPop, endPop=_vPatch.end();
     for(curPop=_vPatch.begin(); curPop!=endPop; ++curPop){
         curPatch = *curPop;
         if(curPatch->get_K()){
@@ -2169,7 +2169,7 @@ TMetapop::get_requiredAgeClass()
 bool
 TMetapop::allPatchPopulated_atInitialization()
 {
-    vector<Patch*>::iterator curPop, endPop = _vPatch.end();
+    vector<TPatch*>::iterator curPop, endPop = _vPatch.end();
     for(curPop=_vPatch.begin(); curPop!=endPop; ++curPop){
         if(!(*curPop)->get_K()) return false;      // if the patch cannot be colonized
         if(!(*curPop)->get_N_ini()) return false;
@@ -2321,7 +2321,7 @@ TMetapop::setPopulation_FSTAT(const age_t& requiredAge)
     TIndividual* cur_ind;
     age_idx age;
     sex_t sex;
-    Patch* pPatch;
+    TPatch* pPatch;
     unsigned int i, l, p, curLocus, nbAllele;
     unsigned int** curGenotype;
     unsigned int** array;
@@ -2467,7 +2467,7 @@ void TMetapop::reset()
 void TMetapop::clear()
 {
    // cout << endl << "delete patches" << endl;
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for(curPop=_vPatch.begin(), endPop=_vPatch.end(); curPop!=endPop; ++curPop){
         delete *curPop;
     }
@@ -2506,7 +2506,7 @@ TMetapop::regulate_selection_fitness_patch(age_idx AGE, unsigned int* Kmal, unsi
 {
     assert(_pSelection);
     if(Kmal && Kfem){       // the size to regulate to is given
-        vector<Patch*>::iterator curPop, endPop;
+        vector<TPatch*>::iterator curPop, endPop;
         for(curPop=get_vFullPatch().begin(), endPop=get_vFullPatch().end(); curPop!=endPop; ++curPop, ++Kmal, ++Kfem) {
             _pSelection->set_fitness(*curPop, AGE); // compute the fitnesses, but don't sort or make yet the array cumulative
             (*curPop)->regulate_selection_fitness(*Kfem, _pSelection, FEM, AGE);
@@ -2514,7 +2514,7 @@ TMetapop::regulate_selection_fitness_patch(age_idx AGE, unsigned int* Kmal, unsi
         }
     }
     else{                 	// the pops are regulated to carrying capacity
-        vector<Patch*>::iterator curPop, endPop;
+        vector<TPatch*>::iterator curPop, endPop;
         for(curPop=get_vFullPatch().begin(), endPop=get_vFullPatch().end(); curPop!=endPop; ++curPop) {
             _pSelection->set_fitness(*curPop, AGE); // compute the fitnesses, but don't sort or make yet the array cumulative
             (*curPop)->regulate_selection_fitness((*curPop)->get_KFem(), _pSelection, FEM, AGE);
@@ -2543,7 +2543,7 @@ TMetapop::regulate_selection_fitness_metapop(age_idx AGE)
     }
     
     // for each patch compute the fitness of the individuals
-    vector<Patch*>::iterator curPop, endPop=get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop, endPop=get_vFullPatch().end();
     for(i=0, curPop=get_vFullPatch().begin(); curPop!=endPop; ++curPop, ++i) {
         // compute and store the fitness of the current patch (0: male, 1: female)
         _pSelection->set_fitness(*curPop, AGE);
@@ -2589,7 +2589,7 @@ TMetapop::regulate_selection_fitness_metapop(age_idx AGE)
 void
 TMetapop::regulate_selection_fitness_hard(age_idx AGE)
 {
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for(curPop=get_vFullPatch().begin(), endPop=get_vFullPatch().end(); curPop!=endPop; ++curPop) {
         (*curPop)->regulation_selection_hard(AGE);
     }
@@ -2605,7 +2605,7 @@ TMetapop::add_tempPatch_noSample_withFull()
     if(_vTempPatch.empty()) return;
     
     // set the sample id
-    vector<Patch*>::iterator curPop=_vTempPatch.begin(), endPop=_vTempPatch.end();
+    vector<TPatch*>::iterator curPop=_vTempPatch.begin(), endPop=_vTempPatch.end();
     for(unsigned int i=(unsigned int)_vFullPatch.size(); curPop!=endPop; ++curPop){
         //if((*curPop)->get_sampleID()==my_NAN) continue; // should never happen
         assert((*curPop)->get_sampleID()==SAMPLED);
@@ -2639,7 +2639,7 @@ TMetapop::add_tempPatch_withSample_withFull()
     if(_vTempPatch.empty()) return;
     
     // set the sample id
-    vector<Patch*>::iterator curPop=_vTempPatch.begin(), endPop=_vTempPatch.end();
+    vector<TPatch*>::iterator curPop=_vTempPatch.begin(), endPop=_vTempPatch.end();
     for(unsigned int i=(unsigned int)_vSamplePatch.size(); curPop!=endPop; ++curPop){
         if((*curPop)->get_sampleID()==my_NAN) continue;
         assert((*curPop)->get_sampleID()==SAMPLED);
@@ -2658,7 +2658,7 @@ TMetapop::add_tempPatch_withSample_withFull()
 void
 TMetapop::add_tempPatch_noSample_noFull()
 {
-    vector<Patch*>::iterator curPop=_vPatch.begin(), endPop=_vPatch.end();
+    vector<TPatch*>::iterator curPop=_vPatch.begin(), endPop=_vPatch.end();
     for(unsigned int i=0; curPop!=endPop; ++curPop){
         assert((*curPop)->get_sampleID()==SAMPLED);
         (*curPop)->set_sampleID(i++);
@@ -2684,7 +2684,7 @@ TMetapop::add_tempPatch_withSample_noFull()
     if(_vTempPatch.empty()) return;
     
     // set the sample id
-    vector<Patch*>::iterator curPop=_vTempPatch.begin(), endPop=_vTempPatch.end();
+    vector<TPatch*>::iterator curPop=_vTempPatch.begin(), endPop=_vTempPatch.end();
     for(unsigned int i=(unsigned int)_vSamplePatch.size(); curPop!=endPop; ++curPop){
         if((*curPop)->get_sampleID()==my_NAN) continue;
         assert((*curPop)->get_sampleID()==SAMPLED);
@@ -2700,7 +2700,7 @@ TMetapop::add_tempPatch_withSample_noFull()
 // ----------------------------------------------------------------------------------------
 /** newly populated patch: without _vSamplePatch and with _vFullPatch */
 void
-TMetapop::new_fullPatch_noSample_withFull(Patch* curPatch)
+TMetapop::new_fullPatch_noSample_withFull(TPatch* curPatch)
 {
     assert(curPatch->size(ALL));
     curPatch->set_isExtinct(false);
@@ -2710,7 +2710,7 @@ TMetapop::new_fullPatch_noSample_withFull(Patch* curPatch)
 // ----------------------------------------------------------------------------------------
 /** newly populated patch:  with _vSamplePatch and _vFullPatch */
 void
-TMetapop::new_fullPatch_withSample_withFull(Patch* curPatch)
+TMetapop::new_fullPatch_withSample_withFull(TPatch* curPatch)
 {
     assert(curPatch->size(ALL));
     curPatch->set_isExtinct(false);
@@ -2720,7 +2720,7 @@ TMetapop::new_fullPatch_withSample_withFull(Patch* curPatch)
 // ----------------------------------------------------------------------------------------
 /** newly populated patch: without _vSamplePatch and without _vFullPatch */
 void
-TMetapop::new_fullPatch_noSample_noFull(Patch* curPatch)
+TMetapop::new_fullPatch_noSample_noFull(TPatch* curPatch)
 {
     assert(curPatch->size(ALL));
     curPatch->set_isExtinct(false);
@@ -2731,7 +2731,7 @@ TMetapop::new_fullPatch_noSample_noFull(Patch* curPatch)
  * only called when pops are initialized
  */
 void
-TMetapop::new_fullPatch_withSample_noFull(Patch* curPatch)
+TMetapop::new_fullPatch_withSample_noFull(TPatch* curPatch)
 {
     assert(curPatch->size(ALL));
     curPatch->set_isExtinct(false);
@@ -2745,7 +2745,7 @@ TMetapop::new_fullPatch_withSample_noFull(Patch* curPatch)
  * endPop remains the same
  */
 void
-TMetapop::new_emptyPatch_noSample_noFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
+TMetapop::new_emptyPatch_noSample_noFull(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop)
 {
     ++curPop;
     assert(endPop==get_vFullPatch().end());
@@ -2758,7 +2758,7 @@ TMetapop::new_emptyPatch_noSample_noFull(vector<Patch*>::iterator& curPop, vecto
  * endPop remains the same
  */
 void
-TMetapop::new_emptyPatch_withSample_noFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
+TMetapop::new_emptyPatch_withSample_noFull(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop)
 {
     assert(!(*curPop)->size(ALL));
     (*curPop)->set_isExtinct(true);
@@ -2779,7 +2779,7 @@ TMetapop::new_emptyPatch_withSample_noFull(vector<Patch*>::iterator& curPop, vec
  * endPop is decreased by one!
  */
 void
-TMetapop::new_emptyPatch_noSample_withFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
+TMetapop::new_emptyPatch_noSample_withFull(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop)
 {
     assert(!(*curPop)->size(ALL));
     (*curPop)->set_isExtinct(true);
@@ -2808,7 +2808,7 @@ TMetapop::new_emptyPatch_noSample_withFull(vector<Patch*>::iterator& curPop, vec
  * endPop is decreased by one!
  */
 void
-TMetapop::new_emptyPatch_noSample_withFull_coal(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
+TMetapop::new_emptyPatch_noSample_withFull_coal(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop)
 {
     assert(!(*curPop)->size(ALL));
     (*curPop)->set_isExtinct(true);
@@ -2827,7 +2827,7 @@ TMetapop::new_emptyPatch_noSample_withFull_coal(vector<Patch*>::iterator& curPop
  * endPop is decreased by one!
  */
 void
-TMetapop::new_emptyPatch_withSample_withFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop)
+TMetapop::new_emptyPatch_withSample_withFull(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop)
 {
     assert(!(*curPop)->size(ALL));
     (*curPop)->set_isExtinct(true);
@@ -2852,7 +2852,7 @@ TMetapop::new_emptyPatch_withSample_withFull(vector<Patch*>::iterator& curPop, v
  * (exchange the patch by the last one and remove the last element
  */
 void
-TMetapop::erase_vSamplePatch(Patch* curPop)
+TMetapop::erase_vSamplePatch(TPatch* curPop)
 {
     unsigned int sampleID = curPop->get_sampleID();
     assert(sampleID!=my_NAN);
@@ -2893,9 +2893,9 @@ TMetapop::set_samples_coalescence()
     assert(_pCoalescence_LCE);
     unsigned int size, N, nbSampledPatches=0, notSampledPatches=0, notSampledInds=0, nbSampledInds=0;
     double sampleN;
-    Patch* curPatch;
+    TPatch* curPatch;
     map<unsigned int, unsigned int> sampleSizes;
-    vector<Patch*>::iterator curPop, endPop = get_vPatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vPatch().end();
     for(curPop = get_vPatch().begin(); curPop!=endPop; ++curPop) {
         curPatch = *curPop;
         sampleN = curPatch->get_N_sample(FEM);  // sample size/proportion
@@ -3210,8 +3210,8 @@ TMetapop::move_random(sex_t SEX, age_idx from_age, unsigned int from_deme,
                      age_idx to_age, unsigned int to_deme, unsigned int nbMigr)
 {
     unsigned int size = get_vPatch(from_deme)->size(SEX, from_age);
-    Patch* fromDeme = _vPatch[from_deme];
-    Patch* toDeme = _vPatch[to_deme];
+    TPatch* fromDeme = _vPatch[from_deme];
+    TPatch* toDeme = _vPatch[to_deme];
     for(unsigned int i=0; i<nbMigr; ++i, --size){
         unsigned int at = rand().Uniform(size);
         toDeme->add(SEX, to_age, fromDeme->get(SEX, from_age, at));
@@ -3222,8 +3222,8 @@ TMetapop::move_random(sex_t SEX, age_idx from_age, unsigned int from_deme,
 // ------------------------------------------------------------------------------
 /** move randomly 'nbMigr' individuals  fom patch 'from_deme' to patch 'to_deme' */
 void
-TMetapop::move_random(sex_t SEX, age_idx from_age, Patch* fromDeme,
-                     age_idx to_age, Patch* toDeme, unsigned int nbMigr)
+TMetapop::move_random(sex_t SEX, age_idx from_age, TPatch* fromDeme,
+                     age_idx to_age, TPatch* toDeme, unsigned int nbMigr)
 {
     unsigned int size = fromDeme->size(SEX, from_age);
     for(unsigned int i=0; i<nbMigr; ++i, --size){
@@ -3239,8 +3239,8 @@ TMetapop::move_random(sex_t SEX, age_idx from_age, Patch* fromDeme,
  * "move with replacement"!
  */
 void
-TMetapop::copyMove_random_withReplacement(sex_t SEX, age_idx from_age, Patch* fromDeme,
-                                         age_idx to_age, Patch* toDeme, unsigned int nbMigr)
+TMetapop::copyMove_random_withReplacement(sex_t SEX, age_idx from_age, TPatch* fromDeme,
+                                         age_idx to_age, TPatch* toDeme, unsigned int nbMigr)
 {
     unsigned int size = fromDeme->size(SEX, from_age);
     assert(size);

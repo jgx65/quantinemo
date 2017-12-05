@@ -108,14 +108,14 @@ void LCE_Regulation::execute() {
 // ----------------------------------------------------------------------------------------
 void LCE_Regulation::regulation_neutral() {
 	unsigned int N, K;
-	Patch* current_patch;
+	TPatch* current_patch;
     
 #ifdef _DEBUG
 	_ex_cnt = _col_cnt = _ph_cnt = 0;
 #endif
     
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop; ++curPop) {
 		current_patch = *curPop;
         
@@ -152,14 +152,14 @@ void LCE_Regulation::regulation_neutral() {
 // ----------------------------------------------------------------------------------------
 void LCE_Regulation::regulation_coalescence() {
 	unsigned int N, K;
-	Patch* current_patch;
+	TPatch* current_patch;
     
 #ifdef _DEBUG
 	_ex_cnt = _col_cnt = _ph_cnt = 0;
 #endif
     
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop; ++curPop) {
 		current_patch = *curPop;
         
@@ -183,7 +183,7 @@ void LCE_Regulation::regulation_coalescence() {
 /** regulates randomly the size of the pop, by randomly drawing survivors
  * (this needs a new array of the succeeders which will then be exchanged)
  */
-void LCE_Regulation::drawSuccessfullIndividuals(Patch* curPatch,
+void LCE_Regulation::drawSuccessfullIndividuals(TPatch* curPatch,
                                                 const unsigned int& K, const sex_t& SEX) {
 	unsigned int ind, cur_size = curPatch->size(SEX, _age);
     
@@ -214,7 +214,7 @@ void LCE_Regulation::drawSuccessfullIndividuals(Patch* curPatch,
 // LCE_Regulation::drawUnSuccessfulIndividuals
 // ----------------------------------------------------------------------------------------
 /** regulates randomly the pop size, by removing randomly supernumerous individuals */
-void LCE_Regulation::drawUnSuccessfullIndividuals(Patch* curPatch,
+void LCE_Regulation::drawUnSuccessfullIndividuals(TPatch* curPatch,
                                                   const unsigned int& K, const sex_t& SEX) {
 	unsigned int ind, nbInd;
     

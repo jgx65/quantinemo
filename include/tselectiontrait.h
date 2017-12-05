@@ -39,7 +39,7 @@
 
 class TSelection;
 class TTQuantiProto;
-class Patch;
+class TPatch;
 class TIndividual;
 
 
@@ -98,7 +98,7 @@ protected:
     double _pheno;            // phenotype
     
     // current settings
-    Patch*      _curPatch;
+    TPatch*      _curPatch;
     sex_t       _curSex;
     TIndividual* _curInd;
     
@@ -134,9 +134,9 @@ public:
     virtual int get_nb_selection_params() {return _nb_selection_params;}
     
     // functions to set the selection pressure (globally)
-    void _get_selection_pressure_tot_var(Patch* patch, sex_t SEX);
-    void _get_selection_pressure_tot_const(Patch* patch, sex_t SEX);
-    void (TSelectionTrait::*_get_selection_pressure_tot_func_ptr)(Patch* patch, sex_t SEX);
+    void _get_selection_pressure_tot_var(TPatch* patch, sex_t SEX);
+    void _get_selection_pressure_tot_const(TPatch* patch, sex_t SEX);
+    void (TSelectionTrait::*_get_selection_pressure_tot_func_ptr)(TPatch* patch, sex_t SEX);
     
     // functions to set the selection pressure (for each parameter individually)
     typedef double (TSelectionTrait::*_func_ptr)(double value, const int&);

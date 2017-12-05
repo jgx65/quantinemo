@@ -79,20 +79,20 @@ public:
 	// survival rate
 	bool set_survival_rate();
 	bool set_survival_rate(Param* param, sex_t SEX, double correction = 1);
-	unsigned int (LCE_Extinction::* survivors_func_ptr[2]) (Patch* curPatch, const sex_t & SEX);
-	unsigned int survivors_relative_var (Patch* curPatch, const sex_t & SEX);   // survivors are only relativly defined
-	unsigned int survivors_absolute_var (Patch* curPatch, const sex_t & SEX);   // survivors are only absolutivly defined
-	unsigned int survivors_relative_const (Patch* curPatch, const sex_t & SEX); // survivors are only relativly defined
-	unsigned int survivors_absolute_const (Patch* curPatch, const sex_t & SEX); // survivors are only absolutivly defined
-	unsigned int survivors_mixed (Patch* curPatch, const sex_t & SEX);      // survivors are relativly and absolutivly defined
-	unsigned int survivors_none (Patch* curPatch, const sex_t & SEX);       // all individuals  of this sex die
-	unsigned int survivors_all (Patch* curPatch, const sex_t & SEX);        // all survive of this sex (nothing to do)
+	unsigned int (LCE_Extinction::* survivors_func_ptr[2]) (TPatch* curPatch, const sex_t & SEX);
+	unsigned int survivors_relative_var (TPatch* curPatch, const sex_t & SEX);   // survivors are only relativly defined
+	unsigned int survivors_absolute_var (TPatch* curPatch, const sex_t & SEX);   // survivors are only absolutivly defined
+	unsigned int survivors_relative_const (TPatch* curPatch, const sex_t & SEX); // survivors are only relativly defined
+	unsigned int survivors_absolute_const (TPatch* curPatch, const sex_t & SEX); // survivors are only absolutivly defined
+	unsigned int survivors_mixed (TPatch* curPatch, const sex_t & SEX);      // survivors are relativly and absolutivly defined
+	unsigned int survivors_none (TPatch* curPatch, const sex_t & SEX);       // all individuals  of this sex die
+	unsigned int survivors_all (TPatch* curPatch, const sex_t & SEX);        // all survive of this sex (nothing to do)
 
-	unsigned int survivors_relative_var_coal (Patch* curPatch, const sex_t & SEX);   // survivors are only relativly defined
-	unsigned int survivors_absolute_var_coal (Patch* curPatch, const sex_t & SEX);   // survivors are only absolutivly defined
-	unsigned int survivors_relative_const_coal (Patch* curPatch, const sex_t & SEX); // survivors are only relativly defined
-	unsigned int survivors_absolute_const_coal (Patch* curPatch, const sex_t & SEX); // survivors are only absolutivly defined
-	unsigned int survivors_mixed_coal (Patch* curPatch, const sex_t & SEX);      // survivors are relativly and absolutivly defined
+	unsigned int survivors_relative_var_coal (TPatch* curPatch, const sex_t & SEX);   // survivors are only relativly defined
+	unsigned int survivors_absolute_var_coal (TPatch* curPatch, const sex_t & SEX);   // survivors are only absolutivly defined
+	unsigned int survivors_relative_const_coal (TPatch* curPatch, const sex_t & SEX); // survivors are only relativly defined
+	unsigned int survivors_absolute_const_coal (TPatch* curPatch, const sex_t & SEX); // survivors are only absolutivly defined
+	unsigned int survivors_mixed_coal (TPatch* curPatch, const sex_t & SEX);      // survivors are relativly and absolutivly defined
 
     void executeBeforeEachGeneration(const unsigned int& gen){}
     void temporal_change(const unsigned int& gen);

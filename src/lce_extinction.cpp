@@ -88,12 +88,12 @@ LCE_Extinction::extinction_homogenous_low_partial_1sex()
 	#endif
 
 	unsigned int nbPatch, nbExt, i, rand;
-	Patch *current_patch;
+	TPatch *current_patch;
 
 	// get the number of extinctions
 	nbPatch = _popPtr->get_nbFullPatch();
 	nbExt = (unsigned int)get_pop_ptr()->rand().Binomial(*_Xtion_rate, nbPatch);
-    vector<Patch*>::iterator curPos, endPos; // not really used
+    vector<TPatch*>::iterator curPos, endPos; // not really used
     vector<unsigned int> PatchGoingExtinct = get_pop_ptr()->rand().Uniforms(nbPatch, nbExt);
 	if (nbExt) {
 		for (i = 0; i < nbExt;) {
@@ -134,7 +134,7 @@ LCE_Extinction::extinction_homogenous_low_partial_2sex()
 	#endif
 
 	unsigned int nbPatch, nbExt, i, j, rand;
-	Patch *current_patch;
+	TPatch *current_patch;
 
 	// get the number of extinctions
 	nbPatch = _popPtr->get_nbFullPatch();
@@ -162,7 +162,7 @@ LCE_Extinction::extinction_homogenous_low_partial_2sex()
 		}
 
 		// remove the empty patches
-        vector<Patch*>::iterator curPos, endPos;
+        vector<TPatch*>::iterator curPos, endPos;
         vector<unsigned int>::iterator curDel, endDel;
 		sort(toDelete.begin(), toDelete.end(), std::greater<unsigned int>());   // start from behind, otherwise the index is wrong
 		for(curDel=toDelete.begin(), endDel=toDelete.end(); curDel!=endDel; ++curDel){
@@ -201,7 +201,7 @@ LCE_Extinction::extinction_homogenous_low_total()
    	unsigned int nbExt = (unsigned int)get_pop_ptr()->rand().Binomial(*_Xtion_rate, nbPatch);
     vector<unsigned int> PatchGoingExtinct = get_pop_ptr()->rand().Uniforms(nbPatch, nbExt);
     if (nbExt) {
-        vector<Patch*>::iterator curPos, endPos = _popPtr->get_vFullPatch().end();
+        vector<TPatch*>::iterator curPos, endPos = _popPtr->get_vFullPatch().end();
 		for (unsigned int i = 0; i < nbExt; ++i, --nbPatch) {
             curPos = _popPtr->get_vFullPatch().begin() + PatchGoingExtinct[i]; // curPos must be a non-const variable...
             (*curPos)->flush();
@@ -232,8 +232,8 @@ LCE_Extinction::extinction_homogenous_high_partial()
 	#endif
 
 	// for each popualted patch
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop;) {
 		if (get_pop_ptr()->rand().Uniform() >= *_Xtion_rate) {
             ++curPop;
@@ -275,8 +275,8 @@ LCE_Extinction::extinction_homogenous_high_total()
 	#endif
 
 	// for each popualted patch
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop;) {
 		if (get_pop_ptr()->rand().Uniform() >= *_Xtion_rate){
             ++curPop;
@@ -314,8 +314,8 @@ LCE_Extinction::extinction_variable_partial()
 	#endif
 
 	// for each populated patch (going backwards avoids deletion problems)
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop;) {
 		if (get_pop_ptr()->rand().Uniform() >= _Xtion_rate[(*curPop)->get_ID() % _Xtion_rate_size]){
             ++curPop;
@@ -358,8 +358,8 @@ LCE_Extinction::extinction_variable_total()
 	#endif
 
 	// for each populated patch (going backwards avoids deletion problems)
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop;) {
 		if (get_pop_ptr()->rand().Uniform() >= _Xtion_rate[(*curPop)->get_ID() % _Xtion_rate_size]){
             ++curPop;
@@ -387,7 +387,7 @@ LCE_Extinction::extinction_variable_total()
 // -----------------------------------------------------------------------------
 /** if extinction hits the patch what to do */
 unsigned int         // survivors are only absolutely defined (identical among patches)
-LCE_Extinction::survivors_absolute_const(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_absolute_const(TPatch* curPatch, const sex_t & SEX)
 {
 	assert(_survival_rate[SEX][0]==0 || _survival_rate[SEX][0]>=1);
 	curPatch->survive_randomly_inds_absolute(SEX, ADLTx, _survival_rate[SEX][0]);
@@ -395,7 +395,7 @@ LCE_Extinction::survivors_absolute_const(Patch* curPatch, const sex_t & SEX)
 }
 
 unsigned int         // survivors are only absolutely defined (patch sepecific settings)
-LCE_Extinction::survivors_absolute_var(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_absolute_var(TPatch* curPatch, const sex_t & SEX)
 {
 	unsigned int size = _survival_rate[SEX][curPatch->get_ID() % _survival_rate_size[SEX]];
 	assert(size==0 || size>=1);
@@ -404,7 +404,7 @@ LCE_Extinction::survivors_absolute_var(Patch* curPatch, const sex_t & SEX)
 }
 
 unsigned int         // survivors are only relativly defined (identical among patches)
-LCE_Extinction::survivors_relative_const(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_relative_const(TPatch* curPatch, const sex_t & SEX)
 {
 	assert(_survival_rate[SEX][0]>=0 && _survival_rate[SEX][0]<=1);
 	curPatch->survive_randomly_inds_relative(SEX, ADLTx, _survival_rate[SEX][0]);
@@ -412,7 +412,7 @@ LCE_Extinction::survivors_relative_const(Patch* curPatch, const sex_t & SEX)
 }
 
 unsigned int         // survivors are only relativly defined (patch specific settings)
-LCE_Extinction::survivors_relative_var(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_relative_var(TPatch* curPatch, const sex_t & SEX)
 {
 	double value = _survival_rate[SEX][curPatch->get_ID() % _survival_rate_size[SEX]];
 	assert(value>=0 && value<=1);
@@ -421,7 +421,7 @@ LCE_Extinction::survivors_relative_var(Patch* curPatch, const sex_t & SEX)
 }
 
 unsigned int        // survivors are specified relativly and absolutely defined (patch specific settings)
-LCE_Extinction::survivors_mixed(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_mixed(TPatch* curPatch, const sex_t & SEX)
 {
 	double value = _survival_rate[SEX][curPatch->get_ID() % _survival_rate_size[SEX]];
 	if(value>=1 || value==0) curPatch->survive_randomly_inds_absolute(SEX, ADLTx, value);
@@ -430,14 +430,14 @@ LCE_Extinction::survivors_mixed(Patch* curPatch, const sex_t & SEX)
 }
 
 unsigned int        // all individuals  of this sex die (identical among patches)
-LCE_Extinction::survivors_none(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_none(TPatch* curPatch, const sex_t & SEX)
 {
 	curPatch->flush(SEX, ADLTx);
 	return 0;
 }
 
 unsigned int        // all survive of this sex (nothing to do) (identical among patches)
-LCE_Extinction::survivors_all(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_all(TPatch* curPatch, const sex_t & SEX)
 {
 	return curPatch->size(SEX, ADLTx);
 }
@@ -668,7 +668,7 @@ void LCE_Extinction::temporal_change(const unsigned int& gen)
 // -----------------------------------------------------------------------------
 /** if extinction hits the patch what to do */
 unsigned int         // survivors are only absolutely defined (identical among patches)
-LCE_Extinction::survivors_absolute_const_coal(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_absolute_const_coal(TPatch* curPatch, const sex_t & SEX)
 {
 	unsigned int size = _survival_rate[SEX][0];
 	assert(size==0 || size>=1);
@@ -678,7 +678,7 @@ LCE_Extinction::survivors_absolute_const_coal(Patch* curPatch, const sex_t & SEX
 }
 
 unsigned int         // survivors are only absolutely defined (patch sepecific settings)
-LCE_Extinction::survivors_absolute_var_coal(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_absolute_var_coal(TPatch* curPatch, const sex_t & SEX)
 {
 	unsigned int size = _survival_rate[SEX][curPatch->get_ID() % _survival_rate_size[SEX]];
 	assert(size==0 || size>=1);
@@ -688,7 +688,7 @@ LCE_Extinction::survivors_absolute_var_coal(Patch* curPatch, const sex_t & SEX)
 }
 
 unsigned int         // survivors are only relativly defined (identical among patches)
-LCE_Extinction::survivors_relative_const_coal(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_relative_const_coal(TPatch* curPatch, const sex_t & SEX)
 {
 	assert(_survival_rate[SEX][0]>=0 && _survival_rate[SEX][0]<=1);
 	unsigned int size = curPatch->size(SEX, ADLTx);
@@ -698,7 +698,7 @@ LCE_Extinction::survivors_relative_const_coal(Patch* curPatch, const sex_t & SEX
 }
 
 unsigned int         // survivors are only relativly defined (patch specific settings)
-LCE_Extinction::survivors_relative_var_coal(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_relative_var_coal(TPatch* curPatch, const sex_t & SEX)
 {
 	double value = _survival_rate[SEX][curPatch->get_ID() % _survival_rate_size[SEX]];
 	assert(value>=0 && value<=1);
@@ -709,7 +709,7 @@ LCE_Extinction::survivors_relative_var_coal(Patch* curPatch, const sex_t & SEX)
 }
 
 unsigned int        // survivors are specified relativly and absolutely defined (patch specific settings)
-LCE_Extinction::survivors_mixed_coal(Patch* curPatch, const sex_t & SEX)
+LCE_Extinction::survivors_mixed_coal(TPatch* curPatch, const sex_t & SEX)
 {
 	double value = _survival_rate[SEX][curPatch->get_ID() % _survival_rate_size[SEX]];
 	if(value>=1 || value==0) return survivors_absolute_var_coal(curPatch, SEX);

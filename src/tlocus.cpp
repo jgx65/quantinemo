@@ -83,7 +83,7 @@ TLocus::~TLocus(){
 // ----------------------------------------------------------------------------------------
 /** initialization of the sequences based on the _initAlleleFreq array (settings file) */
 void
-TLocus::_ini_sequence_dist(unsigned char* seq, Patch* patch, unsigned int size)
+TLocus::_ini_sequence_dist(unsigned char* seq, TPatch* patch, unsigned int size)
 {
 	double* freq_dist = _pTrait->get_ini_alleleFreq(patch, _locus_id_trait);
 	for(unsigned int a = 0; a < size; ++a) {
@@ -93,7 +93,7 @@ TLocus::_ini_sequence_dist(unsigned char* seq, Patch* patch, unsigned int size)
 
 /** initialization of the sequences: alleles are randomly distributed -> maximal variance */
 void
-TLocus::_ini_sequence_uniform(unsigned char* seq, Patch* patch, unsigned int size)
+TLocus::_ini_sequence_uniform(unsigned char* seq, TPatch* patch, unsigned int size)
 {
 	for(unsigned int a = 0; a < size; ++a) {
 		seq[a] = (unsigned char)_popPtr->rand().Uniform(_nb_allele);
@@ -103,7 +103,7 @@ TLocus::_ini_sequence_uniform(unsigned char* seq, Patch* patch, unsigned int siz
 /** initialization of the sequences: populations are fixed for the middle allele -> minimal variance
  * if number of alleles is even, then the lower allele is used, ie.e nb_allele=2 => 0*/
 void
-TLocus::_ini_sequence_monomorph(unsigned char* seq, Patch* patch, unsigned int size)
+TLocus::_ini_sequence_monomorph(unsigned char* seq, TPatch* patch, unsigned int size)
 {
 	for(unsigned int a = 0; a < size; ++a) {
 		seq[a] = (unsigned char)(_nb_allele-1)/2;

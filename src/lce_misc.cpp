@@ -253,7 +253,7 @@ void LCE_Aging::execute() {
 #endif
     
     // remove all adults
-    vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
     for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop; ) {
         (*curPop)->flush(ADLTx); // remove all adults
         

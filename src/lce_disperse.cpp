@@ -147,8 +147,8 @@ bool LCE_Disperse::setDispMatrix(TMatrix* mat) {
  */
 void LCE_Disperse::migrate_zeroMigration() {
 	// for each patch
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop; ++curPop) {
 		(*curPop)->swap(OFFSx, ADLTx); // "move" would be correct, but swap is much faster and also ok for here
 	}
@@ -162,8 +162,8 @@ void LCE_Disperse::migrate_zeroMigration() {
  */
 void LCE_DisperseCoalescence::migrate_zeroMigration() {
 	// for each patch
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop; ++curPop) {
 		(*curPop)->swap_coal(FEM, OFFSx, ADLTx); // "move" would be correct, but swap is much faster and also ok for here
 	}
@@ -296,9 +296,9 @@ void LCE_DisperseCoalescence::execute() {
 /** prepares the dispersal, resets counters,... */
 void LCE_Disperse::preDispersal() {
 	assert(!_popPtr->size(ADLTx));           // adult containers should be empty
-	Patch* curPatch;
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	TPatch* curPatch;
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop; ++curPop) {
 		curPatch = (*curPop);
 		curPatch->nbImmigrant = 0;              // reset counters
@@ -319,7 +319,7 @@ void LCE_Disperse::preDispersal() {
 void LCE_Disperse::postDispersal_noSample_withFull()
 {
 	// for all patches which were populated check if they are now empty
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
 	for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop;) { // for each populated patch
 		if ((*curPop)->size(ALL)) ++curPop;
 		else {                                                 // patch is empty
@@ -353,7 +353,7 @@ void LCE_Disperse::postDispersal_noSample_withFull()
  */
 void LCE_DisperseCoalescence::postDispersal_noSample_withFull() {
 	// for all patches which were populated check if they are now empty
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
 	for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop;) { // for each populated patch
 		if ((*curPop)->size(ALL)) ++curPop;
 		else _popPtr->new_emptyPatch(curPop, endPop); // patch is empty: remove it
@@ -375,7 +375,7 @@ void LCE_DisperseCoalescence::postDispersal_noSample_withFull() {
  */
 void LCE_Disperse::postDispersal_withSample_withFull() {
 	// for all patches which were populated check if they are now empty
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
 	for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop;) { // for each populated patch
 		if ((*curPop)->size(ALL)) ++curPop;
 		else {                                                 // patch is empty
@@ -409,7 +409,7 @@ void LCE_Disperse::postDispersal_withSample_withFull() {
  */
 void LCE_Disperse::postDispersal_withSample_noFull() {
 	// for all patches which were populated check if they are now empty
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
 	for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop;) { // for each populated patch
 		if ((*curPop)->size(ALL)) ++curPop;                             // populated
 		else _popPtr->new_emptyPatch(curPop, endPop);   // curPop and endPop are adjusted
@@ -427,8 +427,8 @@ void LCE_Disperse::postDispersal_withSample_noFull() {
  */
 void LCE_Disperse::postDispersal_noSample_noFull() {
 	// for all patches which were populated check if they are now empty
-	Patch* curPatch;
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vPatch().end();
+	TPatch* curPatch;
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vPatch().end();
 	for (curPop = _popPtr->get_vPatch().begin(); curPop != endPop; ++curPop) { // for each patch
 		curPatch = *curPop;
 		if (!curPatch->size(ALL)) {  // if the patch is empty
@@ -453,7 +453,7 @@ void LCE_Disperse::postDispersal_noSample_noFull() {
  */
 void LCE_DisperseCoalescence::postDispersal_noSample_noFull() {
 	// for all patches which were populated check if they are now empty
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vPatch().end();
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vPatch().end();
 	for (curPop = _popPtr->get_vPatch().begin(); curPop != endPop; ++curPop) { // for each patch
 		assert(((*curPop)->size(ALL) && !(*curPop)->get_isExtinct()) // this has already been done
                ||(!(*curPop)->size(ALL)));// needed that all is within assert()
@@ -466,14 +466,14 @@ void LCE_DisperseCoalescence::postDispersal_noSample_noFull() {
 // ----------------------------------------------------------------------------------------
 /** if the migration rates are defined by a matrix */
 void LCE_Disperse::migrate_matrix() {
-	Patch *curPatch;
+	TPatch *curPatch;
 	unsigned int nbInd[2];        // nbInd is set by _computeTotEmigrants()
 	double factor[2], sum_m[2], migr[2]; // factor is set by get_migr_factor() & sum_m is set by _computeTotEmigrants()
 	unsigned int home, target;
     
 	// for each populated patch
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop; ++curPop) {
 		curPatch = *curPop;
 		home = curPatch->get_ID();
@@ -502,14 +502,14 @@ void LCE_Disperse::migrate_matrix() {
 // ----------------------------------------------------------------------------------------
 /** if the migration rates are defined by a matrix */
 void LCE_DisperseCoalescence::migrate_matrix() {
-	Patch *curPatch;
+	TPatch *curPatch;
 	unsigned int nbEmigr;        // nbInd is set by _computeTotEmigrants()
 	double factor, sum_m; // factor is set by get_migr_factor() & sum_m is set by _computeTotEmigrants()
 	unsigned int home, target;
     
 	// for each populated patch
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop; ++curPop) {
 		curPatch = *curPop;
 		home = curPatch->get_ID();
@@ -539,7 +539,7 @@ void LCE_DisperseCoalescence::migrate_matrix() {
  *   - sum_m
  */
 bool
-LCE_Disperse::_computeTotEmigrants(Patch* curPatch, unsigned int* nbEmigrants,
+LCE_Disperse::_computeTotEmigrants(TPatch* curPatch, unsigned int* nbEmigrants,
                                    double* migrTotRate, double* sum_m, double* factor)
 {
 	nbEmigrants[FEM] = _computeTotEmigrants(curPatch, migrTotRate[FEM], sum_m[FEM], factor[FEM], FEM);
@@ -552,7 +552,7 @@ LCE_Disperse::_computeTotEmigrants(Patch* curPatch, unsigned int* nbEmigrants,
  * sum_m is adjusted/set
  */
 unsigned int
-LCE_Disperse::_computeTotEmigrants(Patch* curPatch, const double& migrTotRate,
+LCE_Disperse::_computeTotEmigrants(TPatch* curPatch, const double& migrTotRate,
                                    double& sum_m, const double& factor, const sex_t& SEX)
 {
 	unsigned int popSize = curPatch->size(SEX, OFFSx); // get current population size
@@ -577,7 +577,7 @@ LCE_Disperse::_computeTotEmigrants(Patch* curPatch, const double& migrTotRate,
 /** this function computes and returns the total number of emigrants
  * sum_m is adjusted/set
  */
-bool LCE_DisperseCoalescence::_computeTotEmigrants(Patch* curPatch,
+bool LCE_DisperseCoalescence::_computeTotEmigrants(TPatch* curPatch,
                                                    unsigned int& totEmigr, const double& migrTotRate, double& sum_m,
                                                    const double& factor) {
 	unsigned int popSize = curPatch->size(FEM, OFFSx); // get current population size
@@ -636,7 +636,7 @@ unsigned int LCE_Disperse::get_nbEmigrant(const double& m, double& sum_m,
  * if the migration rate is negative, the emigrating individuals are removed (absorbed)
  * returns true if the patch is still populated and false if empty
  */
-bool LCE_Disperse::_sendEmigrants(Patch* curPatch, const unsigned int& home,
+bool LCE_Disperse::_sendEmigrants(TPatch* curPatch, const unsigned int& home,
                                   const unsigned int& target, unsigned int* totEmigr,
                                   double* migrRate, double* sum_m, double* factor)
 {
@@ -656,7 +656,7 @@ bool LCE_Disperse::_sendEmigrants(Patch* curPatch, const unsigned int& home,
  *     - sum_m
  * the number of not yet send emigrants is returned
  */
-unsigned int LCE_Disperse::_sendEmigrants(Patch* curPatch,
+unsigned int LCE_Disperse::_sendEmigrants(TPatch* curPatch,
                                           const unsigned int& home, const unsigned int& target,
                                           unsigned int& totEmigr, const double& migrRate, double& sum_m,
                                           const double& factor, const sex_t& SEX)
@@ -693,7 +693,7 @@ unsigned int LCE_Disperse::_sendEmigrants(Patch* curPatch,
 /** function to send emigrants form the home to the target patch for a specific sex
  * if the migration rate is negative, the emigrating individuals are removed (absorbed)
  */
-unsigned int LCE_DisperseCoalescence::_sendEmigrants(Patch* curPatch,
+unsigned int LCE_DisperseCoalescence::_sendEmigrants(TPatch* curPatch,
                                                      const unsigned int& home, const unsigned int& target,
                                                      unsigned int& totEmigr, const double& migrRate, double& sum_m,
                                                      const double& factor) {
@@ -725,7 +725,7 @@ unsigned int LCE_DisperseCoalescence::_sendEmigrants(Patch* curPatch,
 /** function to send a single emigrant from the home to the target patch for a specific sex
  * the pop size is computed here
  */
-void LCE_Disperse::_sendEmigrant(Patch* curPatch, const unsigned int& home,
+void LCE_Disperse::_sendEmigrant(TPatch* curPatch, const unsigned int& home,
                                  const unsigned int& target, const unsigned int& nbEmigr,
                                  const sex_t& SEX) {
 	_sendEmigrant(curPatch, home, target, nbEmigr, SEX,
@@ -736,12 +736,12 @@ void LCE_Disperse::_sendEmigrant(Patch* curPatch, const unsigned int& home,
 /** function to send a single emigrant from the home to the target patch for a specific sex
  * the pop size is given here
  */
-void LCE_Disperse::_sendEmigrant(Patch* curPatch, const unsigned int& home,
+void LCE_Disperse::_sendEmigrant(TPatch* curPatch, const unsigned int& home,
                                  const unsigned int& target, const unsigned int& nbEmigr,
                                  const sex_t& SEX, const unsigned int& popSize) {
 	assert(popSize == curPatch->size(SEX, OFFSx));
 	curPatch->nbEmigrant += nbEmigr;        // increment the number of emigrants
-	Patch* targetPatch = _popPtr->get_vPatch(target);
+	TPatch* targetPatch = _popPtr->get_vPatch(target);
 	targetPatch->nbImmigrant += nbEmigr; // increment the number of immigrants of the target patch
 	for (unsigned int i = 0; i < nbEmigr; ++i) {
 		_popPtr->move(SEX, OFFSx, home, ADLTx, target, get_pop_ptr()->rand().Uniform(popSize - i));
@@ -753,10 +753,10 @@ void LCE_Disperse::_sendEmigrant(Patch* curPatch, const unsigned int& home,
 /** function to send a single emigrant from the home to the target patch for a specific sex
  * the pop size is given here
  */
-void LCE_DisperseCoalescence::_sendEmigrant(Patch* curPatch,
+void LCE_DisperseCoalescence::_sendEmigrant(TPatch* curPatch,
                                             const unsigned int& home, const unsigned int& target,
                                             const unsigned int& nbEmigr) {
-	Patch* targetPatch = _popPtr->get_vPatch(target);
+	TPatch* targetPatch = _popPtr->get_vPatch(target);
 	targetPatch->addImmigrant(curPatch, nbEmigr);      // that are the emigrants
 	if (targetPatch->get_isExtinct()) _popPtr->new_fullPatch(targetPatch); // if the patch is newly colonized
 }
@@ -766,7 +766,7 @@ void LCE_DisperseCoalescence::_sendEmigrant(Patch* curPatch,
  * the pop size is given here
  * popSize is not used, but needed for the function pointers
  */
-void LCE_DisperseCoalescence::_sendEmigrant(Patch* curPatch,
+void LCE_DisperseCoalescence::_sendEmigrant(TPatch* curPatch,
                                             const unsigned int& home, const unsigned int& target,
                                             const unsigned int& nbEmigr, const sex_t& SEX,
                                             const unsigned int& popSize) {
@@ -778,7 +778,7 @@ void LCE_DisperseCoalescence::_sendEmigrant(Patch* curPatch,
 /** function to absorbe a single emigrant (emigration outside of the world) for a specific sex
  * the pop size is computed here
  */
-void LCE_Disperse::_absorbEmigrant(Patch* curPatch, const unsigned int& nbEmigr,
+void LCE_Disperse::_absorbEmigrant(TPatch* curPatch, const unsigned int& nbEmigr,
                                    const sex_t& SEX) {
 	_absorbEmigrant(curPatch, nbEmigr, SEX, curPatch->size(SEX, OFFSx));
 }
@@ -787,7 +787,7 @@ void LCE_Disperse::_absorbEmigrant(Patch* curPatch, const unsigned int& nbEmigr,
 /** function to absorbe a single emigrant (emigration outside of the world) for a specific sex
  * the pop size is given here
  */
-void LCE_Disperse::_absorbEmigrant(Patch* curPatch, const unsigned int& nbEmigr,
+void LCE_Disperse::_absorbEmigrant(TPatch* curPatch, const unsigned int& nbEmigr,
                                    const sex_t& SEX, const unsigned int& popSize) {
 	assert(popSize == curPatch->size(SEX, OFFSx));
 	curPatch->nbEmigrant += nbEmigr;        // increment the number of emigrants
@@ -803,14 +803,14 @@ void LCE_Disperse::_absorbEmigrant(Patch* curPatch, const unsigned int& nbEmigr,
  * migration rate to any patch is m/(_nb_patch-1)
  */
 void LCE_Disperse::migrate_island() {
-	Patch *curPatch;
+	TPatch *curPatch;
 	unsigned int home, target;
 	unsigned int nbInd[2];          // nbInd is set by _computeTotEmigrants()
     double factor[2];               // factor is set by get_migr_factor()
     double sum_m[2];                // sum_m is set by _computeTotEmigrants()
     
 	// for each populated patch
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
 	for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop; ++curPop) {
 		curPatch = *curPop;
 		home = curPatch->get_ID();
@@ -841,7 +841,7 @@ void LCE_Disperse::immigrate_island()
     // get the metapopulation size for each sex
     unsigned int neighbourSizes[2];
     neighbourSizes[FEM] = neighbourSizes[MAL] = 0;
-    vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
     for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop; ++curPop) {
         neighbourSizes[FEM] += (*curPop)->size(FEM, OFFSx);
         neighbourSizes[MAL] += (*curPop)->size(MAL, OFFSx);
@@ -870,7 +870,7 @@ void LCE_Disperse::immigrate_island()
  * - nbMigr: total number of immigrants
  * - SEX: the sex in question
  */
-void LCE_Disperse::immigrate(Patch* homePop, vector<Patch*> vNeighbours, unsigned int totSize, unsigned int nbMigr, sex_t SEX, age_idx fromAge, age_idx toAge)
+void LCE_Disperse::immigrate(TPatch* homePop, vector<TPatch*> vNeighbours, unsigned int totSize, unsigned int nbMigr, sex_t SEX, age_idx fromAge, age_idx toAge)
 {
     unsigned int homeSize = homePop->size(SEX, fromAge);  // population size of focal patch
     unsigned int curMigr, curSize;
@@ -890,7 +890,7 @@ void LCE_Disperse::immigrate(Patch* homePop, vector<Patch*> vNeighbours, unsigne
     if(homeSize) _popPtr->copyMove_random_withReplacement(SEX, fromAge, homePop, toAge, homePop, homeSize-nbMigr);
     
     // for each neighbour
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for (curPop = vNeighbours.begin(), endPop = vNeighbours.end(); nbMigr && curPop != endPop; ++curPop) {
         if(*curPop==homePop) continue; // local patch, continue
         
@@ -916,13 +916,13 @@ void LCE_Disperse::immigrate(Patch* homePop, vector<Patch*> vNeighbours, unsigne
  * migration rate to any patch is m/(_nb_patch-1)
  */
 void LCE_DisperseCoalescence::migrate_island() {
-	Patch *curPatch;
+	TPatch *curPatch;
 	unsigned int home, target;
 	unsigned int nbEmigr;   // nbEmigr is set by _computeTotEmigrants()
 	double factor, sum_m; // factor is set by get_migr_factor() & sum_m is set by _computeTotEmigrants()
     
 	// for each populated patch
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
 	for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop;
          ++curPop) {
 		curPatch = *curPop;
@@ -949,13 +949,13 @@ void LCE_DisperseCoalescence::migrate_island() {
  * migration rate to any patch is m/(_nb_patch-1)
  */
 void LCE_Disperse::migrate_island_propagule() {
-	Patch *curPatch;
+	TPatch *curPatch;
 	unsigned int home, target, propagule;
 	unsigned int nbInd[2];        // nbInd is set by _computeTotEmigrants()
 	double factor[2], sum_m[2]; // factor is set by get_migr_factor() & sum_m is set by _computeTotEmigrants()
     
 	// for each patch
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
 	for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop;
          ++curPop) {
 		curPatch = *curPop;
@@ -991,13 +991,13 @@ void LCE_Disperse::migrate_island_propagule() {
  * migration rate to any patch is m/(_nb_patch-1)
  */
 void LCE_DisperseCoalescence::migrate_island_propagule() {
-	Patch *curPatch;
+	TPatch *curPatch;
 	unsigned int home, target, propagule;
 	unsigned int nbEmigr;   // nbEmigr is set by _computeTotEmigrants()
 	double factor, sum_m; // factor is set by get_migr_factor() & sum_m is set by _computeTotEmigrants()
     
 	// for each patch
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
 	for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop;
          ++curPop) {
 		curPatch = *curPop;
@@ -1030,7 +1030,7 @@ void LCE_DisperseCoalescence::migrate_island_propagule() {
 // migrate_2_neighbours
 // ----------------------------------------------------------------------------------------
 /** migration to 2 neighburs (1D-SS model) */
-void LCE_Disperse::migrate_2_neighbours(Patch* curPatch,
+void LCE_Disperse::migrate_2_neighbours(TPatch* curPatch,
                                         const unsigned int& home, const unsigned int& n1,
                                         const unsigned int& n2, double* m1, double* m2, double* tot_m) {
 	assert(curPatch->get_ID()==home);
@@ -1050,7 +1050,7 @@ void LCE_Disperse::migrate_2_neighbours(Patch* curPatch,
 // migrate_2_neighbours
 // ----------------------------------------------------------------------------------------
 /** migration to 2 neighburs (1D-SS model) */
-void LCE_DisperseCoalescence::migrate_2_neighbours(Patch* curPatch,
+void LCE_DisperseCoalescence::migrate_2_neighbours(TPatch* curPatch,
                                                    const unsigned int& home, const unsigned int& n1,
                                                    const unsigned int& n2, double* m1, double* m2, double* tot_m) {
 	assert(curPatch->get_ID()==home);
@@ -1071,7 +1071,7 @@ void LCE_DisperseCoalescence::migrate_2_neighbours(Patch* curPatch,
 // migrate_4_neighbours
 // ----------------------------------------------------------------------------------------
 /** migration to 4 neighbors (2D-SS model with 4 neighbors) */
-void LCE_Disperse::migrate_4_neighbours(Patch* curPatch,
+void LCE_Disperse::migrate_4_neighbours(TPatch* curPatch,
                                         const unsigned int& home, const unsigned int& n1,
                                         const unsigned int& n2, const unsigned int& n3, const unsigned int& n4,
                                         double* m1, double* m2, double* m3, double* m4, double* tot_m) {
@@ -1096,7 +1096,7 @@ void LCE_Disperse::migrate_4_neighbours(Patch* curPatch,
 // migrate_4_neighbours
 // ----------------------------------------------------------------------------------------
 /** migration to 4 neighbors (2D-SS model with 4 neighbors) */
-void LCE_DisperseCoalescence::migrate_4_neighbours(Patch* curPatch,
+void LCE_DisperseCoalescence::migrate_4_neighbours(TPatch* curPatch,
                                                    const unsigned int& home, const unsigned int& n1,
                                                    const unsigned int& n2, const unsigned int& n3, const unsigned int& n4,
                                                    double* m1, double* m2, double* m3, double* m4, double* tot_m) {
@@ -1122,7 +1122,7 @@ void LCE_DisperseCoalescence::migrate_4_neighbours(Patch* curPatch,
 // migrate_8_neighbours
 // ----------------------------------------------------------------------------------------
 /** migration to 8 neighbors (2D-SS model with 8 neighbors) */
-void LCE_Disperse::migrate_8_neighbours(Patch* curPatch,
+void LCE_Disperse::migrate_8_neighbours(TPatch* curPatch,
                                         const unsigned int& home, const unsigned int& n1,
                                         const unsigned int& n2, const unsigned int& n3, const unsigned int& n4,
                                         const unsigned int& n5, const unsigned int& n6, const unsigned int& n7,
@@ -1157,7 +1157,7 @@ void LCE_Disperse::migrate_8_neighbours(Patch* curPatch,
 // migrate_8_neighbours
 // ----------------------------------------------------------------------------------------
 /** migration to 8 neighburs (2D-SS model with 8 neighbours) */
-void LCE_DisperseCoalescence::migrate_8_neighbours(Patch* curPatch,
+void LCE_DisperseCoalescence::migrate_8_neighbours(TPatch* curPatch,
                                                    const unsigned int& home, const unsigned int& n1,
                                                    const unsigned int& n2, const unsigned int& n3, const unsigned int& n4,
                                                    const unsigned int& n5, const unsigned int& n6, const unsigned int& n7,
@@ -1205,7 +1205,7 @@ void LCE_Disperse::migrate_1D_ss() {
 /** all patches are iterated */
 void LCE_Disperse::migrate_1D_ss_all() {
 	unsigned int id = 0;
-	vector<Patch*>::iterator curPop = _popPtr->get_vPatch().begin();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vPatch().begin();
     
 	// first patch (edge patch)
 	migrate_2_neighbours(*curPop, id, _nb_patch - 1, 1, _migr_rateOut,
@@ -1228,8 +1228,8 @@ void LCE_Disperse::migrate_1D_ss_all() {
 /** only the populated patches are iterated */
 void LCE_Disperse::migrate_1D_ss_full() {
 	unsigned int id;
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop; ++curPop) {
 		id = (*curPop)->get_ID();
 		if (id == 0)
@@ -1260,7 +1260,7 @@ void LCE_Disperse::migrate_2D_ss_4Neighbour() {
 void LCE_Disperse::migrate_2D_ss_4Neighbour_all() {
 	unsigned int id = 0, x, y;
 	// unsigned int xx, yy;
-	vector<Patch*>::iterator curPop = _popPtr->get_vPatch().begin();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vPatch().begin();
     
 	// upper edge ////////////////////////////////////////////////////////////////
 	// left corner       order of neighbours: N,            E,                S,                W
@@ -1343,7 +1343,7 @@ void LCE_Disperse::migrate_2D_ss_4Neighbour_all() {
 /** only the populated patches are iterated */
 void LCE_Disperse::migrate_2D_ss_4Neighbour_full() {
 	unsigned int id, cur_x, cur_y, x = _x_size, y = _y_size;
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
 	for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop;
          ++curPop) {   // for each populated patch
 		id = (*curPop)->get_ID();
@@ -1424,7 +1424,7 @@ void LCE_Disperse::migrate_2D_ss_8Neighbour() {
 void LCE_Disperse::migrate_2D_ss_8Neighbour_all() {
 	unsigned int id = 0, x, y;
 	// unsigned int xx, yy;
-	vector<Patch*>::iterator curPop = _popPtr->get_vPatch().begin();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vPatch().begin();
     
 	// upper edge ////////////////////////////////////////////////////////////////
 	// left corner       order of neighbours: NW,  N,   NE,    E,   SE,   S,   SW,   W
@@ -1526,8 +1526,8 @@ void LCE_Disperse::migrate_2D_ss_8Neighbour_all() {
 /** only the populated patches are iterated */
 void LCE_Disperse::migrate_2D_ss_8Neighbour_full() {
 	unsigned int id, cur_x, cur_y, x = _x_size, y = _y_size;
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for (; curPop != endPop; ++curPop) {   // for each popualted patch
 		id = (*curPop)->get_ID();
 		ID2Coord(id, cur_x, cur_y);
@@ -1634,7 +1634,7 @@ void LCE_Disperse::migrate_2D_ss_geometric(const sex_t& SEX) {
 	double dist, angle;
 	unsigned int popSize, nbEmigrants, x, y, id;
 	int newX, newY;          // can be negative!!!
-	vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
 	for (curPop = _popPtr->get_vFullPatch().begin(); curPop != endPop;
          ++curPop) {  // for each populated patch
 		popSize = (*curPop)->size(SEX, OFFSx);
@@ -2180,10 +2180,10 @@ vector<unsigned int> LCE_Disperse::get_neighbours(
 // get_neighbours_ptr
 //-----------------------------------------------------------------------------
 /** returns a vector with all neighbors as pointers to the patch*/
-vector<Patch*> LCE_Disperse::get_neighbours(Patch* curPatch) {
+vector<TPatch*> LCE_Disperse::get_neighbours(TPatch* curPatch) {
 	vector<unsigned int> idx = get_neighbours(curPatch->get_ID());
     
-	vector<Patch*> vec;
+	vector<TPatch*> vec;
 	vector<unsigned int>::iterator cur, end;
 	for (cur = idx.begin(), end = idx.end(); cur != end; ++cur) {
 		vec.push_back(_popPtr->get_vPatch(*cur));

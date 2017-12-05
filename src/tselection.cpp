@@ -90,8 +90,8 @@ void
 TSelection::set_phenotype_of_all_individuals(age_idx AGE)
 {
 	vector<TIndividual*>::iterator curInd, endInd;
-	vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-	vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+	vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+	vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
 	for(;curPop!=endPop; ++curPop){                                 // for each patch
 		// females
 		vector<TIndividual*>& curFem = (*curPop)->get_sampled_inds(FEM, AGE);
@@ -120,7 +120,7 @@ TSelection::set_phenotype_of_all_individuals(age_idx AGE)
  *          (0: no (default); 1: upwards; 2: downwards)?
  */
 void
-TSelection::set_fitness(Patch* patch, age_idx age, int* sort, int subset)
+TSelection::set_fitness(TPatch* patch, age_idx age, int* sort, int subset)
 {
     // does frequency dependend selection act?
     if(_selTrait_fitnessDependentSize){
@@ -158,7 +158,7 @@ TSelection::set_fitness(Patch* patch, age_idx age, int* sort, int subset)
  * age:     only this age class will be considered
  */
 void
-TSelection::set_fitness(Patch* patch, sex_t sex, age_idx age)
+TSelection::set_fitness(TPatch* patch, sex_t sex, age_idx age)
 {
 	unsigned int i, newSize;
 	TIndividual* ind;
@@ -229,7 +229,7 @@ TSelection::_get_fitness_multiplicative(TIndividual* ind)
  * re-sort the fitness arrays
  */
 void
-TSelection::female_sex_allocation_fix(Patch* patch, age_idx age, int* sort, int subset)
+TSelection::female_sex_allocation_fix(TPatch* patch, age_idx age, int* sort, int subset)
 {
     assert(_fem_sex_allocation_value>=0);
     assert(_fem_sex_allocation_value<=1);
@@ -267,7 +267,7 @@ TSelection::female_sex_allocation_fix(Patch* patch, age_idx age, int* sort, int 
  * re-sort the fitness arrays
  */
 void
-TSelection::female_sex_allocation_G(Patch* patch, age_idx age, int* sort, int subset)
+TSelection::female_sex_allocation_G(TPatch* patch, age_idx age, int* sort, int subset)
 {
     assert(_fem_sex_allocation_value != my_NAN);
     
@@ -310,7 +310,7 @@ TSelection::female_sex_allocation_G(Patch* patch, age_idx age, int* sort, int su
  * re-sort the fitness arrays
  */
 void
-TSelection::female_sex_allocation_equation(Patch* patch, age_idx age, int* sort, int subset)
+TSelection::female_sex_allocation_equation(TPatch* patch, age_idx age, int* sort, int subset)
 {
     assert(_female_sex_allocation);
     
@@ -353,7 +353,7 @@ TSelection::female_sex_allocation_equation(Patch* patch, age_idx age, int* sort,
  * re-sort the fitness arrays
  */
 void
-TSelection::female_sex_allocation_Z(Patch* patch, age_idx age, int* sort, int subset)
+TSelection::female_sex_allocation_Z(TPatch* patch, age_idx age, int* sort, int subset)
 {
     assert(_fem_sex_allocation_value != my_NAN);
     
@@ -481,23 +481,23 @@ TSelection::init(TMetapop* popPtr)
 
 	// what must be read?
 	if(selKind & 2){      // stabilizing selection
-		_popPtr->set_patch_parameter(_vTraitsSize, "patch_stab_sel_optima",    "optima",    &Patch::set_localOptima);    // default 0
-		_popPtr->set_patch_parameter(_vTraitsSize, "patch_stab_sel_intensity", "intensity", &Patch::set_localIntensity); // default 1
+		_popPtr->set_patch_parameter(_vTraitsSize, "patch_stab_sel_optima",    "optima",    &TPatch::set_localOptima);    // default 0
+		_popPtr->set_patch_parameter(_vTraitsSize, "patch_stab_sel_intensity", "intensity", &TPatch::set_localIntensity); // default 1
 	}
 	if(selKind & 4){      // directional selection
-		_popPtr->set_patch_parameter(_vTraitsSize, "patch_dir_sel_growth_rate", "growth_rate", &Patch::set_localGrowthRate);  // default 1
-		_popPtr->set_patch_parameter(_vTraitsSize, "patch_dir_sel_max_growth",  "max_growth",  &Patch::set_localMaxGrowth);   // default 1
-		_popPtr->set_patch_parameter(_vTraitsSize, "patch_dir_sel_symmetry",    "symmetry",    &Patch::set_localSymmetry);    // default 0.5
-		_popPtr->set_patch_parameter(_vTraitsSize, "patch_dir_sel_min",         "min",         &Patch::set_localMin);         // default 0
-		_popPtr->set_patch_parameter(_vTraitsSize, "patch_dir_sel_max",         "max",         &Patch::set_localMax);         // default 1
+		_popPtr->set_patch_parameter(_vTraitsSize, "patch_dir_sel_growth_rate", "growth_rate", &TPatch::set_localGrowthRate);  // default 1
+		_popPtr->set_patch_parameter(_vTraitsSize, "patch_dir_sel_max_growth",  "max_growth",  &TPatch::set_localMaxGrowth);   // default 1
+		_popPtr->set_patch_parameter(_vTraitsSize, "patch_dir_sel_symmetry",    "symmetry",    &TPatch::set_localSymmetry);    // default 0.5
+		_popPtr->set_patch_parameter(_vTraitsSize, "patch_dir_sel_min",         "min",         &TPatch::set_localMin);         // default 0
+		_popPtr->set_patch_parameter(_vTraitsSize, "patch_dir_sel_max",         "max",         &TPatch::set_localMax);         // default 1
 	}
 	if(selKind & 8){      // fitness landscape (phenotype has to be set after fitness due to sorting)
-		_popPtr->set_patch_parameter_array(_vTraitsSize, "patch_fitness_landscape",   "fitness_landscape", &Patch::set_fitnessLandscape_fitness);
-		_popPtr->set_patch_parameter_array(_vTraitsSize, "patch_phenotype_landscape", "phenotype_landscape", &Patch::set_fitnessLandscape_phenotype);
+		_popPtr->set_patch_parameter_array(_vTraitsSize, "patch_fitness_landscape",   "fitness_landscape", &TPatch::set_fitnessLandscape_fitness);
+		_popPtr->set_patch_parameter_array(_vTraitsSize, "patch_phenotype_landscape", "phenotype_landscape", &TPatch::set_fitnessLandscape_phenotype);
 	}
 	if(selKind & 16){      // selection coefficient
-		_popPtr->set_patch_parameter(_vTraitsSize, "patch_coef_sel_AA",  "selection_coefficient_AA",&Patch::set_localSelCoefAA);  // default 1
-		_popPtr->set_patch_parameter(_vTraitsSize, "patch_coef_sel",    "selection_coefficient",    &Patch::set_localSelCoef);    // default 0
+		_popPtr->set_patch_parameter(_vTraitsSize, "patch_coef_sel_AA",  "selection_coefficient_AA",&TPatch::set_localSelCoefAA);  // default 1
+		_popPtr->set_patch_parameter(_vTraitsSize, "patch_coef_sel",    "selection_coefficient",    &TPatch::set_localSelCoef);    // default 0
 	}
 
 	_selection_level      = (unsigned int)_popPtr->get_paramset()->getValue("selection_level");
@@ -594,23 +594,23 @@ TSelection::init2(TMetapop* popPtr)
 			case 0: // neutral:     1. digit
 				break;
 			case 1: // stabilizing: 2. digit
-				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_stab_sel_optima",    "optima",    &Patch::set_localOptima);    // default 0
-				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_stab_sel_intensity", "intensity", &Patch::set_localIntensity); // default 1
+				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_stab_sel_optima",    "optima",    &TPatch::set_localOptima);    // default 0
+				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_stab_sel_intensity", "intensity", &TPatch::set_localIntensity); // default 1
 				break;
 			case 2: // directional: 3. digit
-				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_dir_sel_growth_rate", "growth_rate", &Patch::set_localGrowthRate);  // default 1
-				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_dir_sel_max_growth",  "max_growth",  &Patch::set_localMaxGrowth);   // default 1
-				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_dir_sel_symmetry",    "symmetry",    &Patch::set_localSymmetry);    // default 0.5
-				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_dir_sel_min",         "min",         &Patch::set_localMin);         // default 0
-				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_dir_sel_max",         "max",         &Patch::set_localMax);         // default 1
+				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_dir_sel_growth_rate", "growth_rate", &TPatch::set_localGrowthRate);  // default 1
+				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_dir_sel_max_growth",  "max_growth",  &TPatch::set_localMaxGrowth);   // default 1
+				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_dir_sel_symmetry",    "symmetry",    &TPatch::set_localSymmetry);    // default 0.5
+				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_dir_sel_min",         "min",         &TPatch::set_localMin);         // default 0
+				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_dir_sel_max",         "max",         &TPatch::set_localMax);         // default 1
 				break;
 			case 3: // fitness landscape
-				_popPtr->set_patch_parameter_array_ofTrait(pQuanti, t, trait, "quanti_fitness_landscape",   "fitness_landscape", &Patch::set_fitnessLandscape_fitness);
-				_popPtr->set_patch_parameter_array_ofTrait(pQuanti, t, trait, "quanti_phenotype_landscape", "phenotype_landscape", &Patch::set_fitnessLandscape_phenotype);
+				_popPtr->set_patch_parameter_array_ofTrait(pQuanti, t, trait, "quanti_fitness_landscape",   "fitness_landscape", &TPatch::set_fitnessLandscape_fitness);
+				_popPtr->set_patch_parameter_array_ofTrait(pQuanti, t, trait, "quanti_phenotype_landscape", "phenotype_landscape", &TPatch::set_fitnessLandscape_phenotype);
 				break;
 			case 4: // selection coefficient: 1. digit
-				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_coef_sel_AA", "selection_coefficient_AA", &Patch::set_localSelCoefAA);  // default 1
-				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_coef_sel",    "selection_coefficient",    &Patch::set_localSelCoef);    // default 0
+				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_coef_sel_AA", "selection_coefficient_AA", &TPatch::set_localSelCoefAA);  // default 1
+				_popPtr->set_patch_parameter_ofTrait(pQuanti, t, trait, "quanti_coef_sel",    "selection_coefficient",    &TPatch::set_localSelCoef);    // default 0
 				break;
 		}
 	}
@@ -709,7 +709,7 @@ TSelection::set_ve_mean()
 {
 	_Ve_mean_set = (_popPtr->get_parameter("patch_ve_mean")->isSet() ||_popPtr->get_parameter("patch_ve_mean_fem")->isSet());
 	if(_Ve_mean_set){
-		_popPtr->set_patch_parameter(_vTraitsSize, "patch_ve_mean", "mean_environmental_effect", &Patch::set_localMeanVe);
+		_popPtr->set_patch_parameter(_vTraitsSize, "patch_ve_mean", "mean_environmental_effect", &TPatch::set_localMeanVe);
 	}
 	for(unsigned int t = 0; t < _vTraitsSize; ++t){    // set the function pointers
 		_selTrait[t]->set_ve_mean_func_ptr();
@@ -729,7 +729,7 @@ TSelection::set_ve_var()
 {
 	_Ve_var_set = (_popPtr->get_parameter("patch_ve_var")->isSet() || _popPtr->get_parameter("patch_ve_var_fem")->isSet());
 	if(_Ve_var_set){            // Ve is set by the parameter patch_ve_var (has precedence)
-		_popPtr->set_patch_parameter(_vTraitsSize, "patch_ve_var", "heritability", &Patch::set_localh2Ve);
+		_popPtr->set_patch_parameter(_vTraitsSize, "patch_ve_var", "heritability", &TPatch::set_localh2Ve);
 
 		// heritability cannot change over time for environmental model 1 and 3
 		if(_popPtr->get_parameter("patch_ve_var")->isTemporalParam()){

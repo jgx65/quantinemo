@@ -120,7 +120,7 @@ public:
      * @param sex gender of the individual
      * @param homepatch ID of the Patch where this individual is born, usually the current position in the Patch array
      **/
-    TIndividual*    makeNewIndividual           (TIndividual* mother, TIndividual* father, sex_t sex, Patch* homepatch);
+    TIndividual*    makeNewIndividual           (TIndividual* mother, TIndividual* father, sex_t sex, TPatch* homepatch);
     TIndividual*    copyIndividual(TIndividual* oldInd);
 
     
@@ -131,7 +131,7 @@ public:
      * @param sex gender of the individual
      * @param homepatch ID of the Patch where this individual is born, usually the current position in the Patch array
      **/
-    TIndividual*     makeOffsprg (TIndividual* mother, TIndividual* father, sex_t sex, Patch* homepatch);
+    TIndividual*     makeOffsprg (TIndividual* mother, TIndividual* father, sex_t sex, TPatch* homepatch);
     
     /**Individual prototype accessor.*/
     const TIndividual*       getIndividualProtoype       ( )   {return &_protoIndividual;}

@@ -88,19 +88,19 @@ private:
     /**The stat handler for the population stats*/
     MetapopSH _statHandler;
     
-    vector<Patch*>            _vPatch;          // all patches (contains the patches and does not change over time!)
-    vector<Patch*>            _vFullPatch;      // only the populated patches (adapted during sim)
-    vector<Patch*>            _vSamplePatch;    // only sampled and populated patches [sampleID] (adapted during sim)
+    vector<TPatch*>            _vPatch;          // all patches (contains the patches and does not change over time!)
+    vector<TPatch*>            _vFullPatch;      // only the populated patches (adapted during sim)
+    vector<TPatch*>            _vSamplePatch;    // only sampled and populated patches [sampleID] (adapted during sim)
     
-    vector<Patch*>            _vTempPatch;      // temp vector for newly populated patches
+    vector<TPatch*>            _vTempPatch;      // temp vector for newly populated patches
     
     unsigned int 			  _tot_sampled_patches; // the total/max number of patches to sample (set at the start of the sim)
     
-    vector<Patch*>&        (TMetapop::*func_ptr_get_vFullPatch)();
-    inline vector<Patch*>& get_vFullPatch_eff()     {return _vFullPatch;}
+    vector<TPatch*>&        (TMetapop::*func_ptr_get_vFullPatch)();
+    inline vector<TPatch*>& get_vFullPatch_eff()     {return _vFullPatch;}
     
-    vector<Patch*>&        (TMetapop::*func_ptr_get_vSamplePatch)();
-    inline vector<Patch*>& get_vSamplePatch_eff()     {return _vSamplePatch;}
+    vector<TPatch*>&        (TMetapop::*func_ptr_get_vSamplePatch)();
+    inline vector<TPatch*>& get_vSamplePatch_eff()     {return _vSamplePatch;}
     
 public:
     // functions dealing with the patch containers ///////////////////////////////
@@ -131,23 +131,23 @@ public:
      */
     
     // all patches (does not change over time)
-    inline vector<Patch*>& get_vPatch()         {return _vPatch;}
-    inline Patch*          get_vPatch(const unsigned int& i){return _vPatch[i];}
+    inline vector<TPatch*>& get_vPatch()         {return _vPatch;}
+    inline TPatch*          get_vPatch(const unsigned int& i){return _vPatch[i];}
     inline unsigned int    get_nbPatch()        {return (unsigned int)_vPatch.size();}
     
     // populated patches (changes over time)
-    inline vector<Patch*>& get_vFullPatch()     {return (this->*func_ptr_get_vFullPatch)();}
+    inline vector<TPatch*>& get_vFullPatch()     {return (this->*func_ptr_get_vFullPatch)();}
     inline unsigned int    get_nbFullPatch()    {return (unsigned int)get_vFullPatch().size();}
     
     // temporarily populated patches (changes over time)
-    inline vector<Patch*>& get_vTempPatch()     {return _vTempPatch;}
+    inline vector<TPatch*>& get_vTempPatch()     {return _vTempPatch;}
     inline unsigned int    get_nbTempPatch()    {return (unsigned int)_vTempPatch.size();}
     
     // sampled AND populated patches (changes over time)
-    inline vector<Patch*>& get_vSamplePatch()   {return (this->*func_ptr_get_vSamplePatch)();}
+    inline vector<TPatch*>& get_vSamplePatch()   {return (this->*func_ptr_get_vSamplePatch)();}
     inline unsigned int    get_nbSamplePatch()  {return (unsigned int)get_vSamplePatch().size();}  // current number of
     inline unsigned int    get_nbTotSamplePatch(){return _tot_sampled_patches;} // maximum number of patches to sample
-    void                   erase_vSamplePatch(Patch*);
+    void                   erase_vSamplePatch(TPatch*);
     
     double                 get_fullPatch_ratio(){return (double)get_nbFullPatch()/get_nbPatch();}
     
@@ -532,10 +532,10 @@ public:
                age_idx to_age, unsigned int to_deme, unsigned int at);
     void move_random (sex_t SEX, age_idx from_age, unsigned int from_deme,
                       age_idx to_age, unsigned int to_deme, unsigned int nbMigr);
-    void move_random (sex_t SEX, age_idx from_age, Patch* fromDeme,
-                      age_idx to_age, Patch* toDeme, unsigned int nbMigr);
-    void copyMove_random_withReplacement (sex_t SEX, age_idx from_age, Patch* fromDeme,
-                                          age_idx to_age, Patch* toDeme, unsigned int nbMigr);
+    void move_random (sex_t SEX, age_idx from_age, TPatch* fromDeme,
+                      age_idx to_age, TPatch* toDeme, unsigned int nbMigr);
+    void copyMove_random_withReplacement (sex_t SEX, age_idx from_age, TPatch* fromDeme,
+                                          age_idx to_age, TPatch* toDeme, unsigned int nbMigr);
     
     /**
      * @return the current generation counter string
@@ -570,22 +570,22 @@ public:
     void set_change_disp_rate_after_density();
     
     /** newly populated patch */
-    void (TMetapop::*func_ptr_new_fullPatch)(Patch* curPatch);
-    inline void new_fullPatch(Patch* curPatch){(this->*TMetapop::func_ptr_new_fullPatch)(curPatch);}
-    inline void new_fullPatch_noSample_noFull(Patch* curPatch);
-    inline void new_fullPatch_withSample_noFull(Patch* curPatch);
-    inline void new_fullPatch_noSample_withFull(Patch* curPatch);
-    inline void new_fullPatch_withSample_withFull(Patch* curPatch);
+    void (TMetapop::*func_ptr_new_fullPatch)(TPatch* curPatch);
+    inline void new_fullPatch(TPatch* curPatch){(this->*TMetapop::func_ptr_new_fullPatch)(curPatch);}
+    inline void new_fullPatch_noSample_noFull(TPatch* curPatch);
+    inline void new_fullPatch_withSample_noFull(TPatch* curPatch);
+    inline void new_fullPatch_noSample_withFull(TPatch* curPatch);
+    inline void new_fullPatch_withSample_withFull(TPatch* curPatch);
     
     /** newly freed patch */
-    void (TMetapop::*func_ptr_new_emptyPatch)(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
-    inline void new_emptyPatch(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop){ return (this->*TMetapop::func_ptr_new_emptyPatch)(curPop, endPop);}
-    inline void new_emptyPatch_withSample_withFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
-    inline void new_emptyPatch_withSample_noFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
-    inline void new_emptyPatch_noSample_noFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
-    inline void new_emptyPatch_noSample_withFull(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
-    inline void new_emptyPatch_noSample_noFull_coal(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
-    inline void new_emptyPatch_noSample_withFull_coal(vector<Patch*>::iterator& curPop, vector<Patch*>::iterator& endPop);
+    void (TMetapop::*func_ptr_new_emptyPatch)(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop);
+    inline void new_emptyPatch(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop){ return (this->*TMetapop::func_ptr_new_emptyPatch)(curPop, endPop);}
+    inline void new_emptyPatch_withSample_withFull(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop);
+    inline void new_emptyPatch_withSample_noFull(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop);
+    inline void new_emptyPatch_noSample_noFull(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop);
+    inline void new_emptyPatch_noSample_withFull(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop);
+    inline void new_emptyPatch_noSample_noFull_coal(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop);
+    inline void new_emptyPatch_noSample_withFull_coal(vector<TPatch*>::iterator& curPop, vector<TPatch*>::iterator& endPop);
     
     // add the _vTempPatch container to the _vFullPatch container
     void (TMetapop::*func_ptr_add_tempPatch)();
@@ -623,7 +623,7 @@ public:
 inline unsigned int TMetapop::size ( sex_t SEX, age_t AGE )
 {
     unsigned int size=0;
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for(curPop=get_vFullPatch().begin(), endPop=get_vFullPatch().end(); curPop!=endPop; ++curPop) {
         size += (*curPop)->size(SEX, AGE);
     }
@@ -638,7 +638,7 @@ inline unsigned int TMetapop::size (sex_t SEX, age_idx AGE, unsigned int deme)
 inline unsigned int TMetapop::size ( sex_t SEX, age_idx AGE )
 {
     unsigned int size=0;
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for(curPop=get_vFullPatch().begin(), endPop=get_vFullPatch().end(); curPop!=endPop; ++curPop) {
         size += (*curPop)->size(SEX, AGE);
     }
@@ -653,7 +653,7 @@ inline unsigned int TMetapop::size (sex_t SEX, age_t AGE, unsigned int deme){
 inline unsigned int TMetapop::sampleSize ( sex_t SEX, age_t AGE )
 {
     unsigned int size=0;
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for(curPop=get_vFullPatch().begin(), endPop=get_vFullPatch().end(); curPop!=endPop; ++curPop) {
         size += (*curPop)->sampleSize(SEX, AGE);
     }
@@ -668,7 +668,7 @@ inline unsigned int TMetapop::sampleSize (sex_t SEX, age_idx AGE, unsigned int d
 inline unsigned int TMetapop::sampleSize ( sex_t SEX, age_idx AGE )
 {
     unsigned int size=0;
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for(curPop=get_vFullPatch().begin(), endPop=get_vFullPatch().end(); curPop!=endPop; ++curPop) {
         size += (*curPop)->sampleSize(SEX, AGE);
     }
@@ -693,7 +693,7 @@ inline void TMetapop::move (sex_t SEX, age_idx from_age, unsigned int from_deme,
 
 inline bool TMetapop::individual_container_ok ()
 {
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for(curPop=get_vFullPatch().begin(), endPop=get_vFullPatch().end(); curPop!=endPop; ++curPop) {
          if(!(*curPop)->individual_container_ok()) return false;
     }

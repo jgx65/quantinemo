@@ -39,7 +39,7 @@
 
 class TTraitProto;
 class TIndividual;
-class Patch;
+class TPatch;
 /**A class to compute and store the summary statistics associated with a SimComponent.
  * The template type must be the type of the class that declares the methods linked into the
  * StatRecorder elements. */
@@ -47,7 +47,7 @@ template <class SH>
 class StatHandler: public StatHandlerBase {
     
 private:
-    double get_coancestry(Patch*, const sex_t&, Patch*, const sex_t&, const age_idx&);
+    double get_coancestry(TPatch*, const sex_t&, TPatch*, const sex_t&, const age_idx&);
     
 protected:
     /**The list of stat recorders.*/
@@ -70,7 +70,7 @@ protected:
 	map<unsigned char, map<unsigned char, double> >*** _locusFreq_local;  // [age][patch][locus][allele1][allele2]
 	map<unsigned char, map<unsigned char, double> >**  _locusFreq_global; // [age][locus][allele1][allele2]
     
-	map<unsigned char, map<unsigned char, double> >* get_genotypeFreq(const age_idx& AGE, Patch* p,
+	map<unsigned char, map<unsigned char, double> >* get_genotypeFreq(const age_idx& AGE, TPatch* p,
                                                                       const unsigned int& l1, const unsigned int& l2);
     
     
@@ -391,8 +391,8 @@ public:
 	double  get_allele_freq_local(unsigned int i, const age_t& AGE);
 	double  get_allele_freq_global(unsigned int i, const age_t& AGE);
 	bool    set_alleleFreq(const age_idx& AGE);
-	unsigned int set_alleleFreq_ofPatch(Patch* crnt_patch, const age_idx& AGE, map<unsigned char, double>*& freqs, map<unsigned char, double>*& global_freqs);
-    unsigned int set_alleleFreq_ofPatch_allInds(Patch* crnt_patch, const age_idx& AGE,
+	unsigned int set_alleleFreq_ofPatch(TPatch* crnt_patch, const age_idx& AGE, map<unsigned char, double>*& freqs, map<unsigned char, double>*& global_freqs);
+    unsigned int set_alleleFreq_ofPatch_allInds(TPatch* crnt_patch, const age_idx& AGE,
                                                 map<unsigned char, double>*& freqs,
                                                 map<unsigned char, double>*& global_freqs);
 	void    set_alleleFreq_global_ofLocus(const unsigned int& l,
@@ -401,27 +401,27 @@ public:
 	void    set_alleleFreq_global(map<unsigned char, double>** localFreqs, map<unsigned char, double>* globalFreqs,
                                   unsigned int* popSizes, const unsigned int& tot_popSize, const unsigned int& nbPatch);
     
-	double  getHarmonicMean_ofPopSize(const age_idx& AGE, const vector<Patch*>& aPatch, unsigned int& nbPopFull); // for any number of patches
+	double  getHarmonicMean_ofPopSize(const age_idx& AGE, const vector<TPatch*>& aPatch, unsigned int& nbPopFull); // for any number of patches
     
     // locus genotype frequencies
 	double  get_locus_freq_local(unsigned int i, const age_t& AGE);
 	double  get_locus_freq_global(unsigned int i, const age_t& AGE);
 	bool    set_locusFreq(const age_idx& AGE);
-	unsigned int set_locusFreq_ofPatch(Patch* crnt_patch, const age_idx& AGE,
+	unsigned int set_locusFreq_ofPatch(TPatch* crnt_patch, const age_idx& AGE,
                                        map<unsigned char, map<unsigned char, double> >*& freqs,
                                        map<unsigned char, map<unsigned char, double> >*& global_freqs);
-    unsigned int get_locusGenotypeFreqs_ofPatch(Patch * curPatch, const age_idx & AGE,
+    unsigned int get_locusGenotypeFreqs_ofPatch(TPatch * curPatch, const age_idx & AGE,
                                                 map<unsigned char, map<unsigned char, double> >*& freqs);
-    unsigned int get_locusGenotypeFreqs_ofPatch(Patch * curPatch, const age_idx & AGE,
+    unsigned int get_locusGenotypeFreqs_ofPatch(TPatch * curPatch, const age_idx & AGE,
                                                 unsigned int traitID,
                                                 map<unsigned char, map<unsigned char, double> >*& freqs);
-    unsigned int get_locusGenotypeFreqs_ofPatch_allInds(Patch * curPatch, const age_idx & AGE,
+    unsigned int get_locusGenotypeFreqs_ofPatch_allInds(TPatch * curPatch, const age_idx & AGE,
                                                 unsigned int traitID,
                                                 map<unsigned char, map<unsigned char, double> >*& freqs);
-    unsigned int get_locusGenotypeCounts_ofPatch(Patch * curPatch, const age_idx & AGE,
+    unsigned int get_locusGenotypeCounts_ofPatch(TPatch * curPatch, const age_idx & AGE,
                                                  unsigned int traitID,
                                                 map<unsigned char, map<unsigned char, double> >*& freqs);
-    unsigned int get_locusGenotypeCounts_ofPatch_andSex(Patch * curPatch, const age_idx & AGE, sex_t SEX,
+    unsigned int get_locusGenotypeCounts_ofPatch_andSex(TPatch * curPatch, const age_idx & AGE, sex_t SEX,
                                                         unsigned int traitID,
                                                         map<unsigned char, map<unsigned char, double> >*& freqs);
     
@@ -430,14 +430,14 @@ public:
     
 	/** Computes the weighted within and between patch Fst's as well as the overall Fst (Theta) */
 	void   setFstat_Weir_Cockerham          (const age_idx& AGE);      // across loci
-	void   setFstat_Weir_Cockerham(const age_idx& AGE, vector<Patch*>& aPatch,
+	void   setFstat_Weir_Cockerham(const age_idx& AGE, vector<TPatch*>& aPatch,
                                    map<unsigned char, double>** alleleFreqs,
                                    map<unsigned char, double>* alleleFreqsGlobal,
                                    double& fst, double& fis, double &fit);
 	void   setFstat_Weir_Cockerham_perLocus (const age_idx& AGE);      // for each locus separately
 	void   setFstat_Weir_Cockerham_perPatchPair(const age_idx& AGE);
-	double getFstat_Weir_Cockerham_perPatchPair(const age_idx& AGE, Patch* pop1, Patch* p2);
-	double getFstat_Weir_Cockerham_perPatchPair_andLocus(const age_idx& AGE, Patch* pop1, Patch* p2, unsigned int l);
+	double getFstat_Weir_Cockerham_perPatchPair(const age_idx& AGE, TPatch* pop1, TPatch* p2);
+	double getFstat_Weir_Cockerham_perPatchPair_andLocus(const age_idx& AGE, TPatch* pop1, TPatch* p2, unsigned int l);
 	void   get_sigma_of_locus_Weir_Cockerham(double& sigma_a2,
                                              double& sigma_b2, double& sigma_w2, const unsigned int& nbPatch, const unsigned int& nbPop,
                                              map<unsigned char, double>** alleleFreqs, map<unsigned char, double>* alleleFreqsGlobal,
@@ -571,8 +571,8 @@ public:
     /** F-statistics following Nei and Chesser 1983 */
 	void   setFstat_Nei_Chesser              (const age_idx& AGE);    // F-statistics globally across patch and loci
 	void   setFstat_Nei_Chesser_perPatchPair (const age_idx& AGE);    // F-statistics per pair of patches and across loci
-	double getFstat_Nei_Chesser_perPatchPair (const age_idx& AGE, Patch* p1, Patch* p2);    // F-statistics per pair of patches and across loci
-	double getFstat_Nei_Chesser_perPatchPair_andLocus (const age_idx& AGE, Patch* p1, Patch* p2, unsigned int l);    // F-statistics per pair of patches and across loci
+	double getFstat_Nei_Chesser_perPatchPair (const age_idx& AGE, TPatch* p1, TPatch* p2);    // F-statistics per pair of patches and across loci
+	double getFstat_Nei_Chesser_perPatchPair_andLocus (const age_idx& AGE, TPatch* p1, TPatch* p2, unsigned int l);    // F-statistics per pair of patches and across loci
 	void   setFstat_Nei_Chesser_perLocus     (const age_idx& AGE);    // F-statistics for each locus separately across patches
 	double get_fixed_loci_global (const age_t& AGE);
 	void   set_fixed_loci_perPatch(const age_t& AGE);
@@ -580,25 +580,25 @@ public:
 	double getHo                    (const age_idx& AGE);
 	double getHo                    (const age_t& AGE) {return getHo(age_t2idx(AGE));}
 	double*getHo_perLocus           (const age_idx& AGE);
-	double*getHo_perLocus           (const age_idx& AGE, vector<Patch*>& vPatch);
+	double*getHo_perLocus           (const age_idx& AGE, vector<TPatch*>& vPatch);
 	double getHo_ofLocus            (unsigned int i, const age_t& AGE){return getHo_perLocus(age_t2idx(AGE))[i];}
-	double getHo_ofPatch            (Patch* curPatch, const age_idx& AGE);
+	double getHo_ofPatch            (TPatch* curPatch, const age_idx& AGE);
 	double getHo_ofPatch            (unsigned int i, const age_t& AGE){return getHo_ofPatch(get_vPatch(i), age_t2idx(AGE));}
-	double*getHo_ofPatch_andLocus    (const age_idx& AGE, Patch* cur_patch, double* array=NULL);
-	double getHo_ofPatch_andLocus    (const age_idx& AGE, Patch* cur_patch, const unsigned int& l);
+	double*getHo_ofPatch_andLocus    (const age_idx& AGE, TPatch* cur_patch, double* array=NULL);
+	double getHo_ofPatch_andLocus    (const age_idx& AGE, TPatch* cur_patch, const unsigned int& l);
 	double getHo_ofPatch_andLocus(unsigned int i, const age_t& AGE){
 		unsigned int id, loc;
 		fromID(i, id, loc, _nb_patch, _nb_locus);
 		return getHo_ofPatch_andLocus(age_t2idx(AGE), get_vPatch(id), loc);
 	}
-	map<unsigned char, double>* getHo_ofPatchperAllele  (const age_idx& AGE, Patch* cur_patch, map<unsigned char, double>* array=NULL);
+	map<unsigned char, double>* getHo_ofPatchperAllele  (const age_idx& AGE, TPatch* cur_patch, map<unsigned char, double>* array=NULL);
     
 	double getHs                    (const age_idx& AGE);
 	double getHs                    (const age_t& AGE){return getHs(age_t2idx(AGE));}
-	double getHs_ofPatch            (Patch* p, const age_idx& AGE);
+	double getHs_ofPatch            (TPatch* p, const age_idx& AGE);
 	double getHs_ofPatch            (unsigned int p, const age_t& AGE){return getHs_ofPatch(get_vPatch(p), age_t2idx(AGE));}
 	double getHsUnbiased_ofPatch    (unsigned int p, const age_t& AGE);
-	double getHsUnbiased_ofPatch_andLocus(const age_idx& AGE, Patch* p, const unsigned int& l);
+	double getHsUnbiased_ofPatch_andLocus(const age_idx& AGE, TPatch* p, const unsigned int& l);
 	double getHsUnbiased_ofPatch_andLocus(unsigned int i, const age_t& AGE){
 		unsigned int id, loc;
 		fromID(i, id, loc, _nb_patch, _nb_locus);
@@ -606,7 +606,7 @@ public:
 	}
 	double getHs_ofLocus            (const unsigned int& l, const age_idx& AGE);
 	double getHs_ofLocus            (unsigned int l, const age_t& AGE){return getHs_ofLocus(l, age_t2idx(AGE));}
-	double getHs_ofPatch_andLocus   (const age_idx& AGE, Patch* p, const unsigned int& l);
+	double getHs_ofPatch_andLocus   (const age_idx& AGE, TPatch* p, const unsigned int& l);
 	double getHs_ofPatch_andLocus   (unsigned int i, const age_t& AGE){
 		unsigned int id, loc;
 		fromID(i, id, loc, _nb_patch, _nb_locus);
@@ -616,22 +616,22 @@ public:
 	double getHt                    (const age_idx& AGE);
 	double getHt                    (const age_t& AGE){return getHt(age_t2idx(AGE));}
 	double getHt                    (const age_idx& AGE, const unsigned int& p1, const unsigned int& p2);   // total Ht of the 2 patches
-	double getHt                    (const age_idx& AGE, Patch* p1, Patch* p2);                             // total Ht of the 2 patches
+	double getHt                    (const age_idx& AGE, TPatch* p1, TPatch* p2);                             // total Ht of the 2 patches
 	double getHt_ofLocus            (const age_idx& AGE, const unsigned int& l);
 	double getHt_ofLocus            (unsigned int l, const age_t& AGE){return getHt_ofLocus(age_t2idx(AGE), l);}
 	double getHt_ofLocus            (const age_idx& AGE, const unsigned int& l, const unsigned int& p1, const unsigned int& p2); // total Ht of the 2 patches
-	double getHt_ofLocus            (const age_idx& AGE, const unsigned int& l, Patch* p1, Patch* p2); // total Ht of the 2 patches
+	double getHt_ofLocus            (const age_idx& AGE, const unsigned int& l, TPatch* p1, TPatch* p2); // total Ht of the 2 patches
     
 	// allelic richness
 	unsigned int get_minSampleSize  (const age_idx& AGE);
     
 	double getRs                    (const age_idx& AGE);
 	double getRs                    (const age_t& AGE){return getRs(age_t2idx(AGE));}
-	double getRs_ofPatch            (Patch* p, const age_idx& AGE, unsigned int minN=my_NAN);
+	double getRs_ofPatch            (TPatch* p, const age_idx& AGE, unsigned int minN=my_NAN);
 	double getRs_ofPatch            (unsigned int p, const age_t& AGE){return getRs_ofPatch(get_vPatch(p), age_t2idx(AGE));}
 	double getRs_ofLocus            (const unsigned int& l, const age_idx& AGE, unsigned int minN=my_NAN);
 	double getRs_ofLocus            (unsigned int l, const age_t& AGE){return getRs_ofLocus(l, age_t2idx(AGE));}
-	double getRs_ofPatch_andLocus   (const age_idx& AGE, Patch* p, const unsigned int& l, unsigned int minN);
+	double getRs_ofPatch_andLocus   (const age_idx& AGE, TPatch* p, const unsigned int& l, unsigned int minN);
 	double getRs_ofPatch_andLocus   (unsigned int i, const age_t& AGE){
 		age_idx AGEidx = age_t2idx(AGE);
 		unsigned int sample1, locus, minN = get_minSampleSize(AGEidx);
@@ -647,11 +647,11 @@ public:
 	// allelic range
 	double getRange                    (const age_idx& AGE);
 	double getRange                    (const age_t& AGE){return getRange(age_t2idx(AGE));}
-	double getRange_ofPatch            (Patch* p, const age_idx& AGE);
+	double getRange_ofPatch            (TPatch* p, const age_idx& AGE);
 	double getRange_ofPatch            (unsigned int p, const age_t& AGE){return getRange_ofPatch(get_vPatch(p), age_t2idx(AGE));}
 	double getRange_ofLocus            (const unsigned int& l, const age_idx& AGE);
 	double getRange_ofLocus            (unsigned int l, const age_t& AGE){return getRange_ofLocus(l, age_t2idx(AGE));}
-	unsigned int getRange_ofPatch_andLocus(const age_idx& AGE, Patch* p, const unsigned int& l);
+	unsigned int getRange_ofPatch_andLocus(const age_idx& AGE, TPatch* p, const unsigned int& l);
 	double getRange_ofPatch_andLocus   (unsigned int i, const age_t& AGE){
 		unsigned int sample, locus;
 		fromID(i, sample, locus, _nb_patch, _nb_locus);
@@ -666,11 +666,11 @@ public:
 	// garza williamson stat
 	double getGW                    (const age_idx& AGE);
 	double getGW                    (const age_t& AGE){return getGW(age_t2idx(AGE));}
-	double getGW_ofPatch            (Patch* p, const age_idx& AGE);
+	double getGW_ofPatch            (TPatch* p, const age_idx& AGE);
 	double getGW_ofPatch            (unsigned int p, const age_t& AGE){return getGW_ofPatch(get_vPatch(p), age_t2idx(AGE));}
 	double getGW_ofLocus            (const unsigned int& l, const age_idx& AGE);
 	double getGW_ofLocus            (unsigned int l, const age_t& AGE){return getGW_ofLocus(l, age_t2idx(AGE));}
-	double getGW_ofPatch_andLocus(const age_idx& AGE, Patch* p, const unsigned int& l);
+	double getGW_ofPatch_andLocus(const age_idx& AGE, TPatch* p, const unsigned int& l);
 	double getGW_ofPatch_andLocus   (unsigned int i, const age_t& AGE){
 		unsigned int sample, locus;
 		fromID(i, sample, locus, _nb_patch, _nb_locus);
@@ -684,10 +684,10 @@ public:
     
 	// mean number of alleles per locus and patch/metapopulation
 	double getNbAllele              (const age_t& AGE);
-	double getNbAllele_ofPatch      (Patch* p, const age_idx& AGE);
+	double getNbAllele_ofPatch      (TPatch* p, const age_idx& AGE);
 	double getNbAllele_ofPatch      (unsigned int i, const age_t& AGE);
 	double getNbAllele_ofLocus      (unsigned int i, const age_t& AGE);
-	unsigned int getNbAllele_ofPatch_andLocus(const age_idx& AGE, Patch* p, const unsigned int& l);
+	unsigned int getNbAllele_ofPatch_andLocus(const age_idx& AGE, TPatch* p, const unsigned int& l);
 	unsigned int getNbAllele_ofPatch_andLocus(const age_t& AGE, unsigned int p, const unsigned int& l){
 		return getNbAllele_ofPatch_andLocus(age_t2idx(AGE), p, l);
 	}
@@ -705,11 +705,11 @@ public:
     
 	// mean number of fixed loci
 	double getNbFixedLocus              (const age_t& AGE);
-	unsigned int getNbFixedLocus_ofPatch(Patch* p, const age_idx& AGE);
+	unsigned int getNbFixedLocus_ofPatch(TPatch* p, const age_idx& AGE);
 	double getNbFixedLocus_ofPatch      (unsigned int i, const age_t& AGE);
 	double getNbFixedLocus_ofLocus      (unsigned int i, const age_t& AGE);
-	unsigned int getNbFixedLocus_ofPatch_andLocus(const age_idx& AGE, Patch* p, const unsigned int& l);
-	unsigned int getNbFixedLocus_ofPatch_andLocus(const age_t& AGE, Patch* p, const unsigned int& l){
+	unsigned int getNbFixedLocus_ofPatch_andLocus(const age_idx& AGE, TPatch* p, const unsigned int& l);
+	unsigned int getNbFixedLocus_ofPatch_andLocus(const age_t& AGE, TPatch* p, const unsigned int& l){
 		return getNbFixedLocus_ofPatch_andLocus(age_t2idx(AGE), p, l);
 	}
 	double getNbFixedLocus_ofPatch_andLocus   (unsigned int i, const age_t& AGE){
@@ -817,13 +817,13 @@ public:
     
 	// linkage disequilibrium
 	double getDprime                (const age_idx& AGE, const unsigned int& l1, const unsigned int& l2);
-	double getDprime_ofPatch        (const age_idx& AGE, Patch* p, const unsigned int& l1, const unsigned int& l2);
+	double getDprime_ofPatch        (const age_idx& AGE, TPatch* p, const unsigned int& l1, const unsigned int& l2);
 	double getDstar                 (const age_idx& AGE, const unsigned int& l1, const unsigned int& l2);
-	double getDstar_ofPatch         (const age_idx& AGE, Patch* p, const unsigned int& l1, const unsigned int& l2);
+	double getDstar_ofPatch         (const age_idx& AGE, TPatch* p, const unsigned int& l1, const unsigned int& l2);
 	double getR2                    (const age_idx& AGE, const unsigned int& l1, const unsigned int& l2);
-	double getR2_ofPatch            (const age_idx& AGE, Patch* p, const unsigned int& l1, const unsigned int& l2);
+	double getR2_ofPatch            (const age_idx& AGE, TPatch* p, const unsigned int& l1, const unsigned int& l2);
 	double getChi2                  (const age_idx& AGE, const unsigned int& l1, const unsigned int& l2);
-	double getChi2_ofPatch          (const age_idx& AGE, Patch* p, const unsigned int& l1, const unsigned int& l2);
+	double getChi2_ofPatch          (const age_idx& AGE, TPatch* p, const unsigned int& l1, const unsigned int& l2);
 	double getDprime_ij             (unsigned int i, const age_t& AGE){
 		unsigned int loc1, loc2;
 		fromID(i, loc1, loc2, _nb_locus, _nb_locus);
@@ -890,8 +890,8 @@ public:
 	double get_meanNbSamples(const age_t& AGE);
     
 	// chord distance following Cavalli_Sforza & Bodmer (1971)
-	double getChordDist2_perPatchPair(const age_idx& AGE, Patch* pop1, Patch* pop2);
-	double getChordDist_perPatchPair(const age_idx& AGE, Patch* pop1, Patch* pop2);
+	double getChordDist2_perPatchPair(const age_idx& AGE, TPatch* pop1, TPatch* pop2);
+	double getChordDist_perPatchPair(const age_idx& AGE, TPatch* pop1, TPatch* pop2);
 	double getChordDist(const age_t& AGE);   // average chord distance
 	double getChordDist_ij(unsigned int i, const age_t& AGE){  // just this pair is computed
 		unsigned int sample1, sample2;

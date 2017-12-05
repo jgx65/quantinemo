@@ -270,7 +270,7 @@ class TTQuantiFHvalue: public FileHandler {
 
 private:
     virtual void FHwrite (const age_idx& cur_age, const sex_t& cur_sex, ostream& FILE,
-                          Patch* current_patch, const int& patch_id);
+                          TPatch* current_patch, const int& patch_id);
     
     double (TTQuantiFHvalue::*get_value_func_ptr)(TIndividual* ind, const int& t);
     double get_genotype(TIndividual* ind, const int& t);
@@ -362,14 +362,14 @@ public:
 	// variance components
 	bool compute_alpha(double* y, const map<unsigned char, int*>& x, const unsigned int& nb_ind,
 			map<unsigned char, double>& alpha, const map<unsigned char, double>& availableAllele);
-	bool remove_private_alleles_compute_alpha(Patch* crnt_patch, const unsigned int& sizeF,
+	bool remove_private_alleles_compute_alpha(TPatch* crnt_patch, const unsigned int& sizeF,
 			const unsigned int& sizeM, map<unsigned char, double>& alpha,
 			double* arrayG, const age_idx& age_pos,
 			map<unsigned char, double>& allele_freq, const unsigned int& l);
-	void (TTQuantiSH::*get_Va_ofPatch_func_ptr)(Patch*, const age_idx&, double&, double&, map<unsigned char, double>*);
-	void get_Va_ofPatch(Patch* p, const age_idx& a, double& m, double& v, map<unsigned char, double>* f){(this->*get_Va_ofPatch_func_ptr)(p,a,m,v,f);}
-	void get_Va_ofPatch_regression(Patch*, const age_idx&, double&, double&, map<unsigned char, double>*);    // any case, but slower
-	void get_Va_ofPatch_random_mating(Patch*, const age_idx&, double&, double&, map<unsigned char, double>*); // only random mating
+	void (TTQuantiSH::*get_Va_ofPatch_func_ptr)(TPatch*, const age_idx&, double&, double&, map<unsigned char, double>*);
+	void get_Va_ofPatch(TPatch* p, const age_idx& a, double& m, double& v, map<unsigned char, double>* f){(this->*get_Va_ofPatch_func_ptr)(p,a,m,v,f);}
+	void get_Va_ofPatch_regression(TPatch*, const age_idx&, double&, double&, map<unsigned char, double>*);    // any case, but slower
+	void get_Va_ofPatch_random_mating(TPatch*, const age_idx&, double&, double&, map<unsigned char, double>*); // only random mating
 
 	double getVarA      (unsigned int i, const age_t& AGE){return getVarA(i, age_t2idx(AGE));}
 	double getVarA      (unsigned int i, const age_idx& AGE)  {
@@ -501,17 +501,17 @@ public:
 	void   setVar_Va(const age_idx& AGE);
 	void   setMeanAndVar_Vg(const age_idx& AGE);
 	void   setMeanAndVar_Vg(const age_idx& AGE, sex_t SEX);
-	void   setMeanAndVar_Vg_ofPatch_allInds(Patch*, const age_idx&, double&, double&, map<unsigned char, double>* freqs=NULL);
-	void   setMeanAndVar_Vg_ofPatch(Patch*, const age_idx&, double&, double&, map<unsigned char, double>* freqs=NULL);
-	void   setMeanAndVar_Vg_ofPatch(Patch*, const age_idx&, double&, double&, sex_t SEX, map<unsigned char, double>* freqs=NULL);
+	void   setMeanAndVar_Vg_ofPatch_allInds(TPatch*, const age_idx&, double&, double&, map<unsigned char, double>* freqs=NULL);
+	void   setMeanAndVar_Vg_ofPatch(TPatch*, const age_idx&, double&, double&, map<unsigned char, double>* freqs=NULL);
+	void   setMeanAndVar_Vg_ofPatch(TPatch*, const age_idx&, double&, double&, sex_t SEX, map<unsigned char, double>* freqs=NULL);
 	void   setMeanAndVar_Vp();
 	void   setMeanAndVar_Vp(sex_t SEX);
-	void   setMeanAndVar_Vp_ofPatch(Patch* crnt_patch, double& meanP, double& varP);
-	void   setMeanAndVar_Vp_ofPatch(Patch* crnt_patch, double& meanP, double& varP, sex_t SEX);
+	void   setMeanAndVar_Vp_ofPatch(TPatch* crnt_patch, double& meanP, double& varP);
+	void   setMeanAndVar_Vp_ofPatch(TPatch* crnt_patch, double& meanP, double& varP, sex_t SEX);
 	void   setMeanAndVar_Wp();
 	void   setMeanAndVar_Wp(sex_t SEX);
-	void   setMeanAndVar_Wp_ofPatch(Patch* crnt_patch, double& meanP, double& varP);
-	void   setMeanAndVar_Wp_ofPatch(Patch* crnt_patch, double& meanP, double& varP, sex_t SEX);
+	void   setMeanAndVar_Wp_ofPatch(TPatch* crnt_patch, double& meanP, double& varP);
+	void   setMeanAndVar_Wp_ofPatch(TPatch* crnt_patch, double& meanP, double& varP, sex_t SEX);
 };
 
 #endif //TTDISCRETEQUANTI_H

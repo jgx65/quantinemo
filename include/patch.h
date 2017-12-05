@@ -60,7 +60,7 @@
  */
 
 class TSelectionTrait;
-class Patch
+class TPatch
 {
 	unsigned int _ID;        // id of the patch (starting at 0)
 	string       _IDstr;     // same as _ID (but starting at 1), but stored as a string   num2str(_ID+1)
@@ -71,7 +71,7 @@ public:
 	inline void         set_size(sex_t SEX, age_idx AGE, const unsigned int& s){_sizes[SEX][AGE] = s;}
 	inline void         add_size(sex_t SEX, age_idx AGE, const unsigned int& s){_sizes[SEX][AGE] += s;}
 	inline unsigned int get_size(sex_t SEX, age_idx AGE) {return _sizes[SEX][AGE];}
-	void                addImmigrant(Patch* p, const unsigned int& s);
+	void                addImmigrant(TPatch* p, const unsigned int& s);
 	void                addImmigrant(const unsigned int& p, const unsigned int& s);
 
 protected:
@@ -130,13 +130,13 @@ public:
 //		init_containers();
 //	}
     
-    Patch(TMetapop* p, unsigned int i);
+    TPatch(TMetapop* p, unsigned int i);
 
 
-	~Patch();
+	~TPatch();
 
-	Patch*        init                      (unsigned int id);
-	Patch*        init_coal                 (unsigned int id);
+	TPatch*        init                      (unsigned int id);
+	TPatch*        init_coal                 (unsigned int id);
 	void          init_containers           ( );
 	inline void   set_ID_individual         (unsigned int i) {_ID_individual = i;}   // used when genotypes are passed
 	void          set_PopSizes_ini          (unsigned int nbfem, unsigned int nbmal);

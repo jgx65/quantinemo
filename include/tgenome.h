@@ -38,7 +38,7 @@
 
 class TIndividual;
 class TGenomeProto;
-class Patch;
+class TPatch;
 class FileServices;
 class StatServices;
 
@@ -60,7 +60,7 @@ public:
 	void clear();
 	void inherit(TIndividual* mother, TIndividual* father);
 	void mutate();
-	void ini_sequence(Patch* p);
+	void ini_sequence(TPatch* p);
 	void ini_sequence(unsigned char** seq);
 	void ini_sequence_dadFirst(unsigned char** seq);
 	void ini_sequence(unsigned char* seq_mum, unsigned char* seq_dad);
@@ -196,7 +196,7 @@ public:
 	void ini_mutate();
 	void set_mutation_of_locus(const unsigned int& l, const double& rate, const mut_model_t& model);
 
-	void ini_sequence(unsigned char** seq, Patch* patch);
+	void ini_sequence(unsigned char** seq, TPatch* patch);
 	void set_ini_sequence_model(TLocus* aLocus, const unsigned int& size, const unsigned int& model);
 	void set_ini_sequence_model(TLocus* aLocus, const unsigned int& size, const ini_model_t& model);
 

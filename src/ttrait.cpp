@@ -87,7 +87,7 @@ TTraitProto::resetTotal(){
 // get_trait_index
 // ----------------------------------------------------------------------------------------
 double*
-TTraitProto::get_ini_alleleFreq(Patch* patch, const unsigned& locus){
+TTraitProto::get_ini_alleleFreq(TPatch* patch, const unsigned& locus){
 	return _initAlleleFreq[patch->get_ID()%_initAlleleFreqCols][locus];
 }
 
@@ -716,7 +716,7 @@ TTrait::_copyTTraitParameters(const TTrait& T)
 // ----------------------------------------------------------------------------------------
 /** initialization of the sequence */
 void
-TTrait::ini_sequence (Patch* patch)
+TTrait::ini_sequence (TPatch* patch)
 {
 	for(unsigned int l=0; l<pTraitProto->_nb_locus; ++l){
 		pTraitProto->_aLocus[l].ini_sequence(sequence[l], patch);

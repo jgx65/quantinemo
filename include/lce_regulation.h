@@ -78,8 +78,8 @@ public:
 	virtual void regulation_fitness_patch()  {_popPtr->regulate_selection_fitness_patch(_age);}
 	virtual void regulation_fitness_metapop(){_popPtr->regulate_selection_fitness_metapop(_age);}
 	virtual void regulation_fitness_hard()   {_popPtr->regulate_selection_fitness_hard(_age);}
-	virtual void drawSuccessfullIndividuals(Patch* curPatch, const unsigned int& K, const sex_t& SEX);
-    virtual void drawUnSuccessfullIndividuals(Patch* curPatch, const unsigned int& K, const sex_t& SEX);
+	virtual void drawSuccessfullIndividuals(TPatch* curPatch, const unsigned int& K, const sex_t& SEX);
+    virtual void drawUnSuccessfullIndividuals(TPatch* curPatch, const unsigned int& K, const sex_t& SEX);
     
     //SimComponent overrides:
     virtual void loadFileServices ( FileServices* loader ) {}

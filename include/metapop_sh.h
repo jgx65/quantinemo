@@ -144,7 +144,7 @@ public:
     double getVwB();
     double getVwW();
     void setMeanAndVar_W();
-    void setMeanAndVar_W_ofPatch(Patch* crnt_patch, const unsigned int& i);
+    void setMeanAndVar_W_ofPatch(TPatch* crnt_patch, const unsigned int& i);
 };
 
 #endif

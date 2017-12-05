@@ -47,7 +47,7 @@ using namespace std;
 // ----------------------------------------------------------------------------------------
 /** creates the space for parameters linked to the quantitative traits */
 void
-Patch::reset_LinkedTraits()
+TPatch::reset_LinkedTraits()
 {
 	if(_pSelectionType) {delete[] _pSelectionType; _pSelectionType = NULL;}
 	ARRAY::delete_3D(_localSelection, 2, _nbLinkedTraits);
@@ -65,7 +65,7 @@ Patch::reset_LinkedTraits()
 // ----------------------------------------------------------------------------------------
 /** creates the space for parameters linked to the quantitative traits */
 void
-Patch::set_LinkedTraits(const unsigned int& nbTraits, TSelectionTrait** type, bool bothSexes)
+TPatch::set_LinkedTraits(const unsigned int& nbTraits, TSelectionTrait** type, bool bothSexes)
 {
 	reset_LinkedTraits();
 
@@ -105,7 +105,7 @@ Patch::set_LinkedTraits(const unsigned int& nbTraits, TSelectionTrait** type, bo
  * returns true if Ve is larger than zero for males and/or females
  */
 bool
-Patch::set_Ve(const int& model, const int& trait, sex_t sex)
+TPatch::set_Ve(const int& model, const int& trait, sex_t sex)
 {
 	// for each quantitative trait
 	double h2 = _h2[sex][trait];
@@ -160,7 +160,7 @@ Patch::set_Ve(const int& model, const int& trait, sex_t sex)
 // set_PopSizes_ini_carrying_capacity
 // ----------------------------------------------------------------------------------------
 void
-Patch::set_PopSizes_ini_carrying_capacity()
+TPatch::set_PopSizes_ini_carrying_capacity()
 {
 	_N_ini_sex[FEM] = _Ksex[FEM];
 	_N_ini_sex[MAL] = _Ksex[MAL];
@@ -173,7 +173,7 @@ Patch::set_PopSizes_ini_carrying_capacity()
 // ----------------------------------------------------------------------------------------
 /** returns the number of individuals to sample in this population for the current generation */
 unsigned int
-Patch::get_curN_sample(sex_t SEX, age_idx AGE)
+TPatch::get_curN_sample(sex_t SEX, age_idx AGE)
 {
 	unsigned int N = size(SEX, AGE);
 	if(_N_sample_sex[SEX]==my_NAN || _N_sample_sex[SEX]>=N) return N;      // not specified or exceeds the number: all inds sampled
@@ -189,7 +189,7 @@ Patch::get_curN_sample(sex_t SEX, age_idx AGE)
  * returns yes if sampling revealed some individuals and no if no inds are sampled
  */
 bool
-Patch::set_sampledInds(sex_t SEX, age_t AGE)
+TPatch::set_sampledInds(sex_t SEX, age_t AGE)
 {
 	// perform the sampling for the given age classes
 	unsigned int sampleSize=0, a, mask;
@@ -207,7 +207,7 @@ Patch::set_sampledInds(sex_t SEX, age_t AGE)
  * the number of individuals to sample is returned
  */
 unsigned int
-Patch::set_sampledInds(sex_t SEX, age_idx AGE)
+TPatch::set_sampledInds(sex_t SEX, age_idx AGE)
 {
 	vector<TIndividual*>& vSample = _sampled_inds[SEX][AGE];
 	//assert(vSample.empty());
@@ -229,7 +229,7 @@ Patch::set_sampledInds(sex_t SEX, age_idx AGE)
 /** get the current sample size
  */
 unsigned int
-Patch::sampleSize(const sex_t SEX, const age_t& AGE)
+TPatch::sampleSize(const sex_t SEX, const age_t& AGE)
 {
 	unsigned int a, mask, size = 0;
 	for(a = 0, mask=1; a < NB_AGE_CLASSES; ++a, mask <<= 1) {
@@ -245,7 +245,7 @@ Patch::sampleSize(const sex_t SEX, const age_t& AGE)
  * check that the sampled individuls are set for this generation
  */
 unsigned int
-Patch::sampleSize(const sex_t SEX, const age_idx& AGE)
+TPatch::sampleSize(const sex_t SEX, const age_idx& AGE)
 {
 	assert((_popPtr->get_isSampled()[0] == _popPtr->getCurrentGeneration())
 			&&(_popPtr->get_isSampled()[1] == _popPtr->getCurrentReplicate()));
@@ -258,7 +258,7 @@ Patch::sampleSize(const sex_t SEX, const age_idx& AGE)
 // ----------------------------------------------------------------------------------------
 /** set if a patch is extinced or not */
 void
-Patch::set_isExtinct(bool status)
+TPatch::set_isExtinct(bool status)
 {
 	_isExtinct = status;
 
@@ -272,7 +272,7 @@ Patch::set_isExtinct(bool status)
 // init_containers
 // ----------------------------------------------------------------------------------------
 void
-Patch::init_containers()
+TPatch::init_containers()
 {
 	_containers   = ARRAY::new_2D<vector<TIndividual*> >(2, NB_AGE_CLASSES);
 	_sampled_inds = ARRAY::new_2D<vector<TIndividual*> >(2, NB_AGE_CLASSES);
@@ -293,8 +293,8 @@ Patch::init_containers()
 // ----------------------------------------------------------------------------------------
 // init
 // ----------------------------------------------------------------------------------------
-Patch*
-Patch::init(unsigned int id)
+TPatch*
+TPatch::init(unsigned int id)
 {
 	_ID = id;
 	_IDstr = toStr(id+1);
@@ -315,8 +315,8 @@ Patch::init(unsigned int id)
 // ----------------------------------------------------------------------------------------
 // init
 // ----------------------------------------------------------------------------------------
-Patch*
-Patch::init_coal(unsigned int id)
+TPatch*
+TPatch::init_coal(unsigned int id)
 {
 	_ID = id;
 	_IDstr = toStr(id+1);
@@ -337,35 +337,35 @@ Patch::init_coal(unsigned int id)
 // set_func_pointer
 // ----------------------------------------------------------------------------------------
 void
-Patch::set_func_pointer()
+TPatch::set_func_pointer()
 {
-	func_ptr_move  = &Patch::move_ind;
-	func_ptr_flush = &Patch::flush_ind;
-	func_ptr_swap  = &Patch::swap_ind;
+	func_ptr_move  = &TPatch::move_ind;
+	func_ptr_flush = &TPatch::flush_ind;
+	func_ptr_swap  = &TPatch::swap_ind;
 }
 
 // ----------------------------------------------------------------------------------------
 // set_func_pointer
 // ----------------------------------------------------------------------------------------
 void
-Patch::set_func_pointer_coal()
+TPatch::set_func_pointer_coal()
 {
-	func_ptr_move  = &Patch::move_coal;
-	func_ptr_flush = &Patch::flush_coal;
-	func_ptr_swap  = &Patch::swap_coal;
+	func_ptr_move  = &TPatch::move_coal;
+	func_ptr_flush = &TPatch::flush_coal;
+	func_ptr_swap  = &TPatch::swap_coal;
 }
 
 // ----------------------------------------------------------------------------------------
 // environmental variance
 // ----------------------------------------------------------------------------------------
-void Patch::set_localMeanVe (double *array, sex_t SEX)
+void TPatch::set_localMeanVe (double *array, sex_t SEX)
 {
 	for(unsigned int i = 0; i<_nbLinkedTraits; i++) {
 		_meanVe[SEX][i] = array[i];
 	}
 }
 
-void Patch::set_localh2Ve (double *array, sex_t SEX)
+void TPatch::set_localh2Ve (double *array, sex_t SEX)
 {
 	for(unsigned int i = 0; i<_nbLinkedTraits; i++) {
 		_h2[SEX][i] = array[i];
@@ -375,7 +375,7 @@ void Patch::set_localh2Ve (double *array, sex_t SEX)
 // ----------------------------------------------------------------------------------------
 // stabilizing selection pressure
 // ----------------------------------------------------------------------------------------
-void Patch::set_localOptima (double *array, sex_t SEX)
+void TPatch::set_localOptima (double *array, sex_t SEX)
 {
 	for(unsigned int i = 0; i<_nbLinkedTraits; i++) {
 		if(_pSelectionType[i]->get_nb_selection_params() == 2){
@@ -384,7 +384,7 @@ void Patch::set_localOptima (double *array, sex_t SEX)
 	}
 }
 
-void Patch::set_localIntensity (double *array, sex_t SEX)
+void TPatch::set_localIntensity (double *array, sex_t SEX)
 {
 	for(unsigned int i = 0; i<_nbLinkedTraits; i++) {
 		if(_pSelectionType[i]->get_nb_selection_params() == 2){
@@ -396,7 +396,7 @@ void Patch::set_localIntensity (double *array, sex_t SEX)
 // ----------------------------------------------------------------------------------------
 // selecrtion coefficient selection pressure
 // ----------------------------------------------------------------------------------------
-void Patch::set_localSelCoefAA (double *array, sex_t SEX)
+void TPatch::set_localSelCoefAA (double *array, sex_t SEX)
 {
 	for(unsigned int i = 0; i<_nbLinkedTraits; i++) {
 		if(_pSelectionType[i]->get_nb_selection_params() == 2){
@@ -405,7 +405,7 @@ void Patch::set_localSelCoefAA (double *array, sex_t SEX)
 	}
 }
 
-void Patch::set_localSelCoef (double *array, sex_t SEX)
+void TPatch::set_localSelCoef (double *array, sex_t SEX)
 {
 	for(unsigned int i = 0; i<_nbLinkedTraits; i++) {
 		if(_pSelectionType[i]->get_nb_selection_params() == 2){
@@ -417,7 +417,7 @@ void Patch::set_localSelCoef (double *array, sex_t SEX)
 // ----------------------------------------------------------------------------------------
 // directional selection pressure
 // ----------------------------------------------------------------------------------------
-void Patch::set_localMin (double *array, sex_t SEX)
+void TPatch::set_localMin (double *array, sex_t SEX)
 {
 	for(unsigned int i = 0; i<_nbLinkedTraits; i++) {
 		if(_pSelectionType[i]->get_nb_selection_params() == 5){
@@ -426,7 +426,7 @@ void Patch::set_localMin (double *array, sex_t SEX)
 	}
 }
 
-void Patch::set_localMax (double *array, sex_t SEX)
+void TPatch::set_localMax (double *array, sex_t SEX)
 {
 	for(unsigned int i = 0; i<_nbLinkedTraits; i++) {
 		if(_pSelectionType[i]->get_nb_selection_params() == 5){
@@ -435,7 +435,7 @@ void Patch::set_localMax (double *array, sex_t SEX)
 	}
 }
 
-void Patch::set_localMaxGrowth (double *array, sex_t SEX)
+void TPatch::set_localMaxGrowth (double *array, sex_t SEX)
 {
 	for(unsigned int i = 0; i<_nbLinkedTraits; i++) {
 		if(_pSelectionType[i]->get_nb_selection_params() == 5){
@@ -444,7 +444,7 @@ void Patch::set_localMaxGrowth (double *array, sex_t SEX)
 	}
 }
 
-void Patch::set_localGrowthRate (double *array, sex_t SEX)
+void TPatch::set_localGrowthRate (double *array, sex_t SEX)
 {
 	for(unsigned int i = 0; i<_nbLinkedTraits; i++) {
 		if(_pSelectionType[i]->get_nb_selection_params() == 5){
@@ -453,7 +453,7 @@ void Patch::set_localGrowthRate (double *array, sex_t SEX)
 	}
 }
 
-void Patch::set_localSymmetry (double *array, sex_t SEX)
+void TPatch::set_localSymmetry (double *array, sex_t SEX)
 {
 	for(unsigned int i = 0; i<_nbLinkedTraits; i++) {
 		if(_pSelectionType[i]->get_nb_selection_params() == 5){
@@ -465,39 +465,39 @@ void Patch::set_localSymmetry (double *array, sex_t SEX)
 // ----------------------------------------------------------------------------------------
 // value for a specific trait
 // ----------------------------------------------------------------------------------------
-void Patch::set_localOptima		 (unsigned int t, double val, sex_t SEX){
+void TPatch::set_localOptima		 (unsigned int t, double val, sex_t SEX){
 	assert(_pSelectionType[t]->get_nb_selection_params() == 2);
 	_localSelection[SEX][t][0]=val;
 }
-void Patch::set_localIntensity (unsigned int t, double val, sex_t SEX){
+void TPatch::set_localIntensity (unsigned int t, double val, sex_t SEX){
 	assert(_pSelectionType[t]->get_nb_selection_params() == 2);
 	_localSelection[SEX][t][1]=val;
 }
-void Patch::set_localSelCoefAA (unsigned int t, double val, sex_t SEX){
+void TPatch::set_localSelCoefAA (unsigned int t, double val, sex_t SEX){
 	assert(_pSelectionType[t]->get_nb_selection_params() == 2);
 	_localSelection[SEX][t][0]=val;
 }
-void Patch::set_localSelCoef (unsigned int t, double val, sex_t SEX){
+void TPatch::set_localSelCoef (unsigned int t, double val, sex_t SEX){
 	assert(_pSelectionType[t]->get_nb_selection_params() == 2);
 	_localSelection[SEX][t][1]=val;
 }
-void Patch::set_localMin 		   (unsigned int t, double val, sex_t SEX){
+void TPatch::set_localMin 		   (unsigned int t, double val, sex_t SEX){
 	assert(_pSelectionType[t]->get_nb_selection_params() == 5);
 	_localSelection[SEX][t][0]=val;
 }
-void Patch::set_localMax       (unsigned int t, double val, sex_t SEX){
+void TPatch::set_localMax       (unsigned int t, double val, sex_t SEX){
 	assert(_pSelectionType[t]->get_nb_selection_params() == 5);
 	_localSelection[SEX][t][1]=val;
 }
-void Patch::set_localMaxGrowth (unsigned int t, double val, sex_t SEX){
+void TPatch::set_localMaxGrowth (unsigned int t, double val, sex_t SEX){
 	assert(_pSelectionType[t]->get_nb_selection_params() == 5);
 	_localSelection[SEX][t][2]=val;
 }
-void Patch::set_localGrowthRate(unsigned int t, double val, sex_t SEX){
+void TPatch::set_localGrowthRate(unsigned int t, double val, sex_t SEX){
 	assert(_pSelectionType[t]->get_nb_selection_params() == 5);
 	_localSelection[SEX][t][3]=val;
 }
-void Patch::set_localSymmetry  (unsigned int t, double val, sex_t SEX){
+void TPatch::set_localSymmetry  (unsigned int t, double val, sex_t SEX){
 	assert(_pSelectionType[t]->get_nb_selection_params() == 5);
 	_localSelection[SEX][t][4]=val;
 }
@@ -511,7 +511,7 @@ void Patch::set_localSymmetry  (unsigned int t, double val, sex_t SEX){
  * array[1 -> size]:        fitness landscape
  * array[size+1 -> 2*size]: phenotype landscape
  */
-void Patch::set_fitnessLandscape_fitness (unsigned int trait, double *array, unsigned int size, sex_t SEX)
+void TPatch::set_fitnessLandscape_fitness (unsigned int trait, double *array, unsigned int size, sex_t SEX)
 {
 	if(!_localSelection[SEX][trait] || _localSelection[SEX][trait][0]!=size){
 		delete[] _localSelection[SEX][trait];
@@ -524,7 +524,7 @@ void Patch::set_fitnessLandscape_fitness (unsigned int trait, double *array, uns
 }
 
 /** fitness landscape must be set before phenotype landscape! */
-void Patch::set_fitnessLandscape_phenotype (unsigned int trait,  double *array, unsigned int size, sex_t SEX)
+void TPatch::set_fitnessLandscape_phenotype (unsigned int trait,  double *array, unsigned int size, sex_t SEX)
 {
 	assert(_localSelection[SEX][trait]);
 	assert(_localSelection[SEX][trait][0]);
@@ -543,7 +543,7 @@ void Patch::set_fitnessLandscape_phenotype (unsigned int trait,  double *array, 
 // ----------------------------------------------------------------------------------------
 // set_localParameter
 // ----------------------------------------------------------------------------------------
-void Patch::set_localParameter(double* array, sex_t sex,
+void TPatch::set_localParameter(double* array, sex_t sex,
 		void (Patch::*pt2Func)(double*, sex_t))
 {
 	(this->*pt2Func)(array, sex);
@@ -552,7 +552,7 @@ void Patch::set_localParameter(double* array, sex_t sex,
 // ----------------------------------------------------------------------------------------
 // set_localParameter
 // ----------------------------------------------------------------------------------------
-void Patch::set_localParameter_matrix(unsigned int trait, double* array, unsigned int size, sex_t sex,
+void TPatch::set_localParameter_matrix(unsigned int trait, double* array, unsigned int size, sex_t sex,
 		void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
 {
 	(this->*pt2Func)(trait, array, size, sex);
@@ -561,7 +561,7 @@ void Patch::set_localParameter_matrix(unsigned int trait, double* array, unsigne
 // ----------------------------------------------------------------------------------------
 // set_localParameter
 // ----------------------------------------------------------------------------------------
-void Patch::set_localParameter_matrix_ofTrait(unsigned int t, double* array, unsigned int size, sex_t sex,
+void TPatch::set_localParameter_matrix_ofTrait(unsigned int t, double* array, unsigned int size, sex_t sex,
 		void (Patch::*pt2Func)(unsigned int, double*, unsigned int, sex_t))
 {
 	(this->*pt2Func)(t, array, size, sex);
@@ -570,7 +570,7 @@ void Patch::set_localParameter_matrix_ofTrait(unsigned int t, double* array, uns
 // ----------------------------------------------------------------------------------------
 // reset_counters
 // ----------------------------------------------------------------------------------------
-void Patch::reset_counters()
+void TPatch::reset_counters()
 {
 	nbEmigrant = 0;
 	nbImmigrant = 0;
@@ -581,7 +581,7 @@ void Patch::reset_counters()
 // ----------------------------------------------------------------------------------------
 /** returns the new popualtion size */
 unsigned int
-Patch::setNewGeneration(age_t AGE)
+TPatch::setNewGeneration(age_t AGE)
 {
 	unsigned int i, mask = 1, size=0;
 	for(i = 0; i < NB_AGE_CLASSES; i++, mask<<=1) {
@@ -595,7 +595,7 @@ Patch::setNewGeneration(age_t AGE)
 // ----------------------------------------------------------------------------------------
 /** returns the popualtion size */
 unsigned int
-Patch::setNewGeneration_coal(age_t AGE)
+TPatch::setNewGeneration_coal(age_t AGE)
 {
 	unsigned int mask = 1, size=0;
 	for(unsigned int i = 0; i < NB_AGE_CLASSES; i++, mask<<=1) {
@@ -610,7 +610,7 @@ Patch::setNewGeneration_coal(age_t AGE)
 // setNewGeneration
 // ----------------------------------------------------------------------------------------
 unsigned int
-Patch::setNewGeneration(age_idx AGE)
+TPatch::setNewGeneration(age_idx AGE)
 {
 	TIndividual *new_ind;
 	assert(!size(FEM, AGE));
@@ -633,7 +633,7 @@ Patch::setNewGeneration(age_idx AGE)
 // ----------------------------------------------------------------------------------------
 // Patch
 // ----------------------------------------------------------------------------------------
-Patch::Patch(TMetapop* p, unsigned int i) : _ID(0), _ID_individual(0), _K(0), _N_ini(0),
+TPatch::TPatch(TMetapop* p, unsigned int i) : _ID(0), _ID_individual(0), _K(0), _N_ini(0),
 _localSelection(0), _pSelectionType(0), _nbLinkedTraits(0), _isExtinct(1), _popPtr(0)
 {
     _popPtr = p;
@@ -645,7 +645,7 @@ _localSelection(0), _pSelectionType(0), _nbLinkedTraits(0), _isExtinct(1), _popP
 // ----------------------------------------------------------------------------------------
 // ~Patch
 // ----------------------------------------------------------------------------------------
-Patch::~Patch()
+TPatch::~TPatch()
 {
 	//#ifdef _DEBUG
 	//  message("Patch::~Patch\n");
@@ -663,7 +663,7 @@ Patch::~Patch()
 ///@}
 //---------------------------------------------------------------------------
 void
-Patch::addImmigrant(const unsigned int& p, const unsigned int& s)
+TPatch::addImmigrant(const unsigned int& p, const unsigned int& s)
 {
 	_sizes[FEM][ADLTx] += s;
 	_popPtr->add_immigrants(_ID, p, s);     // (to, from, nbImmigrant)
@@ -673,7 +673,7 @@ Patch::addImmigrant(const unsigned int& p, const unsigned int& s)
 ///@}
 //---------------------------------------------------------------------------
 void
-Patch::addImmigrant(Patch* p, const unsigned int& s)
+TPatch::addImmigrant(TPatch* p, const unsigned int& s)
 {
 	_sizes[FEM][ADLTx] += s;
 	_popPtr->add_immigrants(_ID, p->_ID, s);     // (to, from, nbImmigrant)
@@ -686,7 +686,7 @@ Patch::addImmigrant(Patch* p, const unsigned int& s)
 	@param AGE the flag value of the age class
  */
 unsigned int
-Patch::size(sex_t SEX, age_t AGE){
+TPatch::size(sex_t SEX, age_t AGE){
 	unsigned int mask = 1, s = 0, i;
 	for(i = 0; i < NB_AGE_CLASSES; i++, mask <<= 1) {
 		if(mask & AGE) s += _sizes[SEX][i];
@@ -699,7 +699,7 @@ Patch::size(sex_t SEX, age_t AGE){
 	@param AGE the flag value of the age class
  */
 unsigned int
-Patch::size(age_t AGE){
+TPatch::size(age_t AGE){
 	return size(MAL,AGE) + size(FEM,AGE);
 }
 
@@ -709,7 +709,7 @@ Patch::size(age_t AGE){
 	@param AGE the index of the age class
  */
 unsigned int
-Patch::size(sex_t SEX, age_idx AGE){
+TPatch::size(sex_t SEX, age_idx AGE){
 	return _sizes[SEX][AGE];
 }
 
@@ -718,7 +718,7 @@ Patch::size(sex_t SEX, age_idx AGE){
 	@param AGE the index of the age class
  */
 unsigned int
-Patch::size(age_idx AGE){
+TPatch::size(age_idx AGE){
     return _sizes[0][AGE] + _sizes[1][AGE];
 }
 
@@ -726,7 +726,7 @@ Patch::size(age_idx AGE){
 /** returns true if individual container is in agreement with size container
  */
 bool
-Patch::individual_container_ok(){
+TPatch::individual_container_ok(){
      for(unsigned int s, a=0; a<2; ++a){
         for(s=0; s<2; ++s){
             if(_sizes[s][a] != (unsigned int)_containers[s][a].size()){
@@ -750,7 +750,7 @@ Patch::individual_container_ok(){
 	@param at the index of the individual in the container
  */
 TIndividual*
-Patch::get(sex_t SEX, age_idx AGE, unsigned int at){
+TPatch::get(sex_t SEX, age_idx AGE, unsigned int at){
 	return  _containers[SEX][AGE][at];
 }
 
@@ -763,7 +763,7 @@ Patch::get(sex_t SEX, age_idx AGE, unsigned int at){
 	@param pop the pointer to the metapop for access to the recycling pool
  */
 void
-Patch::flush_ind(sex_t SEX, age_idx AGE)
+TPatch::flush_ind(sex_t SEX, age_idx AGE)
 {
 	for(unsigned int i = 0; i < _sizes[SEX][AGE]; ++i) {
 		_popPtr->recycle(_containers[SEX][AGE][i]);    // remove the individual
@@ -780,7 +780,7 @@ Patch::flush_ind(sex_t SEX, age_idx AGE)
 	@see flush()
  */
 void
-Patch::flush(sex_t SEX, age_idx AGE)
+TPatch::flush(sex_t SEX, age_idx AGE)
 {
 	(this->*func_ptr_flush)(SEX, AGE);
 }
@@ -792,7 +792,7 @@ Patch::flush(sex_t SEX, age_idx AGE)
 	@see flush()
  */
 void
-Patch::flush(age_idx AGE)
+TPatch::flush(age_idx AGE)
 {
 	(this->*func_ptr_flush)(FEM, AGE);
 	(this->*func_ptr_flush)(MAL, AGE);
@@ -800,7 +800,7 @@ Patch::flush(age_idx AGE)
 
 //---------------------------------------------------------------------------
 void
-Patch::flush(age_t AGE)
+TPatch::flush(age_t AGE)
 {
 	for(unsigned int mask=1, i=0; i<NB_AGE_CLASSES; i++, mask <<= 1) {
 		if(mask & AGE) {
@@ -813,7 +813,7 @@ Patch::flush(age_t AGE)
 //---------------------------------------------------------------------------
 /**Removes all individual pointers of all sex and age classes and flush them into the recycling pool.*/
 void
-Patch::flush(){
+TPatch::flush(){
 	for(unsigned int i = 0; i < NB_AGE_CLASSES; i++)
 	{
 		flush(static_cast<age_idx>(i));
@@ -828,7 +828,7 @@ Patch::flush(){
 	@param ind the pointer to the individual
  */
 void
-Patch::set(sex_t SEX, age_idx AGE, unsigned int at, TIndividual* ind)
+TPatch::set(sex_t SEX, age_idx AGE, unsigned int at, TIndividual* ind)
 {
 	cout << "\nPatch::set(): not yet changed!\n" << endl;
 	//_containers[SEX][AGE][at] = ind;
@@ -841,7 +841,7 @@ Patch::set(sex_t SEX, age_idx AGE, unsigned int at, TIndividual* ind)
 	@param ind the pointer to the individual
  */
 void
-Patch::add(const sex_t& SEX, const age_idx& AGE, TIndividual* idx)
+TPatch::add(const sex_t& SEX, const age_idx& AGE, TIndividual* idx)
 {
 	assert(_sizes[SEX][AGE]<=_containers[SEX][AGE].size());
 	if(_sizes[SEX][AGE] < _containers[SEX][AGE].size()) _containers[SEX][AGE][_sizes[SEX][AGE]] = idx;
@@ -853,7 +853,7 @@ Patch::add(const sex_t& SEX, const age_idx& AGE, TIndividual* idx)
 //---------------------------------------------------------------------------
 /**Assigns a new container of given size for the sex and age class passed, sets all values to NULL.*/
 void
-Patch::assign(sex_t SEX, age_idx AGE, unsigned int n)
+TPatch::assign(sex_t SEX, age_idx AGE, unsigned int n)
 {
 	_containers[SEX][AGE].assign(n,0);
 	_sizes[SEX][AGE] = 0;
@@ -868,7 +868,7 @@ Patch::assign(sex_t SEX, age_idx AGE, unsigned int n)
 	@param at the index of the individual in the container
  */
 void
-Patch::remove(sex_t SEX, age_idx AGE, unsigned int at)
+TPatch::remove(sex_t SEX, age_idx AGE, unsigned int at)
 {
 	assert(at<_sizes[SEX][AGE]);
 	_containers[SEX][AGE][at] = _containers[SEX][AGE][_sizes[SEX][AGE] - 1];  // swap the last individual to the position at 'at'
@@ -884,7 +884,7 @@ Patch::remove(sex_t SEX, age_idx AGE, unsigned int at)
 	@param ind pointer of an individual to remove
  */
 void
-Patch::remove(sex_t SEX, age_idx AGE, TIndividual* ind)
+TPatch::remove(sex_t SEX, age_idx AGE, TIndividual* ind)
 {
 	for(unsigned int i=0; i<_sizes[SEX][AGE]; ++i){
 		if(ind == _containers[SEX][AGE][i]){
@@ -902,7 +902,7 @@ Patch::remove(sex_t SEX, age_idx AGE, TIndividual* ind)
 	@param at the index of the individual in the container
  */
 void
-Patch::recycle(sex_t SEX, age_idx AGE, unsigned int at)
+TPatch::recycle(sex_t SEX, age_idx AGE, unsigned int at)
 {
 	assert(at<_sizes[SEX][AGE]);
  	_popPtr->recycle(_containers[SEX][AGE][at]);    // remove the individual
@@ -919,7 +919,7 @@ Patch::recycle(sex_t SEX, age_idx AGE, unsigned int at)
 	@param ind pointer of an individual to remove
  */
 void
-Patch::recycle(sex_t SEX, age_idx AGE, TIndividual* ind)
+TPatch::recycle(sex_t SEX, age_idx AGE, TIndividual* ind)
 {
 	for(unsigned int i=0; i<_sizes[SEX][AGE]; ++i){
 		if(ind == _containers[SEX][AGE][i]){
@@ -940,7 +940,7 @@ Patch::recycle(sex_t SEX, age_idx AGE, TIndividual* ind)
 	@param to the destination age class of the individual
  */
 void
-Patch::move(age_idx from, age_idx to)
+TPatch::move(age_idx from, age_idx to)
 {
 	(this->*func_ptr_move)(FEM, from, to);
 	(this->*func_ptr_move)(MAL, from, to);
@@ -955,7 +955,7 @@ Patch::move(age_idx from, age_idx to)
 	@param to the destination age class of the individual
  */
 void
-Patch::move(sex_t SEX, age_idx from, age_idx to)
+TPatch::move(sex_t SEX, age_idx from, age_idx to)
 {
 	(this->*func_ptr_move)(SEX, from, to);
 }
@@ -970,7 +970,7 @@ Patch::move(sex_t SEX, age_idx from, age_idx to)
 	@param to the destination age class of the individual
  */
 void
-Patch::move_ind(sex_t SEX, age_idx from, age_idx to)
+TPatch::move_ind(sex_t SEX, age_idx from, age_idx to)
 {
 	for(int i=0, size=_sizes[SEX][from]; i<size; ++i){
 		move(SEX, from, to, 0);
@@ -987,7 +987,7 @@ Patch::move_ind(sex_t SEX, age_idx from, age_idx to)
 	@param to the destination age class of the individual
  */
 void
-Patch::move_coal(sex_t SEX, age_idx from, age_idx to)
+TPatch::move_coal(sex_t SEX, age_idx from, age_idx to)
 {
 	_sizes[SEX][to] += _sizes[SEX][from];
 	_sizes[SEX][from] = 0;
@@ -1004,7 +1004,7 @@ Patch::move_coal(sex_t SEX, age_idx from, age_idx to)
 	@param at the index of the individual in the container
  */
 void
-Patch::move(sex_t SEX, age_idx from, age_idx to, unsigned int at)
+TPatch::move(sex_t SEX, age_idx from, age_idx to, unsigned int at)
 {
 	add(SEX, to, _containers[SEX][from][at]);
 	remove(SEX, from, at);
@@ -1013,7 +1013,7 @@ Patch::move(sex_t SEX, age_idx from, age_idx to, unsigned int at)
 //---------------------------------------------------------------------------
 /** this function removes randomly all until 1-n% individuals  of the given age and sex remain */
 void
-Patch::survive_randomly_inds_relative(sex_t SEX, age_idx AGE, double ratio)
+TPatch::survive_randomly_inds_relative(sex_t SEX, age_idx AGE, double ratio)
 {
 	assert(ratio>=0 && ratio<=1);
 	unsigned int size = _sizes[SEX][AGE];
@@ -1024,7 +1024,7 @@ Patch::survive_randomly_inds_relative(sex_t SEX, age_idx AGE, double ratio)
 //---------------------------------------------------------------------------
 /** this function removes randomly all until n individuals  of the given age and sex remain */
 void
-Patch::survive_randomly_inds_absolute(sex_t SEX, age_idx AGE, unsigned int size)
+TPatch::survive_randomly_inds_absolute(sex_t SEX, age_idx AGE, unsigned int size)
 {
 	assert(size==0 || size>=1);
 	if(_sizes[SEX][AGE]>size) remove_randomly_inds_absolute(SEX, AGE, _sizes[SEX][AGE] - size);
@@ -1033,7 +1033,7 @@ Patch::survive_randomly_inds_absolute(sex_t SEX, age_idx AGE, unsigned int size)
 //---------------------------------------------------------------------------
 /** this function removes randomly n% individuals  of the given age and sex */
 void
-Patch::remove_randomly_inds_relative(sex_t SEX, age_idx AGE, double ratio)
+TPatch::remove_randomly_inds_relative(sex_t SEX, age_idx AGE, double ratio)
 {
 	assert(ratio>=0 && ratio<=1);
 	remove_randomly_inds_absolute(SEX, AGE, my_round(_sizes[SEX][AGE]*ratio));
@@ -1042,7 +1042,7 @@ Patch::remove_randomly_inds_relative(sex_t SEX, age_idx AGE, double ratio)
 //---------------------------------------------------------------------------
 /** this function removes randomly n% individuals  of the given age and sex */
 void
-Patch::remove_randomly_inds_absolute(sex_t SEX, age_idx AGE, unsigned int size)
+TPatch::remove_randomly_inds_absolute(sex_t SEX, age_idx AGE, unsigned int size)
 {
 	assert(size==0 || size>=1);
 	vector<unsigned int> vIndex = _popPtr->rand().sample<unsigned int>(0, _sizes[SEX][AGE], size);  // get random indexes
@@ -1058,7 +1058,7 @@ Patch::remove_randomly_inds_absolute(sex_t SEX, age_idx AGE, unsigned int size)
  * and the youngest age class will be empty
  */
 void
-Patch::aging()
+TPatch::aging()
 {
 	for(unsigned int s=0; s<2; ++s){ // for each sex
 		_containers[s][ADLTx].clear();
@@ -1097,7 +1097,7 @@ Patch::aging()
 	@param to the destination age class of the individual
  */
 void
-Patch::swap(age_idx from, age_idx to)
+TPatch::swap(age_idx from, age_idx to)
 {
 	(this->*func_ptr_swap)(FEM, from, to);
 	(this->*func_ptr_swap)(MAL, from, to);
@@ -1114,7 +1114,7 @@ Patch::swap(age_idx from, age_idx to)
 	@param to the destination age class of the individual
  */
 void
-Patch::swap(sex_t SEX, age_idx from, age_idx to)
+TPatch::swap(sex_t SEX, age_idx from, age_idx to)
 {
 	(this->*func_ptr_swap)(SEX, from, to);
 }
@@ -1128,7 +1128,7 @@ Patch::swap(sex_t SEX, age_idx from, age_idx to)
 	@param to the destination age class of the individual
  */
 void
-Patch::swap_ind(sex_t SEX, age_idx from, age_idx to)
+TPatch::swap_ind(sex_t SEX, age_idx from, age_idx to)
 {
 	assert(!_sizes[SEX][to]);
 
@@ -1153,7 +1153,7 @@ Patch::swap_ind(sex_t SEX, age_idx from, age_idx to)
 	@param to the destination age class of the individual
  */
 void
-Patch::swap_coal(sex_t SEX, age_idx from, age_idx to)
+TPatch::swap_coal(sex_t SEX, age_idx from, age_idx to)
 {
 	assert(!_sizes[SEX][to]);
 	_sizes[SEX][to]         = _sizes[SEX][from];                   // reassign the "from" container
@@ -1170,14 +1170,14 @@ Patch::swap_coal(sex_t SEX, age_idx from, age_idx to)
 	@param AGE the index of the age class
  */
 void
-Patch::clear(sex_t SEX, age_idx AGE)
+TPatch::clear(sex_t SEX, age_idx AGE)
 {
 	_sizes[SEX][AGE] = 0;
 }
 
 //---------------------------------------------------------------------------
 void
-Patch::clear(age_idx AGE)
+TPatch::clear(age_idx AGE)
 {
 	clear(MAL, AGE);
 	clear(FEM, AGE);
@@ -1185,7 +1185,7 @@ Patch::clear(age_idx AGE)
 
 //---------------------------------------------------------------------------
 void
-Patch::clear()
+TPatch::clear()
 {
 	for(unsigned int i = 0; i < NB_AGE_CLASSES; i++){
 		clear(static_cast<age_idx>(i));
@@ -1197,7 +1197,7 @@ Patch::clear()
  * The array has to be deleted after use.
  */
 double*
-Patch::getPhenotypes(sex_t SEX, age_idx AGE, const int& trait)
+TPatch::getPhenotypes(sex_t SEX, age_idx AGE, const int& trait)
 {
 	unsigned int i, size=_sizes[SEX][AGE];
 	double* pheno = new double[size];
@@ -1212,7 +1212,7 @@ Patch::getPhenotypes(sex_t SEX, age_idx AGE, const int& trait)
  * randomly in relation to their fitness
  */
 void
-Patch::regulate_selection_fitness(const unsigned int& K, TSelection* pSel, sex_t SEX, age_idx AGE)
+TPatch::regulate_selection_fitness(const unsigned int& K, TSelection* pSel, sex_t SEX, age_idx AGE)
 {
 	// if K is zero: remove all individuals
 	if(!K){
@@ -1229,7 +1229,7 @@ Patch::regulate_selection_fitness(const unsigned int& K, TSelection* pSel, sex_t
 
 //---------------------------------------------------------------------------
 void
-Patch::regulation_selection_draw_survivors(TSelection* pSelection, const unsigned int& K, sex_t SEX, age_idx AGE)
+TPatch::regulation_selection_draw_survivors(TSelection* pSelection, const unsigned int& K, sex_t SEX, age_idx AGE)
 {
 	assert(K && K<=size(SEX, AGE));
 	// make the array cumulative to draw the MOST fittest
@@ -1244,7 +1244,7 @@ Patch::regulation_selection_draw_survivors(TSelection* pSelection, const unsigne
 
 //---------------------------------------------------------------------------
 void
-Patch::regulation_selection_draw_loosers(TSelection* pSelection, const unsigned int& K, sex_t SEX, age_idx AGE)
+TPatch::regulation_selection_draw_loosers(TSelection* pSelection, const unsigned int& K, sex_t SEX, age_idx AGE)
 {
 	assert(K && K<=size(SEX, AGE));
 	// make the array cumulative to draw the MOST fittest
@@ -1260,7 +1260,7 @@ Patch::regulation_selection_draw_loosers(TSelection* pSelection, const unsigned 
 //---------------------------------------------------------------------------
 /** viability selection for the specified sex and age */
 void
-Patch::regulation_selection_hard(age_idx AGE)
+TPatch::regulation_selection_hard(age_idx AGE)
 {
 	_popPtr->get_pSelection()->set_fitness(this, AGE);    // compute the fitnesses, but don't sort or make yet the array cumulative
 	unsigned int SEX, nbInd;

@@ -36,7 +36,7 @@
 
 #include "ttrait.h"
 
-class Patch;
+class TPatch;
 class TIndividual;
 class TMetapop;
 
@@ -69,16 +69,16 @@ protected:
     vector<int> _quantiTraitIndexes;   // used for PLINK
     
     void write_Fstat (const age_idx& cur_age, const sex_t& cur_sex, ostream& FILE,
-                      Patch* current_patch, const int& nbPatchDigit, const int& position,
+                      TPatch* current_patch, const int& nbPatchDigit, const int& position,
                       bool extened);
     void write_Arlequin (const age_idx& cur_age, const sex_t& cur_sex, ostream& FILE,
-                         Patch* current_patch, const unsigned int& nbIndDigit,
+                         TPatch* current_patch, const unsigned int& nbIndDigit,
                          const int& position, bool extened);
     void write_Plink_ped (const age_idx& cur_age, const sex_t& cur_sex, ostream& FILE,
-                          Patch* current_patch, const int& nbPatchDigit, const int& position,
+                          TPatch* current_patch, const int& nbPatchDigit, const int& position,
                           char sep, bool extended, bool appended);
     void write_Plink_pheno (const age_idx& cur_age, const sex_t& cur_sex, ostream& FILE,
-                          Patch* current_patch, const int& nbPatchDigit, const int& position,
+                          TPatch* current_patch, const int& nbPatchDigit, const int& position,
                           char sep);
     
 protected:

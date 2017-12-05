@@ -223,7 +223,7 @@ double MetapopSH::getMeanEmigrantPerPatch()
     
     meanEmigrant = 0;
     unsigned int nbPatch=0;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for(curPop=get_vSamplePatch().begin(); curPop != endPop; ++curPop){
         if(!(*curPop)->size(ADLTx)) continue;     // the patch can just be colonised
         meanEmigrant += (*curPop)->nbEmigrant;
@@ -244,7 +244,7 @@ double MetapopSH::getMeanImmigrantPerPatch()
     
     meanImmigrant = 0;
     unsigned int nbPatch=0;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for(curPop=get_vSamplePatch().begin(); curPop != endPop; ++curPop){
         if(!(*curPop)->size(OFFSx)) continue;     // the patch can just become extinct
         meanImmigrant += (*curPop)->nbImmigrant;
@@ -266,8 +266,8 @@ double MetapopSH::getMeanResidantPerPatch()
     
     meanResidant = 0;
     unsigned int nbPatch=0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(; curPop != endPop; ++curPop){
         if(!(*curPop)->size(ADLTx)) continue;     // the patch can just be colonized
         meanResidant += (*curPop)->size(ADLTx) - (*curPop)->nbEmigrant;
@@ -301,9 +301,9 @@ double MetapopSH::getMeanKolonisersProportion()
     double mean = 0;
     unsigned int nbFullPatch=0;
     
-    Patch* curPatch;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    TPatch* curPatch;
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(; curPop != endPop; ++curPop){
         curPatch = *curPop;
         if(curPatch->nbKolonisers != my_NAN){
@@ -324,8 +324,8 @@ double MetapopSH::getMeanKolonisersPerPatch()
     
     double meanKolonisers = 0;
     unsigned int nbFullPatch=0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(; curPop != endPop; ++curPop){
         if((*curPop)->nbKolonisers != my_NAN){
             meanKolonisers += (*curPop)->nbKolonisers;
@@ -361,8 +361,8 @@ void MetapopSH::setReproductiveStats(bool sex)  // 0: MAL, 1: FEM
     if(already_computed(_computed[24], sex)) return;
     
     vector<double> stat;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     vector<TIndividual*>::iterator curInd, endInd;
     for(; curPop != endPop; ++curPop){                                          // for each patch
         curInd = (*curPop)->get_sampled_inds((sex_t)sex, ADLTx).begin();
@@ -402,8 +402,8 @@ void MetapopSH::setKinship(const age_idx& AGE)
         _sib_prop[AGE][j] = 0.0;
     }
     
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     vector<TIndividual*>::iterator curInd1, curInd2, endInd1, endInd2;
     for(; curPop != endPop; ++curPop){                                          // for each patch
         vector<TIndividual*>& curFem = (*curPop)->get_sampled_inds(FEM, AGE);
@@ -528,8 +528,8 @@ MetapopSH::setMeanAndVar_W(){
     }
     else ARRAY::reset_1D(_varW, get_current_nbSamplePatch(), (double)my_NAN);
     
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for(; curPop != endPop; ++curPop){                                          // for each patch
         setMeanAndVar_W_ofPatch(*curPop, (*curPop)->get_sampleID());
     }
@@ -539,7 +539,7 @@ MetapopSH::setMeanAndVar_W(){
 // setMeanAndVarFitness
 // ----------------------------------------------------------------------------------------
 void
-MetapopSH::setMeanAndVar_W_ofPatch(Patch* crnt_patch, const unsigned int& i){
+MetapopSH::setMeanAndVar_W_ofPatch(TPatch* crnt_patch, const unsigned int& i){
     unsigned int sizeF = crnt_patch->size(FEM, ADLTx),
     sizeM = crnt_patch->size(MAL, ADLTx),
     size  = sizeF + sizeM;

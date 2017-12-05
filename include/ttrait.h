@@ -38,7 +38,7 @@
 #include "simcomponent.h"
 #include "tgenome.h"
 
-class Patch;
+class TPatch;
 class TIndividual;
 
 class TTraitProto;
@@ -123,7 +123,7 @@ public:
     virtual   void            set_from_prototype(TTraitProto* T) = 0;
     
     /**Called at the start of each replicate, sets the initial genotypes. Called by \c TIndividual::create(). **/
-    virtual   void            ini_sequence (Patch* patch);
+    virtual   void            ini_sequence (TPatch* patch);
     
     /** Called to set the sequence pointer to an existing trait
      * @param seq the existing sequence pointer
@@ -293,7 +293,7 @@ public:
     unsigned int  get_locus_max_idx_of_trait_type();
     
     virtual void  add_locus_index(const unsigned int& trait_index, const unsigned int& geome_index);
-    virtual double* get_ini_alleleFreq(Patch* patch, const unsigned& locus);
+    virtual double* get_ini_alleleFreq(TPatch* patch, const unsigned& locus);
     
     /**Inits the parameters, called by \c IndFactory::makePrototype().*/
     virtual   void            init (TMetapop* pMetapop) = 0;

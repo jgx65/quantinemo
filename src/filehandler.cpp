@@ -212,8 +212,8 @@ void FileHandler::write_Fstat(bool extened)
     // write all individuals of all patches
     unsigned int nbPatchDigits = getNbDigits(maxID);
     unsigned int a, mask;
-    vector<Patch*>::iterator curPop = _popPtr->get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vSamplePatch().end();
     for (; curPop != endPop; ++curPop) {
         for (a = 0, mask = 1; a < NB_AGE_CLASSES; ++a, mask <<= 1) {
             if (mask & _age) {
@@ -237,7 +237,7 @@ void FileHandler::write_Fstat(bool extened)
 // write_Fstat
 // ----------------------------------------------------------------------------------------
 void FileHandler::write_Fstat(const age_idx& AGE, const sex_t& SEX,
-                              ostream& FILE, Patch* curPop, const int& nbPatchDigit,
+                              ostream& FILE, TPatch* curPop, const int& nbPatchDigit,
                               const int& position, bool extened)
 {
     
@@ -333,7 +333,7 @@ void FileHandler::write_Arlequin(bool extened)
     unsigned int a, mask, nbInd, nbIntDigit;
     unsigned int position = getNbDigits(max_allele);
     
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for (curPop = _popPtr->get_vSamplePatch().begin(), endPop =
          _popPtr->get_vSamplePatch().end(); curPop != endPop;
          ++curPop) {
@@ -378,7 +378,7 @@ void FileHandler::write_Arlequin(bool extened)
 // write_Arlequin
 // ----------------------------------------------------------------------------------------
 void FileHandler::write_Arlequin(const age_idx& AGE, const sex_t& SEX,
-                                 ostream& FILE, Patch* curPop, const unsigned int& nbIndDigit,
+                                 ostream& FILE, TPatch* curPop, const unsigned int& nbIndDigit,
                                  const int& position, bool extened)
 {
     unsigned char** seq;
@@ -470,8 +470,8 @@ void FileHandler::write_Plink_ped(bool extended)
     unsigned int maxID = (*_popPtr->get_vSamplePatch().rbegin())->get_ID() + 1;
     unsigned int nbPatchDigits = getNbDigits(maxID);
     unsigned int a, mask;
-    vector<Patch*>::iterator curPop = _popPtr->get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vSamplePatch().end();
     for (; curPop != endPop; ++curPop) {
         for (a = 0, mask = 1; a < NB_AGE_CLASSES; ++a, mask <<= 1) {
             if (mask & _age) {
@@ -507,7 +507,7 @@ void FileHandler::write_Plink_ped(bool extended)
  - Genotypes (space or tab separated, 2 for each marker. 0=missing)
  */
 void FileHandler::write_Plink_ped(const age_idx& AGE, const sex_t& SEX,
-                              ostream& FILE, Patch* curPop, const int& nbPatchDigit,
+                              ostream& FILE, TPatch* curPop, const int& nbPatchDigit,
                               const int& position, char sep, bool extended, bool append)
 {
     
@@ -591,8 +591,8 @@ void FileHandler::write_Plink_pheno(bool extended, bool appended)
     unsigned int maxID = (*_popPtr->get_vSamplePatch().rbegin())->get_ID() + 1;
     unsigned int nbPatchDigits = getNbDigits(maxID);
     unsigned int a, mask;
-    vector<Patch*>::iterator curPop = _popPtr->get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vSamplePatch().end();
     for (; curPop != endPop; ++curPop) {
         for (a = 0, mask = 1; a < NB_AGE_CLASSES; ++a, mask <<= 1) {
             if (mask & _age) {
@@ -623,7 +623,7 @@ void FileHandler::write_Plink_pheno(bool extended, bool appended)
  ...
  */
 void FileHandler::write_Plink_pheno(const age_idx& AGE, const sex_t& SEX,
-                                  ostream& FILE, Patch* curPop, const int& nbPatchDigit,
+                                  ostream& FILE, TPatch* curPop, const int& nbPatchDigit,
                                   const int& position, char sep)
 {
     double pheno;

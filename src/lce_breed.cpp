@@ -45,100 +45,100 @@
 // ----------------------------------------------------------------------------------------
 // get a specific individual (no stochasity) /////////////////////////////////
 TIndividual*
-LCE_Breed::Index_MatingFunc   (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::Index_MatingFunc   (TPatch* thePatch, unsigned int& index, sex_t sex){
     return thePatch->get(sex, ADLTx, index);         // index has a meaning
 }
 TIndividual*        // for cloning
-LCE_Breed::NULL_pointer   (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::NULL_pointer   (TPatch* thePatch, unsigned int& index, sex_t sex){
     return NULL;
 }
 
 // random mating /////////////////////////////////////////////////////////////
 TIndividual*
-LCE_Breed::Random_MatingFunc   (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::Random_MatingFunc   (TPatch* thePatch, unsigned int& index, sex_t sex){
     return thePatch->get(sex, ADLTx, get_pop_ptr()->rand().Uniform((unsigned int)_nbIndividuals[sex]));
 }
 TIndividual*
-LCE_Breed::Random_Index_MatingFunc   (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::Random_Index_MatingFunc   (TPatch* thePatch, unsigned int& index, sex_t sex){
     index = get_pop_ptr()->rand().Uniform((unsigned int)_nbIndividuals[sex]);
     return thePatch->get(sex, ADLTx, index);
 }
 TIndividual*
-LCE_Breed::Random_S_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::Random_S_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     return _pSelection->get_RAND_mostFit(sex);
 }
 TIndividual*
-LCE_Breed::Random_Index_S_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::Random_Index_S_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     return _pSelection->get_RAND_mostFit_index(sex, index);   // index has a meaning
 }
 
 // full polygyny (one male) //////////////////////////////////////////////////
 TIndividual*
-LCE_Breed::fullPolygyny_oneMale_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::fullPolygyny_oneMale_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     return thePatch->get(sex, ADLTx, 0);    // return any individual (first one)  // to be checked !!!
 }
 TIndividual*
-LCE_Breed::fullPolygyny_oneMale_S_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::fullPolygyny_oneMale_S_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     return _pSelection->get_mostFit(sex);         // return the fittest individual
 }
 TIndividual*
-LCE_Breed::fullPolygyny_oneMale_S_MatingFunc2 (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::fullPolygyny_oneMale_S_MatingFunc2 (TPatch* thePatch, unsigned int& index, sex_t sex){
     return _pSelection->get_RAND_mostFit(sex);    // return the randomly fittest individual
 }
 
 TIndividual*
-LCE_Breed::fullPolygyny_manyMales_MatingFunc  (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::fullPolygyny_manyMales_MatingFunc  (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(_nbIndividuals[sex]<_mating_males) return Random_MatingFunc(thePatch,index,sex);                    // random mating
     else return thePatch->get(sex, ADLTx, get_pop_ptr()->rand().Uniform(_mating_males));  // return any of the first x individuals
 }
 TIndividual*
-LCE_Breed::fullPolygyny_manyMales_S_MatingFunc  (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::fullPolygyny_manyMales_S_MatingFunc  (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(_nbIndividuals[sex]<_mating_males) return Random_S_MatingFunc(thePatch,index,sex);   // random mating
     else return _pSelection->get_RAND_mostFit_of_mostFit(sex, _mating_males);
 }
 TIndividual*
-LCE_Breed::fullPolygyny_manyMales_S_MatingFunc2  (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::fullPolygyny_manyMales_S_MatingFunc2  (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(_nbIndividuals[sex]<_mating_males) return Random_S_MatingFunc(thePatch,index,sex);   // random mating
     else return _pSelection->get_RAND_mostFit_of_RAND_mostFit(sex, _mating_males);
 }
 
 // partial polygyny (one male) //////////////////////////////////////////////
 TIndividual*
-LCE_Breed::partialPolygyny_oneMale_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::partialPolygyny_oneMale_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion)return Random_MatingFunc(thePatch, index, sex);
     else return thePatch->get(sex, ADLTx, 0);   // to be checked!!!
 }
 TIndividual*
-LCE_Breed::partialPolygyny_oneMale_S_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::partialPolygyny_oneMale_S_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion)return Random_S_MatingFunc(thePatch, index, sex);
     else return _pSelection->get_mostFit(sex);             // return the fittest individual
 }
 TIndividual*
-LCE_Breed::partialPolygyny_oneMale_S_MatingFunc2 (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::partialPolygyny_oneMale_S_MatingFunc2 (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion)return Random_S_MatingFunc(thePatch, index, sex);
     else return _pSelection->get_RAND_mostFit(sex);        // return the ranom fittest individual
 }
 
 // partial polygyny (many males) /////////////////////////////////////////////
 TIndividual*
-LCE_Breed::partialPolygyny_manyMales_MatingFunc  (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::partialPolygyny_manyMales_MatingFunc  (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion)return Random_MatingFunc(thePatch, index, sex);
     else return fullPolygyny_manyMales_MatingFunc(thePatch, index, sex);
 }
 TIndividual*
-LCE_Breed::partialPolygyny_manyMales_S_MatingFunc  (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::partialPolygyny_manyMales_S_MatingFunc  (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion)return Random_S_MatingFunc(thePatch, index, sex);
     else return fullPolygyny_manyMales_S_MatingFunc(thePatch, index, sex);
 }
 TIndividual*
-LCE_Breed::partialPolygyny_manyMales_S_MatingFunc2  (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::partialPolygyny_manyMales_S_MatingFunc2  (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion)return Random_S_MatingFunc(thePatch, index, sex);
     else return fullPolygyny_manyMales_S_MatingFunc2(thePatch, index, sex);
 }
 
 // monogamy //////////////////////////////////////////////////////////////////
 TIndividual*
-LCE_Breed::Monogyny_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::Monogyny_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     assert(_aMatingPairs[sex] && index<_aMatingPairs_size);
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion || _nbIndividuals[sex]<index+1)
         return Random_MatingFunc(thePatch, index, sex);
@@ -146,7 +146,7 @@ LCE_Breed::Monogyny_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex)
         return _aMatingPairs[sex][index];              // index has a meaning
 }
 TIndividual*
-LCE_Breed::Monogyny_S_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::Monogyny_S_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     assert(_aMatingPairs[sex] && index<_aMatingPairs_size);
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion || _nbIndividuals[sex]<index+1)
         return Random_S_MatingFunc(thePatch, index, sex);
@@ -156,7 +156,7 @@ LCE_Breed::Monogyny_S_MatingFunc (Patch* thePatch, unsigned int& index, sex_t se
 
 // one sex ///////////////////////////////////////////////////////////////////
 TIndividual*
-LCE_Breed::oneSex_notSameIndex_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::oneSex_notSameIndex_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(_nbIndividuals[sex]<2) return thePatch->get(sex, ADLTx, 0);    // if there is only a single individual in the patch
     unsigned int newIndex;
     do {
@@ -165,12 +165,12 @@ LCE_Breed::oneSex_notSameIndex_MatingFunc (Patch* thePatch, unsigned int& index,
     return thePatch->get(sex, ADLTx, newIndex);
 }
 TIndividual*
-LCE_Breed::partialSelfing_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::partialSelfing_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion) return oneSex_notSameIndex_MatingFunc(thePatch, index, sex);  // random mating
     else return thePatch->get(sex, ADLTx, index);         // return the same female (index has a meaning)
 }
 TIndividual*
-LCE_Breed::oneSex_notSameIndex_S_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::oneSex_notSameIndex_S_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(_nbIndividuals[sex]<2) return thePatch->get(sex, ADLTx, 0);    // if there is only a single individual in the patch
     unsigned int newIndex, i=0;
     TIndividual* ind;
@@ -183,19 +183,19 @@ LCE_Breed::oneSex_notSameIndex_S_MatingFunc (Patch* thePatch, unsigned int& inde
     return ind;
 }
 TIndividual*
-LCE_Breed::partialSelfing_S_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::partialSelfing_S_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion) return oneSex_notSameIndex_S_MatingFunc(thePatch, index, sex); // random mating
     else return thePatch->get(sex, ADLTx, index);          // return the same female (index has a meaning)
 }
 
 // cloning ///////////////////////////////////////////////////////////////////
 TIndividual*
-LCE_Breed::partialCloning_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::partialCloning_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion) return oneSex_notSameIndex_MatingFunc(thePatch, index, sex);  // random mating
     else return NULL;					 // cloning
 }
 TIndividual*
-LCE_Breed::partialCloning_S_MatingFunc (Patch* thePatch, unsigned int& index, sex_t sex){
+LCE_Breed::partialCloning_S_MatingFunc (TPatch* thePatch, unsigned int& index, sex_t sex){
     if(get_pop_ptr()->rand().Uniform()>_mating_proportion) return oneSex_notSameIndex_S_MatingFunc(thePatch, index, sex); // random mating
     else return NULL;          // cloning
 }
@@ -654,8 +654,8 @@ void LCE_Breed::breed_offspring_soft2metapop ()
     }
     
     // create the offspring with neutral mating and store their fitnesses
-    vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
     for(i=0; curPop!=endPop; ++curPop, ++i) {
         // check if the mating requirements are met
         if(!(this->*isMatingPossible_func_ptr)(*curPop)){
@@ -748,8 +748,8 @@ void LCE_Breed::breed_offspring_metapop2hard ()
     }
     
     // create the offspring with neutral mating and store their fitnesses
-    vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
     for(i=0; curPop!=endPop; ++curPop, ++i) {
         // check if the mating requirements are met
         if(!(this->*isMatingPossible_func_ptr)(*curPop)){
@@ -829,8 +829,8 @@ void LCE_Breed::breed_offspring_soft2hard ()
     unsigned int nbBaby, nbSons, nbDaughters, Kp;
     
     // for each patch
-    vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
     for(; curPop!=endPop; ++curPop) {
         // check if the mating requirements are met
         if(!(this->*isMatingPossible_func_ptr)(*curPop)) continue;
@@ -879,8 +879,8 @@ void LCE_Breed::breed_offspring_soft2hard2 ()
     unsigned int nbBaby, nbSons, nbDaughters, Kp;
     
     // for each patch
-    vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
     for(; curPop!=endPop; ++curPop) {
         // check if the mating requirements are met
         if(!(this->*isMatingPossible_func_ptr)(*curPop)) continue;
@@ -921,8 +921,8 @@ void LCE_Breed::breed_neutral ()
     unsigned int nbBaby, nbSons, nbDaughters;
     
     // for each patch
-    vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
     for(; curPop!=endPop; ++curPop) {
         // check if the mating requirements are met
         if(!(this->*isMatingPossible_func_ptr)(*curPop)) continue;
@@ -969,8 +969,8 @@ void LCE_Breed::breed_soft2metapop ()
     }
     
     // for each patch compute the fitness of the individuals
-    vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
     for(i=0; curPop!=endPop; ++curPop, ++i) {
         
         // check if the mating requirements are met
@@ -1057,8 +1057,8 @@ void LCE_Breed::breed_metapop2hard ()
     }
     
     // for each patch compute the fitness of the individuals
-    vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
     for(i=0; curPop!=endPop; ++curPop, ++i) {
         // check if the mating requirements are met
         if(!(this->*isMatingPossible_func_ptr)(*curPop)){
@@ -1127,8 +1127,8 @@ void LCE_Breed::breed_soft2hard ()
     unsigned int nbBaby, nbSons, nbDaughters, Kp;
     
     // for each patch
-    vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
     for(; curPop!=endPop; ++curPop) {
         // check if the mating requirements are met
         if(!(this->*isMatingPossible_func_ptr)(*curPop)) continue;
@@ -1153,7 +1153,7 @@ void LCE_Breed::breed_soft2hard ()
 // ----------------------------------------------------------------------------------------
 /** create the daugthers and sons */
 void
-LCE_Breed::createOffspring(Patch* cur_patch, unsigned int nbDaughters, unsigned int nbSons){
+LCE_Breed::createOffspring(TPatch* cur_patch, unsigned int nbDaughters, unsigned int nbSons){
     TIndividual *MotherPtr, *FatherPtr;
     unsigned int index;
     
@@ -1179,7 +1179,7 @@ LCE_Breed::createOffspring(Patch* cur_patch, unsigned int nbDaughters, unsigned 
 // ----------------------------------------------------------------------------------------
 /** this funciton is called before mating starts in a patch	*/
 void
-LCE_Breed::preMating(Patch* cur_patch){
+LCE_Breed::preMating(TPatch* cur_patch){
     if(  getFather_func_ptr == &LCE_Breed::Monogyny_S_MatingFunc
        || getFather_func_ptr == &LCE_Breed::Monogyny_MatingFunc) create_mating_pairs(cur_patch);
 }
@@ -1193,7 +1193,7 @@ LCE_Breed::preMating(Patch* cur_patch){
  * if(nbFemales < nbMales) not all males may mate
  */
 void
-LCE_Breed::create_mating_pairs(Patch* cur_patch)
+LCE_Breed::create_mating_pairs(TPatch* cur_patch)
 {
     unsigned int i, pos, nbMales;
     
@@ -1242,8 +1242,8 @@ LCE_Breed::remove_inds_zero_fitnessFactor(age_idx AGE)
     if(!_pSelection) return;
     assert(_fitness_factor_zero_isLethal);
     
-    vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
     TIndividual* ind;
     int i, nbInds;
     vector<int> vTraits = _pSelection->get_vTraits();
@@ -1287,8 +1287,8 @@ LCE_Breed::reset_sex_after_phenotype(age_idx AGE)
     int i, sizeF, sizeM;
     assert(get_pop_ptr()->individual_container_ok());
     
-    vector<Patch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
-    vector<Patch*>::iterator endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop = _popPtr->get_vFullPatch().begin();
+    vector<TPatch*>::iterator endPop = _popPtr->get_vFullPatch().end();
     for(; curPop!=endPop; ++curPop) {
         sizeF = (int)(*curPop)->size(FEM, AGE);
         sizeM = (int)(*curPop)->size(MAL, AGE);
@@ -1361,7 +1361,7 @@ bool LCE_Breed_coal::breed_coal()
     
     // for each patch
     unsigned int size;
-    vector<Patch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
+    vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vFullPatch().end();
     for(curPop = _popPtr->get_vFullPatch().begin(); curPop!=endPop;) {
         size = (*curPop)->size(FEM, ADLTx);
         if(size) size = (this->*setNbOffspring_func_ptr)(0, size, (*curPop)->get_K());
@@ -1377,21 +1377,21 @@ bool LCE_Breed_coal::breed_coal()
 // LCE_Breed::isMatingPossible
 // ----------------------------------------------------------------------------------------
 /** function to set the number of females and males and checks if the conditions are met for mating */
-bool LCE_Breed::isMatingPossible_1_sex(Patch* cur_patch){
+bool LCE_Breed::isMatingPossible_1_sex(TPatch* cur_patch){
     _nbIndividuals[FEM] = cur_patch->size(FEM, ADLTx);
     assert(!cur_patch->size(MAL, ADLTx));
     _nbIndividuals[MAL] = 0;            // no males are present
     if(cur_patch->size(OFFSx)) cur_patch->flush(OFFSx);
     return (_nbIndividuals[FEM]>0);
 }
-bool LCE_Breed::isMatingPossible_2_sex(Patch* cur_patch){
+bool LCE_Breed::isMatingPossible_2_sex(TPatch* cur_patch){
     _nbIndividuals[FEM] = cur_patch->size(FEM, ADLTx);
     _nbIndividuals[MAL] = cur_patch->size(MAL, ADLTx);
     if(cur_patch->size(OFFSx)) cur_patch->flush(OFFSx);
     return (_nbIndividuals[FEM] && _nbIndividuals[MAL]);
 }
 
-bool LCE_Breed::isMatingPossible_sex_allocation_fix(Patch* cur_patch){
+bool LCE_Breed::isMatingPossible_sex_allocation_fix(TPatch* cur_patch){
     unsigned int nbInds = (unsigned int)cur_patch->get_all_inds(FEM, ADLTx).size();
     _nbIndividuals[FEM] = my_round(_fem_sex_allocation_prop*nbInds);
     _nbIndividuals[MAL] = nbInds-_nbIndividuals[FEM];
@@ -1399,7 +1399,7 @@ bool LCE_Breed::isMatingPossible_sex_allocation_fix(Patch* cur_patch){
     return (_nbIndividuals[FEM] && _nbIndividuals[MAL]);
 }
 
-bool LCE_Breed::isMatingPossible_sex_allocation_G(Patch* cur_patch){
+bool LCE_Breed::isMatingPossible_sex_allocation_G(TPatch* cur_patch){
     double nbFem = 0;
     vector<TIndividual*> inds = cur_patch->get_all_inds(FEM, ADLTx);
     vector<TIndividual*>::iterator cur=inds.begin(), end=inds.end();
@@ -1412,7 +1412,7 @@ bool LCE_Breed::isMatingPossible_sex_allocation_G(Patch* cur_patch){
     return (_nbIndividuals[FEM] && _nbIndividuals[MAL]);
 }
 
-bool LCE_Breed::isMatingPossible_sex_allocation_Z(Patch* cur_patch){
+bool LCE_Breed::isMatingPossible_sex_allocation_Z(TPatch* cur_patch){
     double nbFem = 0;
     vector<TIndividual*> inds = cur_patch->get_all_inds(FEM, ADLTx);
     vector<TIndividual*>::iterator cur=inds.begin(), end=inds.end();
@@ -1426,7 +1426,7 @@ bool LCE_Breed::isMatingPossible_sex_allocation_Z(Patch* cur_patch){
     return (_nbIndividuals[FEM] && _nbIndividuals[MAL]);
 }
 
-bool LCE_Breed::isMatingPossible_sex_allocation_equation(Patch* cur_patch){
+bool LCE_Breed::isMatingPossible_sex_allocation_equation(TPatch* cur_patch){
     double nbFem = 0;
     vector<TIndividual*> inds = cur_patch->get_all_inds(FEM, ADLTx);
     vector<TIndividual*>::iterator cur=inds.begin(), end=inds.end();

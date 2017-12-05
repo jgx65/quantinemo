@@ -83,7 +83,7 @@ void TGenome::mutate()
 // ----------------------------------------------------------------------------------------
 // ini_sequence
 // ----------------------------------------------------------------------------------------
-void TGenome::ini_sequence(Patch* patch)
+void TGenome::ini_sequence(TPatch* patch)
 {
 	_protoGenome->ini_sequence(sequence, patch);
 }
@@ -1355,7 +1355,7 @@ void TGenomeProto::set_ini_sequence_model(TLocus* aLocus,
 // ini_sequence
 // ----------------------------------------------------------------------------------------
 /** initialize the entire sequence */
-void TGenomeProto::ini_sequence(unsigned char** seq, Patch* patch)
+void TGenomeProto::ini_sequence(unsigned char** seq, TPatch* patch)
 {
 	assert(seq);
     

@@ -956,7 +956,7 @@ StatHandler<SH>::set_alleleFreq(const age_idx & AGE)
     
     // get the local frequencies and global allele counts for each patch
     unsigned int nbAllele = 0; // total number of alleles
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for (curPop = get_vSamplePatch().begin(), endPop = get_vSamplePatch().end(); curPop != endPop; ++curPop) {
         assert((*curPop)->get_sampleID()<get_current_nbSamplePatch());
         nbAllele += set_alleleFreq_ofPatch(*curPop, AGE,_alleleFreq_local[AGE][(*curPop)->get_sampleID()], _alleleFreq_global[AGE]);
@@ -1024,7 +1024,7 @@ StatHandler<SH>::set_locusFreq(const age_idx & AGE)
     
     // get the local frequencies and global allele counts for each patch
     unsigned int nbInds = 0; // total number of alleles
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for (curPop = get_vSamplePatch().begin(), endPop = get_vSamplePatch().end(); curPop != endPop; ++curPop) {
         assert((*curPop)->get_sampleID()<get_current_nbSamplePatch());
         nbInds += set_locusFreq_ofPatch(*curPop, AGE,_locusFreq_local[AGE][(*curPop)->get_sampleID()], _locusFreq_global[AGE]);
@@ -1056,7 +1056,7 @@ StatHandler<SH>::set_locusFreq(const age_idx & AGE)
  * the number of allels is returned
  */
 template<class SH> unsigned int
-StatHandler<SH>::set_alleleFreq_ofPatch(Patch * curPatch,
+StatHandler<SH>::set_alleleFreq_ofPatch(TPatch * curPatch,
                                         const age_idx & AGE,
                                         map<unsigned char, double>*&freqs,
                                         map<unsigned char, double>*&global_freqs)
@@ -1118,7 +1118,7 @@ StatHandler<SH>::set_alleleFreq_ofPatch(Patch * curPatch,
  * the number of allels is returned
  */
 template<class SH> unsigned int
-StatHandler<SH>::set_locusFreq_ofPatch(Patch * curPatch,
+StatHandler<SH>::set_locusFreq_ofPatch(TPatch * curPatch,
                                        const age_idx & AGE,
                                        map<unsigned char, map<unsigned char, double> >*&freqs,
                                        map<unsigned char, map<unsigned char, double> >*&global_freqs)
@@ -1189,7 +1189,7 @@ StatHandler<SH>::set_locusFreq_ofPatch(Patch * curPatch,
  * the number of allels is returned
  */
 template<class SH> unsigned int
-StatHandler<SH>::set_alleleFreq_ofPatch_allInds(Patch * curPatch,
+StatHandler<SH>::set_alleleFreq_ofPatch_allInds(TPatch * curPatch,
                                                 const age_idx & AGE,
                                                 map<unsigned char, double>*&freqs,
                                                 map<unsigned char, double>*&global_freqs)
@@ -1251,7 +1251,7 @@ StatHandler<SH>::set_alleleFreq_ofPatch_allInds(Patch * curPatch,
  * Note, freqs is not checked if it is empty!
  */
 template<class SH> unsigned int
-StatHandler<SH>::get_locusGenotypeCounts_ofPatch_andSex(Patch * curPatch,
+StatHandler<SH>::get_locusGenotypeCounts_ofPatch_andSex(TPatch * curPatch,
                                                         const age_idx & AGE, sex_t SEX,
                                                         unsigned int traitID,
                                                         map<unsigned char, map<unsigned char, double> >*& freqs)
@@ -1288,7 +1288,7 @@ StatHandler<SH>::get_locusGenotypeCounts_ofPatch_andSex(Patch * curPatch,
  * Note, freqs is not checked if it is empty!
  */
 template<class SH> unsigned int
-StatHandler<SH>::get_locusGenotypeCounts_ofPatch(Patch * curPatch, const age_idx & AGE,
+StatHandler<SH>::get_locusGenotypeCounts_ofPatch(TPatch * curPatch, const age_idx & AGE,
                                                  unsigned int traitID,
                                                  map<unsigned char, map<unsigned char, double> >*& freqs)
 {
@@ -1306,7 +1306,7 @@ StatHandler<SH>::get_locusGenotypeCounts_ofPatch(Patch * curPatch, const age_idx
  * here the _SHLinkedTraitIndex is used!
  */
 template<class SH> unsigned int
-StatHandler<SH>::get_locusGenotypeFreqs_ofPatch(Patch * curPatch, const age_idx & AGE,
+StatHandler<SH>::get_locusGenotypeFreqs_ofPatch(TPatch * curPatch, const age_idx & AGE,
                                                 map<unsigned char, map<unsigned char, double> >*& freqs)
 {
     get_locusGenotypeFreqs_ofPatch(curPatch, AGE, _SHLinkedTraitIndex, freqs);
@@ -1319,7 +1319,7 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch(Patch * curPatch, const age_idx 
  * the number of indivduals is returned
  */
 template<class SH> unsigned int
-StatHandler<SH>::get_locusGenotypeFreqs_ofPatch(Patch * curPatch, const age_idx & AGE,
+StatHandler<SH>::get_locusGenotypeFreqs_ofPatch(TPatch * curPatch, const age_idx & AGE,
                                                 unsigned int traitID,
                                                 map<unsigned char, map<unsigned char, double> >*& freqs)
 {
@@ -1354,7 +1354,7 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch(Patch * curPatch, const age_idx 
  * the number of indivduals is returned
  */
 template<class SH> unsigned int
-StatHandler<SH>::get_locusGenotypeFreqs_ofPatch_allInds(Patch * curPatch, const age_idx & AGE,
+StatHandler<SH>::get_locusGenotypeFreqs_ofPatch_allInds(TPatch * curPatch, const age_idx & AGE,
                                                         unsigned int traitID,
                                                         map<unsigned char, map<unsigned char, double> >*& freqs)
 {
@@ -1469,7 +1469,7 @@ StatHandler<SH>::set_alleleFreq_global_ofLocus(const unsigned int&l, map<unsigne
  * returned map: [allele1][allele2]
  */
 template<class SH>map<unsigned char, map<unsigned char,double> > *
-StatHandler<SH>::get_genotypeFreq(const age_idx & AGE, Patch* curPop, const unsigned int&l1, const unsigned int&l2)
+StatHandler<SH>::get_genotypeFreq(const age_idx & AGE, TPatch* curPop, const unsigned int&l1, const unsigned int&l2)
 {
     map<unsigned char, map<unsigned char, double> > *freqs = new map<unsigned char, map<unsigned char, double> >;
     unsigned int a;
@@ -1522,7 +1522,7 @@ template<class SH>void StatHandler<SH>::setFstat_Nei_Chesser(const age_idx & AGE
     // check if the table has already been computed
     if (already_computed(_computed[6], AGE)) return;
     
-    vector<Patch*>&aPatch = get_vSamplePatch();
+    vector<TPatch*>&aPatch = get_vSamplePatch();
     unsigned int nbPops;
     double H = getHarmonicMean_ofPopSize(AGE, aPatch, nbPops); // nbPops (full) is set by the function
     
@@ -1573,7 +1573,7 @@ template<class SH>void StatHandler<SH>::setFstat_Nei_Chesser_perPatchPair(const 
     
     double * hs_pop = new double[get_current_nbSamplePatch()];
     double * ho_pop = new double[get_current_nbSamplePatch()];
-    vector<Patch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
     for (i = 0, curPop1 = get_vSamplePatch().begin(); curPop1 != endPop; ++i, ++curPop1) { // for each patch
         ho_pop[i] = getHo_ofPatch(*curPop1, AGE);
         hs_pop[i] = getHs_ofPatch(*curPop1, AGE);
@@ -1617,7 +1617,7 @@ template<class SH>void StatHandler<SH>::setFstat_Nei_Chesser_perPatchPair(const 
  * nothing is stored in a matrix
  */
 template<class SH> double
-StatHandler<SH>::getFstat_Nei_Chesser_perPatchPair(const age_idx & AGE, Patch * curPatch1, Patch * curPatch2)
+StatHandler<SH>::getFstat_Nei_Chesser_perPatchPair(const age_idx & AGE, TPatch * curPatch1, TPatch * curPatch2)
 {
     // get population sizes
     unsigned int N1 = curPatch1->sampleSize(AGE);
@@ -1647,7 +1647,7 @@ StatHandler<SH>::getFstat_Nei_Chesser_perPatchPair(const age_idx & AGE, Patch * 
  */
 template<class SH> double
 StatHandler<SH>::getFstat_Nei_Chesser_perPatchPair_andLocus(const age_idx & AGE,
-                                                            Patch * curPatch1, Patch * curPatch2, unsigned int locus)
+                                                            TPatch * curPatch1, TPatch * curPatch2, unsigned int locus)
 {
     // get population sizes
     unsigned int N1 = curPatch1->sampleSize(AGE);
@@ -1763,7 +1763,7 @@ template<class SH>void StatHandler<SH>::setFstat_Beaumont_Nichols_perLocus
     double x0, x2, yy;
     map<unsigned char, double>::iterator pos1, end1, pos2, end2;
     map<unsigned char, double> *curAllele1, *curAllele2;
-    vector<Patch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
     
     for (l = 0; l < _nb_locus; ++l) { // for each locus
         x0 = 0.0;
@@ -1826,7 +1826,7 @@ double StatHandler<SH>::getNbAllele_ofLocus(unsigned int l,	const age_t & AGE)
     double curNb, sum = 0;
     unsigned int nbFullPops = 0;
     
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         // for each patch
         curNb = getNbAllele_ofPatch_andLocus(age_pos, *curPop, l);
@@ -1855,7 +1855,7 @@ double StatHandler<SH>::getNbAllele_ofPatch(unsigned int p,	const age_t & AGE)
  * !! the allele frequencies have to be set before (not anymore tested) !!
  */
 template<class SH>
-double StatHandler<SH>::getNbAllele_ofPatch(Patch * p,	const age_idx & AGE)
+double StatHandler<SH>::getNbAllele_ofPatch(TPatch * p,	const age_idx & AGE)
 {
     if (p->get_sampleID() == SAMPLED) return my_NAN;
     
@@ -1871,7 +1871,7 @@ double StatHandler<SH>::getNbAllele_ofPatch(Patch * p,	const age_idx & AGE)
 // ----------------------------------------------------------------------------------------
 /** get the number of alleles of the given locus and patch */
 template<class SH>
-unsigned int StatHandler<SH>::getNbAllele_ofPatch_andLocus(const age_idx & AGE, Patch * p,	const unsigned int& l)
+unsigned int StatHandler<SH>::getNbAllele_ofPatch_andLocus(const age_idx & AGE, TPatch * p,	const unsigned int& l)
 {
     if (p->get_sampleID() == SAMPLED) return my_NAN;
     set_alleleFreq(AGE);
@@ -1891,7 +1891,7 @@ template<class SH>double StatHandler<SH>::getNbAllele(const age_t & AGE) {
     double curNb, sum = 0;
     unsigned int nbFullPops = 0;
     
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         // for each patch
         curNb = getNbAllele_ofPatch(*curPop, age_pos);
@@ -1946,7 +1946,7 @@ StatHandler<SH>::getNbFixedLocus_ofPatch(unsigned int p, const age_t & AGE) {
  * !! the allele frequencies have to be set before (not anymore tested) !!
  */
 template<class SH>
-unsigned int StatHandler<SH>::getNbFixedLocus_ofPatch(Patch * p, const age_idx & AGE) {
+unsigned int StatHandler<SH>::getNbFixedLocus_ofPatch(TPatch * p, const age_idx & AGE) {
     
     assert(p->get_sampleID()!=my_NAN);
     if(p->get_sampleID()==SAMPLED) return my_NAN;
@@ -1970,7 +1970,7 @@ unsigned int StatHandler<SH>::getNbFixedLocus_ofPatch(Patch * p, const age_idx &
  * !! the allele frequencies have to be set before (not anymore tested) !!
  */
 template<class SH>
-unsigned int StatHandler<SH>::getNbFixedLocus_ofPatch_andLocus(const age_idx & AGE, Patch * p, const unsigned int& l) {
+unsigned int StatHandler<SH>::getNbFixedLocus_ofPatch_andLocus(const age_idx & AGE, TPatch * p, const unsigned int& l) {
     
     assert(p->get_sampleID()==my_NAN);
     if(p->get_sampleID()==SAMPLED) return my_NAN;
@@ -1993,8 +1993,8 @@ double StatHandler<SH>::getNbFixedLocus(const age_t & AGE)
     unsigned int curNb, sum = 0;
     unsigned int nbFullPops = 0;
     
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for (; curPop != endPop; ++curPop) { // for each patch
         curNb = getNbFixedLocus_ofPatch(*curPop, age_pos);
         if (curNb == my_NAN) continue; // if patch is empty
@@ -2017,8 +2017,8 @@ double StatHandler<SH>::getNbFixedLocus_ofLocus(unsigned int l, const age_t & AG
     unsigned int curNb, sum = 0;
     unsigned int nbFullPops = 0;
     
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for (; curPop != endPop; ++curPop) { // for each patch
         curNb = getNbFixedLocus_ofPatch_andLocus(age_pos, *curPop, l);
         if (curNb == my_NAN) continue; // if patch is empty
@@ -2066,14 +2066,14 @@ unsigned int StatHandler<SH>::getNbFixedLocusTot_ofLocus(const age_idx & AGE, co
  * the number of populated patches is adapted (last parameter "nbPopFull")!
  */
 template<class SH>
-double StatHandler<SH>::getHarmonicMean_ofPopSize(const age_idx & AGE, const vector<Patch*>&aPatch,
+double StatHandler<SH>::getHarmonicMean_ofPopSize(const age_idx & AGE, const vector<TPatch*>&aPatch,
                                                   unsigned int&nbPopFull) {
     double harmonic = 0;
     
     unsigned int nbind;
     
     nbPopFull = 0;
-    vector<Patch*>::const_iterator curPop, endPop;
+    vector<TPatch*>::const_iterator curPop, endPop;
     for (curPop = aPatch.begin(), endPop = aPatch.end(); curPop != endPop; ++curPop) {
         nbind = (*curPop)->sampleSize(AGE);
         if (!nbind) continue; // if the patch is empty
@@ -2125,7 +2125,7 @@ template<class SH>double* StatHandler<SH>::getHo_perLocus(const age_idx & AGE)
     double* ho = new double[_nb_locus]; // temp array
     
     // compute Ho per patch
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     unsigned int l, nbFullPatch = 0;
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         getHo_ofPatch_andLocus(AGE, *curPop, ho); // compute ho for each locus of the patch i
@@ -2153,7 +2153,7 @@ template<class SH>double* StatHandler<SH>::getHo_perLocus(const age_idx & AGE)
 // setHo
 // ----------------------------------------------------------------------------------------
 /** get observed heterozygosity of the given patch */
-template<class SH>double StatHandler<SH>::getHo_ofPatch(Patch * curPatch,
+template<class SH>double StatHandler<SH>::getHo_ofPatch(TPatch * curPatch,
                                                         const age_idx & AGE) {
     assert(curPatch->get_sampleID() != my_NAN);
     if (curPatch->get_sampleID() == SAMPLED)
@@ -2186,7 +2186,7 @@ template<class SH>double StatHandler<SH>::getHo_ofPatch(Patch * curPatch,
  * if no array is passed then the returned array has to be deleted !
  */
 template<class SH>
-double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, Patch * cur_patch, double*array)
+double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cur_patch, double*array)
 {
     unsigned int l;
     unsigned char** genes;
@@ -2237,7 +2237,7 @@ double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, Patch * cur
 /** get observed heterozygoxity for the fgiven locus and patch
  */
 template<class SH> double
-StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, Patch * cur_patch, const unsigned int&l)
+StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cur_patch, const unsigned int&l)
 {
     unsigned char** genes;
     
@@ -2270,7 +2270,7 @@ StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, Patch * cur_patch, 
  * if no array is passed then the returned array has to be deleted !
  */
 template<class SH>map<unsigned char,
-double> *StatHandler<SH>::getHo_ofPatchperAllele(const age_idx & AGE, Patch * cur_patch,
+double> *StatHandler<SH>::getHo_ofPatchperAllele(const age_idx & AGE, TPatch * cur_patch,
                                                  map<unsigned char, double> *array)
 {
     if (array) delete[]array;
@@ -2329,7 +2329,7 @@ double> *StatHandler<SH>::getHo_ofPatchperAllele(const age_idx & AGE, Patch * cu
  * the returned array must be deleted!
  */
 template<class SH>double* StatHandler<SH>::getHo_perLocus(const age_idx & AGE,
-                                                          vector<Patch*>&vPatch) {
+                                                          vector<TPatch*>&vPatch) {
     // check if the table has already been computed
     if (already_computed(_computed[11], AGE)) return _ho_locus;
     
@@ -2342,7 +2342,7 @@ template<class SH>double* StatHandler<SH>::getHo_perLocus(const age_idx & AGE,
     vector<TIndividual*>::iterator curInd, endInd;
     
     // compute Ho per patch
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     for (curPop = vPatch.begin(), endPop = vPatch.end();
          curPop != endPop; ++curPop) {
         ARRAY::reset_1D(ho, _nb_locus, (unsigned int)0); // reset all ho to zero
@@ -2417,7 +2417,7 @@ template<class SH>double StatHandler<SH>::getHs_ofLocus(const unsigned int&l, co
     
     unsigned int nbFullPatch = 0;
     double val, hs = 0;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         val = getHs_ofPatch_andLocus(AGE, *curPop, l);
         if (val == my_NAN) continue;         // patch is empty
@@ -2433,7 +2433,7 @@ template<class SH>double StatHandler<SH>::getHs_ofLocus(const unsigned int&l, co
 // ----------------------------------------------------------------------------------------
 /** return mean expected heterozygosity of patch p across loci: hs = 1 - sum(p^2) */
 template<class SH> double
-StatHandler<SH>::getHs_ofPatch(Patch * p,const age_idx & AGE)
+StatHandler<SH>::getHs_ofPatch(TPatch * p,const age_idx & AGE)
 {
     if (!set_alleleFreq(AGE)) return my_NAN;
     
@@ -2452,7 +2452,7 @@ template<class SH> double
 StatHandler<SH>::getHsUnbiased_ofPatch(unsigned int p, const age_t & AGE)
 {
     age_idx age_pos = age_t2idx(AGE);
-    Patch* curPatch = get_vPatch(p);
+    TPatch* curPatch = get_vPatch(p);
     unsigned int size = curPatch->sampleSize(age_pos);
     if (size < 2) return my_NAN;
     return (double)size / (size - 1) * (getHs_ofPatch(curPatch, age_pos) - (getHo_ofPatch(curPatch, age_pos) / (2 * size)));
@@ -2463,7 +2463,7 @@ StatHandler<SH>::getHsUnbiased_ofPatch(unsigned int p, const age_t & AGE)
 // ----------------------------------------------------------------------------------------
 /** return mean UNBIASED expected heterozygosity of patch p across loci (Nei 1987, eq. 7.39, p. 164) */
 template<class SH> double
-StatHandler<SH>::getHsUnbiased_ofPatch_andLocus(const age_idx & AGE, Patch * p, const unsigned int&l)
+StatHandler<SH>::getHsUnbiased_ofPatch_andLocus(const age_idx & AGE, TPatch * p, const unsigned int&l)
 {
     unsigned int size = p->sampleSize(AGE);
     if (size < 2) return my_NAN;
@@ -2477,7 +2477,7 @@ StatHandler<SH>::getHsUnbiased_ofPatch_andLocus(const age_idx & AGE, Patch * p, 
  * returns NaN if the pop is empty
  */
 template<class SH> double
-StatHandler<SH>::getHs_ofPatch_andLocus(const age_idx & AGE, Patch * p, const unsigned int&l)
+StatHandler<SH>::getHs_ofPatch_andLocus(const age_idx & AGE, TPatch * p, const unsigned int&l)
 {
     assert(set_alleleFreq(AGE));
     assert(p->get_sampleID()!=my_NAN);
@@ -2525,7 +2525,7 @@ StatHandler<SH>::getHt(const age_idx & AGE)
  *  across 2 patches
  */
 template<class SH>
-double StatHandler<SH>::getHt(const age_idx & AGE, Patch * p1, Patch * p2)
+double StatHandler<SH>::getHt(const age_idx & AGE, TPatch * p1, TPatch * p2)
 {
     double ht = 0;
     assert(p1->sampleSize(AGE) && p2->sampleSize(AGE));
@@ -2563,7 +2563,7 @@ StatHandler<SH>::getHt_ofLocus(const age_idx & AGE,	const unsigned int&l)
  * used by Nei for the given patches
  */
 template<class SH>
-double StatHandler<SH>::getHt_ofLocus(const age_idx & AGE,const unsigned int&l, Patch * p1, Patch * p2)
+double StatHandler<SH>::getHt_ofLocus(const age_idx & AGE,const unsigned int&l, TPatch * p1, TPatch * p2)
 {
     set_alleleFreq(AGE);
     
@@ -2643,7 +2643,7 @@ StatHandler<SH>::setFstat_Weir_Cockerham_perLocus(const age_idx & AGE)
     double a2, b2, w2, tot_square_size = 0, nc;
     
     // get pop sizes
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (p = 0, curPop = get_vSamplePatch().begin(); curPop != endPop;
          ++curPop, ++p) {
         pop_sizes[p] = cur_size = (*curPop)->sampleSize(AGE);
@@ -2721,7 +2721,7 @@ StatHandler<SH>::setFstat_Weir_Cockerham_perPatchPair(const age_idx & AGE)
     map<unsigned char, double> *cur_allele_freq_global = new map<unsigned char, double>[_nb_locus];
     
     // get pop sizes and Ho
-    vector<Patch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
     for (i = 0, curPop1 = get_vSamplePatch().begin(); curPop1 != endPop; ++curPop1, ++i) {
         assert((*curPop1)->get_sampleID() == i);
         pop_sizes[i] = (*curPop1)->sampleSize(AGE);
@@ -2778,7 +2778,7 @@ StatHandler<SH>::setFstat_Weir_Cockerham_perPatchPair(const age_idx & AGE)
  * Values are not stored in a matrix
  */
 template<class SH>
-double StatHandler<SH>::getFstat_Weir_Cockerham_perPatchPair(const age_idx & AGE, Patch * pop1, Patch * pop2)
+double StatHandler<SH>::getFstat_Weir_Cockerham_perPatchPair(const age_idx & AGE, TPatch * pop1, TPatch * pop2)
 {
     if (!set_alleleFreq(AGE)) return my_NAN;
     
@@ -2842,7 +2842,7 @@ double StatHandler<SH>::getFstat_Weir_Cockerham_perPatchPair(const age_idx & AGE
  */
 template<class SH>
 double StatHandler<SH>::getFstat_Weir_Cockerham_perPatchPair_andLocus(const age_idx & AGE,
-                                                                      Patch * pop1, Patch * pop2, unsigned int locus)
+                                                                      TPatch * pop1, TPatch * pop2, unsigned int locus)
 {
     if (!set_alleleFreq(AGE)) return my_NAN;
     
@@ -2898,7 +2898,7 @@ double StatHandler<SH>::getFstat_Weir_Cockerham_perPatchPair_andLocus(const age_
 // ----------------------------------------------------------------------------------------
 /** computes the global F-statistics following Weir and Cockerham (1984) for the given patches */
 template<class SH>
-void StatHandler<SH>::setFstat_Weir_Cockerham(const age_idx & AGE, vector<Patch*>&aPatch,
+void StatHandler<SH>::setFstat_Weir_Cockerham(const age_idx & AGE, vector<TPatch*>&aPatch,
                                               map<unsigned char, double> **alleleFreqs,
                                               map<unsigned char, double> *alleleFreqsGlobal,
                                               double&fst, double&fis, double&fit)
@@ -2909,7 +2909,7 @@ void StatHandler<SH>::setFstat_Weir_Cockerham(const age_idx & AGE, vector<Patch*
     double a2, b2, w2, tot_square_size = 0, nc;
     
     // get pop sizes
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (p = 0, curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop, ++p) {
         pop_sizes[p] = cur_size = (*curPop)->sampleSize(AGE);
         if (!cur_size) {
@@ -3019,7 +3019,7 @@ void StatHandler<SH>::get_sigma_of_locus_Weir_Cockerham(double&sigma_a2, double&
  *       =(numLoci - Sum_loci(Sum_allele(sqrt(p1*p2))))/(sum_loci(numAllele) - numLoci)
  */
 template<class SH>
-double StatHandler<SH>::getChordDist2_perPatchPair(const age_idx& AGE, Patch* pop1, Patch* pop2)
+double StatHandler<SH>::getChordDist2_perPatchPair(const age_idx& AGE, TPatch* pop1, TPatch* pop2)
 {
     if (!set_alleleFreq(AGE)) return my_NAN;
     
@@ -3071,7 +3071,7 @@ double StatHandler<SH>::getChordDist2_perPatchPair(const age_idx& AGE, Patch* po
  * Dc=2/(Pi*r)*Sum_loci(sqrt(2*(1-Sum_allele(sqrt(p1*p2)))))
  */
 template<class SH>
-double StatHandler<SH>::getChordDist_perPatchPair(const age_idx& AGE, Patch* pop1, Patch* pop2)
+double StatHandler<SH>::getChordDist_perPatchPair(const age_idx& AGE, TPatch* pop1, TPatch* pop2)
 {
     if (!set_alleleFreq(AGE)) return my_NAN;
     
@@ -3126,7 +3126,7 @@ double StatHandler<SH>::getChordDist(const age_t& AGE)
     
     unsigned int nbStats=0;
     double sumChor=0, value;
-    vector<Patch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
     for(curPop1 = get_vSamplePatch().begin(); curPop1 != endPop; ++curPop1) { // for each pair of pops
         for(curPop2 = curPop1; curPop2 != endPop; ++curPop2) {
             value = getChordDist_perPatchPair(curAge, *curPop1, *curPop2);
@@ -3186,7 +3186,7 @@ StatHandler<SH>::setCoaMatrixTheta(const age_idx & AGE)
     // first fill the diagonale: within deme coancestry (theta)
     _mean_theta[AGE] = 0;
     vector<TIndividual*>::iterator curInd1, curInd2, endInd;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (i = 0, curPop = get_vSamplePatch().begin(); curPop != endPop; ++i, ++curPop) {
         vector<TIndividual*>&curFem = (*curPop)->get_sampled_inds(FEM, AGE);
         vector<TIndividual*>&curMal = (*curPop)->get_sampled_inds(MAL, AGE);
@@ -3238,7 +3238,7 @@ template<class SH>void StatHandler<SH>::setCoaMatrixAlpha(const age_idx & AGE) {
     // check if the table has already been computed
     if (already_computed(_computed[17], AGE)) return;
     
-    vector<Patch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
     unsigned int i, j, Fsize1, Msize1, Fsize2, Msize2, tot_size, wt = 0;
     
     double coa;
@@ -3310,8 +3310,8 @@ template<class SH>void StatHandler<SH>::setCoaMatrixAlpha(const age_idx & AGE) {
 // ----------------------------------------------------------------------------------------
 // setSexspecific_Theta
 // ----------------------------------------------------------------------------------------
-template<class SH>double StatHandler<SH>::get_coancestry(Patch * P1,
-                                                         const sex_t & SEX1, Patch * P2, const sex_t & SEX2, const age_idx & AGE)
+template<class SH>double StatHandler<SH>::get_coancestry(TPatch * P1,
+                                                         const sex_t & SEX1, TPatch * P2, const sex_t & SEX2, const age_idx & AGE)
 {
     double sum = 0;
     vector<TIndividual*>::iterator cur1, cur2, end1, end2;
@@ -3339,7 +3339,7 @@ template<class SH>void StatHandler<SH>::setSexspecific_Theta
     if (already_computed(_computed[18], AGE))
         return;
     
-    vector<Patch*>::iterator curPop, endPop;
+    vector<TPatch*>::iterator curPop, endPop;
     vector<TIndividual*>::iterator curInd1, curInd2, endInd1, endInd2;
     unsigned int Fsize, Msize, FFsize, MMsize, FMsize, nbFullPatch = 0;
     
@@ -3451,7 +3451,7 @@ template<class SH>void StatHandler<SH>::setSibStats(const age_idx & AGE) {
         _sib_prop[AGE][i] = _sib_coa[AGE][i] = 0.0;
     }
     
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     vector<TIndividual*>::iterator curInd1, curInd2, endInd1, endInd2;
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         // for each patch
@@ -3547,7 +3547,7 @@ StatHandler<SH>::getDprime(const age_idx & AGE,  const unsigned int&l1, const un
 {
     double Dprime = 0, dp;
     unsigned int size, totSize = 0;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         size = (*curPop)->sampleSize(AGE);
         if(!size) continue;
@@ -3569,7 +3569,7 @@ StatHandler<SH>::getDprime(const age_idx & AGE,  const unsigned int&l1, const un
  * D' = Sum(p(a)*p(b)*|Dab'|)
  */
 template<class SH> double
-StatHandler<SH>::getDprime_ofPatch(const age_idx & AGE, Patch* p,
+StatHandler<SH>::getDprime_ofPatch(const age_idx & AGE, TPatch* p,
                                    const unsigned int&l1, const unsigned int&l2)
 {
     set_alleleFreq(AGE); // allele freuqencies are used
@@ -3618,7 +3618,7 @@ StatHandler<SH>::getR2(const age_idx & AGE,  const unsigned int&l1, const unsign
 {
     double R2 = 0, r2;
     unsigned int size, totSize = 0;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         size = (*curPop)->sampleSize(AGE);
         if(!size) continue;
@@ -3640,7 +3640,7 @@ StatHandler<SH>::getR2(const age_idx & AGE,  const unsigned int&l1, const unsign
  *    = Sum(Dab^2/[(1-p(a))*(1-p(b))]    // p(a) and p(b) are reduced by the devision
  */
 template<class SH> double
-StatHandler<SH>::getR2_ofPatch(const age_idx & AGE, Patch* p, const unsigned int&l1, const unsigned int&l2)
+StatHandler<SH>::getR2_ofPatch(const age_idx & AGE, TPatch* p, const unsigned int&l1, const unsigned int&l2)
 {
     set_alleleFreq(AGE); // allele frequencies are used
     
@@ -3680,7 +3680,7 @@ StatHandler<SH>::getDstar(const age_idx & AGE,  const unsigned int&l1, const uns
 {
     double Dstar = 0, d;
     unsigned int size, totSize = 0;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         size = (*curPop)->sampleSize(AGE);
         if(!size) continue;
@@ -3700,7 +3700,7 @@ StatHandler<SH>::getDstar(const age_idx & AGE,  const unsigned int&l1, const uns
  *    = Sum(Dab^2)/[Hs(a)*Hs(b)]
  */
 template<class SH> double
-StatHandler<SH>::getDstar_ofPatch(const age_idx & AGE, Patch* p, const unsigned int&l1, const unsigned int&l2)
+StatHandler<SH>::getDstar_ofPatch(const age_idx & AGE, TPatch* p, const unsigned int&l1, const unsigned int&l2)
 {
     set_alleleFreq(AGE); // allele freuqencies are used
     
@@ -3744,7 +3744,7 @@ StatHandler<SH>::getChi2(const age_idx & AGE,  const unsigned int&l1, const unsi
 {
     double Chi2 = 0, chi2;
     unsigned int size, totSize = 0;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         size = (*curPop)->sampleSize(AGE);
         if(!size) continue;
@@ -3765,7 +3765,7 @@ StatHandler<SH>::getChi2(const age_idx & AGE,  const unsigned int&l1, const unsi
  *       = Sum(Sum(Dab^2/[p(a)*p(b)]))/(l-1); l: number of alleles of the locus with less alleles
  */
 template<class SH> double
-StatHandler<SH>::getChi2_ofPatch(const age_idx & AGE, Patch* p, const unsigned int&l1, const unsigned int&l2)
+StatHandler<SH>::getChi2_ofPatch(const age_idx & AGE, TPatch* p, const unsigned int&l1, const unsigned int&l2)
 {
     set_alleleFreq(AGE); // allele frequencies are used
     
@@ -4728,8 +4728,8 @@ template<class SH>
 unsigned int StatHandler<SH>::get_nbInds(const age_idx & AGE, const sex_t & SEX)
 {
     unsigned int size = 0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for (; curPop != endPop; ++curPop) {
         size += (*curPop)->size(SEX, AGE);
     }
@@ -4745,8 +4745,8 @@ template<class SH>
 unsigned int StatHandler<SH>::get_nbInds(const age_t & AGE, const sex_t & SEX)
 {
     unsigned int size = 0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for (; curPop != endPop; ++curPop) {
         size += (*curPop)->size(SEX, AGE);
     }
@@ -4762,8 +4762,8 @@ template<class SH>
 double StatHandler<SH>::get_meanNbInds(const age_idx & AGE, const sex_t & SEX)
 {
     unsigned int size = 0, curSize, nbPatch = 0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for (; curPop != endPop; ++curPop) {
         curSize = (*curPop)->size(SEX, AGE);
         if (!curSize)
@@ -4781,8 +4781,8 @@ double StatHandler<SH>::get_meanNbInds(const age_idx & AGE, const sex_t & SEX)
 template<class SH>double StatHandler<SH>::get_meanNbInds(const age_t & AGE,
                                                          const sex_t & SEX) {
     unsigned int size = 0, curSize, nbPatch = 0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for (; curPop != endPop; ++curPop) {
         curSize = (*curPop)->size(SEX, AGE);
         if (!curSize)
@@ -4799,8 +4799,8 @@ template<class SH>double StatHandler<SH>::get_meanNbInds(const age_t & AGE,
 /** get the total number of individuals  of the given age class */
 template<class SH>double StatHandler<SH>::get_meanNbInds(const age_idx & AGE) {
     unsigned int size = 0, curSize, nbPatch = 0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for (; curPop != endPop; ++curPop) {
         curSize = (*curPop)->size(AGE);
         if (!curSize)
@@ -4819,8 +4819,8 @@ template<class SH>
 double StatHandler<SH>::get_meanNbInds(const age_t & AGE)
 {
     unsigned int size = 0, curSize, nbPatch = 0;
-    vector<Patch*>::iterator curPop = get_vSamplePatch().begin();
-    vector<Patch*>::iterator endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop = get_vSamplePatch().begin();
+    vector<TPatch*>::iterator endPop = get_vSamplePatch().end();
     for (; curPop != endPop; ++curPop) {
         curSize = (*curPop)->size(AGE);
         if (!curSize)
@@ -4839,7 +4839,7 @@ template<class SH>
 unsigned int StatHandler<SH>::get_nbSamples(const age_idx & AGE, const sex_t & SEX)
 {
     unsigned int size = 0;
-    vector<Patch*>::iterator cur, end;
+    vector<TPatch*>::iterator cur, end;
     for (cur = get_vSamplePatch().begin(), end = get_vSamplePatch().end();
          cur != end; ++cur) {
         size += (*cur)->sampleSize(SEX, AGE);
@@ -4856,7 +4856,7 @@ template<class SH>
 unsigned int StatHandler<SH>::get_nbSamples(const age_t & AGE, const sex_t & SEX)
 {
     unsigned int size = 0;
-    vector<Patch*>::iterator cur, end;
+    vector<TPatch*>::iterator cur, end;
     for (cur = get_vSamplePatch().begin(), end = get_vSamplePatch().end();
          cur != end; ++cur) {
         size += (*cur)->sampleSize(SEX, AGE);
@@ -4873,7 +4873,7 @@ template<class SH>
 double StatHandler<SH>::get_meanNbSamples(const age_idx & AGE, const sex_t & SEX)
 {
     unsigned int size = 0, curSize, nbPatch = 0;
-    vector<Patch*>::iterator cur, end;
+    vector<TPatch*>::iterator cur, end;
     for (cur = get_vSamplePatch().begin(), end = get_vSamplePatch().end();
          cur != end; ++cur) {
         curSize = (*cur)->sampleSize(SEX, AGE);
@@ -4893,7 +4893,7 @@ template<class SH>
 double StatHandler<SH>::get_meanNbSamples(const age_t & AGE, const sex_t & SEX)
 {
     unsigned int size = 0, curSize, nbPatch = 0;
-    vector<Patch*>::iterator cur, end;
+    vector<TPatch*>::iterator cur, end;
     for (cur = get_vSamplePatch().begin(), end = get_vSamplePatch().end();
          cur != end; ++cur) {
         curSize = (*cur)->sampleSize(SEX, AGE);
@@ -4912,7 +4912,7 @@ double StatHandler<SH>::get_meanNbSamples(const age_t & AGE, const sex_t & SEX)
 template<class SH>double StatHandler<SH>::get_meanNbSamples
 (const age_idx & AGE) {
     unsigned int size = 0, curSize, nbPatch = 0;
-    vector<Patch*>::iterator cur, end;
+    vector<TPatch*>::iterator cur, end;
     for (cur = get_vSamplePatch().begin(), end = get_vSamplePatch().end();
          cur != end; ++cur) {
         curSize = (*cur)->sampleSize(AGE);
@@ -4930,7 +4930,7 @@ template<class SH>double StatHandler<SH>::get_meanNbSamples
 /** get the total number of samples of the given age class and sex */
 template<class SH>double StatHandler<SH>::get_meanNbSamples(const age_t & AGE) {
     unsigned int size = 0, curSize, nbPatch = 0;
-    vector<Patch*>::iterator cur, end;
+    vector<TPatch*>::iterator cur, end;
     for (cur = get_vSamplePatch().begin(), end = get_vSamplePatch().end();
          cur != end; ++cur) {
         curSize = (*cur)->sampleSize(AGE);
@@ -4951,7 +4951,7 @@ unsigned int StatHandler<SH>::get_minSampleSize(const age_idx & AGE)
 {
     //unsigned int size = UINT_MAX, curSize;
     unsigned int size = std::numeric_limits<unsigned int>::max(), curSize;
-    vector<Patch*>::iterator cur, end;
+    vector<TPatch*>::iterator cur, end;
     for (cur = get_vSamplePatch().begin(), end = get_vSamplePatch().end(); cur != end; ++cur) {
         curSize = (*cur)->sampleSize(AGE);
         if (!curSize) 	continue; // empty
@@ -4977,7 +4977,7 @@ template<class SH>double StatHandler<SH>::getRs(const age_idx & AGE) {
 // get_Rs
 // ----------------------------------------------------------------------------------------
 template<class SH>
-double StatHandler<SH>::getRs_ofPatch(Patch * p, const age_idx & AGE, unsigned int minN)
+double StatHandler<SH>::getRs_ofPatch(TPatch * p, const age_idx & AGE, unsigned int minN)
 {
     if(!p->sampleSize(AGE)) return my_NAN;
     if (minN == my_NAN) minN = get_minSampleSize(AGE);
@@ -4997,7 +4997,7 @@ double StatHandler<SH>::getRs_ofLocus(const unsigned int&l,	const age_idx & AGE,
     if (minN == my_NAN) minN = get_minSampleSize(AGE);
     unsigned int nbFullPatch = 0;
     double val, rs = 0;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         val = getRs_ofPatch_andLocus(AGE, *curPop, l, minN);
         if (val == my_NAN) continue;
@@ -5017,7 +5017,7 @@ double StatHandler<SH>::getRs_ofLocus(const unsigned int&l,	const age_idx & AGE,
  *  r = exp(factln(n-i)+factln(n-k)-factln(n)-factln(n-i-k))
  */
 template<class SH> double
-StatHandler<SH>::getRs_ofPatch_andLocus(const age_idx & AGE, Patch * p,
+StatHandler<SH>::getRs_ofPatch_andLocus(const age_idx & AGE, TPatch * p,
                                         const unsigned int&l, unsigned int minN)
 {
     if (!set_alleleFreq(AGE)) return my_NAN;
@@ -5099,7 +5099,7 @@ double StatHandler<SH>::getRange(const age_idx & AGE)
 // get_Rs
 // ----------------------------------------------------------------------------------------
 template<class SH>
-double StatHandler<SH>::getRange_ofPatch(Patch * p, const age_idx & AGE)
+double StatHandler<SH>::getRange_ofPatch(TPatch * p, const age_idx & AGE)
 {
     if(!p->sampleSize(AGE)) return my_NAN;
     unsigned int range = 0;
@@ -5116,7 +5116,7 @@ template<class SH>
 double StatHandler<SH>::getRange_ofLocus(const unsigned int&l, const age_idx & AGE)
 {
     unsigned int nbFullPatch = 0, range = 0, val;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         val = getRange_ofPatch_andLocus(AGE, *curPop, l);
         if (val == my_NAN) continue;
@@ -5131,7 +5131,7 @@ double StatHandler<SH>::getRange_ofLocus(const unsigned int&l, const age_idx & A
 // get_Rs
 // ----------------------------------------------------------------------------------------
 template<class SH>
-unsigned int StatHandler<SH>::getRange_ofPatch_andLocus(const age_idx & AGE, Patch * p, const unsigned int&l)
+unsigned int StatHandler<SH>::getRange_ofPatch_andLocus(const age_idx & AGE, TPatch * p, const unsigned int&l)
 {
     if (p->get_sampleID()==SAMPLED) return my_NAN; // pop not populated
     if (!set_alleleFreq(AGE)) return my_NAN; // get the local allele frequencies if necessary
@@ -5170,7 +5170,7 @@ template<class SH>double StatHandler<SH>::getGW(const age_idx & AGE)
 {
     unsigned int nbFullPatch=0;
     double gw = 0, curGW;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         curGW = getGW_ofPatch(*curPop, AGE);
         if(curGW == my_NAN) continue;
@@ -5184,7 +5184,7 @@ template<class SH>double StatHandler<SH>::getGW(const age_idx & AGE)
 // get_GW
 // ----------------------------------------------------------------------------------------
 template<class SH>
-double StatHandler<SH>::getGW_ofPatch(Patch * p, const age_idx & AGE)
+double StatHandler<SH>::getGW_ofPatch(TPatch * p, const age_idx & AGE)
 {
     if(!p->sampleSize(AGE)) return my_NAN;
     
@@ -5204,7 +5204,7 @@ double StatHandler<SH>::getGW_ofLocus(const unsigned int&l, const age_idx & AGE)
 {
     unsigned int nbFullPatch=0;
     double gw = 0, curGW;
-    vector<Patch*>::iterator curPop, endPop = get_vSamplePatch().end();
+    vector<TPatch*>::iterator curPop, endPop = get_vSamplePatch().end();
     for (curPop = get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
         curGW = getGW_ofPatch_andLocus(AGE, *curPop, l);
         if(curGW == my_NAN) continue;
@@ -5218,7 +5218,7 @@ double StatHandler<SH>::getGW_ofLocus(const unsigned int&l, const age_idx & AGE)
 // get_GW
 // ----------------------------------------------------------------------------------------
 template<class SH>
-double StatHandler<SH>::getGW_ofPatch_andLocus(const age_idx & AGE, Patch * p, const unsigned int&l)
+double StatHandler<SH>::getGW_ofPatch_andLocus(const age_idx & AGE, TPatch * p, const unsigned int&l)
 {
     if (!set_alleleFreq(AGE)) return my_NAN; // get the local allele frequencies if necessary
     if (p->get_sampleID()==SAMPLED) return my_NAN; // pop not populated
