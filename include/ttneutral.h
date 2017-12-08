@@ -42,31 +42,31 @@
 
 class TTNeutralFH;
 class TTNeutralSH;
-class TTNeutralProto;
+class TTraitNeutralProto;
 
 /**Microsatellites genome.*/
-class TTNeutral : public TTrait
+class TTraitNeutral : public TTrait
 {
     
-    TTNeutralProto* pProto;
+    TTraitNeutralProto* pProto;
     
 private:
     
 public:
     virtual void set_from_prototype(TTraitProto* T);
     
-    TTNeutral () : pProto(0){}
+    TTraitNeutral () : pProto(0){}
     
-    TTNeutral(const TTNeutral& T) : pProto(T.pProto){
+    TTraitNeutral(const TTraitNeutral& T) : pProto(T.pProto){
         _copyTTraitParameters(T);  // copy the parameters of TTrait
     }
     
-    virtual ~TTNeutral ();
+    virtual ~TTraitNeutral ();
     
     ///@}
     ///@name Implementations
     ///@{
-    virtual TTNeutral& operator= (const TTrait& T);
+    virtual TTraitNeutral& operator= (const TTrait& T);
     virtual bool    operator== (const TTrait& T);
     virtual bool    operator!= (const TTrait& T);
     virtual void    reset                ( ){}
@@ -78,13 +78,13 @@ public:
     virtual void    set_value            (double value)          {return;}
     virtual double  get_value            ( )					           {return my_NAN;}
     virtual void    show_up              ( );
-    virtual TTNeutral*  clone       ( )                      {return new TTNeutral(*this);}
+    virtual TTraitNeutral*  clone       ( )                      {return new TTraitNeutral(*this);}
     ///@}
 };
 
 /**Prototype class for the TTNeutral trait class.**/
-class TTNeutralProto : public TTraitProto {
-    friend class TTNeutral; // we allow to access these parameters from TTNeutral directly
+class TTraitNeutralProto : public TTraitProto {
+    friend class TTraitNeutral; // we allow to access these parameters from TTNeutral directly
 protected:
     void ini_paramset();
     
@@ -92,18 +92,18 @@ public:
     TTNeutralFH* _writer;
     TTNeutralSH* _stats;
     
-    TTNeutralProto ( );
-    TTNeutralProto (int i);
-    TTNeutralProto(const TTNeutralProto& T);
+    TTraitNeutralProto ( );
+    TTraitNeutralProto (int i);
+    TTraitNeutralProto(const TTraitNeutralProto& T);
     
-    virtual ~TTNeutralProto ( );
+    virtual ~TTraitNeutralProto ( );
     
     //implementation of TTraitProto:
     virtual void                     init (TMetapop* pMetapop);
     
-    virtual TTNeutral*          hatch ();
+    virtual TTraitNeutral*          hatch ();
     
-    virtual TTNeutralProto*      clone () {return new TTNeutralProto(*this);}
+    virtual TTraitNeutralProto*      clone () {return new TTraitNeutralProto(*this);}
     
     //implementation of SimComponent:
     virtual void loadFileServices ( FileServices* loader );
@@ -133,7 +133,7 @@ class TTNeutralSH: public StatHandler<TTNeutralSH> {
     
 public:
     
-    TTNeutralSH (TTNeutralProto* TT){
+    TTNeutralSH (TTraitNeutralProto* TT){
         set(TT);
     }
     

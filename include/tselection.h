@@ -38,7 +38,7 @@
 #include "tpatchfitness.h"
 #include "tequation.h"
 
-class TTQuantiProto;
+class TTraitQuantiProto;
 class LCE_Breed;
 class LCE;
 class TMetapop;
@@ -53,7 +53,7 @@ class TSelection: public SimComponent {
 private:
 	// object pointers
 	TMetapop*            _popPtr;
-//	TTQuantiProto**     _pQuantiProto;
+//	TTraitQuantiProto**     _pQuantiProto;
 
 
 	TPatchFitness*      _fit[2];          // pointer to obejcts (male/female) containg the fitness, and individuals
@@ -61,7 +61,7 @@ private:
 	double*             _aPheno;          // temp array to stoe the phenotype of all traits
     
     // frequency dependent selection
-	TTQuantiProto**     _selTrait_fitnessDependent; // array for each trait with frequency dependent selection
+	TTraitQuantiProto**     _selTrait_fitnessDependent; // array for each trait with frequency dependent selection
     unsigned int        _selTrait_fitnessDependentSize;
     
     // sex allocation trait

@@ -44,7 +44,7 @@
 // ----------------------------------------------------------------------------------------
 // copy constructor
 // ----------------------------------------------------------------------------------------
-TTQuanti::TTQuanti(const TTQuanti& T): _phenotype(my_NAN), _fitness(my_NAN), _fitness_factor(my_NAN), pProto(T.pProto){
+TTraitQuanti::TTraitQuanti(const TTraitQuanti& T): _phenotype(my_NAN), _fitness(my_NAN), _fitness_factor(my_NAN), pProto(T.pProto){
     _genotype=T._genotype;
     _phenotype=T._phenotype;
     _fitness=T._fitness;
@@ -57,9 +57,9 @@ TTQuanti::TTQuanti(const TTQuanti& T): _phenotype(my_NAN), _fitness(my_NAN), _fi
 // ----------------------------------------------------------------------------------------
 // set_from_prototype (used during hatching)
 // ----------------------------------------------------------------------------------------
-void TTQuanti::set_from_prototype(TTraitProto* T)
+void TTraitQuanti::set_from_prototype(TTraitProto* T)
 {
-    pProto = dynamic_cast<TTQuantiProto*> (T);
+    pProto = dynamic_cast<TTraitQuantiProto*> (T);
     pTraitProto = T;
 }
 
@@ -67,7 +67,7 @@ void TTQuanti::set_from_prototype(TTraitProto* T)
 // set_value
 // ----------------------------------------------------------------------------------------
 void
-TTQuanti::set_value()
+TTraitQuanti::set_value()
 {
     _genotype = (pProto->*(pProto->get_genotype_func_ptr))(sequence);
 }   // set the genotype
@@ -77,7 +77,7 @@ TTQuanti::set_value()
 // set_fitness_factor
 // ----------------------------------------------------------------------------------------
 void
-TTQuanti::set_fitness_factor()
+TTraitQuanti::set_fitness_factor()
 {
     _fitness_factor = (pProto->*(pProto->get_fitnessFactor_func_ptr))(sequence);
 }   // set the set_fitness_factor
@@ -86,7 +86,7 @@ TTQuanti::set_fitness_factor()
 // set_fitness_factor
 // ----------------------------------------------------------------------------------------
 double
-TTQuanti::set_get_fitness_factor()
+TTraitQuanti::set_get_fitness_factor()
 {
     _fitness_factor = (pProto->*(pProto->get_fitnessFactor_func_ptr))(sequence);
     return _fitness_factor;
@@ -97,8 +97,8 @@ TTQuanti::set_get_fitness_factor()
 // operator=
 // ----------------------------------------------------------------------------------------
 
-TTQuanti&
-TTQuanti::operator= (const TTrait& T)
+TTraitQuanti&
+TTraitQuanti::operator= (const TTrait& T)
 {
     error("");
     return *this;
@@ -108,10 +108,10 @@ TTQuanti::operator= (const TTrait& T)
 // operator==
 // ----------------------------------------------------------------------------------------
 bool
-TTQuanti::operator== (const TTrait& T)
+TTraitQuanti::operator== (const TTrait& T)
 {
     if(*pTraitProto != *T.pTraitProto) return false;
-    const TTQuanti& TN = dynamic_cast<const TTQuanti&> (T);
+    const TTraitQuanti& TN = dynamic_cast<const TTraitQuanti&> (T);
     if(this != &TN || *pProto != *TN.pProto) return false;
     return true;
 }
@@ -120,7 +120,7 @@ TTQuanti::operator== (const TTrait& T)
 // operator!=
 // ----------------------------------------------------------------------------------------
 bool
-TTQuanti::operator!= (const TTrait& T)
+TTraitQuanti::operator!= (const TTrait& T)
 {
     if(!((*this) == T)) return true;
     else                return false;
@@ -129,7 +129,7 @@ TTQuanti::operator!= (const TTrait& T)
 // ----------------------------------------------------------------------------------------
 // Destructor
 // ----------------------------------------------------------------------------------------
-TTQuanti::~TTQuanti()
+TTraitQuanti::~TTraitQuanti()
 {
 }
 
@@ -137,7 +137,7 @@ TTQuanti::~TTQuanti()
 // reset
 // ----------------------------------------------------------------------------------------
 void
-TTQuanti::reset()
+TTraitQuanti::reset()
 {
     _phenotype      = my_NAN;
     _genotype       = my_NAN;
@@ -150,7 +150,7 @@ TTQuanti::reset()
 // show_up
 // ----------------------------------------------------------------------------------------
 void
-TTQuanti::show_up ()
+TTraitQuanti::show_up ()
 {
     message("\n  Trait's type: discretequanti\nlocus: %i\nalleles: %i\nsequence:", pProto->_nb_locus,pProto->get_nb_allele_max());
     
@@ -163,7 +163,7 @@ TTQuanti::show_up ()
 // ----------------------------------------------------------------------------------------
 // cstor
 // ----------------------------------------------------------------------------------------
-TTQuantiProto::TTQuantiProto( ):
+TTraitQuantiProto::TTraitQuantiProto( ):
 _stats(0), _allelicValues(0), _allelic_file(0),
 _dominanceValues(0),
 _fitnessFactor_heterozygote(0), _fitnessFactor_homozygote(0), _fitnessFactor_freqDepend(0),
@@ -177,7 +177,7 @@ get_fitnessFactor_func_ptr(0), get_fitnessFactor2_func_ptr(0)
 // ----------------------------------------------------------------------------------------
 // cstor
 // ----------------------------------------------------------------------------------------
-TTQuantiProto::TTQuantiProto(int i):
+TTraitQuantiProto::TTraitQuantiProto(int i):
 _stats(0), _allelicValues(0), _allelic_file(0),
 _dominanceValues(0),
 _fitnessFactor_heterozygote(0), _fitnessFactor_homozygote(0),
@@ -194,7 +194,7 @@ get_fitnessFactor2_func_ptr(0)
 // ----------------------------------------------------------------------------------------
 // cstor
 // ----------------------------------------------------------------------------------------
-TTQuantiProto::TTQuantiProto(const TTQuantiProto& T):
+TTraitQuantiProto::TTraitQuantiProto(const TTraitQuantiProto& T):
 _stats(0), _allelicValues(T._allelicValues), _allelic_file(T._allelic_file),
 _dominanceValues(T._dominanceValues),
 _fitnessFactor_heterozygote(T._fitnessFactor_heterozygote),
@@ -215,7 +215,7 @@ _phenotyper(0), _writer(0), _genotyper(0)
 // ----------------------------------------------------------------------------------------
 // dstor
 // ----------------------------------------------------------------------------------------
-TTQuantiProto::~TTQuantiProto ()
+TTraitQuantiProto::~TTraitQuantiProto ()
 {
     if(_stats)          delete _stats;
     
@@ -232,7 +232,7 @@ TTQuantiProto::~TTQuantiProto ()
 // ini_paramset
 // -----------------------------------------------------------------------------
 void
-TTQuantiProto::ini_paramset ()
+TTraitQuantiProto::ini_paramset ()
 {
     TTraitProto::ini_paramset();
     string trait = get_trait_indexStr_();
@@ -545,7 +545,7 @@ TTQuantiProto::ini_paramset ()
 // reset
 // ----------------------------------------------------------------------------------------
 // called between replicates to reset this object
-void TTQuantiProto::reset()
+void TTraitQuantiProto::reset()
 {
     TTraitProto::reset();
     
@@ -579,7 +579,7 @@ void TTQuantiProto::reset()
 // ----------------------------------------------------------------------------------------
 // delete_dominanceValues
 // ----------------------------------------------------------------------------------------
-void TTQuantiProto::delete_dominanceValues()
+void TTraitQuantiProto::delete_dominanceValues()
 {
     if(!_dominanceValues) return;  // if not used
     for(unsigned int a, l=0; l<_nb_locus; ++l){
@@ -595,7 +595,7 @@ void TTQuantiProto::delete_dominanceValues()
 // ----------------------------------------------------------------------------------------
 // delete_allelicValues
 // ----------------------------------------------------------------------------------------
-void TTQuantiProto::delete_allelicValues()
+void TTraitQuantiProto::delete_allelicValues()
 {
     if(!_allelicValues) return;
     if(_nb_locus > 1 && _allelicValues[0] != _allelicValues[1]){   // each locus has its one array
@@ -610,7 +610,7 @@ void TTQuantiProto::delete_allelicValues()
 // ----------------------------------------------------------------------------------------
 // delete_fitnessFactor
 // ----------------------------------------------------------------------------------------
-void TTQuantiProto::delete_fitnessFactor()
+void TTraitQuantiProto::delete_fitnessFactor()
 {
     if(!_fitnessFactor) return;  // if not used
     for(unsigned int a, l=0; l<_nb_locus; ++l){
@@ -627,7 +627,7 @@ void TTQuantiProto::delete_fitnessFactor()
 // ----------------------------------------------------------------------------------------
 // delete_locusFreqs
 // ----------------------------------------------------------------------------------------
-void TTQuantiProto::delete_locusFreqs()
+void TTraitQuantiProto::delete_locusFreqs()
 {
     if(!_locusFreqs) return;  // if not used
     delete[] _locusFreqs;
@@ -638,7 +638,7 @@ void TTQuantiProto::delete_locusFreqs()
 // reset
 // ----------------------------------------------------------------------------------------
 // used between simulations
-void TTQuantiProto::resetTotal()
+void TTraitQuantiProto::resetTotal()
 {
     if(_phenoTree)        {delete _phenoTree;		_phenoTree=NULL;}
     if(_fitnessFactorTree){delete _fitnessFactorTree;		_fitnessFactorTree=NULL;}
@@ -656,7 +656,7 @@ void TTQuantiProto::resetTotal()
 // ----------------------------------------------------------------------------------------
 // init
 // ----------------------------------------------------------------------------------------
-void TTQuantiProto::init (TMetapop* pMetapop)
+void TTraitQuantiProto::init (TMetapop* pMetapop)
 {
     mut_model_t mutation_models[4] = {RMM, IMM, KAM, SSM};
     ini_base(pMetapop, mutation_models, 4);
@@ -716,10 +716,10 @@ void TTQuantiProto::init (TMetapop* pMetapop)
     // set the fitness factor
     set_fitnessFactor(trait, "quanti_fitness_factor_heterozygote", _fitnessFactor_heterozygote);
     set_fitnessFactor(trait, "quanti_fitness_factor_homozygote", _fitnessFactor_homozygote);
-    if(_fitnessFactorTree)  get_fitnessFactor_func_ptr = &TTQuantiProto::get_fitnessFactor_genome;
-    else if(_fitnessFactor) get_fitnessFactor_func_ptr = &TTQuantiProto::get_fitnessFactor_locus;
+    if(_fitnessFactorTree)  get_fitnessFactor_func_ptr = &TTraitQuantiProto::get_fitnessFactor_genome;
+    else if(_fitnessFactor) get_fitnessFactor_func_ptr = &TTraitQuantiProto::get_fitnessFactor_locus;
     else if(_fitnessFactor_homozygote || _fitnessFactor_heterozygote){
-        get_fitnessFactor_func_ptr = &TTQuantiProto::get_fitnessFactor_global;
+        get_fitnessFactor_func_ptr = &TTraitQuantiProto::get_fitnessFactor_global;
     }
     else get_fitnessFactor_func_ptr = NULL;	// fitness factor is not used
     
@@ -728,7 +728,7 @@ void TTQuantiProto::init (TMetapop* pMetapop)
     set_fitnessFactor(trait, "quanti_fitness_frequency_dependent", _fitnessFactor_freqDepend);
     if(_fitnessFactor_freqDepend){
         get_fitnessFactor2_func_ptr = get_fitnessFactor_func_ptr;
-        get_fitnessFactor_func_ptr = &TTQuantiProto::get_fitnessFactor_freqDepend;
+        get_fitnessFactor_func_ptr = &TTraitQuantiProto::get_fitnessFactor_freqDepend;
     }
 }
 
@@ -736,7 +736,7 @@ void TTQuantiProto::init (TMetapop* pMetapop)
 // temporal_change
 // ----------------------------------------------------------------------------------------
 void
-TTQuantiProto::temporal_change(const unsigned int& gen)
+TTraitQuantiProto::temporal_change(const unsigned int& gen)
 {
     // if it is a temporal parameter
     map<string, Param*>* pParam = _paramSet->getTemporalParams(gen);
@@ -807,7 +807,7 @@ TTQuantiProto::temporal_change(const unsigned int& gen)
 // loadFileServices
 // ----------------------------------------------------------------------------------------
 void
-TTQuantiProto::executeAfterEachReplicate(const unsigned int& rep)
+TTraitQuantiProto::executeAfterEachReplicate(const unsigned int& rep)
 {
     if(_output){
         string dir =get_popPtr()->getSimfolder();
@@ -821,7 +821,7 @@ TTQuantiProto::executeAfterEachReplicate(const unsigned int& rep)
 // get_info
 // ----------------------------------------------------------------------------------------
 string
-TTQuantiProto::get_info()
+TTraitQuantiProto::get_info()
 {
     string text;
     
@@ -845,13 +845,13 @@ TTQuantiProto::get_info()
 // loadFileServices
 // ----------------------------------------------------------------------------------------
 void
-TTQuantiProto::loadFileServices  (FileServices* loader)
+TTraitQuantiProto::loadFileServices  (FileServices* loader)
 {
     // genotype
     unsigned int choice = (int)get_parameter_value("quanti_save_genotype");
     assert(!_writer);
     if(choice) {
-        _writer = (dynamic_cast<TTQuantiProto*>(_popPtr->getFirstPrototype(_type)))->_writer;
+        _writer = (dynamic_cast<TTraitQuantiProto*>(_popPtr->getFirstPrototype(_type)))->_writer;
         if(!_writer){
             _writer = new TTQuantiFH();
             if(_writer->set(get_parameter("quanti_genot_logtime"),
@@ -878,7 +878,7 @@ TTQuantiProto::loadFileServices  (FileServices* loader)
     choice = (int)get_parameter_value("quanti_save_phenotype");
     assert(!_phenotyper);
     if(choice) {
-        _phenotyper = (dynamic_cast<TTQuantiProto*>(_popPtr->getFirstPrototype(_type)))->_phenotyper;
+        _phenotyper = (dynamic_cast<TTraitQuantiProto*>(_popPtr->getFirstPrototype(_type)))->_phenotyper;
         if(!_phenotyper){
             _phenotyper = new TTQuantiFHvalue();
             if(_phenotyper->set(get_parameter("quanti_phenot_logtime"),
@@ -909,7 +909,7 @@ TTQuantiProto::loadFileServices  (FileServices* loader)
     choice = (int)get_parameter_value("quanti_save_geno_value");
     assert(!_genotyper);
     if(choice) {
-        _genotyper = (dynamic_cast<TTQuantiProto*>(_popPtr->getFirstPrototype(_type)))->_genotyper;
+        _genotyper = (dynamic_cast<TTraitQuantiProto*>(_popPtr->getFirstPrototype(_type)))->_genotyper;
         if(!_genotyper){
             _genotyper = new TTQuantiFHvalue();
             if(_genotyper->set(get_parameter("quanti_geno_value_logtime"),
@@ -938,7 +938,7 @@ TTQuantiProto::loadFileServices  (FileServices* loader)
 // loadStatServices
 // ----------------------------------------------------------------------------------------
 void
-TTQuantiProto::loadStatServices  (StatServices* loader)
+TTraitQuantiProto::loadStatServices  (StatServices* loader)
 {
     if(_stats)  delete _stats;
     _stats = new TTQuantiSH(this);
@@ -948,10 +948,10 @@ TTQuantiProto::loadStatServices  (StatServices* loader)
 // ----------------------------------------------------------------------------------------
 // clone
 // ----------------------------------------------------------------------------------------
-TTQuanti*
-TTQuantiProto::hatch ()
+TTraitQuanti*
+TTraitQuantiProto::hatch ()
 {
-    TTQuanti* new_trait = new TTQuanti();
+    TTraitQuanti* new_trait = new TTraitQuanti();
     new_trait->set_from_prototype(this);
     return new_trait;
 }
@@ -961,7 +961,7 @@ TTQuantiProto::hatch ()
 // ----------------------------------------------------------------------------------------
 /** check the mutation probabilities for the mutation model IMM */
 void
-TTQuantiProto::check_mutationValues_IMM()
+TTraitQuantiProto::check_mutationValues_IMM()
 {
     for(unsigned int l = 0; l < _nb_locus; ++l){
         if(abs(_mutationFreq[l][_nb_allele[l]/2]) > 1e-4){
@@ -976,7 +976,7 @@ TTQuantiProto::check_mutationValues_IMM()
 // ----------------------------------------------------------------------------------------
 /** check the allelic effect array for the mutation model IMM */
 void
-TTQuantiProto::check_allelicValues_IMM()
+TTraitQuantiProto::check_allelicValues_IMM()
 {
     
     unsigned int l, a;
@@ -1006,7 +1006,7 @@ TTQuantiProto::check_allelicValues_IMM()
  ** due to round-off errors the array is made symmetrically starting in the middle
  */
 void
-TTQuantiProto::create_regular_spaced_array(double* array, const int& size, double half_range)
+TTraitQuantiProto::create_regular_spaced_array(double* array, const int& size, double half_range)
 {
     assert(array);
     double step = 2.*half_range/(size-1.);    // compute step size
@@ -1044,7 +1044,7 @@ TTQuantiProto::create_regular_spaced_array(double* array, const int& size, doubl
  * Caution: they do not yet sum up to 1!!!
  */
 void
-TTQuantiProto::compute_frequencies(double* array, double* effect_array, const unsigned int& size, const double& sd)
+TTraitQuantiProto::compute_frequencies(double* array, double* effect_array, const unsigned int& size, const double& sd)
 {
     assert(array);
     assert(effect_array);
@@ -1060,10 +1060,10 @@ TTQuantiProto::compute_frequencies(double* array, double* effect_array, const un
 /** read the allelic values and their frequencies from a file (used for mutation model IMM and RMM)
  */
 void
-TTQuantiProto::read_allele_file (string filename)
+TTraitQuantiProto::read_allele_file (string filename)
 {
 #ifdef _DEBUG
-    message("  TTQuantiProto::read_allele_file (%s) ...",filename.c_str());
+    message("  TTraitQuantiProto::read_allele_file (%s) ...",filename.c_str());
 #endif
     
     // read the file
@@ -1199,7 +1199,7 @@ TTQuantiProto::read_allele_file (string filename)
 // ----------------------------------------------------------------------------------------
 /** set the probabilities to mutate to a certain allele */
 void
-TTQuantiProto::set_mutationFreq(const string& trait)
+TTraitQuantiProto::set_mutationFreq(const string& trait)
 {
     if(_mutationFreq) return;      // the file was already set explicitly by the allelic file
     
@@ -1241,7 +1241,7 @@ TTQuantiProto::set_mutationFreq(const string& trait)
 // ----------------------------------------------------------------------------------------
 /** set the probabilities to mutate to a certain allele for locus l*/
 void
-TTQuantiProto::set_mutationFreq_locus(const unsigned int& l, const double& var)
+TTraitQuantiProto::set_mutationFreq_locus(const unsigned int& l, const double& var)
 {
     assert(var>0);
     compute_frequencies(_mutationFreq[l], _allelicValues[l], _nb_allele[l], sqrt(var));
@@ -1261,7 +1261,7 @@ TTQuantiProto::set_mutationFreq_locus(const unsigned int& l, const double& var)
 /** set the initial allelic values for a maximal "polymorphism"
  * _ini_allele_model is set already either to uniform or monomorph*/
 void
-TTQuantiProto::set_initAlleleFreq(const string& trait)
+TTraitQuantiProto::set_initAlleleFreq(const string& trait)
 {
     // explicitly given values overwrite the settings
     if(_initAlleleFreq){
@@ -1317,7 +1317,7 @@ TTQuantiProto::set_initAlleleFreq(const string& trait)
 /** set the initial allelic values for a maximal "polymorphism" of locus l
  * _ini_allele_model is set already either to uniform or monomorph*/
 void
-TTQuantiProto::set_initAlleleFreq_locus(const unsigned int& l, const double& var)
+TTraitQuantiProto::set_initAlleleFreq_locus(const unsigned int& l, const double& var)
 {
     // fill the array with values
     assert(var>0);
@@ -1332,7 +1332,7 @@ TTQuantiProto::set_initAlleleFreq_locus(const unsigned int& l, const double& var
 // set_fitnessFactor
 // ----------------------------------------------------------------------------------------
 void
-TTQuantiProto::set_fitnessFactor(const string& trait, string name, double* &array)
+TTraitQuantiProto::set_fitnessFactor(const string& trait, string name, double* &array)
 {
     Param* p = get_parameter(name+trait);
     if(array) {delete[] array; array=NULL;}
@@ -1373,28 +1373,28 @@ TTQuantiProto::set_fitnessFactor(const string& trait, string name, double* &arra
  * Before calling this function the dominance file has to be read...
  */
 void
-TTQuantiProto::set_dominanceValues(const string& trait)
+TTraitQuantiProto::set_dominanceValues(const string& trait)
 {
     _dominance_mean = get_parameter_value("quanti_dominance_mean"+trait);
     _dominance_sd   = sqrt(get_parameter_value("quanti_dominance_var"+trait));
     
     
     if(_dominanceValues){				// dominance effects are set explicitly by the file (however not all must be set nby the file
-        get_locus_genotype_func_ptr = &TTQuantiProto::get_locus_genotype_dominance_array;
+        get_locus_genotype_func_ptr = &TTraitQuantiProto::get_locus_genotype_dominance_array;
     }
     else if(_dominance_sd){     // dominance effects are set by a distribution (redraw at each replicate!)
         ARRAY::create_3D(_dominanceValues, _nb_locus, _nb_allele, _nb_allele, (double)my_NAN);
-        get_locus_genotype_func_ptr = &TTQuantiProto::get_locus_genotype_dominance_array;
+        get_locus_genotype_func_ptr = &TTraitQuantiProto::get_locus_genotype_dominance_array;
     }
-    else if(_dominance_mean) get_locus_genotype_func_ptr = &TTQuantiProto::get_locus_genotype_dominance_single;
-    else                     get_locus_genotype_func_ptr = &TTQuantiProto::get_locus_genotype_additive;
+    else if(_dominance_mean) get_locus_genotype_func_ptr = &TTraitQuantiProto::get_locus_genotype_dominance_single;
+    else                     get_locus_genotype_func_ptr = &TTraitQuantiProto::get_locus_genotype_additive;
     
     if(get_parameter_value("quanti_dominance_model"+trait)==1){
-        get_genotype_dominace_func_ptr=&TTQuantiProto::get_genotype_dominance_h;
+        get_genotype_dominace_func_ptr=&TTraitQuantiProto::get_genotype_dominance_h;
         if(!get_parameter_isSet("quanti_dominance_mean"+trait))_dominance_mean=0.5; // if not set codominant is 0.5 and not 0
     }
     else{
-        get_genotype_dominace_func_ptr=&TTQuantiProto::get_genotype_dominance_k;
+        get_genotype_dominace_func_ptr=&TTraitQuantiProto::get_genotype_dominance_k;
         if(_selection_model==4) error("Parameter 'quanti_dominance_model' has to be set to 1 when using selection coefficient!");
     }
 }
@@ -1406,14 +1406,14 @@ TTQuantiProto::set_dominanceValues(const string& trait)
  * Before calling this function the epistatic file has to be read...
  */
 void
-TTQuantiProto::set_epistaticValues(const string& trait)
+TTraitQuantiProto::set_epistaticValues(const string& trait)
 {
     _epistatic_sd = sqrt(get_parameter_value("quanti_epistatic_var"+trait));
     if(_phenoTree){                 // epistatic effects are set explicitly by the file
-        get_genotype_func_ptr = &TTQuantiProto::get_genotype_epistatic;
+        get_genotype_func_ptr = &TTraitQuantiProto::get_genotype_epistatic;
     }
     else if(_epistatic_sd){          // epistatic effects set by its variance (reset at each replicate!)
-        get_genotype_func_ptr = &TTQuantiProto::get_genotype_epistatic;
+        get_genotype_func_ptr = &TTraitQuantiProto::get_genotype_epistatic;
         if(!_phenoTree){
             unsigned int nb_allele_max = 0;             // get the max number of alleles
             for(unsigned int l=0; l<_nb_locus; ++l){
@@ -1422,7 +1422,7 @@ TTQuantiProto::set_epistaticValues(const string& trait)
             _phenoTree = new Tree<unsigned char>(_nb_locus, nb_allele_max);
         }
     }
-    else get_genotype_func_ptr = &TTQuantiProto::get_genotype_additive;   // no epistatic effects
+    else get_genotype_func_ptr = &TTraitQuantiProto::get_genotype_additive;   // no epistatic effects
 }
 
 // ----------------------------------------------------------------------------------------
@@ -1439,7 +1439,7 @@ TTQuantiProto::set_epistaticValues(const string& trait)
  * prerequisite of this function are: _mut_model, _nb_allel, _allelicValues(if set by explicitly by the file)
  */
 void
-TTQuantiProto::set_allelicValues(const string& trait)
+TTraitQuantiProto::set_allelicValues(const string& trait)
 {
     // controls
     for(unsigned int l=0; l<_nb_locus; ++l){
@@ -1505,7 +1505,7 @@ TTQuantiProto::set_allelicValues(const string& trait)
 /** set the allelic effects of locus l
  */
 void
-TTQuantiProto::set_allelicValues_locus(const unsigned int& l, const double& var, const string& trait)
+TTraitQuantiProto::set_allelicValues_locus(const unsigned int& l, const double& var, const string& trait)
 {
     if(var<=0) error("Parameter 'quanti_allelic_var%s' must be positive!\n", trait.c_str());
     double sd = sqrt(var);
@@ -1522,7 +1522,7 @@ TTQuantiProto::set_allelicValues_locus(const unsigned int& l, const double& var,
  * 	cols = {"col_locus","col_allele","col_mut_freq","col_ini_freq","col_allelic_value","col_allelic_value"};
  */
 void
-TTQuantiProto::set_allelicValues(TMatrix* mat, const unsigned int& i, const unsigned int& l, const unsigned int& a, unsigned int* cols)
+TTraitQuantiProto::set_allelicValues(TMatrix* mat, const unsigned int& i, const unsigned int& l, const unsigned int& a, unsigned int* cols)
 {
     if(_allelicValues){
         assert(cols[4]!=my_NAN);
@@ -1538,10 +1538,10 @@ TTQuantiProto::set_allelicValues(TMatrix* mat, const unsigned int& i, const unsi
  * not set combinations will be recessive
  */
 void
-TTQuantiProto::read_locus_file(string filename)
+TTraitQuantiProto::read_locus_file(string filename)
 {
 #ifdef _DEBUG
-    message("  TTQuantiProto::read_locus_file (%s) ...",filename.c_str());
+    message("  TTraitQuantiProto::read_locus_file (%s) ...",filename.c_str());
 #endif
     unsigned int i, l, a1, a2;
     bool hasLocus = true;
@@ -1639,10 +1639,10 @@ TTQuantiProto::read_locus_file(string filename)
 // ----------------------------------------------------------------------------------------
 /** read epistatic values from a file */
 void
-TTQuantiProto::read_genome_file(string filename)
+TTraitQuantiProto::read_genome_file(string filename)
 {
 #ifdef _DEBUG
-    message("  TTQuantiProto::read_genome_file (%s) ...",filename.c_str());
+    message("  TTraitQuantiProto::read_genome_file (%s) ...",filename.c_str());
 #endif
     
     try{
@@ -1822,7 +1822,7 @@ TTQuantiProto::read_genome_file(string filename)
 // ----------------------------------------------------------------------------------------
 /** print only the allelic values which were used */
 void
-TTQuantiProto::print_allelic_values(string name)
+TTraitQuantiProto::print_allelic_values(string name)
 {
     if(!_allelicValues) return;  // if not used do not print it
     
@@ -1835,7 +1835,7 @@ TTQuantiProto::print_allelic_values(string name)
     + _popPtr->getReplicateCounter_r()
     + ".txt";
 #ifdef _DEBUG
-    message("TTQuantiProto::print_allelic_values (%s)\n",filename.c_str());
+    message("TTraitQuantiProto::print_allelic_values (%s)\n",filename.c_str());
 #endif
     
     ofstream FILE(filename.c_str());
@@ -1922,7 +1922,7 @@ TTQuantiProto::print_allelic_values(string name)
 // ----------------------------------------------------------------------------------------
 /** print only the dominance values which were used */
 void
-TTQuantiProto::print_dominance_values(string name)
+TTraitQuantiProto::print_dominance_values(string name)
 {
     if(!(_dominanceValues || _fitnessFactor)) return;   // if not used don't make the output
     
@@ -1935,7 +1935,7 @@ TTQuantiProto::print_dominance_values(string name)
     + ".txt";
     
 #ifdef _DEBUG
-    message("TTQuantiProto::print_dominance_values (%s)\n",filename.c_str());
+    message("TTraitQuantiProto::print_dominance_values (%s)\n",filename.c_str());
 #endif
     
     ofstream FILE(filename.c_str());
@@ -2010,7 +2010,7 @@ TTQuantiProto::print_dominance_values(string name)
 // ----------------------------------------------------------------------------------------
 /** print only the epistatic values which were used */
 void
-TTQuantiProto::print_epistatic_values(string name)
+TTraitQuantiProto::print_epistatic_values(string name)
 {
     
     if(!(_phenoTree || _fitnessFactorTree)) return;   // if not used don't make the output
@@ -2024,7 +2024,7 @@ TTQuantiProto::print_epistatic_values(string name)
     + ".txt";
     
 #ifdef _DEBUG
-    message("TTQuantiProto::print_epistatic_values (%s)\n",filename.c_str());
+    message("TTraitQuantiProto::print_epistatic_values (%s)\n",filename.c_str());
 #endif
     
     ofstream FILE(filename.c_str());
@@ -2103,7 +2103,7 @@ TTQuantiProto::print_epistatic_values(string name)
 // operator=
 // ----------------------------------------------------------------------------------------
 void
-TTQuantiProto::print_gentoype(ostream& FILE, unsigned char** seq, const unsigned int& digit)
+TTraitQuantiProto::print_gentoype(ostream& FILE, unsigned char** seq, const unsigned int& digit)
 {
     unsigned int l, a;
     for(l=0; l<_nb_locus; ++l){
@@ -2123,7 +2123,7 @@ TTQuantiProto::print_gentoype(ostream& FILE, unsigned char** seq, const unsigned
  * returns true if this was possible and false if the last possible genotype is reached
  */
 bool
-TTQuantiProto::get_next_gentoype(unsigned char** seq)
+TTraitQuantiProto::get_next_gentoype(unsigned char** seq)
 {
     int l;
     
@@ -2149,7 +2149,7 @@ TTQuantiProto::get_next_gentoype(unsigned char** seq)
 // getAllelicValue
 // ----------------------------------------------------------------------------------------
 double
-TTQuantiProto::getAllelicValue(const unsigned int& l, const unsigned char& i)
+TTraitQuantiProto::getAllelicValue(const unsigned int& l, const unsigned char& i)
 {
     assert(_allelicValues[l][i] != my_NAN);
     return _allelicValues[l][i];
@@ -2159,7 +2159,7 @@ TTQuantiProto::getAllelicValue(const unsigned int& l, const unsigned char& i)
 // getDominanceValue
 // ----------------------------------------------------------------------------------------
 double
-TTQuantiProto::getDominanceValue(const unsigned int& l, const unsigned char& a1, const unsigned char& a2)
+TTraitQuantiProto::getDominanceValue(const unsigned int& l, const unsigned char& a1, const unsigned char& a2)
 {
     double *value;
     assert(a1<a2);
@@ -2176,13 +2176,13 @@ TTQuantiProto::getDominanceValue(const unsigned int& l, const unsigned char& a1,
 // get_locus_genotype
 // ----------------------------------------------------------------------------------------
 double
-TTQuantiProto::get_locus_genotype_additive(const unsigned int& l, const unsigned char& a1, const unsigned char& a2)
+TTraitQuantiProto::get_locus_genotype_additive(const unsigned int& l, const unsigned char& a1, const unsigned char& a2)
 {
     return (getAllelicValue(l, a1) + getAllelicValue(l, a2));
 }
 
 double
-TTQuantiProto::get_locus_genotype_dominance_array(const unsigned int& l, const unsigned char& a1, const unsigned char& a2){
+TTraitQuantiProto::get_locus_genotype_dominance_array(const unsigned int& l, const unsigned char& a1, const unsigned char& a2){
     double a_1 = getAllelicValue(l, a1);    // get effect of allele 1
     double a_2 = getAllelicValue(l, a2);    // get effect of allele 2
     if(a1<a2) return get_genotype_dominance(a_1, a_2, getDominanceValue(l, a1, a2));
@@ -2191,7 +2191,7 @@ TTQuantiProto::get_locus_genotype_dominance_array(const unsigned int& l, const u
 }
 
 double
-TTQuantiProto::get_locus_genotype_dominance_single(const unsigned int& l, const unsigned char& a1, const unsigned char& a2)
+TTraitQuantiProto::get_locus_genotype_dominance_single(const unsigned int& l, const unsigned char& a1, const unsigned char& a2)
 {
     return get_genotype_dominance(getAllelicValue(l, a1), getAllelicValue(l, a2), _dominance_mean);
 }
@@ -2205,7 +2205,7 @@ TTQuantiProto::get_locus_genotype_dominance_single(const unsigned int& l, const 
  * k > 1:   overdominance
  */
 double
-TTQuantiProto::get_genotype_dominance_h(double a1, double a2, double h)
+TTraitQuantiProto::get_genotype_dominance_h(double a1, double a2, double h)
 {
     if(a1<a2) return (1-h)*a1 + h*a2;
     return (1-h)*a2 + h*a1;
@@ -2219,7 +2219,7 @@ TTQuantiProto::get_genotype_dominance_h(double a1, double a2, double h)
  * h > 1:   overdominance
  */
 double
-TTQuantiProto::get_genotype_dominance_k(double a1, double a2, double k)
+TTraitQuantiProto::get_genotype_dominance_k(double a1, double a2, double k)
 {
     return a1 + a2 + k*abs(a2-a1);
 }
@@ -2228,7 +2228,7 @@ TTQuantiProto::get_genotype_dominance_k(double a1, double a2, double k)
 // get_genotype
 // ----------------------------------------------------------------------------------------
 double
-TTQuantiProto::get_genotype_additive(unsigned char** seq)
+TTraitQuantiProto::get_genotype_additive(unsigned char** seq)
 {
     double sum=0;
     for(unsigned int l=0; l<_nb_locus; ++l){
@@ -2238,7 +2238,7 @@ TTQuantiProto::get_genotype_additive(unsigned char** seq)
 }
 
 double
-TTQuantiProto::get_genotype_epistatic(unsigned char** seq)
+TTraitQuantiProto::get_genotype_epistatic(unsigned char** seq)
 {
     double val  = _phenoTree->get_value(seq);
     if(val != my_NAN) return val;
@@ -2255,7 +2255,7 @@ TTQuantiProto::get_genotype_epistatic(unsigned char** seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified explicitly for each genome */
 double
-TTQuantiProto::get_fitnessFactor_genome(unsigned char** seq)
+TTraitQuantiProto::get_fitnessFactor_genome(unsigned char** seq)
 {
     double val  = _fitnessFactorTree->get_value(seq);
     if(val != my_NAN) return val;
@@ -2270,7 +2270,7 @@ TTQuantiProto::get_fitnessFactor_genome(unsigned char** seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified at the locus level */
 double
-TTQuantiProto::get_fitnessFactor_locus(unsigned char** seq)
+TTraitQuantiProto::get_fitnessFactor_locus(unsigned char** seq)
 {
     assert(_fitnessFactor);
     
@@ -2298,7 +2298,7 @@ TTQuantiProto::get_fitnessFactor_locus(unsigned char** seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specifed globally for heterozygote/homozygote loci */
 double
-TTQuantiProto::get_fitnessFactor_global(unsigned char** seq)
+TTraitQuantiProto::get_fitnessFactor_global(unsigned char** seq)
 {
     double product=1;
     for(unsigned int l=0; l<_nb_locus; ++l){
@@ -2315,7 +2315,7 @@ TTQuantiProto::get_fitnessFactor_global(unsigned char** seq)
  * Noe: _locusFreqs have to be recomputed at each generation and patch
  */
 double
-TTQuantiProto::get_fitnessFactor_freqDepend(unsigned char** seq)
+TTraitQuantiProto::get_fitnessFactor_freqDepend(unsigned char** seq)
 {
     assert(_locusFreqs);
     

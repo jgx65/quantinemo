@@ -147,11 +147,11 @@ TReplicate::generate_traits(map<string, string>& inputParams)
         case 0:
             break;
         case 1:
-            add_trait_template(new TTQuantiProto());
+            add_trait_template(new TTraitQuantiProto());
             break;
         default:
             for (unsigned int i = 0; i < nb; ++i) {
-                add_trait_template(new TTQuantiProto(i + 1));
+                add_trait_template(new TTraitQuantiProto(i + 1));
             }
             break;
     }
@@ -162,11 +162,11 @@ TReplicate::generate_traits(map<string, string>& inputParams)
         case 0:
             break;
         case 1:
-            add_trait_template(new TTNeutralProto());
+            add_trait_template(new TTraitNeutralProto());
             break;
         default:
             for (unsigned int i = 0; i < nb; ++i) {
-                add_trait_template(new TTNeutralProto(i + 1));
+                add_trait_template(new TTraitNeutralProto(i + 1));
             }
             break;
     }
@@ -484,10 +484,10 @@ TReplicate::print_help(ostream& os, unsigned int wide1, unsigned int wide2,
     TMetapop pop(this,1);
     pop.get_paramset()->print_help(os, wide1, wide2, fill, importance, arg);
     
-    TTQuantiProto  quanti;
+    TTraitQuantiProto  quanti;
     quanti.get_paramset()->print_help(os, wide1, wide2, fill, importance, arg);
     
-    TTNeutralProto  ntrl;
+    TTraitNeutralProto  ntrl;
     ntrl.get_paramset()->print_help(os, wide1, wide2, fill, importance, arg);
     
     LCE_Breed breed(1);

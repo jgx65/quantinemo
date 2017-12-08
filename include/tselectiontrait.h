@@ -38,7 +38,7 @@
 
 
 class TSelection;
-class TTQuantiProto;
+class TTraitQuantiProto;
 class TPatch;
 class TIndividual;
 
@@ -119,7 +119,7 @@ public:
         }
     }
     
-    TTQuantiProto* _pQuantiProto;  // pointer to the corresponding quantitative trait (do not delete)
+    TTraitQuantiProto* _pQuantiProto;  // pointer to the corresponding quantitative trait (do not delete)
     
     void init(TSelection* s, const int& trait);
     virtual void init() = 0;
@@ -174,7 +174,7 @@ public:
     // getter
     int     get_Ve_model    ( )             const  {return _Ve_model;}
     bool    get_independent ( )             const  {return _independent;}
-    TTQuantiProto* get_pQuantiProto()       const  {return _pQuantiProto;}
+    TTraitQuantiProto* get_pQuantiProto()       const  {return _pQuantiProto;}
     
     void setPhenotype_funcPointer(bool corr);
     

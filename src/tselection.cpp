@@ -444,8 +444,8 @@ TSelection::init(TMetapop* popPtr)
 	unsigned int selKind = 0;                 // bit: 1: neutral, 2: stabilizing, 4: directional
 	for(unsigned int t = 0; t < _vTraitsSize; ++t) {
 		// find the kind of selection of the trait
-		assert((dynamic_cast <TTQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t]))));
-		switch((dynamic_cast <TTQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t])))->get_selection_model()){
+		assert((dynamic_cast <TTraitQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t]))));
+		switch((dynamic_cast <TTraitQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t])))->get_selection_model()){
 			case 0: // neutral:     1. digit
 				_selTrait[t] = new TSelectionNeutral(this, t);
 				selKind |= 1;
@@ -566,10 +566,10 @@ TSelection::init2(TMetapop* popPtr)
 	// create the TSelectionTrait objects
 	_selTrait = new TSelectionTrait*[_vTraitsSize];
 	string trait;
-	TTQuantiProto* pQuanti;
+	TTraitQuantiProto* pQuanti;
 	for(unsigned int t = 0; t < _vTraitsSize; ++t) {
-		assert((dynamic_cast <TTQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t]))));
-		pQuanti = (dynamic_cast <TTQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t])));
+		assert((dynamic_cast <TTraitQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t]))));
+		pQuanti = (dynamic_cast <TTraitQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t])));
 		switch(pQuanti->get_selection_model()){          // find the kind of selection of the trait
 			case 0: _selTrait[t] = new TSelectionNeutral(this, t);         	break;  // neutral:           1. digit
 			case 1: _selTrait[t] = new TSelectionStabilizing(this, t);      break;  // stabilizing:       2. digits
@@ -586,8 +586,8 @@ TSelection::init2(TMetapop* popPtr)
 
 	// set the selection pressure (only now since several traits may be under the same selection preessure, and this step has to be executed only onces)
 	for(unsigned int t = 0; t < _vTraitsSize; ++t) {
-		assert((dynamic_cast <TTQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t]))));
-		pQuanti = (dynamic_cast <TTQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t])));
+		assert((dynamic_cast <TTraitQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t]))));
+		pQuanti = (dynamic_cast <TTraitQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t])));
 		trait = pQuanti->get_trait_indexStr_();
 
 		switch(pQuanti->get_selection_model()){          // find the kind of selection of the trait
@@ -633,11 +633,11 @@ void
 TSelection::set_frequency_dependend_selection()
 {
 	string trait;
-	TTQuantiProto* pQuanti;
-    vector<TTQuantiProto*> tempTrait;
+	TTraitQuantiProto* pQuanti;
+    vector<TTraitQuantiProto*> tempTrait;
 	for(unsigned int t = 0; t < _vTraitsSize; ++t) {
-		assert((dynamic_cast <TTQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t]))));
-		pQuanti = (dynamic_cast <TTQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t])));
+		assert((dynamic_cast <TTraitQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t]))));
+		pQuanti = (dynamic_cast <TTraitQuantiProto*> (&_popPtr->getTraitPrototype(_vTraits[t])));
         if(pQuanti->get_fitnessFactor_freqDepend()) tempTrait.push_back(pQuanti);
 	}
     _selTrait_fitnessDependent=NULL;

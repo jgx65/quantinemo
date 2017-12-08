@@ -38,7 +38,7 @@
 // ----------------------------------------------------------------------------------------
 // cstor
 // ----------------------------------------------------------------------------------------
-TTNeutralProto::TTNeutralProto() :
+TTraitNeutralProto::TTraitNeutralProto() :
 		_stats(0), _writer(0)
 {
 	_type = "ntrl";
@@ -48,7 +48,7 @@ TTNeutralProto::TTNeutralProto() :
 // ----------------------------------------------------------------------------------------
 // cstor
 // ----------------------------------------------------------------------------------------
-TTNeutralProto::TTNeutralProto(int i) :
+TTraitNeutralProto::TTraitNeutralProto(int i) :
 		_stats(0), _writer(0)
 {
 	_trait_index = i;
@@ -59,7 +59,7 @@ TTNeutralProto::TTNeutralProto(int i) :
 // ----------------------------------------------------------------------------------------
 // cstor
 // ----------------------------------------------------------------------------------------
-TTNeutralProto::TTNeutralProto(const TTNeutralProto& T) :
+TTraitNeutralProto::TTraitNeutralProto(const TTraitNeutralProto& T) :
 		_stats(0), _writer(0)
 {
 	_copyTraitPrototypeParameters(T);
@@ -69,7 +69,7 @@ TTNeutralProto::TTNeutralProto(const TTNeutralProto& T) :
 // ----------------------------------------------------------------------------------------
 // ini_paramset
 // ----------------------------------------------------------------------------------------
-void TTNeutralProto::ini_paramset()
+void TTraitNeutralProto::ini_paramset()
 {
 	TTraitProto::ini_paramset();
 	string trait = get_trait_indexStr_();
@@ -82,7 +82,7 @@ void TTNeutralProto::ini_paramset()
 // ----------------------------------------------------------------------------------------
 // dstor
 // ----------------------------------------------------------------------------------------
-TTNeutralProto::~TTNeutralProto()
+TTraitNeutralProto::~TTraitNeutralProto()
 {
 	if (_stats) delete _stats;
 	if (get_trait_index() <= 1) {
@@ -96,7 +96,7 @@ TTNeutralProto::~TTNeutralProto()
 // ----------------------------------------------------------------------------------------
 // init
 // ----------------------------------------------------------------------------------------
-void TTNeutralProto::init(TMetapop* pMetapop)
+void TTraitNeutralProto::init(TMetapop* pMetapop)
 {
 	mut_model_t mutation_models[2] = { KAM, SSM };
 	ini_base(pMetapop, mutation_models, 2);
@@ -124,7 +124,7 @@ void TTNeutralProto::init(TMetapop* pMetapop)
 // temporal_change
 // ----------------------------------------------------------------------------------------
 /** parameters which may change over time */
-void TTNeutralProto::temporal_change(const unsigned int& gen)
+void TTraitNeutralProto::temporal_change(const unsigned int& gen)
 {
 	map<string, Param*>* pParam = _paramSet->getTemporalParams(gen);
 
@@ -151,7 +151,7 @@ void TTNeutralProto::temporal_change(const unsigned int& gen)
 // ----------------------------------------------------------------------------------------
 // get_info
 // ----------------------------------------------------------------------------------------
-string TTNeutralProto::get_info()
+string TTraitNeutralProto::get_info()
 {
 	string text;
 
@@ -165,13 +165,13 @@ string TTNeutralProto::get_info()
 // ----------------------------------------------------------------------------------------
 // loadFileServices
 // ----------------------------------------------------------------------------------------
-void TTNeutralProto::loadFileServices(FileServices* loader)
+void TTraitNeutralProto::loadFileServices(FileServices* loader)
 {
 	//writer
 	unsigned int choice = (unsigned int) get_parameter_value("ntrl_save_genotype");
     assert(!_writer);
     if(choice) {
-        _writer = (dynamic_cast<TTNeutralProto*>(_popPtr->getFirstPrototype(_type)))->_writer;
+        _writer = (dynamic_cast<TTraitNeutralProto*>(_popPtr->getFirstPrototype(_type)))->_writer;
         if(!_writer){
             _writer = new TTNeutralFH();
 			if (_writer->set(get_parameter("ntrl_genot_logtime"),
@@ -195,7 +195,7 @@ void TTNeutralProto::loadFileServices(FileServices* loader)
 // ----------------------------------------------------------------------------------------
 // loadStatServices
 // ----------------------------------------------------------------------------------------
-void TTNeutralProto::loadStatServices(StatServices* loader)
+void TTraitNeutralProto::loadStatServices(StatServices* loader)
 {
 	//allocate the stat handler
 	if (_stats) delete _stats;
@@ -206,17 +206,17 @@ void TTNeutralProto::loadStatServices(StatServices* loader)
 // ----------------------------------------------------------------------------------------
 // clone
 // ----------------------------------------------------------------------------------------
-TTNeutral* TTNeutralProto::hatch()
+TTraitNeutral* TTraitNeutralProto::hatch()
 {
-	TTNeutral* new_trait = new TTNeutral();
+	TTraitNeutral* new_trait = new TTraitNeutral();
 	new_trait->set_from_prototype(this);
 	return new_trait;
 }
 //----------------------------------------------------------------------------------------
 // operator=
 // ----------------------------------------------------------------------------------------
-TTNeutral&
-TTNeutral::operator=(const TTrait& T)
+TTraitNeutral&
+TTraitNeutral::operator=(const TTrait& T)
 {
 	error("");
 	return *this;
@@ -226,7 +226,7 @@ TTNeutral::operator=(const TTrait& T)
 // operator==
 // ----------------------------------------------------------------------------------------
 void*
-TTNeutral::get_allele(const unsigned int& loc, const unsigned int& all) const
+TTraitNeutral::get_allele(const unsigned int& loc, const unsigned int& all) const
 {
 	return (!(loc < pProto->_nb_locus) || !(all < ploidy) ?
 			0 : (void*) &sequence[loc][all]);
@@ -235,11 +235,11 @@ TTNeutral::get_allele(const unsigned int& loc, const unsigned int& all) const
 //----------------------------------------------------------------------------------------
 // operator==
 // ----------------------------------------------------------------------------------------
-bool TTNeutral::operator==(const TTrait& T)
+bool TTraitNeutral::operator==(const TTrait& T)
 {
 	if (*pTraitProto != *T.pTraitProto) return false;
 
-	const TTNeutral& TN = dynamic_cast<const TTNeutral&>(T);
+	const TTraitNeutral& TN = dynamic_cast<const TTraitNeutral&>(T);
 
 	if (this != &TN || *pProto != *TN.pProto) return false;
 
@@ -249,7 +249,7 @@ bool TTNeutral::operator==(const TTrait& T)
 //----------------------------------------------------------------------------------------
 // operator!=
 // ----------------------------------------------------------------------------------------
-bool TTNeutral::operator!=(const TTrait& T)
+bool TTraitNeutral::operator!=(const TTrait& T)
 {
 	if (!((*this) == T)) return true;
 	else return false;
@@ -258,23 +258,23 @@ bool TTNeutral::operator!=(const TTrait& T)
 // ----------------------------------------------------------------------------------------
 // Destructor
 // ----------------------------------------------------------------------------------------
-TTNeutral::~TTNeutral()
+TTraitNeutral::~TTraitNeutral()
 {
 }
 
 // ----------------------------------------------------------------------------------------
 // set_from_prototype (used during hatching)
 // ----------------------------------------------------------------------------------------
-void TTNeutral::set_from_prototype(TTraitProto* T)
+void TTraitNeutral::set_from_prototype(TTraitProto* T)
 {
-	pProto = dynamic_cast<TTNeutralProto*>(T);
+	pProto = dynamic_cast<TTraitNeutralProto*>(T);
 	pTraitProto = T;
 }
 
 // ----------------------------------------------------------------------------------------
 // show_up
 // ----------------------------------------------------------------------------------------
-void TTNeutral::show_up()
+void TTraitNeutral::show_up()
 {
 	message(
 			"\n  Trait's type: ntrl\n\

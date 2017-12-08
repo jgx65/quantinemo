@@ -531,8 +531,8 @@ bool LCE_Breed::init(TMetapop* popPtr)
             vector<int> vTraits = _popPtr->getTraitIndex("quanti");   // get all quanti traits
             vector<int>::iterator curTrait, endTrait = vTraits.end();
             for(curTrait = vTraits.begin(); curTrait!=endTrait; ++curTrait){   // for each quanti trait
-                assert((dynamic_cast<TTQuantiProto*>(&_popPtr->getTraitPrototype(*curTrait))));
-                if((dynamic_cast<TTQuantiProto*>(&_popPtr->getTraitPrototype(*curTrait)))->fitnessFactor_used()) break;
+                assert((dynamic_cast<TTraitQuantiProto*>(&_popPtr->getTraitPrototype(*curTrait))));
+                if((dynamic_cast<TTraitQuantiProto*>(&_popPtr->getTraitPrototype(*curTrait)))->fitnessFactor_used()) break;
             }
             if(curTrait==endTrait) _fitness_factor_zero_isLethal = false; // no fitness factors set
         }

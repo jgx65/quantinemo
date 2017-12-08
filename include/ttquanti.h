@@ -40,36 +40,36 @@
 #include "tree.h"
 
 class TTQuantiFHvalue;
-class TTQuantiProto;
+class TTraitQuantiProto;
 
 /******************************************************************************/
 /******************************************************************************/
 /**Quantitative trait coded on discrete allelic values.
  * Alleles coded on \<char\>, max number of alleles per locus is 256.*/
-class TTQuanti : public TTrait{
-	friend class TTQuantiProto; // we allow to access these parameters from TTQuantiProto directly
+class TTraitQuanti : public TTrait{
+	friend class TTraitQuantiProto; // we allow to access these parameters from TTraitQuantiProto directly
 private:
 	double _genotype;             // this is the genotype (Vg)
 	double _phenotype;            // this is the phenotype (Vp = Vg + Ve)
 	double _fitness;              // this is the fitness component
 	double _fitness_factor;       // by default 1
 
-	TTQuantiProto* pProto;
+	TTraitQuantiProto* pProto;
 
 public:
 
-	TTQuanti (): _phenotype(my_NAN), _fitness(my_NAN), _fitness_factor(my_NAN), pProto(0){}
+	TTraitQuanti (): _phenotype(my_NAN), _fitness(my_NAN), _fitness_factor(my_NAN), pProto(0){}
 
-    TTQuanti(const TTQuanti& T);
+    TTraitQuanti(const TTraitQuanti& T);
     
-    virtual ~TTQuanti ();
+    virtual ~TTraitQuanti ();
 
 	virtual void set_from_prototype(TTraitProto* T);
 
 	///@}
 	///@name Implementations
 	///@{
-	virtual TTQuanti& operator= (const TTrait& T);
+	virtual TTraitQuanti& operator= (const TTrait& T);
 	virtual bool    operator== (const TTrait& T);
 	virtual bool    operator!= (const TTrait& T);
 	virtual void    reset                ();
@@ -92,7 +92,7 @@ public:
 
 
 	virtual void    show_up              ();
-	virtual TTQuanti*  clone     ()                      {return new TTQuanti(*this);}
+	virtual TTraitQuanti*  clone     ()                      {return new TTraitQuanti(*this);}
 
 	///@}
 };
@@ -106,8 +106,8 @@ class TTQuantiFHvalue;
 /******************************************************************************/
 /**Prototype class for the TTQuanti trait class.
  **/
-class TTQuantiProto : public TTraitProto {
-	friend class TTQuanti; // we allow to access these parameters from TTQuanti directly
+class TTraitQuantiProto : public TTraitProto {
+	friend class TTraitQuanti; // we allow to access these parameters from TTQuanti directly
 private:
 	int     _output;              //0: nothing, 1: allelic values
 //	int     _Ve_model;            // environmental model: 0: Ve directly, 1: h2; 2: h2 at every gen; 3: H2; 4: H" at every gen
@@ -143,12 +143,12 @@ public:
 	double               _epistatic_sd;
 
 	// determination of the genotype
-	double  (TTQuantiProto::* get_locus_genotype_func_ptr)(const unsigned int& l, const unsigned char& a1, const unsigned char& a2);
+	double  (TTraitQuantiProto::* get_locus_genotype_func_ptr)(const unsigned int& l, const unsigned char& a1, const unsigned char& a2);
 	double  get_locus_genotype_additive (const unsigned int& l, const unsigned char& a1, const unsigned char& a2);
 	double  get_locus_genotype_dominance_single (const unsigned int& l, const unsigned char& a1, const unsigned char& a2);
 	double  get_locus_genotype_dominance_array (const unsigned int& l, const unsigned char& a1, const unsigned char& a2);
 
-	double (TTQuantiProto::* get_genotype_dominace_func_ptr)(double a1, double a2, double dom);
+	double (TTraitQuantiProto::* get_genotype_dominace_func_ptr)(double a1, double a2, double dom);
 	double get_genotype_dominance(double a1, double a2, double h){
 		return (this->*get_genotype_dominace_func_ptr)(a1, a2, h);
 	}
@@ -157,7 +157,7 @@ public:
 
 	double get_dominance_mean(){return _dominance_mean;}
 
-	double  (TTQuantiProto::* get_genotype_func_ptr)(unsigned char** seq);
+	double  (TTraitQuantiProto::* get_genotype_func_ptr)(unsigned char** seq);
 	double  get_genotype_additive (unsigned char** seq);
 	double  get_genotype_epistatic (unsigned char** seq);
 
@@ -166,8 +166,8 @@ public:
 	double*** get_fitnessFactor_array()  {return _fitnessFactor;}
 	bool    fitnessFactor_used() {return (get_fitnessFactor_func_ptr != NULL || get_fitnessFactor2_func_ptr != NULL);}
 	bool    fitnessFactor_freqDep_used() {return (get_fitnessFactor2_func_ptr != NULL);}
-	double  (TTQuantiProto::* get_fitnessFactor_func_ptr)(unsigned char** seq);
-	double  (TTQuantiProto::* get_fitnessFactor2_func_ptr)(unsigned char** seq);
+	double  (TTraitQuantiProto::* get_fitnessFactor_func_ptr)(unsigned char** seq);
+	double  (TTraitQuantiProto::* get_fitnessFactor2_func_ptr)(unsigned char** seq);
 	double  get_fitnessFactor_genome(unsigned char** seq);
 	double  get_fitnessFactor_locus(unsigned char** seq);
 	double  get_fitnessFactor_global(unsigned char** seq);
@@ -184,11 +184,11 @@ public:
 
 public:
 
-	TTQuantiProto ( );
-	TTQuantiProto (int i);
-	TTQuantiProto(const TTQuantiProto& T);
+	TTraitQuantiProto ( );
+	TTraitQuantiProto (int i);
+	TTraitQuantiProto(const TTraitQuantiProto& T);
 
-	~TTQuantiProto ( );
+	~TTraitQuantiProto ( );
 
 	//implementation of TTraitProto:
 	virtual void                     init (TMetapop* pMetapop);
@@ -200,9 +200,9 @@ public:
 	void                              delete_fitnessFactor();
     void                              delete_locusFreqs();
 
-	virtual TTQuanti*          hatch ();
+	virtual TTraitQuanti*          hatch ();
 
-	virtual TTQuantiProto*      clone () {return new TTQuantiProto(*this);}
+	virtual TTraitQuantiProto*      clone () {return new TTraitQuantiProto(*this);}
 
 	//implementation of SimComponent:
 	virtual void loadFileServices ( FileServices* loader );
@@ -323,7 +323,7 @@ private:
 
 public:
 
-	TTQuantiSH (TTQuantiProto* TT) :  _varA(0), _varA2(0),/* _h2(0),*/ _meanG(0), _varG(0),
+	TTQuantiSH (TTraitQuantiProto* TT) :  _varA(0), _varA2(0),/* _h2(0),*/ _meanG(0), _varG(0),
 	_meanP(0), _varP(0), _meanW(0), _varW(0), _qst_matrix(0), _qstF_matrix(0)
 {
 		set(TT);

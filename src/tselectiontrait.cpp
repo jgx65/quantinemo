@@ -58,7 +58,7 @@ TSelectionTrait::init(TSelection* s, const int& trait)
 	_popPtr       = _pSel->get_popPtr();
 	_quantiIndex  = trait;
 	_traitIndex   = _pSel->get_vTraits(trait);
-	_pQuantiProto = dynamic_cast <TTQuantiProto*> (&_popPtr->getTraitPrototype(_traitIndex));
+	_pQuantiProto = dynamic_cast <TTraitQuantiProto*> (&_popPtr->getTraitPrototype(_traitIndex));
 
 	// get parameters from quantiProto
 	_Ve_prop      = _pQuantiProto->get_parameter("quanti_environmental_proportion"+_pQuantiProto->get_trait_indexStr_())->get_value();
