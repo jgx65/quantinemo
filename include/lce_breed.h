@@ -323,10 +323,10 @@ public:
 };
 
 
-class LCE_Breed_coal: public LCE_Breed {
+class LCE_BreedCoalescence: public LCE_Breed {
 public:
-	LCE_Breed_coal(int rank = my_NAN) : LCE_Breed(rank){};
-	~LCE_Breed_coal(){}
+	LCE_BreedCoalescence(int rank = my_NAN) : LCE_Breed(rank){};
+	~LCE_BreedCoalescence(){}
 	void execute();
 	bool init(TMetapop* popPtr);
 	bool breed_coal();

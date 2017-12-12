@@ -198,7 +198,7 @@ void
 TReplicate::generate_LCE_coalescence()
 {
     assert(_LCE_Templates.empty());
-    add_LCE_template(new LCE_Breed_coal(1));
+    add_LCE_template(new LCE_BreedCoalescence(1));
     add_LCE_template(new LCE_Regulation(OFFSx, 2));
     add_LCE_template(new LCE_DisperseCoalescence(3));
     add_LCE_template(new LCE_store_popSizes(4));

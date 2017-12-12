@@ -1319,7 +1319,7 @@ LCE_Breed::reset_sex_after_phenotype(age_idx AGE)
 // ----------------------------------------------------------------------------------------
 // LCE_Breed::execute
 // ----------------------------------------------------------------------------------------
-void LCE_Breed_coal::execute () {
+void LCE_BreedCoalescence::execute () {
 #ifdef _DEBUG
     message("  LCE_Breed_Coal ");
 #endif
@@ -1337,7 +1337,7 @@ void LCE_Breed_coal::execute () {
 // ----------------------------------------------------------------------------------------
 // LCE_Breed::init
 // ----------------------------------------------------------------------------------------
-bool LCE_Breed_coal::init(TMetapop* popPtr)
+bool LCE_BreedCoalescence::init(TMetapop* popPtr)
 {
     LCE::init(popPtr);
     
@@ -1353,7 +1353,7 @@ bool LCE_Breed_coal::init(TMetapop* popPtr)
 // ----------------------------------------------------------------------------------------
 // LCE_Breed::breed_coal
 // ----------------------------------------------------------------------------------------
-bool LCE_Breed_coal::breed_coal()
+bool LCE_BreedCoalescence::breed_coal()
 {
 #ifdef _DEBUG
     message("(breed_coal) ... ");
