@@ -262,8 +262,8 @@ TGenomeProto::~TGenomeProto()
 #endif
     
 	// delete each locus position
-	map<string, vector<TLocusPos*> >::iterator curType, endType;
-	vector<TLocusPos*>::iterator curPos, endPos;
+	map<string, vector<TLocusPosition*> >::iterator curType, endType;
+	vector<TLocusPosition*>::iterator curPos, endPos;
 	
     if(_locus_pos.find("global")==_locus_pos.end()){    // per trait defined map
         for (curType = _locus_pos.begin(), endType = _locus_pos.end();
@@ -324,8 +324,8 @@ void TGenomeProto::print_genome()
     //second way to specify it
     FILE << "\n#Per trait defined genetic map:";
 	// print the genetic map of each trait on a separate line
-    map<string, vector<TLocusPos*> >::iterator curTrait = _locus_pos.begin();
-    map<string, vector<TLocusPos*> >::iterator endTrait = _locus_pos.end();
+    map<string, vector<TLocusPosition*> >::iterator curTrait = _locus_pos.begin();
+    map<string, vector<TLocusPosition*> >::iterator endTrait = _locus_pos.end();
 	for (curTrait = _locus_pos.begin(), endTrait = _locus_pos.end(); curTrait != endTrait; ++curTrait) {
 		print_genome_trait(FILE, curTrait->first);
 	}
@@ -365,7 +365,7 @@ void TGenomeProto::print_genome_tot(ofstream& FILE)
 string TGenomeProto::print_genome_tot_sex(sex_t SEX)
 {
 	TLocus *curLocus;
-	TLocusPos* curLocPos = NULL;
+	TLocusPosition* curLocPos = NULL;
 	unsigned int curChrom, lastChrom = my_NAN;
 	ostringstream out;
 	out << "{{";
@@ -416,7 +416,7 @@ void TGenomeProto::print_genome_trait(ofstream& FILE, const string& type)
 string TGenomeProto::print_genome_trait_sex(sex_t SEX, const string& type)
 {
 	TLocus *curLocus;
-	TLocusPos* curLocPos = NULL;
+	TLocusPosition* curLocPos = NULL;
 	unsigned int curChrom, lastChrom = my_NAN;
 	ostringstream out;
 	out << "{{";
@@ -450,7 +450,7 @@ void TGenomeProto::print_locus_index_trait(ofstream& out, TTraitProto* pTrait)
 {
     // generate a temp map for the conversion of totID to traitID
     string type = pTrait->get_type();
-    TLocusPos* curPos = _locus_tot[0]->get_locusPosition();
+    TLocusPosition* curPos = _locus_tot[0]->get_locusPosition();
     bool firstI = true;
     map<unsigned int, unsigned int> tot2trait;      //tot2trait[totID]=traitID
     for(unsigned int traitID=0, l=0; l<_nb_locus_linked; ++l){
@@ -693,7 +693,7 @@ void TGenomeProto::create_pleiotrophy()
     
 	// check if there are pleiotropic loci
 	vector<unsigned int> locus_pleiotropic;	// temp vector since we do not know the size yet
-	TLocusPos* curPos = NULL;
+	TLocusPosition* curPos = NULL;
 	unsigned int l;
 	for (l = 0; l < _nb_locus_linked; ++l) {
 		if (curPos == _locus_tot[l]->get_locusPosition()) continue; // it is a pleiotropic locus: continue
@@ -1476,14 +1476,14 @@ void TGenomeProto::create_locus_tot_perTrait()
 	_nb_locus_linked = 0;            // reset the number of linked loci
     
 	// create some temp containers
-	map<TLocusPos, vector<TLocus*> > locus_tot_trait; // used to align the different trait types
+	map<TLocusPosition, vector<TLocus*> > locus_tot_trait; // used to align the different trait types
 	vector<unsigned int> locus_pos_used; // container to check if all locus positions are used
 	map<string, map<unsigned int, vector<TLocus*> > >::iterator curType, endType; // _locus_vector[type][locusID]
 	map<unsigned int, vector<TLocus*> >::iterator curLocIdx, endLocIdx;
 	vector<TLocus*>::iterator curLocus, endLocus;
-	map<string, vector<TLocusPos*> >::iterator curGenomeMap;
-	vector<TLocusPos*>* curGenome = &(_locus_pos.find("global")->second);  // get the current genome;
-	TLocusPos* curLocusPos;
+	map<string, vector<TLocusPosition*> >::iterator curGenomeMap;
+	vector<TLocusPosition*>* curGenome = &(_locus_pos.find("global")->second);  // get the current genome;
+	TLocusPosition* curLocusPos;
 	unsigned int l, posIdx;
 	string type;                     // ntrl/quanti
     
@@ -1544,7 +1544,7 @@ void TGenomeProto::create_locus_tot_perTrait()
 	_nb_locus_linked = _nb_locus_tot - _nb_locus_unlinked; // set the number of linked loci
     
 	// merge the different types of traits and create the final array _locus_tot
-	map<TLocusPos, vector<TLocus*> >::iterator curPos = locus_tot_trait.begin(),
+	map<TLocusPosition, vector<TLocus*> >::iterator curPos = locus_tot_trait.begin(),
     endPos = locus_tot_trait.end();
 	vector<TLocus*>::iterator curLoc, endLoc;
 	unsigned int curChrom = curPos->first.chrom; // temp vector to count the number of cumulative loci per chromosome
@@ -1596,16 +1596,16 @@ void TGenomeProto::create_locus_tot_global()
 	_nb_locus_linked = 0;            // reset the number of linked loci
     
 	// create some temp containers
-	map<TLocusPos, vector<TLocus*> > locus_tot_trait; // used to align the different trait types
+	map<TLocusPosition, vector<TLocus*> > locus_tot_trait; // used to align the different trait types
 	vector<unsigned int> locus_pos_used; // container to check if all locus positions are used and to evaluate if pleiotropic loci are present
     
 	map<string, map<unsigned int, vector<TLocus*> > >::iterator curType, endType;
 	map<unsigned int, vector<TLocus*> >::iterator curLocIdx, endLocIdx;
 	vector<TLocus*>::iterator curLocus, endLocus;
-	map<string, vector<TLocusPos*> >::iterator curGenomeMap;
-	vector<TLocusPos*>* curGenome = &(_locus_pos.find("global")->second);  // get the current genome;
+	map<string, vector<TLocusPosition*> >::iterator curGenomeMap;
+	vector<TLocusPosition*>* curGenome = &(_locus_pos.find("global")->second);  // get the current genome;
     locus_pos_used.assign(curGenome->size(), 0);
-	TLocusPos* curLocusPos;
+	TLocusPosition* curLocusPos;
 	unsigned int l, posIdx;
     
 	curType = _locus_vector.begin();
@@ -1667,8 +1667,8 @@ void TGenomeProto::create_locus_tot_global()
     _nb_locus_linked = _nb_locus_tot - _nb_locus_unlinked; // set the number of linked loci
     
 	// merge the different types of traits and create the final array _locus_tot
-	map<TLocusPos, vector<TLocus*> >::iterator curPos = locus_tot_trait.begin();
-    map<TLocusPos, vector<TLocus*> >::iterator endPos = locus_tot_trait.end();
+	map<TLocusPosition, vector<TLocus*> >::iterator curPos = locus_tot_trait.begin();
+    map<TLocusPosition, vector<TLocus*> >::iterator endPos = locus_tot_trait.end();
 	vector<TLocus*>::iterator curLoc, endLoc;
 	unsigned int curChrom = curPos->first.chrom; // temp vector to count the number of cumulative loci per chromosome
 	vector<unsigned int> nb_locus_per_chrom;
@@ -1773,7 +1773,7 @@ void TGenomeProto::add_locus_position(const string& t, // type of trait (quanti/
                                       const unsigned int& l)   // locus index
 {
 	if (l < _locus_pos[t].size()) { // if this locus position is already present, then this means that the second sex is set
-		TLocusPos* curPos = _locus_pos[t][l];
+		TLocusPosition* curPos = _locus_pos[t][l];
 		if (curPos->chrom != c) error("Genome (%s): the sex specific genome does not match each other!\n", t.c_str()); // wrong chromosome
 		if (l && _locus_pos[t][l - 1]->chrom == c // locus pos must increase within a chromosome
             && _locus_pos[t][l - 1]->pos[s] > d)
@@ -1784,9 +1784,9 @@ void TGenomeProto::add_locus_position(const string& t, // type of trait (quanti/
                || (curPos->pos[FEM] == my_NAN && curPos->pos[MAL] == my_NAN));// or both linked
 	}
 	else {                              // add this locus position to the vector
-		TLocusPos* curPos = new TLocusPos(c, d, d); // set the same postion for both sexes (it may be changed later...)
+		TLocusPosition* curPos = new TLocusPosition(c, d, d); // set the same postion for both sexes (it may be changed later...)
 		if (l) {		// perform some checks (if it is not the first locus)
-			TLocusPos* lastPos = *_locus_pos[t].rbegin();
+			TLocusPosition* lastPos = *_locus_pos[t].rbegin();
 			if (*lastPos > *curPos) error("Genome (%s): the loci positions have to be in increasing distance!\n", t.c_str()); // wrong order of the loci
 		}
 		_locus_pos[t].push_back(curPos);

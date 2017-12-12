@@ -46,25 +46,25 @@ class TMetapop;
 	* unlinked loci: chrom has a value of NaN and pos the index of the unlinked locus of the trait (0. umlinked locus, 1. unlinked locus,...)
 	* Pleiotropic loci point to the same object
  */
-class TLocusPos{
+class TLocusPosition{
 public:
     unsigned int chrom;    // index of the chromosome (starts with 0)
     double pos[2];         // position on the chromosome in cM from the beggining of the chromosome
     
-    TLocusPos(){chrom = pos[FEM] = pos[MAL] = my_NAN;}
-    TLocusPos(const unsigned int& c, const double& f){
+    TLocusPosition(){chrom = pos[FEM] = pos[MAL] = my_NAN;}
+    TLocusPosition(const unsigned int& c, const double& f){
         chrom = c; pos[FEM] = pos[MAL] = f;
     }
-    TLocusPos(const unsigned int& c, const double& d, const sex_t& s){
+    TLocusPosition(const unsigned int& c, const double& d, const sex_t& s){
         chrom = c; pos[FEM] = pos[MAL] = my_NAN; pos[s] = d;
     }
-    TLocusPos(const unsigned int& c, const double& f, const double& m){
+    TLocusPosition(const unsigned int& c, const double& f, const double& m){
         chrom = c; pos[FEM] = f; pos[MAL] = m;
     }
     
     bool isUnlinked(){return chrom == my_NAN;}
     
-    bool operator<(const TLocusPos& l) const {
+    bool operator<(const TLocusPosition& l) const {
         if(chrom < l.chrom) return true;
         if(chrom > l.chrom) return false;
         if(pos[FEM] < l.pos[FEM]){
@@ -77,9 +77,9 @@ public:
         }
         return false;
     }
-    bool operator>(const TLocusPos& l) const {return !(*this<=l);}
+    bool operator>(const TLocusPosition& l) const {return !(*this<=l);}
     
-    bool operator<=(const TLocusPos& l) const {
+    bool operator<=(const TLocusPosition& l) const {
         if(chrom < l.chrom) return true;
         if(chrom > l.chrom) return false;
         if(pos[FEM] <= l.pos[FEM]){
@@ -88,14 +88,14 @@ public:
         }
         return false;
     }
-    bool operator>=(const TLocusPos& l) const {return !(*this<l);}
+    bool operator>=(const TLocusPosition& l) const {return !(*this<l);}
     
-    bool operator==(const TLocusPos& l) const {
+    bool operator==(const TLocusPosition& l) const {
         if(chrom != l.chrom) return false;
         if(pos[FEM] == l.pos[FEM] && pos[MAL] == l.pos[MAL]) return true;
         return false;
     }
-    bool operator!=(const TLocusPos& l) const {return !(*this==l);}
+    bool operator!=(const TLocusPosition& l) const {return !(*this==l);}
     
     
 };
@@ -105,7 +105,7 @@ public:
 /** object for each locus containing the locus specific information */
 class TLocus{
 private:
-    TLocusPos*   _locusPos;             // locus coordinates on the genome (NULL if unlinked)
+    TLocusPosition*   _locusPos;             // locus coordinates on the genome (NULL if unlinked)
     unsigned int _nb_allele;            // maximal number of alleles
     unsigned int _locus_id_trait;       // the locus id of the trait
     unsigned int _locus_id_tot;         // the locus id of the genome
@@ -145,7 +145,7 @@ public:
     TLocus();
     ~TLocus();
     
-    void set_locusPosition(TLocusPos* l){_locusPos = l;}
+    void set_locusPosition(TLocusPosition* l){_locusPos = l;}
     void set_mutationRate(const double& m){_mut_rate = m;}
     void set_mutationModel(const mut_model_t& m);
     void set_nb_allele(const unsigned int& n){_nb_allele = n;}
@@ -158,7 +158,7 @@ public:
     
     unsigned int 	get_chromosomePosition()  {return _locusPos ? _locusPos->chrom : my_NAN;}
     double      	get_locusPosition(sex_t s){return _locusPos ? _locusPos->pos[s]: my_NAN;}
-    TLocusPos*  	get_locusPosition()       {return _locusPos;}
+    TLocusPosition*  	get_locusPosition()       {return _locusPos;}
     unsigned int 	get_nb_allele()			  {return _nb_allele;}
     unsigned int 	get_locus_id_trait()	  {return _locus_id_trait;}
     unsigned int 	get_locus_id_tot()		  {return _locus_id_tot;}

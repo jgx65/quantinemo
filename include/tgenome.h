@@ -108,7 +108,7 @@ protected:
     
     // parameters just used to set up the super chromosome
     double*           _chromosomeSize[2];    // _chromosomeSize[SEX]: array of the cumulative length of the chromosomes (only used to set up the super chromosome);
-	map<string, vector<TLocusPos*> >                   _locus_pos;     // _locus_pos[type][TLocusPos*]
+	map<string, vector<TLocusPosition*> >                   _locus_pos;     // _locus_pos[type][TLocusPos*]
 	map<string, map<unsigned int, vector<TLocus*> > >  _locus_vector;  // _locus_vector[type][locus_id][TLocus*]
 
 	// help arrays to simulate pleiotrophy
