@@ -53,7 +53,7 @@ void FileServices::attach ( FileHandler* FH )
 // ----------------------------------------------------------------------------------------
 // load
 // ----------------------------------------------------------------------------------------
-void FileServices::load ( SimComponent* sc ) {
+void FileServices::load ( TSimComponent* sc ) {
     sc->loadFileServices(this);
 }
 

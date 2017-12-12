@@ -763,7 +763,7 @@ TReplicate::print_info(TMetapop* thePop)
 // register_services
 // ----------------------------------------------------------------------------------------
 void
-TReplicate::register_services(SimComponent* cmpt)
+TReplicate::register_services(TSimComponent* cmpt)
 {
     _FileServices->load(cmpt);
     _StatServices->load(cmpt);

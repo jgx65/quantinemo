@@ -122,7 +122,7 @@ void ParamManager::build_allParams ()
     assert(_allParams.empty());
     _allParams.push_back(&_paramSet);
     
-    list< SimComponent* >::iterator cmpt = this->_components.begin(), end = this->_components.end();
+    list< TSimComponent* >::iterator cmpt = this->_components.begin(), end = this->_components.end();
     for(; cmpt != end; ++cmpt) {
         _allParams.push_back( (*cmpt)->get_paramset() );
     }

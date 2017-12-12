@@ -40,7 +40,7 @@
 using namespace std;
 
 
-class SimComponent;
+class TSimComponent;
 
 /**Interface for the simulation services (files and stats).
  * Implements the observer pattern. Notify the observers (Handler) to update their state.
@@ -84,7 +84,7 @@ public:
     }
         
     /**Interface to used by a simulation component to load its obervers onto a service provider.*/
-    virtual void load ( SimComponent* sc ) = 0;
+    virtual void load ( TSimComponent* sc ) = 0;
     
     /**Adds an observer to the list. */
     void attach ( Handler* h ) {

@@ -109,7 +109,7 @@ public:
      *  tell the SimComponent to load its stat handlers
      *  @param sc the SimComponent
      */
-    virtual void load ( SimComponent* sc );
+    virtual void load ( TSimComponent* sc );
     
     /**
      *  attach the StatHandler to the current list (_children) of the StatServices

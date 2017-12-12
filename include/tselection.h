@@ -49,7 +49,7 @@ class StatServices;
 class TSelectionTrait;
 
 
-class TSelection: public SimComponent {
+class TSelection: public TSimComponent {
 private:
 	// object pointers
 	TMetapop*            _popPtr;

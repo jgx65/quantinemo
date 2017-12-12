@@ -109,7 +109,7 @@ public:
     /**Tells the SimComponent to load its file handlers.
      *  @param sc the SimComponent
      */
-    virtual void load ( SimComponent* sc );
+    virtual void load ( TSimComponent* sc );
     
     /**Attaches the FileHandler to the current list (_children) of the FileServices.
      *  @param FH the FileHandler

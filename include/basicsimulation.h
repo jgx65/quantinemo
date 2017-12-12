@@ -65,7 +65,7 @@ public:
 	void build_component_list();
 
 	/**Push a component at the back of the component list. **/
-	void add_component(SimComponent* cmpt) {
+	void add_component(TSimComponent* cmpt) {
 		_components.push_back(cmpt);
 	}
 
@@ -111,7 +111,7 @@ public:
 protected:
 
 	/**List of all the simulation components. **/
-	list<SimComponent*> _components;			// don't delete elements
+	list<TSimComponent*> _components;			// don't delete elements
 
 	/**List of all trait prototypes of the simulation, a subset of _components list. */
 	list<TTraitProto*> _TTrait_Templates;		// delete elements

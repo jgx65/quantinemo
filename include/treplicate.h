@@ -99,7 +99,7 @@ public:
     
     void print_info(TMetapop* thePop);
     bool setup(map<string, string>& simparams, map<string, string>& simkeaywords, TMetapop* thePop);
-    void register_services(SimComponent* cmpt);
+    void register_services(TSimComponent* cmpt);
     bool build_pop(TMetapop* thePop);
     
     void register_all(TMetapop* thePop);

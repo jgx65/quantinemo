@@ -207,7 +207,7 @@ StatServices::get_nb_stats (){
 //-----------------------------------------------------------------------------------------
 // load
 // ----------------------------------------------------------------------------------------
-void StatServices::load ( SimComponent* sc ){
+void StatServices::load ( TSimComponent* sc ){
     sc->loadStatServices(this);
 }
 

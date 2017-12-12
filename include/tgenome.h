@@ -83,7 +83,7 @@ public:
 
 class TMetapop;
 
-class TGenomeProto: public SimComponent {
+class TGenomeProto: public TSimComponent {
 friend class TGenome;
 
 protected:

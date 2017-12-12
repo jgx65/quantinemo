@@ -43,18 +43,18 @@
  * Contains the components parameters.
  */
 
-class SimComponent {
+class TSimComponent {
 protected:
 	/**The parameters container. */
 	ParamSet* _paramSet;  // has to be deleted
 
 public:
 
-	SimComponent() :
+	TSimComponent() :
 			_paramSet(0) {
 	}
 	//**Dstor. Deletes the parameter container. */
-	virtual ~SimComponent() {
+	virtual ~TSimComponent() {
 		if (_paramSet) delete _paramSet;
 	}
 

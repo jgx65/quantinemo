@@ -77,7 +77,7 @@ class TReplicate;
  * The OFFSPRNG age class has index OFFSx = 0, and the ADULTS age class has index ADLTx = 2.
  *
  */
-class TMetapop: public SimComponent, public IndFactory
+class TMetapop: public TSimComponent, public IndFactory
 {
 private:
     

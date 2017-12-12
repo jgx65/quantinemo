@@ -55,7 +55,7 @@
  
  * \b Note: the LCEs \a must be inited \a after a call to IndFactory::makePrototype() has been issued so that the trait links can be set!
  */
-class LCE: public SimComponent {
+class LCE: public TSimComponent {
 private:
     /**The param name to be read in the init file.*/
     string _event_name;

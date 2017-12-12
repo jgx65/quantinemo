@@ -188,7 +188,7 @@ public:
  * This class manages the file and stat handlers through its inheritance of the SimComponent
  * interface.
  */
-class TTraitProto : public SimComponent {
+class TTraitProto : public TSimComponent {
     friend class TTrait;
     
 protected:
