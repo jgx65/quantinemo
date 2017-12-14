@@ -159,6 +159,7 @@ public:
     
     /** phenotype specific functions ********************************************/
     double   get_phenotype();
+    double   get_genotype();
     void   (TSelectionTrait::* func_ptr_set_phenotype)(TIndividual* ind);
     void    set_phenotype(TIndividual* ind);
     void    set_phenotype_noVe(TIndividual* ind);

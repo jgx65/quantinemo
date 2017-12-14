@@ -1386,8 +1386,8 @@ TTraitQuantiProto::set_dominanceValues(const string& trait)
         ARRAY::create_3D(_dominanceValues, _nb_locus, _nb_allele, _nb_allele, (double)my_NAN);
         get_locus_genotype_func_ptr = &TTraitQuantiProto::get_locus_genotype_dominance_array;
     }
-    else if(_dominance_mean) get_locus_genotype_func_ptr = &TTraitQuantiProto::get_locus_genotype_dominance_single;
-    else                     get_locus_genotype_func_ptr = &TTraitQuantiProto::get_locus_genotype_additive;
+    else get_locus_genotype_func_ptr = &TTraitQuantiProto::get_locus_genotype_dominance_single;
+//    else                     get_locus_genotype_func_ptr = &TTraitQuantiProto::get_locus_genotype_additive;
     
     if(get_parameter_value("quanti_dominance_model"+trait)==1){
         get_genotype_dominace_func_ptr=&TTraitQuantiProto::get_genotype_dominance_h;
@@ -2207,8 +2207,8 @@ TTraitQuantiProto::get_locus_genotype_dominance_single(const unsigned int& l, co
 double
 TTraitQuantiProto::get_genotype_dominance_h(double a1, double a2, double h)
 {
-    if(a1<a2) return (1-h)*a1 + h*a2;
-    return (1-h)*a2 + h*a1;
+    if(a1<a2) return 2*((1-h)*a1 + h*a2);
+    return 2*((1-h)*a2 + h*a1);
 }
 
 /* G = (1-h)a1 + ha2       // a1 < a2

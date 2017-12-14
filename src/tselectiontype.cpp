@@ -296,13 +296,9 @@ TSelectionSelectionCoefficient::init()
 double
 TSelectionSelectionCoefficient::get_fitness_none()
 {
-	double fitness=my_NAN;
-	switch((unsigned int)get_phenotype()){               // get the phenotype and assign a fitness accordingly
-		case 0: fitness = _selection_pressure[_curSex][0];                                                                       break;  // 0: AA
-		case 1: fitness = _selection_pressure[_curSex][0]-(_pQuantiProto->get_dominance_mean()*_selection_pressure[_curSex][1]); break;  // 1: Aa
-		case 2: fitness = _selection_pressure[_curSex][0]-_selection_pressure[_curSex][1];                                       break;  // 2: aa
-		default: assert(1==2); break;   // should never happen
-	}
+	//The genotype is computed using the formula 2[(1−h)a_1 +h*a_2] with a_1 and a_2 either 0 or 1, so the only missing piece is s
+    double fitness=_selection_pressure[_curSex][0] - get_genotype()*_selection_pressure[_curSex][1]/2;
+
 	// is there environmental variance
 	double sd = (this->*func_ptr_get_sdVe)();
 	if(sd) fitness += sd*_popPtr->rand().Normal();
