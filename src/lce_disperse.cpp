@@ -96,7 +96,7 @@ _lattice_range(0), _disp_propagule_prob(0), _x_size(0), _y_size(0) {
                   "What model we use for the dispersal rate:\n "
                   "  0: Flat rate\n" \
                   "  1: Rate depend on density with an effective rate of migration_rate when the density is one \n" \
-                  "  2: Rate depend on density ans is smoothly adjusted so that after emigration, density is lower than one", 1);
+                  "  2: Rate depend on density and is smoothly adjusted so that after emigration, density is lower than one", 1);
     
     
     add_parameter("dispersal_rate_model_fem", INT2, false, 0, 1, "0", false,
