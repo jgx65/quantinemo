@@ -140,7 +140,7 @@ The structure of the manual is the following:
 \item Chapter \hyperref[chap:introduction]{introduction} introduce the program, giving information about the program in general (licence, citation, etc) and the main features. 
 \item Chapter \hyperref[chap:GettingStarted] {Getting started} give the minimal necessary knowledge to launch a basic quantiNEMO simulation and output simple result about the simulation. New comer should start with this chapter. 
 \item Chapter \hyperref[chap:InputFiles]{Input files} give deeper information about how to write an input file. It is recommended for more advance user and can be skipped at first reading given that simple example given in the chapter getting started are already sufficient for simple simulation. 
-\item Chapter \hyperref[chap:GeneralParameters]{General Parameters} give details information about the parameters used for metainformation about the simulation, i.e. relevant but not modifying the scenario itself, like the folder, the number of replicate, the initial seed, etc. 
+\item Chapter \hyperref[chap:GeneralParameters]{General Parameters} give details information about the parameters used for metainformation about the simulation, \textit{i.e.} relevant but not modifying the scenario itself, like the folder, the number of replicate, the initial seed, etc. 
 \item Chapter \hyperref[chap:LifeCycle]{Life cycle} explain a bit more about how the different event through which all individual go (birth, migration, etc) and give information about how to change their behaviours. 
 \item Chapter \hyperref[chap:Demography]{Demography} contains all the information about the demography, the number of individual, the population growth model, the dispersal rate and model, etc. 
 \item Chapter \hyperref[chap:Genetics]{Genetics} contains all the information about how to set the genetic information of all individual, like the number of loci, their position on the genome, their mutation rate, etc. 
@@ -169,7 +169,7 @@ QuantiNEMO has an underlying genetic map, which may consist of several chromosom
 QuantiNEMO allows simulating realistic population dynamics. Population sizes may vary in space and in time. The user can choose between several preset migration models (island, 1-D stepping-stone, 2-D stepping-stone), or specify the full migration matrix. The migration pattern can change over time, allowing to investigate scenarios of population fragmentation.
 
 \item[Lifecycle]\hspace*{\fill}\\\
-Each individual undergoes a single life cycle (non-overlapping generations). The life-cycle is fixed (in contrast to NEMO \citep{Guillaume_2006}) and starts with breeding and reproduction. Several mating systems are available: random mating, selfing or cloning for hermaphrodites; promiscuity, monogamy or polygyny for dÔoecious (gonochoric) species. Selection acts by default on the reproductive fitness of individuals, however the current version of quantiNEMO supports also selection at other life cycle stages. After reproduction, juveniles may disperse to other populations, and then population size is possibly regulated. Environmental stochasticity can also be introduced, where populations may go extinct due to an external factor, independent of population size or genetic constitution of the population.
+Each individual undergoes a single life cycle (non-overlapping generations). The life-cycle starts with breeding and reproduction. Several mating systems are available: random mating, selfing or cloning for hermaphrodites; promiscuity, monogamy or polygyny for dioecious (gonochoric) species. Selection acts by default on the reproductive fitness of individuals, however selection at other life cycle stages is also supported . After reproduction, juveniles may disperse to other populations, and then population size is possibly regulated. Environmental stochasticity can also be introduced, where populations may go extinct due to an external factor, independent of population size or genetic constitution of the population.
 
 \item[Coalescence]\hspace*{\fill}\\\
 To simulate larger population size and genome, QuantiNEMO offer the possibility to switch from individual to population based simulation, using coalescence. In coalescence, a forward in time simulation in first perform to simulate any complex demographical scenario, and then a coalescence simulation is performed. This setup allows for much more elaborate scenarios than the common coalescence tools. 
@@ -186,7 +186,7 @@ quantiNEMO provides summary statistics for the different simulation components, 
 \end{description}
 
 \section{Availability}
-The website \linebreak\url{http://www.unil.ch/popgen/softwares/quantinemo} \tbc includes executables for Windows, Linux and Mac, the source code, a detailed user's manual, tutorials and also a syntax highlighting definition to edit the settings file with the shareware TextPad (\linebreak\url{http://www.textpad.com}). All downloads are freely available under the terms of the GNU General Public License.
+The website \linebreak\url{http://www.unil.ch/popgen/softwares/quantinemo} \tbc{} includes executables for Windows, Linux and Mac, the source code, a detailed user's manual, tutorials and also a syntax highlighting definition to edit the settings file with the shareware TextPad (\linebreak\url{http://www.textpad.com}).  \tbc{} All downloads are freely available under the terms of the GNU General Public License.
 
 \section{Technical}
 quantiNEMO is a console program, and is coded in standard C++ using an object oriented approach. This allows compiling quantiNEMO on any computer platform which supports standard C++ compilation. There is no limit on the number of populations, individuals, genes, etc that quantiNEMO can handle, apart from the available hardware capacities (CPU and memory). QuantiNEMO was optimized for high computation efficiency in particular for large simulations on clusters. QuantiNEMO is built on the evolutionary and population genetics programming framework NEMO \citep{Guillaume_2006}, with well developed demographic models. The demographic models of NEMO were kept, although several of these functionalities were re-coded, respectively adapted to the new functionalities of quantiNEMO.
@@ -195,13 +195,14 @@ quantiNEMO is a console program, and is coded in standard C++ using an object or
 QuantiNEMO is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. quantiNEMO is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with quantiNEMO. If not, see \linebreak\url{http://www.gnu.org/licenses/}.
 
 \section{Citation}
-\tbc
+\tbc{}
 quantiNEMO has been published in the journal \textit{Bioinformatics}. If you are using quantiNEMO for your research please cite it as \\
  Neuenschwander S, Hospital F, Guillaume F, Goudet J, 2008. QuantiNEMO: an individual-based program to simulate quantitative traits with explicit genetic architecture in a dynamic metapopulation. \textbf{Bioinformatics} 24, 1552-1553.
 
 \section{Acknowledgments}
+\tbc{}\fm{Jérôme, can you update this?}
 We are grateful to Ricardo Kanitz, Sylvain Antoniazza, Yves Rousselle, Patrick Meirmans, Christine Grossen, Claire Mouton, and Olivier Blaser, Alex von Ungern-Sternberg. These persons helped us to improve quantiNEMO by reporting bugs and/or great discussions. 
-\fm{Jérôme, can you update this?}
+
 
 
 
@@ -213,11 +214,11 @@ This chapter explains how to use quantiNEMO starting from the basics.
 
 
 \section{Installation}
-Executables of quantiNEMO for several operating systems can be downloaded from the web site \url{http://www.unil.ch/popgen/softwares/quantinemo} \tbc. The executables are standalones, meaning that quantiNEMO does not require an installation. After downloading the compressed file with the executable corresponding to your operating system simply extract it to a folder of your choice. The compressed file includes the executable for your operating system, the user manual, and also an example settings file.
+Executables of quantiNEMO for several operating systems can be downloaded from the web site \url{http://www.unil.ch/popgen/softwares/quantinemo} \tbc{}. The executables are standalones, meaning that quantiNEMO does not require an installation. After downloading the compressed file with the executable corresponding to your operating system simply extract it to a folder of your choice. The compressed file includes the executable for your operating system, the user manual, and also an example settings file.\tbc{}.
 
 
 \section{Launching quantiNEMO}\label{launchQuantiNEMO}
-There are different ways to launch a simulation with quantiNEMO. Normally a simulation is defined using a settings file and the settings file is then passed to quantiNEMO, but it is also possible to specify the simulation parameters directly as arguments passed to the program. These two approaches may also be combined:
+There are different ways to launch a simulation with quantiNEMO. Normally a simulation is defined using a settings file and the settings file is then passed to quantiNEMO, but it is also possible to specify the simulation parameters directly as arguments passed to the program. See chapter \ref{chap:InputFiles} for more details. 
 
 \begin{description}
 \item[no argument]\hspace*{\fill}\\ 
@@ -250,141 +251,101 @@ This minimal settings file allows to perform a simulation with a single populati
 \section{Simulation example}
 This section describes a more realistic simulation example and describes how the output is stored. The settings file of this example named "quantiNEMO2\_example.ini" is included in the compressed folders of the downloads of quantiNEMO:
 \begin{lstlisting}[frame=single]
-generations               100
+generations               1000
   
 # metapopulation
 patch_number              10
 patch_capacity            1000
 dispersal_rate            0.01
-  
-# mating
-selection_level           0
-mating_system             0
+
   
 # selection
-patch_stab_sel_optima     10
-patch_stab_sel_intensity  1
+quanti_stab_sel_optima     5
+quanti_stab_sel_intensity  0.1
   
 # quantitative trait
 quanti_loci               5 
 quanti_all                255
 quanti_mutation_model     0
 quanti_mutation_rate      1e-4
-quanti_save_genotype      2
-quanti_genot_logtime      10
-quanti_genot_dir          quanti_genotype
-quanti_save_phenotype     2
-quanti_phenot_logtime     10
-quanti_phenot_dir         quanti_phenotype
-  
-# neutral marker
-ntrl_loci                 5
-ntrl_all                  10
-ntrl_mutation_model       0
-ntrl_mutation_rate        1e-4
- 
-ntrl_save_genotype        2
-ntrl_genot_logtime        10
-ntrl_genot_dir            ntrl_genotype
+
   
 # statistics
-stat                      {n.adlt.fstat}
-stat_save                 1            
-stat_log_time             10
-stat_dir                  stats
+stat                      {q.adlt.ho}
 \end{lstlisting}
 
 A simulation based on this settings file named "quantiNEMO2\_example.ini" produces the following output to your terminal window:
 \tbc{}
 \begin{lstlisting}[frame=single]
+Program:    quantiNemo2 (quantitative genetics simulator)
 
-**************************************************
+Version:    2.0.0 [Dec 25 2017; 23:12:33]
 
-                q u a n t i N E M O
-**************************************************
-*     Release: 1.5.0 [May 28 2009; 09:58:32]     *
-*    Copyright (C) 2008 Samuel Neuenschwander    *
-* http://www.unil.ch/popgen/softwares/quantinemo *
-**************************************************
+Authors: Samuel Neuenschwander (samuel.neuenschwander@unil.ch) &
+         Frederic Michaud (frederic.michaud@unil.ch)&
+         Jerome Goudet (jerome.goudet@unil.ch)
+         Department of Ecology and Evolution
+         University of Lausanne, Switzerland
 
-Reading settings file '../quantiNEMO.ini' ...
-Reading settings file '../quantiNEMO.ini' done (29 parameters)
+Reading settings file 'example.ini' ...
+Reading settings file 'example.ini' done (16 parameters)
 
-SETTINGS
+SETTINGS (example.ini)
   Simulation:
-    10 generations
-    1 replicates
+    individual-based
+    120 generations
+    2 replicates
+    1. of 1 batch simulations
+    1 threads used
+    random generator initialized by the time
 
-  Loaded traits:
-    Quantitative trait: 5 loci; 255 alleles; stabilizing selection
-    Neutral marker type: 5 loci; 10 alleles
+  Loaded traits: 
+    Quantitative trait: 5 loci; 255 alleles; neutral trait;
 
   Life cycle sequence:
     1. breed
     2. save_stats
     3. save_files
     4. aging
-    5. disperse
+    5. dispersal
 
   Metapopulation:
-    10 populations
+    10 patches (K_tot=10000)
     Migration model: island
     Mating system: random mating (hermaphrodite)
 
   Genetic map:
-    10 independend loci
+    5 independent loci
+
+  Output:
+    (to folder 'example')
+    genotype (quanti) computed at 4 generations
+    statistics (2 statistics) computed at 120 generations
 
 
-SIMULATION
-    replicate 1/1 [00:00:14] 100/100
+    replicate 2/2 [00:00:01] 120/120   RAM: 0.000000 MB
 
------ SIMULATION done (CPU time: 00:00:15s) -----
+----- SIMULATION done (CPU time: 00:00:02s) -----
 
-quantiNEMO terminated successfully!
+quantiNemo2 terminated successfully!
 \end{lstlisting}
 
-This output informs you that this simulation was parameterized by the settings file "quantiNEMO2\_example.ini". The simulation consisted of one quantitative trait and one type of neutral markers. The simulated life cycle is indicated and shows that summary statistics and genotypes or phenotypes are output. Only one replicate of 100 generations was performed. For each replicate the elapsed time (hh:mm:ss) is printed out to the console and at the end of the simulations also the total elapsed time. 
+This output informs you that this simulation was parametrized by the settings file "quantiNEMO2\_example.ini". The simulation consisted of one quantitative trait and one type of neutral markers. The simulated life cycle is indicated and shows that summary statistics and genotypes or phenotypes are output. Only one replicate of 100 generations was performed. For each replicate the elapsed time (hh:mm:ss) is printed out to the console and at the end of the simulations also the total elapsed time. 
 The output of this simulation was stored in the following structure relative to the executable:
 \begin{lstlisting}[frame=single]
-simulation_2008-01-01_00-00-00/    # automatically named folder
-    simulation.log                 # log file
-    quanti_phenotype/              # phenotype folder 
-        simulation_g010.phe        # phenotypes of generation 10
-        simulation_g020.phe
-        simulation_g030.phe
-        simulation_g040.phe
-        simulation_g050.phe
-        simulation_g060.phe
-        simulation_g070.phe
-        simulation_g080.phe
-        simulation_g090.phe
-        simulation_g100.phe
-    quanti_genotype/               # genotype folder (quantitative)
-        simulation_g010.dat        # genotypes at generation 10
-        simulation_g020.dat
-        simulation_g030.dat
-        simulation_g040.dat
-        simulation_g050.dat
-        simulation_g060.dat
-        simulation_g070.dat
-        simulation_g080.dat
-        simulation_g090.dat
-        simulation_g100.dat
-    ntrl_genotype/                 # genotype folder (neutral)
-        simulation_g010.dat        # genotype at generation 10
-        simulation_g020.dat
-        simulation_g030.dat
-        simulation_g040.dat
-        simulation_g050.dat
-        simulation_g060.dat
-        simulation_g070.dat
-        simulation_g080.dat
-        simulation_g090.dat
-        simulation_g100.dat
-    stats/                         # statistic files
-        simulation.txt             # statistics for each replicate
-        simulation_mean.txt        # statistics across replicates
-        simulation_legend.txt      # statistic legends
+simulation.log      #log file to relaunch the same simulation
+simulation_stats.txt         # statistics for each replicate
+simulation_mean.txt          # statistics across replicates
+simulation_var.txt           # variance across replicates
+simulation_legend.txt        # statistic legends
+simulation_g030_r1.dat       # genotype raw data 
+simulation_g030_r2.dat       # genotype raw data 
+simulation_g060_r1.dat	     # genotype raw data 
+simulation_g060_r2.dat       # genotype raw data 
+simulation_g090_r1.dat	     # genotype raw data 
+simulation_g090_r2.dat       # genotype raw data 
+simulation_g120_r1.dat       # genotype raw data 
+simulation_g120_r2.dat       # genotype raw data 
 \end{lstlisting}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
@@ -420,7 +381,7 @@ stat_log_time [integer]
 
 \begin{description}
 \item[Integer]\hspace*{\fill}\\
-Integers are whole-numbers, i.e. a dot-less number. The following forms are equivalent: 1000 or 1e3.
+Integers are whole-numbers, \textit{i.e.} a dot-less number. The following forms are equivalent: 1000 or 1e3.
 
 \item[Decimal]\hspace*{\fill}\\
 Decimals are floating-point numbers. The following forms are equivalent: 0.0001, .0001 or 1e-4.
@@ -456,7 +417,7 @@ disp_rate { {0.2  0.0  0.0  0.8}
 This example shows the pairwise dispersal matrix for 4 patches (4x4). Each row specifies a source patch from which emigrants emigrate. Each column specifies the target patch receiving the immigrants. The diagonal of the matrix specifies the proportion of individuals remaining in the natal patch.
 
 \item[Matrix length adjustment]\hspace*{\fill}\\
-Usually matrices are defined in whole, i.e. the number of carrying capacities in the 1D matrix example above meets the number of patches (4 patches). However, if there is a repeating pattern in the matrix, it is also possible to define only the repetition. In this case the matrix will be repeated as needed. For instance the 1D matrix above could also be written in one of the following ways as there is a repetition in it: 
+Usually matrices are defined in whole, \textit{i.e.} the number of carrying capacities in the 1D matrix example above meets the number of patches (4 patches). However, if there is a repeating pattern in the matrix, it is also possible to define only the repetition. In this case the matrix will be repeated as needed. For instance the 1D matrix above could also be written in one of the following ways as there is a repetition in it: 
 \begin{lstlisting}[frame=single]
 patch_number 4
 patch_capacity {20  10}
@@ -476,7 +437,7 @@ patch_capacity  20
 
 
 \item[Unbalanced matrices]\hspace*{\fill}\\
-Usually a matrix is balanced, i.e. each row has the same number of columns. However, some parameters (such as the parameter \texttt{quanti\_loci\_positions}) allow to have unbalanced matrices, i.e. rows do not necessarily contain the same number of columns. Other parameters (such as the parameter \texttt{quanti\_loci\_positions}) allow to skip a row, i.e. some rows do not contain any data. A row can be skipped by explicitly indicating the rank of the row just after the beginning of the row followed by a colon ":". The ranking starts with 1. If a row has no explicit rank it is assumed to follow the preceding row. Here is an example for the genetic map of a quantitative trait:
+Usually a matrix is balanced, \textit{i.e.} each row has the same number of columns. However, some parameters (such as the parameter \texttt{quanti\_loci\_positions}) allow to have unbalanced matrices, \textit{i.e.} rows do not necessarily contain the same number of columns. Other parameters (such as the parameter \texttt{quanti\_loci\_positions}) allow to skip a row, \textit{i.e.} some rows do not contain any data. A row can be skipped by explicitly indicating the rank of the row just after the beginning of the row followed by a colon ":". The ranking starts with 1. If a row has no explicit rank it is assumed to follow the preceding row. Here is an example for the genetic map of a quantitative trait:
 \begin{lstlisting}[frame=single]
 quanti_loci 11
 quanti_loci_positions { {1: 10}
@@ -488,7 +449,7 @@ In this example the quantitative trait is defined by 11 loci located on three ou
 \end{description}
 
 \section{Temporal parameters}\label{tempParam}\index{(..)}
-An important feature of quantiNEMO is that some parameters may change over time during a simulation. Such parameters are indicated as "temporal" in this manual. Temporal arguments are enclosed within two parentheses '(...)'. For each change of the argument over time a pair consisting of a generation index and a corresponding argument is needed. The values of a pair are separated by at least one space. Pairs are separated by a coma ',' or by a semi-colon ';'. The first value of a pair specifies the time, i.e. before which generation the change happens. The second value is the new argument. A parameter may change as often as any generation. A simulation starts at generation 1. Therefore the first change has to have the time value 1 otherwise the parameter cannot be initialized leading quantiNEMO to return an error. A temporal argument may be written over several lines.
+An important feature of quantiNEMO is that some parameters may change over time during a simulation. Such parameters are indicated as "temporal" in this manual. Temporal arguments are enclosed within two parentheses '(...)'. For each change of the argument over time a pair consisting of a generation index and a corresponding argument is needed. The values of a pair are separated by at least one space. Pairs are separated by a coma ',' or by a semi-colon ';'. The first value of a pair specifies the time, \textit{i.e.} before which generation the change happens. The second value is the new argument. A parameter may change as often as any generation. A simulation starts at generation 1. Therefore the first change has to have the time value 1 otherwise the parameter cannot be initialized leading quantiNEMO to return an error. A temporal argument may be written over several lines.
 \begin{lstlisting}[frame=single]
 patch_capacity (1   100, 
                 50  200, 
@@ -528,7 +489,7 @@ external file named "dispersal\_file.txt":
 Parameters are normally defined in a settings file which is then passed to the command line. All parameters and there arguments may also be passed directly to the command line. Command line options provide a convenient mechanism to override commonly altered parameter values. Parameters and their argument passed to the command line override the arguments defined in the settings file. (see section \ref{launchQuantiNEMO}). 
 
 \section{Macros}\label{macros}
-quantiNEMO supports several macros allowing to write more easily the settings file. In principle the macros are interpreted and replaced before quantiNEMO reads the settings file. Several macros allow to draw random deviates from a given distribution. Note, that the random deviates are only drawn once, i.e. all replicates have thus the same numbers. The names and parameters of all macros follow as good as possible the equivalent functions in the statistical package R. To understand or control the outcome of a macro the log file (see parameter \textbf{logfile\_type}) may be consulted. This log file may either contain the macros as they were specified or the interpreted macros.
+QuantiNEMO supports several macros allowing to write more easily the settings file. In principle the macros are interpreted and replaced before quantiNEMO reads the settings file. Several macros allow to draw random deviates from a given distribution. Note, that the random deviates are only drawn once, \textit{i.e.} all replicates have thus the same numbers. The names and parameters of all macros follow as good as possible the equivalent functions in the statistical package R. To understand or control the outcome of a macro the log file (see parameter \textbf{logfile\_type}) may be consulted. This log file may either contain the macros as they were specified or the interpreted macros.
 
 \begin{description}
 \item[option "Time"]\hspace*{\fill}\\
@@ -542,7 +503,7 @@ With this macro it is possible to specify a sequence of data points. \textit{seq
 patch_capacity {seq(100, 1000, 10)}
 patch_capacity {100 200 300 400 500 600 700 800 900 1000}
 \end{lstlisting}
-Both specifications of the carrying capacities are identical, i.e. the macro \textit{seq} translates its arguments to the lower specification.\\
+Both specifications of the carrying capacities are identical, \textit{i.e.} the macro \textit{seq} translates its arguments to the lower specification.\\
 The command \textit{seq} can also be used for temporal sequences:
 \begin{lstlisting}[frame=single]
 patch_capacity (seqTime(200, 1000, 5, 1, 5))
@@ -563,7 +524,7 @@ patch_stab_sel_optima (1 {{1 9}{1 9}},
 Both specifications of the linear increase of the carrying capacities and selection optima, respectively, over time are identical. Again the macro \textit{seqTime} translates its arguments into the lower specification.     
 
 \item[seq2D($xlim, ylim, patchID1, patchID2, value1, value2, steps)$)\index{seq2D}]\hspace*{\fill}\\
-This macro allows to generate a two dimensional cline of values. For example this allows generating a cline of carrying capacities across a two dimensional landscape. Since the macro does not know the other parameter arguments all necessary information has to be passed to the macro, i.e. some information may be redundant in the settings file. In principle the cline is defined by the values at two patches and the number of steps between these two patches to interpolate. The changes of numbers are vertical to the line between the two patches. $xlim$ and $ylim$ are the matrix dimensions, $patchID1$ and $patchID2$ are the patch-IDs for which the values will be defined and the corresponding values are $value1$ and $value2$, respectively. $step$ is the number of changes between these two patches, following the macro $seq$.
+This macro allows to generate a two dimensional cline of values. For example this allows generating a cline of carrying capacities across a two dimensional landscape. Since the macro does not know the other parameter arguments all necessary information has to be passed to the macro, \textit{i.e.} some information may be redundant in the settings file. In principle the cline is defined by the values at two patches and the number of steps between these two patches to interpolate. The changes of numbers are vertical to the line between the two patches. $xlim$ and $ylim$ are the matrix dimensions, $patchID1$ and $patchID2$ are the patch-IDs for which the values will be defined and the corresponding values are $value1$ and $value2$, respectively. $step$ is the number of changes between these two patches, following the macro $seq$.
 
 \item[seq2Db($xlim, ylim, patchID1, patchID2, value1, value2, steps)$)\index{seq2Db}]\hspace*{\fill}\\
 This macro is similar to the previous one $seq2D$ but the interpolation for the cline follows another rule: The value of any patch is defined by the ratio of the distances from this patch to the two specified patches.
@@ -574,7 +535,7 @@ With this macro it is possible to specify a repetition of the text. \textit{rep}
 patch_ini_size {1000 rep(0, 9)}
 patch_ini_size {1000 0 0 0 0 0 0 0 0 0}
 \end{lstlisting}
-Both specifications of the initial population sizes are identical, i.e. the macro \textit{rep} translates its arguments to the lower specification. In this example only the first patch is populated at the start of the simulation, allowing to simulate a colonization scenario. 
+Both specifications of the initial population sizes are identical, \textit{i.e.} the macro \textit{rep} translates its arguments to the lower specification. In this example only the first patch is populated at the start of the simulation, allowing to simulate a colonization scenario. 
 
 \item[runif($nb$)\index{runif}]\hspace*{\fill}\\
 \vspace{-9mm}
@@ -644,13 +605,13 @@ This macro allows to sample within the given elements (numbers or text supported
 This macro rounds all numbers within the brackets to entire numbers.
 
 \item[ceil($elements$)\index{ceil}]\hspace*{\fill}\\
-This macro ceils all numbers within the brackets to entire numbers, i.e. to the next higher entire number.
+This macro ceils all numbers within the brackets to entire numbers, \textit{i.e.} to the next higher entire number.
 
 \item[floor($elements$)\index{floor}]\hspace*{\fill}\\
-This macro floors all numbers within the brackets to entire numbers, i.e. to the next lower entire number.
+This macro floors all numbers within the brackets to entire numbers, \textit{i.e.} to the next lower entire number.
 
 \item[trunc($elements$)\index{trunc}]\hspace*{\fill}\\
-This macro truncates the numbers at zero, i.e. all negative numbers are set to zero.
+This macro truncates the numbers at zero, \textit{i.e.} all negative numbers are set to zero.
 
 \item[equation($...$)\index{equation}]\hspace*{\fill}\\
 This macro allows to solve simple equations from left to right. Supported are arithmetics on single values, matrices, or a combination of them. It supports the arithmetics plus, minus, product and division. Values and arithmetic signs have to be separated by any space.
@@ -675,7 +636,7 @@ In all three examples the mean carrying capacity is 1000, however the capacity o
 
 
 \section{Batch mode}\label{batchMode}
-quantiNEMO allows to perform multiple simulations by executing a single command. There are two ways to perform such batch simulations. Note, that these two types may not be mixed, i.e. be used at the same time.
+quantiNEMO allows to perform multiple simulations by executing a single command. There are two ways to perform such batch simulations. Note, that these two types may not be mixed, \textit{i.e.} be used at the same time.
 
 \subsection{Multiple settings files}\label{multiFiles}
 A normal simulation can be launched by passing the settings file name as parameter to the executable. It is also possible to pass several settings file names to the executable. In this case a simulation for each settings file is executed consecutively: 
@@ -749,8 +710,7 @@ Notice that if you specify a folder using the parameter \textsf{folder}, all sim
 \chapter{General parameters}\label{chap:GeneralParameters}
 This section describes general parameters of a simulation: 
 \begin{description}
-\item[generations\index{generations}]\textbf{[integer]}\\
-Number of generations to perform per replicate. This parameter is mandatory, and has no default.
+
  
 \item[replicates\index{replicates}]\textbf{[integer] (default: 1)}\\
 Number of replicates to perform per simulation. Replicates are identical simulations (in terms of parametrization), but their outcome may differ due to stochastic events. 
@@ -766,7 +726,7 @@ This parameter allows defining the working directory, the directory where the si
 
 
 \item[folder\index{folder}]\textbf{[string] (default: "simulation\_yyyy-mm-dd\_hh-mm-ss")}\\
-This parameter specifies the folder for the output. The default argument of this parameter differs from the rules, as the default folder name is dynamic, i.e. comprises the start time and date of the simulation. The default folder name is "simulation\_" with the date and time as suffix in the format "yyyy-mm-dd\_hh-mm-ss" (Year-Month-Day\_Hour-Minute-Second). This dynamic default folder name allows to store each simulation separately, avoiding that previous outputs are overwritten. If the parameter is set, the passed argument will be used as folder name (i.e. without any addition of the time). In this case it may happen that the new output wants to overwrite previous outputs. The parameter \textsf{overwrite} (see below) allows to specify the rules for overwriting other outputs. If the output should be stored directly in the working directory this parameter has to be listed in the settings file followed by an empty argument "" (for this special parameter an empty argument is not identical to a missing one).
+This parameter specifies the folder for the output. The default argument of this parameter differs from the rules, as the default folder name is dynamic, \textit{i.e.} comprises the start time and date of the simulation. The default folder name is "simulation\_" with the date and time as suffix in the format "yyyy-mm-dd\_hh-mm-ss" (Year-Month-Day\_Hour-Minute-Second). This dynamic default folder name allows to store each simulation separately, avoiding that previous outputs are overwritten. If the parameter is set, the passed argument will be used as folder name (i.e. without any addition of the time). In this case it may happen that the new output wants to overwrite previous outputs. The parameter \textsf{overwrite} (see below) allows to specify the rules for overwriting other outputs. If the output should be stored directly in the working directory this parameter has to be listed in the settings file followed by an empty argument "" (for this special parameter an empty argument is not identical to a missing one).
 
 \item[overwrite\index{overwrite}]\textbf{[integer] (default: 0)}\\
 This parameter specifies how present output is treated if there is a danger of overwriting:
@@ -777,15 +737,14 @@ This parameter specifies how present output is treated if there is a danger of o
 
 
 \item[filename\index{filename}]\textbf{[string] (default: "simulation")}\\
-This name will be used as the base filename for all outputs, if they are not specified individually. The output file extensions are added to this base filename. If a file is written on a replicate-periodic basis, the replicate number will be added between the base name and the extension, so that the same file is not overwritten periodically. The same is true concerning generation-periodic files (see section \ref{output}).  
+This name will be used as the base filename for all outputs, if they are not specified individually. The output file extensions are added to this base filename. If a file is written on a replicate-periodic basis, the replicate number will be added between the base name and the extension, so that the same file is not overwritten periodically.  
 
-The base name may include the special expansion character '\%' used to build filenames when sequential parameters are present in the input parameter file. See the discussion on sequential parameters in section \ref{seqparam}. 
 
-\item[logfile\index{logfile}] \textbf{[string] (default: "quantinemo.log")}\\
+\item[logfile\index{logfile}] \textbf{[string] (default: "quantinemo2.log")}\\
 This is the file name (including the extension) for the log file in which the simulation logs are recorded. This log file is stored next to the executable and records the main information of each simulation, such as the elapsed time for the simulation and the replicates and the time of the start and end of a simulation. By default, quantiNEMO will save all this information in a file named "quantinemo.log".
 
 \item[logfile\_type\index{logfile\_type}] \textbf{[0-2] (default: 0)}\\
-For each simulation a log file is created containing the settings of the simulation. The file is created for each simulation and is stored in the simulation folder (parameter \textsf{folder}). The name of the log file is composed of the base name (parameter \textsf{filename}) and the suffix ".log". Some of the log files are identical to the settings file, i.e. show the macros as they are writen. Other log files have these macros interpreted, i.e. replaced by the values. These latter log files may help to better understand and control the macros:
+For each simulation a log file is created containing the settings of the simulation. The file is created for each simulation and is stored in the simulation folder (parameter \textsf{folder}). The name of the log file is composed of the base name (parameter \textsf{filename}) and the suffix ".log". Some of the log files are identical to the settings file, \textit{i.e.} show the macros as they are writen. Other log files have these macros interpreted, \textit{i.e.} replaced by the values. These latter log files may help to better understand and control the macros:
 \begin{description}
 \item[0~:~as~input.] The file contains the same parameters as the settings file, plus the parameter \textsf{seed}.
 \item[1~:~minimal.] The file contains a minimal set of parameters still able to perform the same simulation. All parameters of the settings file which were set to the default value are not reported. 
@@ -793,7 +752,7 @@ For each simulation a log file is created containing the settings of the simulat
 \end{description}
 
 \item[seed\index{seed}] \textbf{[integer/matrix] (default: "")}\\
-This parameter specifies the seed which will be used to initialize the random number generator. It is possible to pass a single number as seed in the range of 0 to 4,294,967,295 depending on the computer system (corresponding to an unsigned long in C++). To increase the number of possible seeds it is possible to pass an array of seeds (up to 624) to quantiNEMO if specified as a one dimensional matrix. If the seed is not set the random generator is initialized by the time, i.e. a matrix with two seeds is used. Thereby the first number is the time in seconds since 1.1.1970 (function \textit{time(NULL)} in C++), and the second number is the number of clock ticks elapsed since quantiNEMO started (function \textit{clock()} in C++). Note, no macros are allowed in the seed argument.\\
+This parameter specifies the seed which will be used to initialize the random number generator. It is possible to pass a single number as seed in the range of 0 to 4,294,967,295 depending on the computer system (corresponding to an unsigned long in C++). To increase the number of possible seeds it is possible to pass an array of seeds (up to 624) to quantiNEMO if specified as a one dimensional matrix. If the seed is not set the random generator is initialized by the time, \textit{i.e.} a matrix with two seeds is used. Thereby the first number is the time in seconds since 1.1.1970 (function \textit{time(NULL)} in C++), and the second number is the number of clock ticks elapsed since quantiNEMO started (function \textit{clock()} in C++). Note, no macros are allowed in the seed argument.\\
 
 
 \item[stat\_NaN\index{stat\_NaN}] \textbf{[string] (default: NaN)}\\
@@ -825,27 +784,27 @@ This parameter allows specifying a script which will be executed after the simul
 \newpage
 \chapter{Life Cycle}\label{chap:LifeCycle}
 \section{Introduction}
-QuantiNEMO is a discrete generation-based simulator. This means that a single individual undergoes only once the life cycle and that the generations are not overlapping. Depending on the parameterization in the settings file some events may be skipped. The life cycle has a fixed order of events. A simulation starts with "Breeding", i.e. only adults are present at the initialization of the simulation. The life cycle is repeated for each generation, i.e. the life cycle event "Breeding" follows the life cycle event "Extinction": 
+QuantiNEMO is a discrete generation-based simulator. This means that a single individual undergoes only once the life cycle and that the generations are not overlapping. Depending on the parameterization in the settings file some events may be skipped. The life cycle has a fixed order of events. A simulation starts with "Breeding", \textit{i.e.} only adults are present at the initialization of the simulation. The life cycle is repeated for each generation. The life cycle in quantiNemo is the following.  
 
 \begin{figure}[h]
 	\centering
-		\includegraphics[width=0.80\textwidth]{life-cycle.pdf}
+		\includegraphics[width=0.80\textwidth]{life_cycle.pdf}
 	\label{fig:life-cycle}
 \end{figure}
 \begin{description}
-\item \textbf{\hyperref[chap:breeding]{1 : Breeding.}} Adults mate and may produce offspring. Selection acts at this stage.
+\item \textbf{\hyperref[chap:breeding]{1 : Breeding.}} Adults mate and may produce offspring. By default, selection acts at this stage.
 \item \textbf{\hyperref[4aging]{2 : Aging.}} Adults are removed from the population. Only the juveniles remain in the model.
 \item \textbf{\hyperref[5regulation]{3 : Regulation.}} Reduce if necessary the population size to carrying capacity on each patch before dispersal. 
 \item \textbf{\hyperref[sec:dispersal]{4 : Dispersal.}} Individual can migrate to other patches and become adults. 
 \item \textbf{\hyperref[7regulation]{5 : Regulation.}} Reduce if necessary the population size to carrying capacity on each patch after dispersal. 
 \item \textbf{\hyperref[8extinction]{6 : Extinction.}} Due to stochastic events populations may go extinct.
 \end{description}
-Moreover, during each cycle,  two events which called between breeding and aging allow to save informations about the simulation.  Notice that at this moment, both adult and Juvenile are present, the main difference between both being that the adult might come from another patch while Juvenile not. 
+Moreover, during each cycle,  two events are called between breeding and aging allow to save informations about the simulation.  Notice that at this moment, both adult and Juvenile are present, the main difference between both being that the adult might come from another patch while Juvenile not. 
 \begin{description}
-\item \textbf{\hyperref[2statistics]{2 : Statistics.}} It is the stage were summary statistics can be computed for adults and juveniles.
-\item \textbf{\hyperref[3output]{3 : Outputs.}} Genotypes and/or phenotypes can be dumped to files for adults and/or juveniles.
+\item \textbf{\hyperref[sec:Statistics]{Statistics.}} It is the stage were summary statistics can be computed for adults and juveniles.
+\item \textbf{\hyperref[sec:Output]{Outputs.}} Genotypes and/or phenotypes can be dumped to files for adults and/or juveniles.
 \end{description}
-The main life cycle events are described in separate chapter, in particular the reproduction is described in chapter \ref{chap:breeding} and the dispersal in the chapter about demography, section \ref{sec:dispersal}. All the information about statistics and output is also given in a separate chapter: \ref{chap:statistic}
+Most of the life cycle events are described in the following pages. However, the dispersal is included in the chapter about demography,  section \ref{sec:dispersal}. All the information about statistics and output is also given in a separate chapter \ref{chap:OutputsAndStatistics}
 
 
 \section{Mating system}\label{chap:breeding}
@@ -854,22 +813,22 @@ This stage performs mating and reproduction following the selected mating system
 \begin{description}
 
 \item[mating\_system\index{mating\_system}]\textbf{[0-6] (default: 0)}\\
-Five general mating systems are implemented in quantiNEMO. The assignment of the parents to the offspring is random depending on the fitness of the local parents (if no selection acts all individuals have a fitness of 1). Thereby, adults with a higher fitness have on average a higher reproductive success):
+Five general mating systems are implemented in quantiNEMO. The assignment of the parents to the offspring is random depending on the fitness of the local parents (if no selection acts all individuals have a fitness of 1). Adults with a higher fitness have on average a higher reproductive success):
 
 \begin{description}
 \item [0~:~random mating (hermaphrodite).] For each offspring two hermaphrodite parents are randomly assigned. With probability $1/N$ these two hermaphrodites are identical which leads to selfing. Females are used to simulate hermaphrodites. 
 
-\item [1~:~selfing (hermaphrodite).] For each offspring a hermaphrodite is randomly assigned to self fertilize. The parameter \textsf{mating\_proportion} allows to set the proportion of outcrosses. quantiNEMO controls that the proportion of outcrosses is met, i.e. that outcrossing does not result by chance ($1/N$) in selfing. Females are used to simulate hermaphrodites.
+\item [1~:~selfing (hermaphrodite).] For each offspring a hermaphrodite is randomly assigned to self fertilize. The parameter \textsf{mating\_proportion} allows to set the proportion of outcrosses. quantiNEMO controls that the proportion of outcrosses is met, \textit{i.e.} that outcrossing does not result by chance ($1/N$) in selfing. Females are used to simulate hermaphrodites.
 
 \item [2~:~cloning (hermaphrodite).] This mating system is identical to the model selfing but without any recombination. The genotype of the offspring is identical to the genotype of the mother (only females are simulated) except for changes due to mutations. The parameter \textsf{mating\_proportion} allows to set the proportion of sexual reproduction (random mating). Females are used to simulate hermaphrodites.
 
 \item [3~:~random mating (promiscuity).] This is random mating with two sexes. For each offspring a father and a mother are randomly assigned.
 
-\item [4~:~polygyny.] Depending on the parameter \textsf{mating\_males} only one (default) or several males per patch may reproduce. This fixed number of reproductive males are selected randomly depending on their fitnesses, i.e. the reproductive males have on average a higher fitness. Then for each offspring a mother and one of these reproductive males are randomly assigned depending on their fitnesses. Thus reproductive males with higher fitnesses have a higher reproductive success among the reproductive males. If no selection acts (parameter \textsf{selection\_level} set to 3) the reproductive males are randomly chosen (all males have the same probability) and each male has the same probability to father an offspring. The parameter \textsf{mating\_proportion} allows to set the proportion of random matings between any male and female, i.e. also males of the non-reproductive group may get the chance to reproduce.
+\item [4~:~polygyny.] Depending on the parameter \textsf{mating\_males} only one (default) or several males per patch may reproduce. This fixed number of reproductive males are selected randomly depending on their fitnesses, \textit{i.e.} the reproductive males have on average a higher fitness. Then for each offspring a mother and one of these reproductive males are randomly assigned depending on their fitnesses. Thus reproductive males with higher fitnesses have a higher reproductive success among the reproductive males. If no selection acts the reproductive males are randomly chosen (all males have the same probability) and each male has the same probability to father an offspring. The parameter \textsf{mating\_proportion} allows to set the proportion of random matings between any male and female, \textit{i.e.} also males of the non-reproductive group may get the chance to reproduce.
 
 \item [5~:~monogamy.] For each female a male is randomly assigned to be its partner for all offspring. If there are less females than males present in the patch, not all males will mate. In contrast, if there are more females than males present in the patch, males may belong to several mating pairs. For each offspring a parent pair is randomly assigned depending on the fitness of the female (if no selection acts the parent pairs have the same probability to be selected). Thus parent pairs, where the females have a higher fitness have on average a higher reproductive success. The parameter \textsf{mating\_proportion} allows to set the proportion of random matings.
 
-\item [6~:~no mating/reproduction.] In this case no mating or reproduction occurs, i.e. this life cycle event is skipped. This option allows to use quantiNEMO as a statistical package. The input data may be passed as initial genotype files (ntrl or quanti) in the FSTAT format (see sections \ref{iniGenoQuanti} and \ref{iniGenoNtrl}). The number of generations has to be set to one since a simulation without any mating and reproduction does not make sense.
+\item [6~:~no mating/reproduction.] In this case no mating or reproduction occurs, \textit{i.e.} this life cycle event is skipped. This option allows to use quantiNEMO as a statistical package. The input data may be passed as initial genotype files (ntrl or quanti) in the FSTAT format (see sections \ref{iniGenoQuanti} and \ref{iniGenoNtrl}). The number of generations has to be set to one since a simulation without any mating and reproduction does not make sense.
 
 \end{description}
 
@@ -888,7 +847,7 @@ Models and their specific parameters\\
 \end{tabular*}
 
 \item[mating\_proportion\index{mating\_proportion}] \textbf{[decimal] (temporal/default: 1)}\\
-This parameter allows to specify the ratio of a special mating system (selfing, cloning, polygyny, or monogamy) in relation to random mating. A value of 1 (default) means that only the special mating occurs and a value of 0 means that only random mating occurs. For example if we want to simulate a plant with a selfing rate of 90\% we have to set the parameter \textbf{mating\_system} to 1 (selfing) and this parameter \textbf{mating\_proportion} to 0.9. These settings will lead to 90\% selfing and 10\% random mating. Note, that quantiNEMO controls that the ratio is met, i.e. that selfing does not occur by chance (probability would be $1/N$) when random mating should occur.
+This parameter allows to specify the ratio of a special mating system (selfing, cloning, polygyny, or monogamy) in relation to random mating. A value of 1 (default) means that only the special mating occurs and a value of 0 means that only random mating occurs. For example if we want to simulate a plant with a selfing rate of 90\% we have to set the parameter \textbf{mating\_system} to 1 (selfing) and this parameter \textbf{mating\_proportion} to 0.9. These settings will lead to 90\% selfing and 10\% random mating. Note, that quantiNEMO controls that the ratio is met, \textit{i.e.} that selfing does not occur by chance (probability would be $1/N$) when random mating should occur.
 
 \item[mating\_males\index{mating\_males}] \textbf{[integer] (default: 1)}\\
 This parameter sets the number of males that will be available for mating within each patch. The parameter will only be used if the mating system is polygyny (parameter \textsf{mating\_system} set to 4). The range of values is between 1 (a single male mates) and the carrying capacity of the males (all males may mate).
@@ -897,7 +856,7 @@ This parameter sets the number of males that will be available for mating within
 This parameter allows to specify the ratio of males to females of the offspring in a patch. If hermaphrodites are simulated (parameter \textsf{mating\_system} is set to 0, 1 or 2) the sex ratio is not considered, respectively set to 0 (females are used to simulate hermaphrodites).
 
 \item[sex\_ratio\_threshold\index{sex\_ratio\_threshold}] \textbf{[decimal] (default: "")}\\
-By default the sex of an individual is randomly assigned depending on the specified sex ratio (see parameter \textsf{sex\_ratio}). If the parameter \textsf{sex\_ratio\_threshold} is set the sex of an offspring is determined by the phenotype of the first quantitative trait of the offspring. The argument specifies the threshold above which an individual becomes a male. If this parameter is set the parameter \textsf{sex\_ratio} is not considered. Note, that when using this parameter the phenotype has to be defined at the offspring stage, thus the parameter \textsf{quanti\_environmental\_proportion} has to be set to 0. Using this parameter it is possible to simulate sex chromosomes (see chapter \ref{chap:geneticMap}).  
+By default the sex of an individual is randomly assigned depending on the specified sex ratio (see parameter \textsf{sex\_ratio}). If the parameter \textsf{sex\_ratio\_threshold} is set the sex of an offspring is determined by the phenotype of the first quantitative trait of the offspring. The argument specifies the threshold above which an individual becomes a male. If this parameter is set the parameter \textsf{sex\_ratio} is not considered. Note, that when using this parameter the phenotype has to be defined at the offspring stage, thus the parameter \textsf{quanti\_environmental\_proportion} has to be set to 0. Using this parameter it is possible to simulate sex chromosomes.  
 
 \end{description}
 
@@ -907,11 +866,11 @@ This life cycle event simply removes the adults present.
 
 
 \section{Regulation offspring}\label{5regulation}
-This event performs population regulation before dispersal, i.e. at the offspring stage. This life cycle event allows to regulate the population sizes down to carrying capacity. In fact the regulation should only be used if there is no regulation at the reproduction stage, i.e. if the parameter \textsf{mating\_nb\_offspring\_model} is set to 1 (keep number), 2 (fecundity), or 3 (fecundity stochastic). If the parameter \textsf{selection\_position} is set to 2 then selection acts at this stage. In this case the following parameter is ignored and offspring regulation happens following the parameter \textsf{selection\_level}.  
+This event performs population regulation before dispersal, \textit{i.e.} at the offspring stage. This life cycle event allows to regulate the population sizes down to carrying capacity. In fact the regulation should only be used if there is no regulation at the reproduction stage, \textit{i.e.} if the parameter \textsf{mating\_nb\_offspring\_model} is set to 1 (keep number), 2 (fecundity), or 3 (fecundity stochastic). If the parameter \textsf{selection\_position} is set to 2 then selection acts at this stage. In this case the following parameter is ignored and offspring regulation happens following the parameter \textsf{selection\_level}.  
 \begin{description}
 \item[regulation\_model\_offspring\index{regulation\_model\_offspring}] \textbf{[0,1] (default: 0)}
 \begin{description}
-\item[0~:~no regulation.] No population size regulation takes place at the offspring stage, i.e. overcrowding can occur.
+\item[0~:~no regulation.] No population size regulation takes place at the offspring stage, \textit{i.e.} overcrowding can occur.
 \item[1~:~random regulation.] For each patch quantiNEMO regulates the population size down to its carrying capacity if the population size exceeds carrying capacity. Individuals are thereby randomly removed. No regulation takes place if the population size is lower than carrying capacity.
 \end{description}
 \end{description}
@@ -919,12 +878,12 @@ This event performs population regulation before dispersal, i.e. at the offsprin
 
 
 \section{Regulation adults}\label{7regulation}
-This event performs population regulation after dispersal, i.e. at the adult stage. Due to asymmetric dispersal some patches may be overcrowded. This life cycle event allows to regulate the population sizes down to carrying capacity. In fact the regulation should only be used if there is no regulation at the reproduction stage, i.e. if the parameter \textsf{mating\_nb\_offspring\_model} is set to 1 (keep number), 2 (fecundity), or 3 (fecundity stochastic). If the parameter \textsf{selection\_position} is set to 3 then selection acts at this stage. In this case the following parameter is ignored and offspring regulation happens following the parameter \textsf{selection\_level}.  
+This event performs population regulation after dispersal, \textit{i.e.} at the adult stage. Due to asymmetric dispersal some patches may be overcrowded. This life cycle event allows to regulate the population sizes down to carrying capacity. In fact the regulation should only be used if there is no regulation at the reproduction stage, \textit{i.e.} if the parameter \textsf{mating\_nb\_offspring\_model} is set to 1 (keep number), 2 (fecundity), or 3 (fecundity stochastic). If the parameter \textsf{selection\_position} is set to 3 then selection acts at this stage. In this case the following parameter is ignored and offspring regulation happens following the parameter \textsf{selection\_level}.  
 
 \begin{description}
 \item[regulation\_model\_adults\index{regulation\_model\_adults}] \textbf{[0,1] (default: 0)}
 \begin{description}
-\item[0~:~no regulation.] No population size regulation takes place at the adults stage, i.e. overcrowding can occur.
+\item[0~:~no regulation.] No population size regulation takes place at the adults stage, \textit{i.e.} overcrowding can occur.
 \item[1~:~random regulation.] For each patch quantiNEMO regulates the population size down to its carrying capacity if the population size exceeds carrying capacity. Individuals are thereby randomly removed. No regulation takes place if the population size is lower than carrying capacity.
 \end{description}
 \end{description}
@@ -949,21 +908,28 @@ These parameters specify how a population is affected when it is hit by an extin
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \chapter{Demography}\label{chap:Demography}
-This section describes general parameters about the the demography, like the number of individual in each patch, the dispersal and the population growth. 
+This section describes general parameters about the the demography, such as the number of individual in each patch, the migration model and the population growth. 
 \section{Dimensions}
 \begin{description}
-\item[patch\_number\index{patch\_number}] \textbf{[integer] (default: 1)}\\ 
-This parameter specifies the number of patches in the metapopulation.
 
-\item[patch\_capacity\index{patch\_capacity}]\hspace*{\fill}\\
-\vspace{-9mm}
+\item[generations\index{generations}]\textbf{[integer]}\\
+Number of generations to perform per replicate. This parameter is mandatory, and has no default.
+\item[patch\_capacity\index{patch\_capacity}]
+\textbf{[integer/matrix] (temporal)}\\
+Carrying capacities of the patches. This parameter is mandatory, and has no default.
+
+ If all patches have the same carrying capacities a single number as argument is sufficient to specify the carrying capacities. To set the carrying capacities individually for each patch a matrix is needed. Note, using a two dimensional matrix with two columns allows addressing directly a patch and thus specifying carrying capacity explicitly for this patch (e.g. \textit{\{\{patchID value\}\{patchID value\}...\}}), while all not specified patches will have a carrying capacity of 0. 
+
+
 \item[patch\_capacity\_fem\index{patch\_capacity\_fem}]\hspace*{\fill}\\
 \vspace{-9mm}
 \item[patch\_capacity\_mal\index{patch\_capacity\_mal}]\textbf{[integer/matrix] (temporal)}\\
-These parameters allow to set the carrying capacities of the patches. The carrying capacity of a patch is the maximal number of individuals that a patch may support. The carrying capacities may vary among sexes, patches, and time. The carrying capacities have to be specified either for each sex separately (parameters \textsf{patch\_capacity\_fem} and \textsf{patch\_capacity\_mal}), or for both sexes together (parameter \textsf{patch\_capacity}). In the first case both sex specific parameters have to be set if two sexes are simulated. In the latter case the carrying capacities for females and males are assumed to be identical, i.e. the carrying capacity of females and males is $patch\_capacity/2$. If hermaphrodites are simulated the parameters \textsf{patch\_capacity} and \textsf{patch\_capacity\_fem} are identical. In case all three parameters are set, only the sex specific parameters will be used as they are more informative. To set the carrying capacities individually for each patch a matrix is needed. The matrix is adjusted to the number of patches if necessary (see section \ref{matparam}). If all patches have the same carrying capacities a single number as argument is sufficient to specify the carrying capacities. If the initial population sizes (parameter \textsf{patch\_ini\_size}) are not specified the simulation will start with all the populations set at carrying capacity. Note, using a two dimensional matrix with two columns allows addressing directly a patch and thus specifying carrying capacity explicitly for this patch (e.g. \textit{\{\{patchID value\}\{patchID value\}...\}}), while all not specified patches will have a carrying capacity of 0. 
+The carrying capacities may vary among sexes, patches, and time. The carrying capacities have to be specified either for each sex separately (parameters \textsf{patch\_capacity\_fem} and \textsf{patch\_capacity\_mal}), or for both sexes together (parameter \textsf{patch\_capacity}). In the first case both sex specific parameters have to be set if two sexes are simulated. In the latter case the carrying capacities for females and males are assumed to be identical, \textit{i.e.} the carrying capacity of females and males is $patch\_capacity/2$. If hermaphrodites are simulated the parameters \textsf{patch\_capacity} and \textsf{patch\_capacity\_fem} are identical. In case all three parameters are set, only the sex specific parameters will be used as they are more informative.
+\item[patch\_number\index{patch\_number}] \textbf{[integer] (default: 1)}\\ 
+This parameter specifies the number of patches in the metapopulation.
 \end{description}
 \section{Initialization}
-This section allows to specify how the metapopulation is initialized. The population size of the patches may be set in three different ways. Also the genotypes of the individuals of the initial populations may be set differently. By default, i.e. if no special parameters of this section are defined, the initial population size of each patch corresponds to its carrying capacity (see parameter \textbf{patch\_capacity} above). If the initial population sizes deviate from the carrying capacities the parameter \textbf{patch\_ini\_size} allows to set the initial population size for each patch separately. Finally, it is possible to define the genotypes of each individual explicitly using an FSTAT file \citep{Goudet_1995}. By doing this also the initial population sizes are defined. For details please have a look at the parameters \textbf{quanti\_ini\_genotypes} and \textbf{ntrl\_ini\_genotypes} in their appropriate chapter about quantitative traits (chapter \ref{chap:quanti}) and neutral markers (chapter \ref{chap:ntrl}), respectively. If a genotype file is present the initial population sizes are defined using this file. Note, that it is possible to resume a simulation using the genotype files.    
+This section allows to specify how the metapopulation is initialized. The population size of the patches may be set in three different ways. Also the genotypes of the individuals of the initial populations may be set differently. By default, \textit{i.e.} if no special parameters of this section are defined, the initial population size of each patch corresponds to its carrying capacity (see parameter \textbf{patch\_capacity} above). If the initial population sizes deviate from the carrying capacities the parameter \textbf{patch\_ini\_size} allows to set the initial population size for each patch separately. Finally, it is possible to define the genotypes of each individual explicitly using an FSTAT file \citep{Goudet_1995}. By doing this also the initial population sizes are defined. For details please have a look at the parameters \textbf{quanti\_ini\_genotypes} and \textbf{ntrl\_ini\_genotypes} in the chapter about \hyperref[chap:Genetics]{genetic}. If a genotype file is present the initial population sizes are defined using this file.
 
 \begin{description}
 
@@ -972,7 +938,7 @@ This section allows to specify how the metapopulation is initialized. The popula
 \item[patch\_ini\_size\_fem\index{patch\_ini\_size\_fem}]\hspace*{\fill}\\
 \vspace{-9mm}
 \item[patch\_ini\_size\_mal\index{patch\_ini\_size\_mal}]\textbf{[integer/matrix]}\\
-These parameters allow to set the initial population sizes of the patches, i.e. the populations sizes present at the beginning of the simulation. These parameters are optional. If none of these parameters is set, i.e. the initial population sizes are not set, the simulation will start with all the population sizes set at carrying capacity. The initial population sizes may vary among sexes, and patches. The initial population sizes have to be specified either for each sex separately (parameters \textsf{patch\_ini\_size\_fem} and \textsf{patch\_ini\_size\_mal}), or for both sexes together (parameter \textsf{patch\_ini\_size}). In the first case both sex specific parameters have to be set if two sexes are simulated. In the latter case the initial population sizes for females and males are assumed to be identical, i.e. the initial population size of females and males is $patch\_ini\_size/2$. If hermaphrodites are simulated the parameters \textsf{patch\_ini\_size} and \textsf{patch\_ini\_size\_fem} are identical. In case all three parameters are set the sex specific parameters will be used as they are more informative. To set the initial population sizes individually for each patch a matrix is needed. The matrix is adjusted to the number of patches if necessary (see section \ref{matparam}). If all patches have the same initial population sizes a single number as argument is sufficient to specify the initial population sizes. Note, using a two dimensional matrix with two columns allows addressing directly a patch and thus specifying the initial population size for this patch (e.g. \textit{\{\{patchID value\}\{patchID value\}...\}}), while all not specified patches will have an initial population size of 0.
+These parameters allow to set the initial population sizes of the patches, \textit{i.e.} the populations sizes present at the beginning of the simulation. These parameters are optional. If none of these parameters is set, \textit{i.e.} the initial population sizes are not set, the simulation will start with all the population sizes set at carrying capacity. The initial population sizes may vary among sexes, and patches. The initial population sizes have to be specified either for each sex separately (parameters \textsf{patch\_ini\_size\_fem} and \textsf{patch\_ini\_size\_mal}), or for both sexes together (parameter \textsf{patch\_ini\_size}). In the first case both sex specific parameters have to be set if two sexes are simulated. In the latter case the initial population sizes for females and males are assumed to be identical, \textit{i.e.} the initial population size of females and males is $patch\_ini\_size/2$. If hermaphrodites are simulated the parameters \textsf{patch\_ini\_size} and \textsf{patch\_ini\_size\_fem} are identical. In case all three parameters are set the sex specific parameters will be used as they are more informative. To set the initial population sizes individually for each patch a matrix is needed. The matrix is adjusted to the number of patches if necessary (see section \ref{matparam}). If all patches have the same initial population sizes a single number as argument is sufficient to specify the initial population sizes. Note, using a two dimensional matrix with two columns allows addressing directly a patch and thus specifying the initial population size for this patch (e.g. \textit{\{\{patchID value\}\{patchID value\}...\}}), while all not specified patches will have an initial population size of 0.
 \end{description}
 \section{Population growth}
 \begin{description}
@@ -982,13 +948,13 @@ This parameter specifies how the total number of offspring ($N_{Off}$) is determ
 \item [0~:~carrying capacity.]  \[ N_{Off} = K \]
 The total number of offspring ($N_{Off}$) is set to the carrying capacity ($K$, parameter \textsf{patch\_capacity}) of the patch or the metapopulation, respectively.
 \item [1~:~keep number.] \[ N_{Off} = N \]
-The total number of offspring ($N_{Off}$) corresponds to the number of adults ($N$), i.e. the number of individuals is kept constant. Note that a regulation of the patch densities after dispersal can lead to an unwanted continuing reduction of the entire metapopulation size. 
+The total number of offspring ($N_{Off}$) corresponds to the number of adults ($N$), \textit{i.e.} the number of individuals is kept constant. Note that a regulation of the patch densities after dispersal can lead to an unwanted continuing reduction of the entire metapopulation size. 
 \item [2~:~fecundity.]  \[ N_{Off} = Poisson(N_{F}f) \]
 The number of offspring ($N_{Off}$) depends on the mean fecundity of the females ($f$) defined by the parameter \textsf{mean\_fecundity}.
 \item [3~:~fecundity simple.] \[ N_{Off} = round(N_{F}f) \]
 A simplified version of point 2 assuming that the fecundity is always the same (no fluctuations). This simplification speeds up computation and is acceptable for a wide range of simulation problems.
 \item [4~:~fecundity binomial.] \[ N_{Off} = floor(N_{F}f)+Binomial(N_{F}f-floor(N_{F}f),1) \]
-Similar to point 3, but the rounding is replaced by random rounding with probability equal to the decimal part of the number, i.e. drawing a random number in a binomial distribution with probability equal to the decimal part of the number.
+Similar to point 3, but the rounding is replaced by random rounding with probability equal to the decimal part of the number, \textit{i.e.} drawing a random number in a binomial distribution with probability equal to the decimal part of the number.
 \item [5~:~fecundity limited.] 
 \[ N_{Off}= Poisson(N_{F}f) \]
 \[ if(N_{Off}>K) N_{Off}=K \]
@@ -1036,7 +1002,7 @@ This life cycle event allows the exchange of individuals between populations. Th
 \item[dispersal\_rate\_fem\index{dispersal\_rate\_fem}]\hspace*{\fill}\\
 \vspace{-9mm}
 \item[dispersal\_rate\_mal\index{dispersal\_rate\_mal}]\textbf{[decimal/matrix] (temporal/default: 0)}\\
-These parameters allow to set the emigration rate (if the argument is between 0 and 1 (1 excluded), or the number of emigrants (if the argument is an integer). If the argument is a single value the dispersal model used depends on the other parameters of this section. But it is also possible to specify the dispersal rate explicitly between each pair of patches (for both directions) if the argument is a matrix. A dispersal matrix has precedence over all other dispersal settings. The matrix must be \texttt{patch\_number} x \texttt{patch\_number} in dimensions. Each $d_{ij}$ element of this matrix is the dispersal probability from patch $i$ to patch $j$, where $i$ specifies the row and $j$ the column of the matrix. Consequently the values in a row must sum up to 1 (if the row do do not sum up to 1 the proportion of residents (diagonal) will be adjusted and a warning returned). The dispersal rates can either be specified for both sexes in general or for each sex separately. If the dispersal rates are sex specific the dispersal rates for both sexes have to be specified and they have to be in the same format (matrix or a single dispersal rate). Sex specific dispersal rates have precedence over a general dispersal rate. Note, that the dispersal matrix has to be fully specified, i.e. the matrix is not adjusted to the number of patches as for other parameters. 
+These parameters allow to set the emigration rate (if the argument is between 0 and 1 (1 excluded), or the number of emigrants (if the argument is an integer). If the argument is a single value the dispersal model used depends on the other parameters of this section. But it is also possible to specify the dispersal rate explicitly between each pair of patches (for both directions) if the argument is a matrix. A dispersal matrix has precedence over all other dispersal settings. The matrix must be \texttt{patch\_number} x \texttt{patch\_number} in dimensions. Each $d_{ij}$ element of this matrix is the dispersal probability from patch $i$ to patch $j$, where $i$ specifies the row and $j$ the column of the matrix. Consequently the values in a row must sum up to 1 (if the row do do not sum up to 1 the proportion of residents (diagonal) will be adjusted and a warning returned). The dispersal rates can either be specified for both sexes in general or for each sex separately. If the dispersal rates are sex specific the dispersal rates for both sexes have to be specified and they have to be in the same format (matrix or a single dispersal rate). Sex specific dispersal rates have precedence over a general dispersal rate. Note, that the dispersal matrix has to be fully specified, \textit{i.e.} the matrix is not adjusted to the number of patches as for other parameters. 
 
 \item[dispersal\_model\index{dispersal\_model}] \textbf{[0-4] (default: 0)}\\
 The following dispersal models can be specified, if the dispersal rate is a single rate:
@@ -1049,7 +1015,6 @@ The following dispersal models can be specified, if the dispersal rate is a sing
 
 \item[3~:~2D Stepping-Stone model.] In the two dimensional Stepping-Stone model patches are placed on a grid (or lattice) and migrants can move to 4 or 8 adjacent patches (set by the \textsf{dispersal\_lattice\_range} parameter below). If the dispersal rate is $m$, the probability to disperse to one of the adjacent patches is $m/4$ or $m/8$ depending on the the parameter \textsf{dispersal\_lattice\_range}, while the probability to stay at home is $1-m$. The parameter \textsf{dispersal\_border\_model} allows to specify how to treat the border patches and the parameter \textsf{dispersal\_lattice\_dims} allows to specify the dimensions of the grid.   
 
-\item[4~:~2D long range dispersal.] A two dimensional lattice is used and dispersal follows a geometric distribution to simulate long range dispersal. The slope of the geometric distribution is given by the parameter \textbf{dispersal\_long\_range\_coef}. Note that this model is fully parametrized by the parameter \textbf{dispersal\_long\_range\_coef} and does not require the parameter \textbf{dispersal\_rate}, i.e. this parameter is not considered (expect if it is a matrix, as in this case the dispersal matrix is used to define the migration). For example a value of 0.3 defines the geometric slope and at the same time the emigration rate which is in this case 0.3.
 \end{description}
 
 Models and their specific parameters\\
@@ -1061,7 +1026,6 @@ Models and their specific parameters\\
  2~:~1D Stepping-Stone      & dispersal\_border\_model\\
  3~:~2D Stepping-Stone      & dispersal\_border\_model / dispersal\_lattice\_range / \\
                             & dispersal\_lattice\_dims\\
- 4~:~2D long range          & dispersal\_long\_range\_coef\\
  \hline
 \end{tabular*}
 
@@ -1086,7 +1050,7 @@ This parameter allows to specify the length and width of the 2D Stepping-Stone l
 
 
 \item[dispersal\_propagule\_prob\index{dispersal\_propagule\_prob}] \textbf{[decimal] (temporal/default: 1)}\\
-This parameter is only used for the Propagule-pool Island model (parameter \textsf{dispersal\_model} set to 1). It specifies the probability that a migrant will move to the propagule-assigned patch, i.e. this is also the proportion of emigrants of a patch which migrate to the same non-natal patch. A probability of 1 means that all emigrants migrate to the same non-natal patch, while a value of 0 means that all emigrants migrate to any patch, but the natal and the propagule patch. 
+This parameter is only used for the Propagule-pool Island model (parameter \textsf{dispersal\_model} set to 1). It specifies the probability that a migrant will move to the propagule-assigned patch, \textit{i.e.} this is also the proportion of emigrants of a patch which migrate to the same non-natal patch. A probability of 1 means that all emigrants migrate to the same non-natal patch, while a value of 0 means that all emigrants migrate to any patch, but the natal and the propagule patch. 
 
 \end{description}
 
@@ -1098,7 +1062,7 @@ By default the dispersal rate is not influenced by the population size. The foll
 this parameter define how the dispersal rate is set.
 \begin{description}
                   \item[0~:~Flat rate.] The rate does not depend of the density
-                  \item [1~:~Dependant rate 1] Rate depend on density following the relation $ m_{\text{eff}} = \frac{me}{N}*(N-K(1-\exp(-N/K)))$, where $m$ is the migration rate, $K$ the patch capacity, $N$ the number of individual on the patch before migration and $e$ the Euler constant. Notice that in this case, the migration rate is exactly $m$ when the density is one.
+                  \item [1~:~Dependant rate 1] Rate depend on density following the relation $ m_{\text{eff}} = \frac{me}{N}*(N-K(1-\exp(-N/K)))$, where $m$ is the migration rate, $K$ the patch capacity, $N$ the number of individual on the patch before migration and $e$ the Euler constant. Notice that in this case, the migration rate is exactly $m$ (parameters \textsf{dispersal\_rate}) when the density is one.
                    \item [2 ~:~Dependant rate 2] Rate depend on density following the relation $m_{\text{eff}} =\frac{(N-K(1-\exp(-N/K)))}{N}$. Notice that in this case, the migration rate specified using the parameter \textsf{dispersal\_rate} is not used, and instead the migration rate is smoothly adjusted so that the density after dispersal is always smaller than one. 
 \end{description}
 \end{description}
@@ -1106,21 +1070,21 @@ this parameter define how the dispersal rate is set.
 
 \chapter{Genetics}\label{chap:Genetics}
 \section{Introduction}
-quantiNEMO allow the simulation of quantitative trait as well as neutral markers, both related by a common genetic map so that processes like linkage disequilibrium and genetic hitchhiking can be simulated. More precisely, quantiNEMO also allows the simulation of neutral markers, such as microsatellites or SNPs with different mutation models (K allele and Stepwise). Quantitative trait under selection composed from various loci can also be added to the same simulation. In this chapter, we explain how to define trait and loci, locate them in a map, set an initial genotype and choose a mutation model for all loci. 
+QuantiNEMO allow the simulation of quantitative trait as well as neutral markers, both related by a common genetic map so that processes like linkage disequilibrium and genetic hitchhiking can be simulated easly. More precisely, quantiNEMO also allows the simulation of neutral markers, such as microsatellites or SNPs with different mutation models (K allele and Stepwise). Quantitative trait under selection composed from various loci can also be added to the same simulation. In this chapter, we explain how to define trait and loci, locate them in a map, set an initial genotype and choose a mutation model for all loci. 
 
 Most of the parameter and behaviour are the same for neutral and quantitative traits. The main difference is that neutral trait's parameters are defined with a \textsf{ntrl\_} in front while quantitative trait are specified with  \textsf{quanti\_}. In the case where the parameter have the same meaning for neutral and quantitative trait, the \textsf{(ntrl/quanti)\_parameter} notation will be used, which should be read as the existence of two parameters, one \textsf{ntrl\_parameter} and another one \textsf{quanti\_parameter}.  Most of the time, the two parameters have the same meaning for neutral and quantitative trait, but small differences are present for example in the mutations models or in how the initial genotype is randomly draw. 
 \section{Settings loci}
 \begin{description}
 \item[(ntrl/quanti)\_loci\index{ntrl\_loci}\index{quanti\_loci}] \textbf{[integer]}\\
-This parameter specifies the number of neutral/quantitative marker loci per individual. This parameter is mandatory for the simulation of a neutral/quantitative marker.
+This parameter specifies the number of neutral/quantitative loci per individual. This parameter is mandatory for the simulation of a neutral/quantitative loci \textit{i.e.} it is necessary as soon as we want to study genetic effect.  
 
 \item[(ntrl/quanti)\_all\index{ntrl\_all}\index{quanti\_all}] \textbf{[1-256/matrix] (default: 255)}\\
 This parameter specifies the maximal possible number of alleles per locus. Using a matrix it is possible to specify this number for each locus of a trait separately.
 \end{description}
 
 \begin{description}
-\item[\label{allelicFileNTRL}ntrl\_allelic\_file\index{ntrl\_allelic\_file}]  \textbf{[string] (default: "")} \\
-This parameter allows to pass the name of a file containing allele informations, such as the initial allele frequencies, and/or the mutation probability to an allele. The number of alleles and loci has to be in line with the parameters \textsf{ntrl\_loci} and \textsf{ntrl\_all}. The information can be set globally for all loci, if they have the same specifications, or for each locus separately. The allelic file for neutral markers has the same format as the allelic file for quantitative traits, but does not allow to specify the allelic effects:
+\item[\label{allelicFile}(ntrl/quanti)\_allelic\_file\index{ntrl\_allelic\_file}\index{quanti\_allelic\_file}]  \textbf{[string] (default: "")} \\
+This parameter allows to pass the name of a file containing allele informations, such as the initial allele frequencies, and/or the mutation probability to an allele. The number of alleles and loci has to be in line with the parameters \textsf{ntrl\_loci} and \textsf{ntrl\_all}. The information can be set globally for all loci, if they have the same specifications, or for each locus separately. The allelic file for neutral markers and for quantitative trait have the same format except for one column specifying the allelic effects:
 
 \begin{lstlisting}[frame=single]
 #Allelic file 
@@ -1128,28 +1092,29 @@ This parameter allows to pass the name of a file containing allele informations,
 [FILE_INFO]{
   col_locus 1
   col_allele 2
-  col_mut_freq 3
-  col_ini_freq 4
+  col_allelic_value 3
+  col_mut_freq 4
+  col_ini_freq 5
 }
 
-#locus  allele   mut_freq  ini_freq  
-1       1        0.20      {0  0.2}
-1       2        0.25      {0  0.2}
-1       3        0.20      {1  0.2}
-1       4        0.20      {0  0.2}
-1       5        0.20      {0  0.2}
-2       1        0.20      {0  0.2}
-2       2        0.25      {0  0.2}
-2       3        0.20      {1  0.2}
-2       4        0.20      {0  0.2}
-2       5        0.20      {0  0.2}
+#locus  allele  value   mut_freq  ini_freq  
+1       1       -1.0    0.2       {0  0.2}
+1       2       -0.5    0.2       {0  0.2}
+1       3       0.0     0.2       {1  0.2}
+1       4       0.5     0.2       {0  0.2}
+1       5       1.0     0.2       {0  0.2}
+2       1       -2      0.2       {0  0.2}
+2       2       -1      0.2       {0  0.2}
+2       3       0       0.2       {1  0.2}
+2       4       1       0.2       {0  0.2}
+2       5       2       0.2       {0  0.2}
 \end{lstlisting}
 
 The file has to start with a file information box \textsf{[FILE\_INFO]}\{...\}. This box contains the information of the structure of the following table allowing a flexible structure of the table. For example the order of the columns in the table may vary, or columns may be ignored. The file information box starts with the key word \textsf{[FILE\_INFO]} and the information is enclosed by brackets "\{...\}". Line by line the index of the columns to be read have to be declared. Thereby a keyword for the specific setting is followed by the column index (the ordering starts with 1). The following column keywords are available:
 \begin{description}
 \item [col\_locus] This keyword specifies the column containing the locus index. If this column is not declared in the file information box, quantiNEMO will use the same settings for all loci. In this case the length of the table must meet the number of alleles (\textsf{ntrl\_all}). If this keyword is declared the length of the table must meet the number of alleles times the number of loci (\textsf{ntrl\_loci} * \textsf{ntrl\_all}).   
 \item [col\_allele] This keyword specifies the column containing the allele index. This column is mandatory. The index of the allele goes from 1 to \textsf{ntrl\_loci}.
-\item [col\_mut\_freq] This keyword specifies the column containing the mutation probabilities, i.e. the probability to mutate to this allele when a mutation occurs. The behavior of this mutation probability depends on the mutation model (see parameter (\textsf{ntrl\_mutation\_model}).
+\item [col\_mut\_freq] This keyword specifies the column containing the mutation probabilities, \textit{i.e.} the probability to mutate to this allele when a mutation occurs. The behavior of this mutation probability depends on the mutation model (see parameter (\textsf{ntrl\_mutation\_model}).
 \item [col\_ini\_freq] This keyword specifies the column containing the initial frequencies of the alleles. This column allows to explicitly set the allele frequencies at the start of a simulation. The frequencies can be set for each patch separately using a matrix. In the example above, individuals of the first population are initially fixed for the allele 3 at the first locus as well as at the second locus. In the second population all alleles have the same initial frequency of 0.2. Note, that the matrix is adjusted in length if the number of populations does not correspond to the length of the matrix. If this column is not given the initial allele frequencies are set globally depending on the parameter \textsf{ntrl\_ini\_allele\_model}.
 \end{description} 
 Note, that as in all input files for quantiNEMO it is possible to define comments (also in the file information box) using the hash character: '\#' or '\#/ ...any text... /\#'.
@@ -1171,13 +1136,13 @@ This parameter allows to specify a name of an FSTAT file \citep{Goudet_1995} con
 If the genotypes or allele frequencies are not already defined in another way, the initialization of the genotypes may be either polymorphic, where the probability of each allele is identically or monomorphic, where all populations are fixed for a single allele.   
 \begin{description}
 \item[0~:~polymorph.] The populations are maximally polymorph in respect to allele frequencies at the start of a simulation.
-\item[1~:~monomorph.] The populations are monomorph in respect to allele frequencies at the start of a simulation. All individuals are fixed for a single allele, which is  the "middle" allele, i.e. the allele with the index $\left\lfloor \textsf{ntrl\_all}/2\right\rfloor$.
+\item[1~:~monomorph.] The populations are monomorph in respect to allele frequencies at the start of a simulation. All individuals are fixed for a single allele, which is  the "middle" allele, \textit{i.e.} the allele with the index $\left\lfloor \textsf{ntrl\_all}/2\right\rfloor$.
 \end{description}
 \item[quanti\_ini\_allele\_model\index{quanti\_ini\_allele\_model}] \textbf{[0,1] (default: 0)}\\
 If the genotypes or allele frequencies are not already defined in another way, the initialization of the genotypes may be either polymorphic, where the probability of each allele is identically or monomorphic, where all populations are fixed for a single allele.   
 \begin{description}
 \item[0~:~polymorph.] The allele frequency is given by a (discretized) normal distribution with a variance given by the parameter \textbf{quanti\_allelic\_var}. See \ref{tobedefine}
-\item[1~:~monomorph.] The populations are monomorph in respect to allele frequencies at the start of a simulation. All individuals are fixed for a single allele, which is  the "middle" allele, i.e. the allele with the index $\left\lfloor \textsf{ntrl\_all}/2\right\rfloor$.
+\item[1~:~monomorph.] The populations are monomorph in respect to allele frequencies at the start of a simulation. All individuals are fixed for a single allele, which is  the "middle" allele, \textit{i.e.} the allele with the index $\left\lfloor \textsf{ntrl\_all}/2\right\rfloor$.
 \end{description}
 \end{description}
 
@@ -1216,7 +1181,7 @@ This parameter allows to specify the mutation model. The following mutation mode
 At each mutation the existing allele is randomly exchanged by another allele within the range of alleles (i.e. $[1; ntrl\_all]$). By default the probability to mutate to any allele is the same. However, if the mutation probabilities are specified explicitly by the allelic file (see section \ref{allelicFileNTRL}) the probability to mutate to a certain allele depends on the specified probability to mutate to this allele.
 
 \item[1~:~SSM] (Single Step Mutation)\\
-In contrast to the K-Allele-Model the new allele depends on the current allele. When a mutation occurs the current allele is replaced by one of its neighboring alleles (concerning the allele index). For example, if the allele with the index 12 mutates, it changes either to the allele with the index 13, or to the allele with the index 11. The boundaries are reflexive, i.e. the allele index can not exceed the range of alleles (i.e. $[1; ntrl\_all]$). In line with the Increment Mutation Model (IMM) for quantitative traits it is possible to specify mutation probabilities of the "steps to mutate" using the allelic file (see section \ref{allelicFileNTRL}). In this case the number of alleles (\textsf{ntrl\_all}) has to be odd (as for the IMM). Then similar to the IMM the probabilities of the step to mutate has to be defined using the allelic file, where the step size is measured from the middle allele (concerning its index, i.e. $ntrl\_all/2$). The middle allele (with index $ntrl\_all/2$) has to have a mutation probability of 0 as a mutation of step zero is not a mutation. This allows generating any mutation pattern, as for instance the Generalized stepwise mutation model \citep{Estoup_2002}.
+In contrast to the K-Allele-Model the new allele depends on the current allele. When a mutation occurs the current allele is replaced by one of its neighboring alleles (concerning the allele index). For example, if the allele with the index 12 mutates, it changes either to the allele with the index 13, or to the allele with the index 11. The boundaries are reflexive, \textit{i.e.} the allele index can not exceed the range of alleles (i.e. $[1; ntrl\_all]$). In line with the Increment Mutation Model (IMM) for quantitative traits it is possible to specify mutation probabilities of the "steps to mutate" using the allelic file (see section \ref{allelicFileNTRL}). In this case the number of alleles (\textsf{ntrl\_all}) has to be odd (as for the IMM). Then similar to the IMM the probabilities of the step to mutate has to be defined using the allelic file, where the step size is measured from the middle allele (concerning its index, \textit{i.e.} $ntrl\_all/2$). The middle allele (with index $ntrl\_all/2$) has to have a mutation probability of 0 as a mutation of step zero is not a mutation. This allows generating any mutation pattern, as for instance the Generalized stepwise mutation model \citep{Estoup_2002}.
 \end{description}
 \end{description}
 \subsection{quantitative mutation model}
@@ -1228,7 +1193,7 @@ This parameter allows to specify the mutation model. The following mutation mode
 \item[0~:~RMM] (Random Mutation Model)\\
 At a given mutation a new allele is drawn randomly. 
 	\[ a_{new} = a_{mut}    \]
-Where $a_{new}$ is the effect of the new allele, and $a_{mut}$ is the effect of the drawn allele. The probability to mutate to a certain allele depends on its probability to mutate to it given that there is a mutation. These probabilities and also the effects of the alleles can explicitly be set by the allelic file (see section \ref{allelicFile}). If this is not the case quantiNEMO allocates the allelic effects and the probabilities to mutate to the alleles given that there is a mutation automatically: The effects of the alleles are regularly spaced between $-6\sigma$ and $6\sigma$, if there are more than 5 alleles, and the range is down regulated if the number of alleles is lower. Note, that in this later case the variance of the allelic effects in a population may not meet the specified variance.  Where $\sigma$ is the square root of the variance of the normal distribution from where the allelic effects are drawn randomly (see parameter \textsf{quanti\_allelic\_var}). The probability to mutate to a given allele given that there is a mutation is identical to the frequency of this allele defined by the distribution of the allelic effects (see parameter \textsf{quanti\_allelic\_var}), i.e. follow a normal distribution.
+Where $a_{new}$ is the effect of the new allele, and $a_{mut}$ is the effect of the drawn allele. The probability to mutate to a certain allele depends on its probability to mutate to it given that there is a mutation. These probabilities and also the effects of the alleles can explicitly be set by the allelic file (see section \ref{allelicFile}). If this is not the case quantiNEMO allocates the allelic effects and the probabilities to mutate to the alleles given that there is a mutation automatically: The effects of the alleles are regularly spaced between $-6\sigma$ and $6\sigma$, if there are more than 5 alleles, and the range is down regulated if the number of alleles is lower. Note, that in this later case the variance of the allelic effects in a population may not meet the specified variance.  Where $\sigma$ is the square root of the variance of the normal distribution from where the allelic effects are drawn randomly (see parameter \textsf{quanti\_allelic\_var}). The probability to mutate to a given allele given that there is a mutation is identical to the frequency of this allele defined by the distribution of the allelic effects (see parameter \textsf{quanti\_allelic\_var}), \textit{i.e.} follow a normal distribution.
 
 \item[1~:~IMM] (Increment Mutation Model)\\
 At a given mutation an allele effect is drawn randomly and is added to the current allelic effect. 
@@ -1236,13 +1201,13 @@ At a given mutation an allele effect is drawn randomly and is added to the curre
 \[ a_{new} = a_{old} + a_{mut}    \]
 
 Where $a_{new}$ is the effect of the new allele, $a_{mut}$ is the effect of the drawn allele, and $a_{old}$ is the effect of the old allele, before the mutation.
-The probability to mutate to a certain allelic effect depends on its probability to mutate to it given that there is a mutation. These probabilities and also the effects of the alleles can explicitly be set by the allelic file (see section \ref{allelicFile}). If this is not the case quantiNEMO allocates the allelic effects and the probabilities to mutate to the alleles given that there is a mutation automatically: The effects of the alleles are regularly spaced between $-20\sigma$ and $20\sigma$, where $\sigma$ is the square root of the variance of the normal distribution from where the allelic effects are drawn randomly (see parameter \textsf{quanti\_allelic\_var}). The probability to mutate to a given allelic effect given that there is a mutation is identical to its allele frequency, i.e. follow a normal distribution. This mutation model requires that the allelic effects are regularly spaced around zero, that the number of alleles is odd (thus the allele with index $\left\lfloor \textsf{quanti\_all}/2\right\rfloor$ is zero), and that there are at least 51 possible alleles (parameter \textsf{quanti\_all}).  
+The probability to mutate to a certain allelic effect depends on its probability to mutate to it given that there is a mutation. These probabilities and also the effects of the alleles can explicitly be set by the allelic file (see section \ref{allelicFile}). If this is not the case quantiNEMO allocates the allelic effects and the probabilities to mutate to the alleles given that there is a mutation automatically: The effects of the alleles are regularly spaced between $-20\sigma$ and $20\sigma$, where $\sigma$ is the square root of the variance of the normal distribution from where the allelic effects are drawn randomly (see parameter \textsf{quanti\_allelic\_var}). The probability to mutate to a given allelic effect given that there is a mutation is identical to its allele frequency, \textit{i.e.} follow a normal distribution. This mutation model requires that the allelic effects are regularly spaced around zero, that the number of alleles is odd (thus the allele with index $\left\lfloor \textsf{quanti\_all}/2\right\rfloor$ is zero), and that there are at least 51 possible alleles (parameter \textsf{quanti\_all}).  
 
 \item[2~:~KAM] (K-Allele Model)\\
 At each mutation the existing allele is randomly exchanged by another allele within the range of alleles (i.e. $[1; quanti\_all]$) not taking into account any allelic effect. By default the probability to mutate to any allele is the same. However, if the mutation probabilities are specified explicitly by the allelic file (see section \ref{allelicFile}) the probability to mutate to a certain allele depends on the specified probability to mutate to this allele.
 
 \item[3~:~SSM] (Single Step Mutation)\\
-In contrast to the K-Allele-Model the new allele depends on the current allele. When a mutation occurs the current allele is replaced by one of its neighboring alleles (concerning the allele index). For example, if the allele with the index 12 mutates, it changes either to the allele with the index 13, or to the allele with the index 11. The boundaries are reflexive, i.e. the allele index can not exceed the range of alleles (i.e. $[1; ntrl\_all]$). In line with the Increment Mutation Model (IMM) for quantitative traits it is possible to specify mutation probabilities of the "steps to mutate" using the allelic file (see section \ref{allelicFileNTRL}). In this case the number of alleles (\textsf{ntrl\_all}) has to be odd (as for the IMM). Then similar to the IMM the probabilities of the step to mutate has to be defined using the allelic file, where the step size is measured from the middle allele (concerning its index, i.e. $ntrl\_all/2$). The middle allele (with index $ntrl\_all/2$) has to have a mutation probability of 0 as a mutation of step zero is not a mutation. This allows generating any mutation pattern, as for instance the Generalized stepwise mutation model \citep{Estoup_2002}.
+In contrast to the K-Allele-Model the new allele depends on the current allele. When a mutation occurs the current allele is replaced by one of its neighboring alleles (concerning the allele index). For example, if the allele with the index 12 mutates, it changes either to the allele with the index 13, or to the allele with the index 11. The boundaries are reflexive, \textit{i.e.} the allele index can not exceed the range of alleles (i.e. $[1; ntrl\_all]$). In line with the Increment Mutation Model (IMM) for quantitative traits it is possible to specify mutation probabilities of the "steps to mutate" using the allelic file (see section \ref{allelicFileNTRL}). In this case the number of alleles (\textsf{ntrl\_all}) has to be odd (as for the IMM). Then similar to the IMM the probabilities of the step to mutate has to be defined using the allelic file, where the step size is measured from the middle allele (concerning its index, \textit{i.e.} $ntrl\_all/2$). The middle allele (with index $ntrl\_all/2$) has to have a mutation probability of 0 as a mutation of step zero is not a mutation. This allows generating any mutation pattern, as for instance the Generalized stepwise mutation model \citep{Estoup_2002}.
 \end{description}
 \end{description}
 
@@ -1273,7 +1238,7 @@ To simulate linked loci two types of parameters have to be set: One to specify t
 \vspace{-9mm}
 \item[genome\_mal\index{genome\_mal}]\textbf{[matrix] (default: "")}\\
 These parameters allow specifying the positions of loci in centi Morgans for all traits in common.
-Brackets separate different chromosomes and within a chromosome the positions of  loci are defined  cumulatively, i.e. the position of the locus is defined as the length to the start of the chromosome. Note, that
+Brackets separate different chromosomes and within a chromosome the positions of  loci are defined  cumulatively, \textit{i.e.} the position of the locus is defined as the length to the start of the chromosome. Note, that
 chromosomes may contain different numbers of loci. It is possible to skip chromosomes if they don't
 contain loci (see section \ref{matparam}). If the genetic map is sex specific both parameters have
 to be set. If hermaphrodites are simulated the parameters \textbf{genome} and \textbf{genome\_fem} are identical.
@@ -1307,7 +1272,7 @@ the second chromosome. The third and fourth chromosomes have 5 loci at positions
 This parameter allows assigning each locus of a trait (quanti or ntrl) to a locus position on the genome (see above). The parameter has to be set for each trait
 separately and the assignment of the locus to a locus position on the genome is made based on the
 index of the locus on the entier genome (starting with 1). Note, that the indexing is ignoring any
-chromosomal structure. Note also, that the indexing depends on the corresponding genome, i.e. if it
+chromosomal structure. Note also, that the indexing depends on the corresponding genome, \textit{i.e.} if it
 is specified in general (parameter \textbf{genome}) or trait type specific (e.g. parameter
 \textbf{quanti\_genome}). Note further, that this parameter is not sex specific, since the
 order of the loci is identical for both sexes.   \\
@@ -1399,7 +1364,7 @@ In the following sections, we explain in details the parameters to define quanti
 
 \section{From genotype to genotypic value }
 \subsection{Allelic effects}
-Each allele has an allelic effect, its contribution to the genotype, which is represented by a number, the allelic value. There are two possibilities to define these effects. Either they are defined explicitly for each allele using a separate file (see parameter \textsf{quanti\_allelic\_file}), or they can be defined by specifying the variance of the normal distribution of the genotypic value (see parameter \textsf{quanti\_allelic\_var}). If the allelic effects are defined in both ways the explicitly defined effects are used. Note, that all effects have to be defined in the same way, i.e. explicitly or by their distribution.
+Each allele has an allelic effect, its contribution to the genotype, which is represented by a number, the allelic value. There are two possibilities to define these effects. Either they are defined explicitly for each allele using a separate file (see parameter \textsf{quanti\_allelic\_file}), or they can be defined by specifying the variance of the normal distribution of the genotypic value (see parameter \textsf{quanti\_allelic\_var}). If the allelic effects are defined in both ways the explicitly defined effects are used. Note, that all effects have to be defined in the same way, \textit{i.e.} explicitly or by their distribution.
 
 \begin{description}
 \item[\label{allelicFile}quanti\_allelic\_file\index{quanti\_allelic\_file}]  \textbf{[string] (default: "")} \\
@@ -1441,7 +1406,7 @@ This box contains informations about the structure of the following table and th
 Note, that as in all input files for quantiNEMO it is possible to add comments (also in the file information box) using the hash character: '\#' or '\#/ ...any text... /\#'.
 
 \item[quanti\_allelic\_var\index{quanti\_allelic\_var}] \textbf{[decimal/matrix] (default: 1)} \\
-This parameter allows to specify the variance of the normal distribution from where the allelic effects are drawn randomly. The normal distribution is centered around 0 (mean phenotype is by definition 0). By using a matrix it is possible to define different variances of the normal distributions for each locus, i.e. specifying different contributions of the QTLs to the trait. This parameter is taken into account only if the allelic effects are not defined explicitly by the allelic file.
+This parameter allows to specify the variance of the normal distribution from where the allelic effects are drawn randomly. The normal distribution is centered around 0 (mean phenotype is by definition 0). By using a matrix it is possible to define different variances of the normal distributions for each locus, \textit{i.e.} specifying different contributions of the QTLs to the trait. This parameter is taken into account only if the allelic effects are not defined explicitly by the allelic file.
 \end{description} 
 
 \subsection{Dominance effects}
@@ -1519,7 +1484,7 @@ It is possible to simulate epistatic effects between alleles at different loci. 
 
 \[G_{11'22'...ii'...}=\epsilon_{11'22'...ii'...}+\sum_{i=1}^{nbLoci}G_{i} \]
 
-Where $G_{11'22'...ii'...}$ is the genotypic value of genotype ${11'22'...ii'...}$ ($1$ and $1'$ are the alleles of locus 1, $2$ and $2'$ the alleles of locus 2, ...), $G_{i}$ is the genotypic effect of locus $i$ (additive and dominance effects), and $\epsilon_{11'22'...ii'...}$ is the epistatic effect of genotype $11'22'...ii'...$ (unique for each multilocus genotype). There are two possibilities to define these epistatic effects. Either they are defined explicitly for each genotype using a separate file (see parameter \textsf{quanti\_epistatic\_file}), or by defining the variance of the normal distribution from where the epistatic effects are randomly drawn (see parameter \textsf{quanti\_epistatic\_var}). Using the parameter \textsf{quanti\_epistatic\_file} it is also possible to define the genotypic effects directly. If the epistatic effects are defined in both ways the explicitly defined effects are used. Note, that all effects have to be defined in the same way, i.e. explicitly or by their distribution. By default, the parameter \textsf{quanti\_epistatic\_var} is set to zero resulting in simulations without any epistatic effects.
+Where $G_{11'22'...ii'...}$ is the genotypic value of genotype ${11'22'...ii'...}$ ($1$ and $1'$ are the alleles of locus 1, $2$ and $2'$ the alleles of locus 2, ...), $G_{i}$ is the genotypic effect of locus $i$ (additive and dominance effects), and $\epsilon_{11'22'...ii'...}$ is the epistatic effect of genotype $11'22'...ii'...$ (unique for each multilocus genotype). There are two possibilities to define these epistatic effects. Either they are defined explicitly for each genotype using a separate file (see parameter \textsf{quanti\_epistatic\_file}), or by defining the variance of the normal distribution from where the epistatic effects are randomly drawn (see parameter \textsf{quanti\_epistatic\_var}). Using the parameter \textsf{quanti\_epistatic\_file} it is also possible to define the genotypic effects directly. If the epistatic effects are defined in both ways the explicitly defined effects are used. Note, that all effects have to be defined in the same way, \textit{i.e.} explicitly or by their distribution. By default, the parameter \textsf{quanti\_epistatic\_var} is set to zero resulting in simulations without any epistatic effects.
 
 \begin{description}
 \item[quanti\_epistatic\_file\index{quanti\_epistatic\_file}] \textbf{[string] (default: "")}\\
@@ -1819,7 +1784,7 @@ The fitness landscape is defined by two tightly linked parameters:
 \item[quanti\_phenotype\_landscape\_fem\index{quanti\_phenotype\_landscape\_fem}]\hspace*{\fill}\\
 \vspace{-9mm}
 \item[quanti\_phenotype\_landscape\_mal\index{quanti\_phenotype\_landscape\_mal}]\textbf{[decimal/matrix] (temporal/default: 0)}\\
-These parameters allow to specify an array of phenotypes for which the corresponding fitness is defined using the parameter \textsf{quanti\_fitness\_landscape}.  The phenotype values are either specified by a single value (similar to the default value) specifying a unique phenotype for all patches and quantitative traits together (all phenotypes will result in the same fitness), or by a one dimensional array (1D matrix) specifying the same fitness landscape for all patches and a given quantitative traits together, or by a 2D matrix specifying the fitness landscape separately for each patch for a given quantitative trait. Since the two parameters \textsf{quanti\_fitness\_phenotype} and \textsf{quanti\_fitness\_fitness} are tightly linked, i.e. specify the phenotypes and their corresponding fitness values, the architecture of the two parameters have to be identical, i.e. show up the same number of values for a patch. 
+These parameters allow to specify an array of phenotypes for which the corresponding fitness is defined using the parameter \textsf{quanti\_fitness\_landscape}.  The phenotype values are either specified by a single value (similar to the default value) specifying a unique phenotype for all patches and quantitative traits together (all phenotypes will result in the same fitness), or by a one dimensional array (1D matrix) specifying the same fitness landscape for all patches and a given quantitative traits together, or by a 2D matrix specifying the fitness landscape separately for each patch for a given quantitative trait. Since the two parameters \textsf{quanti\_fitness\_phenotype} and \textsf{quanti\_fitness\_fitness} are tightly linked, \textit{i.e.} specify the phenotypes and their corresponding fitness values, the architecture of the two parameters have to be identical, \textit{i.e.} show up the same number of values for a patch. 
 
 
 \item[quanti\_fitness\_landscape\index{quanti\_fitness\_landscape}]\hspace*{\fill}\\
@@ -1827,7 +1792,7 @@ These parameters allow to specify an array of phenotypes for which the correspon
 \item[quanti\_fitness\_landscape\_fem\index{quanti\_fitness\_landscape\_fem}]\hspace*{\fill}\\
 \vspace{-9mm}
 \item[quanti\_fitness\_landscape\_mal\index{quanti\_fitness\_landscape\_mal}]\textbf{[decimal/matrix] (temporal/default: 1)}\\
-These parameters allow to specify the fitnesses corresponding to the phenotypes defined with the parameter \textsf{quanti\_phenotype\_landscape}, in the same order as the phenotypes are defined in the parameter \textsf{quanti\_fitness\_phenotype}. The fitness values are either specified by a single value (similar to the default value) specifying a unique fitness for all patches and quantitative traits together, or by a one dimensional array (1D matrix) specifying the same fitness landscape for all patches for a given quantitative traits together, or by a 2D matrix specifying the fitness landscape separately for each patch of a given quantitative trait. Since the two parameters \textsf{quanti\_fitness\_phenotype} and \textsf{quanti\_fitness\_fitness} are tightly linked, i.e. specify the phenotypes and their corresponding fitness values, the architecture of the two parameters has to be the identical, i.e. show up the same number of values for a patch at a given quantitative trait.  
+These parameters allow to specify the fitnesses corresponding to the phenotypes defined with the parameter \textsf{quanti\_phenotype\_landscape}, in the same order as the phenotypes are defined in the parameter \textsf{quanti\_fitness\_phenotype}. The fitness values are either specified by a single value (similar to the default value) specifying a unique fitness for all patches and quantitative traits together, or by a one dimensional array (1D matrix) specifying the same fitness landscape for all patches for a given quantitative traits together, or by a 2D matrix specifying the fitness landscape separately for each patch of a given quantitative trait. Since the two parameters \textsf{quanti\_fitness\_phenotype} and \textsf{quanti\_fitness\_fitness} are tightly linked, \textit{i.e.} specify the phenotypes and their corresponding fitness values, the architecture of the two parameters has to be the identical, \textit{i.e.} show up the same number of values for a patch at a given quantitative trait.  
 \end{description}
 
 \paragraph{Example}\hspace*{\fill}
@@ -1881,10 +1846,10 @@ If the fitness factor are defined globally, the contribution to the fitness will
     
 \begin{description}
 \item[quanti\_fitness\_factor\_heterozygote\index{quanti\_fitness\_factor\_heterozygote}] \textbf{[decimal/matrix] (default: 1)}\\
-This parameter allows to specify the fitness factor for heterozygote loci, i.e. if the two alleles at a given locus are different. Using a matrix it is possible to define different fitness factors for each locus. By default the fitness factor for heterozygote loci is 1, resulting in no effect on the fitness. 
+This parameter allows to specify the fitness factor for heterozygote loci, \textit{i.e.} if the two alleles at a given locus are different. Using a matrix it is possible to define different fitness factors for each locus. By default the fitness factor for heterozygote loci is 1, resulting in no effect on the fitness. 
 
 \item[quanti\_fitness\_factor\_homozygote\index{quanti\_fitness\_factor\_homozygote}] \textbf{[decimal/matrix] (default: 1)}\\
-This parameter allows to specify the fitness factor for homozygote loci, i.e. if the two alleles at a given locus are identical. Using a matrix it is possible to define different fitness factors for each locus. By default the fitness factor for homozygote loci is 1, resulting in no effect on the fitness. 
+This parameter allows to specify the fitness factor for homozygote loci, \textit{i.e.} if the two alleles at a given locus are identical. Using a matrix it is possible to define different fitness factors for each locus. By default the fitness factor for homozygote loci is 1, resulting in no effect on the fitness. 
 
 \item[fitness\_factor\_zero\_lethal\index{fitness\_factor\_zero\_lethal}] \textbf{[0-1] (default: 0)}\\
 This parameter allows to define how a fitness of zero (0.0) is treated within the fitness factor (and only here). A value of 0 (default) means that an individual with fitness factor  0 has a fitness of 0, but is not lethal. Under specific circumstances such an individual may even reproduce. In contrast if this parameter is set to 1 an individual with fitness factor 0 dies just after breeding.
@@ -1899,7 +1864,7 @@ With the following parameters it is possible to define the level of selection.
 This parameter specifies if and how selection acts at the reproduction stage. Selection acts on the phenotype of the quantitative traits (see section \ref{chap:quanti} for more details).
 \begin{description}
 \item [0~:~soft selection.] $nbOff_{p} = N_{p}$\\
-The fitness of an individual is relative to the mean fitness of the population of its patch (soft selection at the patch level). This means that the population size does not depend on the mean fitness of the population and that selection does act locally at the patch level, i.e. patches do not interact \citep{Wallace_1975}. No populations may therefore go extinct due to their maladaptation.
+The fitness of an individual is relative to the mean fitness of the population of its patch (soft selection at the patch level). This means that the population size does not depend on the mean fitness of the population and that selection does act locally at the patch level, \textit{i.e.} patches do not interact \citep{Wallace_1975}. No populations may therefore go extinct due to their maladaptation.
 
 \item [1~:~metapopulation selection.] $nbOff_{p} = (W_{p}/W_{m})N_{m}$\\
 The fitness of an individual is relative to the mean fitness of the entire metapopulation (soft selection at the metapopulation level). This means that the size of the entire metapopulation does not depend on the mean fitness. However, the population size of each patch depends on the mean fitness of its population \citep{Ravigne_2004}. This implies that a well adapted population grows while the population size of a less adapted population declines. Individual populations may go extinct due to their maladaptation, however not the entire metapopulation. 
@@ -1926,14 +1891,14 @@ Here is an example of the different selection levels in case of selection at the
 \end{tabular*}
 
 \subsection{Selection position}
-By default, the selection append during breeding. This is a reasonable choice for performance issue (all individual created go until the next reproduction stage, i.e. no "useless" individual are created). However, quantiNEMO also offer the possibility for selection to act at other stage of the life cycle. Note however, that selection may only act at a single stage at once. 
+By default, the selection append during breeding. This is a reasonable choice for performance issue (all individual created go until the next reproduction stage, \textit{i.e.} no "useless" individual are created). However, quantiNEMO also offer the possibility for selection to act at other stage of the life cycle. Note however, that selection may only act at a single stage at once. 
 \item[selection\_position\index{selection\_position}] \textbf{[0-4] (default: 0)}\\
 The parameter specifies when and how selection acts. By default selection acts at reproduction where the fecundity of an individual depends on its fitness.
 \begin{description}
 \item [0~:~reproductive success.] Selection acts at the reproduction stage (see section \ref{chap:breeding}), where the number of offspring of an individual depends on its fitness.
 \item [1~:~reproductive success special.] Currently not working (do not use). 
-\item [2~:~offspring survival.] Selection acts at the survival probability of the offspring, i.e. before dispersal (see section \ref{5regulation}).
-\item [3~:~adult survival.] Selection acts at the survival probability of the adults, i.e. after dispersal (see section \ref{7regulation}).
+\item [2~:~offspring survival.] Selection acts at the survival probability of the offspring, \textit{i.e.} before dispersal (see section \ref{5regulation}).
+\item [3~:~adult survival.] Selection acts at the survival probability of the adults, \textit{i.e.} after dispersal (see section \ref{7regulation}).
 \item [4~:~no selection.] This option allows to perform simulations without any selection. This is also the case if no quantitative traits under selection are simulated (see section \ref{selectionModels}).
 \end{description}
 
@@ -1997,7 +1962,7 @@ The probability $p$ that a single coalescence event per generation and patch occ
 	\[
 	p = \frac{n(n-1)}{4N}.
 \]  
-This approximation is valid for small numbers of traced lineages compared to the population size ($n<<N$). If $n$ in relation to $N$ gets bigger the probability that more than one coalescence event occurs increases and thus the method above is not anymore accurate. Therefore quantiNEMO allows to set a threshold (this parameters) for the probability of a single coalescence even $p$ above which the method used to simulate the coalescence events is changed. In this latter case the coalescence process is simulated realistically, i.e. for each traced lineage a parental gene is drawn randomly. All lineages with an identical parental gene are then coalesced. This method is always valid, however much slower in terms of computation time then the previously mentioned one. By default the value of this parameter, i.e. the threshold, is set to 0.1 which is a acceptable threshold. Note that the probability that a single coalescence event occurs may exceed extensively 1. A value of 0 implies that the coalescent process is always realistically simulated. And ratios above 0 are used to specify the threshold below which a singe coalescence event is assumed and above which the coalescence process is simulated realistically. A parameter value of 1e6 is arbitrarily used to tell quantiNEMO that only single coalescence events should be assumed.    
+This approximation is valid for small numbers of traced lineages compared to the population size ($n<<N$). If $n$ in relation to $N$ gets bigger the probability that more than one coalescence event occurs increases and thus the method above is not anymore accurate. Therefore quantiNEMO allows to set a threshold (this parameters) for the probability of a single coalescence even $p$ above which the method used to simulate the coalescence events is changed. In this latter case the coalescence process is simulated realistically, \textit{i.e.} for each traced lineage a parental gene is drawn randomly. All lineages with an identical parental gene are then coalesced. This method is always valid, however much slower in terms of computation time then the previously mentioned one. By default the value of this parameter, \textit{i.e.} the threshold, is set to 0.1 which is a acceptable threshold. Note that the probability that a single coalescence event occurs may exceed extensively 1. A value of 0 implies that the coalescent process is always realistically simulated. And ratios above 0 are used to specify the threshold below which a singe coalescence event is assumed and above which the coalescence process is simulated realistically. A parameter value of 1e6 is arbitrarily used to tell quantiNEMO that only single coalescence events should be assumed.    
 
 \item[divergence\_time\index{divergence\_time}] \textbf{[integer] (default: 0)}\\ 
 A coalescence simulation lasts until the most recent common ancestor (MRCA) is reached. Depending on the simulated demography the MRCA may be found within the simulated time, but it can well be that the MRCA of all sampled lineages lays before the start of the demographic simulation. In this case, going backward in time the coalescence simulation is continued behind the demographic simulation assuming no migration between the remaining patches. At the divergence time (parameter \textbf{divergence\_time} all remaining lineages are then merged to a single patch of specified size (parameter \textbf{divergence\_pop\_size} below). By default the value of the parameter \textbf{divergence\_time} is 0. If the divergence time is set to less than the number of simulated generations (as the default) the divergence time will be readjusted to the number of generations, thus all remaining lineages are merged to a single patch, when the onset of the demographic simulation is reached. 
@@ -2091,7 +2056,7 @@ It is possible to launch a script just after the MRCA file is generated. The arg
 \end{description}
 
 \subsection{Lineages}\label{coalLineages}
-For the coalescence simulation it is possible to dump the current populated patches, including their population sizes and number of traces lineages to a file for any given generation. The file is generated for each locus separately and has has the ending \textbf{\_lX.lin}, where $X$ is the locus index. The format is as follows: Each line contains a single generation, i.e. time slice. The line starts with the generation index relative to the start of the simulation. Thus since thes coalescence simulations are proceeded backward in time the generations decrease from top to down of the file. Positive numbers are time slices where a demographic simulation is available and negative numbers for time slices before (forward in time) the demographic simulation. The generation number is followed by the total number of currently traced lineages. Then each populated patch is listed using three numbers, the patch index, the current population size, and the current number of traced lineages. Since over time some patches may be colonized or freed the number of columns per line may change between generations.
+For the coalescence simulation it is possible to dump the current populated patches, including their population sizes and number of traces lineages to a file for any given generation. The file is generated for each locus separately and has has the ending \textbf{\_lX.lin}, where $X$ is the locus index. The format is as follows: Each line contains a single generation, \textit{i.e.} time slice. The line starts with the generation index relative to the start of the simulation. Thus since thes coalescence simulations are proceeded backward in time the generations decrease from top to down of the file. Positive numbers are time slices where a demographic simulation is available and negative numbers for time slices before (forward in time) the demographic simulation. The generation number is followed by the total number of currently traced lineages. Then each populated patch is listed using three numbers, the patch index, the current population size, and the current number of traced lineages. Since over time some patches may be colonized or freed the number of columns per line may change between generations.
 
 \begin{description} 
 \item[coalescence\_save\_lineages\index{coalescence\_save\_lineages}] \textbf{[0-1] (default: 0)} \\
@@ -2197,7 +2162,7 @@ By default the outputs generated by quantiNEMO (summary statistics, genotypes, p
 The parameter \textbf{sampled\_patches} allows to define a sampling schema for patches, where ALL individuals are sampled. There are different methods to define the sampled patches:
 \begin{description}
 \item[single number.] If the argument is a single number the patches to sample are drawn randomly. In this case the passed number specifies the total number of patches to sample. Patches are drawn randomly for each replicate, but remain the same during a simulation. A special case is 0 as argument (default value). In this case all patches are sampled. 
-\item[matrix.] Using a one dimensional matrix as argument allows to define explicitly the patches to sample. Please note that for this parameter a matrix has to be defined fully, i.e. all patches to sample have to be listed in the matrix and a single number is not expanded to a matrix. Note, that in contrast to the normal matrix behaviour the two arguments \textit{20} and \textit{\{20\}} are not identical. While the former one is considered as a single number defining the total number of sampled patches, the second one is a matrix and defines the patch to be sampled, i.e. patch 20.  
+\item[matrix.] Using a one dimensional matrix as argument allows to define explicitly the patches to sample. Please note that for this parameter a matrix has to be defined fully, \textit{i.e.} all patches to sample have to be listed in the matrix and a single number is not expanded to a matrix. Note, that in contrast to the normal matrix behaviour the two arguments \textit{20} and \textit{\{20\}} are not identical. While the former one is considered as a single number defining the total number of sampled patches, the second one is a matrix and defines the patch to be sampled, \textit{i.e.} patch 20.  
 \end{description}
 
 \item[patch\_sample\_size\index{patch\_sample\_size}]\hspace*{\fill}\\
@@ -2214,13 +2179,13 @@ These parameters allows to define for each patch and/or sex the sample size or s
 
 The sampling schema for all patches may be defined as follows:
 \begin{description}
-\item[single number.] All patches have the same sampling schema, i.e. sampling proportion or sampling number.
-\item[1D matrix.] The sample sizes/proportions of each patch may be set using a 1D matrix. The setting of this matrix behaves as the matrix for the parameter \textbf{patch\_capacity} or \textbf{patch\_ini\_size}, i.e. the matrix size is adjusted if needed. Within a matrix the individual patch sample sizes may vary between relative, absolute, or \textit{NaN} definitions. 
-\item[2D matrix.] A 2D matrix allows to specify directly the sample sizes/proportions for a given number of patches. The numbers of columns has to be 2, where the first column contains the patch ID and the second column the corresponding sampling number/proportion. Within a matrix the individual patch sample sizes may vary between relative, absolute, or \textit{NaN} definitions. All not specified patches will not be sampled, i.e. have a sample size of 0.
+\item[single number.] All patches have the same sampling schema, \textit{i.e.} sampling proportion or sampling number.
+\item[1D matrix.] The sample sizes/proportions of each patch may be set using a 1D matrix. The setting of this matrix behaves as the matrix for the parameter \textbf{patch\_capacity} or \textbf{patch\_ini\_size}, \textit{i.e.} the matrix size is adjusted if needed. Within a matrix the individual patch sample sizes may vary between relative, absolute, or \textit{NaN} definitions. 
+\item[2D matrix.] A 2D matrix allows to specify directly the sample sizes/proportions for a given number of patches. The numbers of columns has to be 2, where the first column contains the patch ID and the second column the corresponding sampling number/proportion. Within a matrix the individual patch sample sizes may vary between relative, absolute, or \textit{NaN} definitions. All not specified patches will not be sampled, \textit{i.e.} have a sample size of 0.
 \end{description}
 \end{description}
-\section{Summary statistics}\label{sec:statistics}
-It is possible to record summary statistics specified by the parameter \textsf{stat}. Most of the summary statistics can be recorded for offspring and/or adults and for females and/or males. It is also possible to set the frequency (parameter \textsf{stat\_log\_time}) of the recording. At the end of a simulation the summary statistics are written to a text file. By default, the summary statistics is printed  individually per replicate and/or summed up across replicates (mean and variance across replicates). In this latter case an additional statistic named \textit{alive.rpl} will be added which contains the number of alive replicates, i.e. the number of simulations where the populations did not get extinct. Note, that the computation of some summary statistics may be time consuming. 
+\section{Summary statistics}\label{sec:Statistics}
+It is possible to record summary statistics specified by the parameter \textsf{stat}. Most of the summary statistics can be recorded for offspring and/or adults and for females and/or males. It is also possible to set the frequency (parameter \textsf{stat\_log\_time}) of the recording. At the end of a simulation the summary statistics are written to a text file. By default, the summary statistics is printed  individually per replicate and/or summed up across replicates (mean and variance across replicates). In this latter case an additional statistic named \textit{alive.rpl} will be added which contains the number of alive replicates, \textit{i.e.} the number of simulations where the populations did not get extinct. Note, that the computation of some summary statistics may be time consuming. 
 
 The column \textsf{Stat name} contains the name of the summary statistic used to specify which summary statistics are computed (parameter \textsf{stat}, for details see section \ref{2statistics}). These names appear also in the output file. The column \textsf{Description} contains a short description of the summary statistic. 
 
@@ -2281,8 +2246,8 @@ This parameter allows to specify a place holder used for the output of the summa
 \item[sample\_all\_or\_nothing\index{sample\_all\_or\_nothing}] \textbf{[0,1] (default: 0)}\\
 This parameter allows to specify when statistics should be computed (only available for the coalescence simulations (see parameter \textsf{coalescence})):
 \begin{description}
-\item[0~:~when possible.] In this case statistics and outputs are generated whenever it is possible, i.e. whenever a patch is enough populated that a given statistic may be computed.
-\item[1~:~all or nothing.] In this case statistics and output are generated only if the entire sampling schema may be applied, i.e. if the patches are enough populated that the specified sampling may be applied. If this is not the case a NaN or a zero depending on the statistic is outputted for all statistics. Note that in such a case the genetic part of the coalescence simulations are omitted, thus the simulation may be much quicker although useless. A specified sampling may not be applied if (and only if) not all specified patches (parameter \textsf{sampled\_patches} defined as a matrix) may be sampled or the population size is inferior to the sampling size (parameter \textsf{patch\_sample\_size} defined in entire numbers (absolute)).
+\item[0~:~when possible.] In this case statistics and outputs are generated whenever it is possible, \textit{i.e.} whenever a patch is enough populated that a given statistic may be computed.
+\item[1~:~all or nothing.] In this case statistics and output are generated only if the entire sampling schema may be applied, \textit{i.e.} if the patches are enough populated that the specified sampling may be applied. If this is not the case a NaN or a zero depending on the statistic is outputted for all statistics. Note that in such a case the genetic part of the coalescence simulations are omitted, thus the simulation may be much quicker although useless. A specified sampling may not be applied if (and only if) not all specified patches (parameter \textsf{sampled\_patches} defined as a matrix) may be sampled or the population size is inferior to the sampling size (parameter \textsf{patch\_sample\_size} defined in entire numbers (absolute)).
 \end{description}
 \end{description}
 \subsection{Demography}
@@ -2654,7 +2619,7 @@ All summary statistics (and also all other outputs) are computed for the specifi
  \hline
  					
 \end{supertabular}
-\section{Output}\label{3output}
+\section{Output}\label{sec:Output}
 
 quantiNEMO can also produce files with the raw genetic and phenotypic data. Genotypes of neutral markers and quantitative traits can be dumped to file in the FSTAT \citep{Goudet_1995} or Arlequin format \citep{Excoffier_2010}. For quantitative traits, the phenotypes may also be written to a file for any generation, sex or age. The selection of the various outputs is done in the corresponding simulation components (neutral genotype see section \ref{genoNTRL}, quantitative trait genotype see section \ref{genoQuanti}, and quantitative trait phenotype see section \ref{phenoQuanti}). If no output is desired this event is skipped. After each output a script may be launched to process the output. 
 
@@ -2786,7 +2751,7 @@ This parameter allows to choose which age is output.
 \end{description}
 
 \subsection{Phenotypic value}\label{phenoQuanti}
-Similar to the genotypes the phenotypic values of the adults may be periodically dumped to files. The phenotype of juveniles cannot be output, as the phenotype is only computed when selection acts, and this is at the reproduction stage, i.e. when individuals are adults. The output files will be stored in the folder given by the parameter \textsf{quanti\_phenot\_dir} and will have the name of the base file name (see parameter \textsf{filename} in section \ref{chap:simparam}). The extension is ".phe". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05r4.phe"}. All summary statistics (and also all other outputs) are computed for the specified samples. By default all individuals of all populations are sampled. The chapter \ref{chap:sampling} describes how to specify a sampling schema.
+Similar to the genotypes the phenotypic values of the adults may be periodically dumped to files. The phenotype of juveniles cannot be output, as the phenotype is only computed when selection acts, and this is at the reproduction stage, \textit{i.e.} when individuals are adults. The output files will be stored in the folder given by the parameter \textsf{quanti\_phenot\_dir} and will have the name of the base file name (see parameter \textsf{filename} in section \ref{chap:simparam}). The extension is ".phe". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05r4.phe"}. All summary statistics (and also all other outputs) are computed for the specified samples. By default all individuals of all populations are sampled. The chapter \ref{chap:sampling} describes how to specify a sampling schema.
 
 \begin{description} 
 \item[quanti\_save\_phenotype\index{quanti\_save\_phenotype}] \textbf{[0-2] (default: 0)} \\
@@ -2864,7 +2829,7 @@ Depending on the definition of the architecture of the quantitative trait it is 
 
 \begin{appendices}
 \chapter{Multiple traits with varying types of selection}
-A special case arises if multiple quantitative traits are simulated with varying types of selection. The problem is how to specify the individual selection pressures. This is a more technical problem which I would like to illustrate here. First, quantiNEMO investigates which types of selection will be simulated based on the settings file. Then, quantiNEMO sets for each simulated type of selection the corresponding parameters assuming one selection type after the other that all quantitative traits have the same type of selection: assuming for example first that all quantitative traits are under stabilizing selection, then in a second step assuming that all quantitative traits are under directional selection. This detail is important to understand since this makes it clear how a matrix is treated, i.e. how a matrix is expanded if needed. Of, course finally the selection pressure parameters are only set where needed, i.e. if the type of selection for a given quantitative trait requires the parameter. In other words the matrix of a selection pressure has to have the number of rows of the total number of traits, and not only of the traits with the corresponding selection pressure (this is controlled by quantiNEMO returning a warning if not met). If multiple quantitative traits are simulated with varying selection pressures it is handy to use the row indicator for the rows of the matrix. Example:
+A special case arises if multiple quantitative traits are simulated with varying types of selection. The problem is how to specify the individual selection pressures. This is a more technical problem which I would like to illustrate here. First, quantiNEMO investigates which types of selection will be simulated based on the settings file. Then, quantiNEMO sets for each simulated type of selection the corresponding parameters assuming one selection type after the other that all quantitative traits have the same type of selection: assuming for example first that all quantitative traits are under stabilizing selection, then in a second step assuming that all quantitative traits are under directional selection. This detail is important to understand since this makes it clear how a matrix is treated, \textit{i.e.} how a matrix is expanded if needed. Of, course finally the selection pressure parameters are only set where needed, \textit{i.e.} if the type of selection for a given quantitative trait requires the parameter. In other words the matrix of a selection pressure has to have the number of rows of the total number of traits, and not only of the traits with the corresponding selection pressure (this is controlled by quantiNEMO returning a warning if not met). If multiple quantitative traits are simulated with varying selection pressures it is handy to use the row indicator for the rows of the matrix. Example:
 \begin{lstlisting}[frame=single]
 patch_number 3
 quanti_nb_trait 5 
