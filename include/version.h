@@ -30,8 +30,8 @@
 *   You should have received a copy of the GNU General Public License
 *   along with quantiNemo2.  If not, see <http://www.gnu.org/licenses/>.
 */
-#define RELEASE 0
-#define REVISION 9
+#define RELEASE 2
+#define REVISION 0
 #define MINOR_VERSION 0
 #define TEMP_VERSION ""
 

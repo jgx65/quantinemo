@@ -293,6 +293,7 @@ TSimManager::program_args(map<string, string>& args, vector<string>& inputfiles)
     message("\nCommit N°:  %s",VERSIONGIT);
 #endif
     message("\n\nAuthors:    Samuel Neuenschwander (samuel.neuenschwander@unil.ch) &");
+    message(  "\n            Frederic Michaud (frederic.michaud@unil.ch)");
     message(  "\n            Jerome Goudet (jerome.goudet@unil.ch)");
     message(  "\n            Department of Ecology and Evolution");
     message(  "\n            University of Lausanne, Switzerland\n");
