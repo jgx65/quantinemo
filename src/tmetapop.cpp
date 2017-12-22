@@ -302,7 +302,7 @@ TMetapop::init_paramset()
     
     
     // how should the seleciton be defined? (0: using patch_x; 1: using quanti_x)
-    _paramSet->add_param("selection_pressure_definition",   INT2,false,0,1,"0", false,
+    _paramSet->add_param("selection_pressure_definition",   INT2,false,0,1,"1", false,
                          "Should selection be defined as:\n" \
                          "  0: patch (at the patch level 'patch_*')\n" \
                          "  1: quanti (at the quantitative trait level 'quanti_*)",0);
