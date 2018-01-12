@@ -1,3 +1,5 @@
 src/*.o
+.DS_Store
+bin/*
 depend
 Makefile_thread
