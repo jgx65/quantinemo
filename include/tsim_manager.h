@@ -92,7 +92,7 @@ public:
                        const unsigned& nbSims, vector<string>& args);
     
     unsigned int get_nbThreads();
-    
+    void printVersion();
     string _ini_file_directory;
 
 public:

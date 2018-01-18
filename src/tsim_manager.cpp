@@ -267,24 +267,15 @@ TSimManager::readInputFiles(int ARGC, char **ARGV,
 #endif
 }
 
+
 //----------------------------------------------------------------------------------------
-//  program_args
+//  printVersion
 // ----------------------------------------------------------------------------------------
-/** check the program args */
-void
-TSimManager::program_args(map<string, string>& args, vector<string>& inputfiles)
+/** print the current version of quantiNemo and usefull information about the author/the commit */
+void TSimManager::printVersion()
 {
-    // is the version desrired
-    string date = VERSION_DATE;
-    map<string, string>::iterator cur, end = args.end();
-    if (args.find("v") != end || args.find("version") != end) {
-        message("Version:    %i.%i.%i%s [%s; %s]\n", RELEASE,
-                REVISION, MINOR_VERSION, TEMP_VERSION, VERSION_DATE,
-                VERSION_TIME, date.substr(date.rfind(' ') + 1).c_str());
-        throw 1111;
-    }
-    
-    //& write the heading
+       string date = VERSION_DATE;
+
     message("Program:    quantiNemo2 (quantitative genetics simulator)");
     message("\n\nVersion:    %i.%i.%i%s [%s; %s]", RELEASE,
             REVISION, MINOR_VERSION, TEMP_VERSION, VERSION_DATE,
@@ -297,6 +288,26 @@ TSimManager::program_args(map<string, string>& args, vector<string>& inputfiles)
     message(  "\n            Jerome Goudet (jerome.goudet@unil.ch)");
     message(  "\n            Department of Ecology and Evolution");
     message(  "\n            University of Lausanne, Switzerland\n");
+    
+}
+
+//----------------------------------------------------------------------------------------
+//  program_args
+// ----------------------------------------------------------------------------------------
+/** check the program args */
+void
+TSimManager::program_args(map<string, string>& args, vector<string>& inputfiles)
+{
+    //print the header
+    printVersion();
+    // If only the version is required, stop here
+    map<string, string>::iterator cur, end = args.end();
+    if (args.find("v") != end || args.find("version") != end) {
+        throw 1111;
+    }
+    
+
+
     
     // is the help desired
     if (args.find("h") != end || args.find("help") != end || (!inputfiles.empty() && inputfiles.front()=="help")) {
