@@ -1091,22 +1091,22 @@ this parameter define how the dispersal rate is set.
 
 \chapter{Genetics}\label{chap:Genetics}
 \section{Introduction}
-QuantiNemo allows the simulation of quantitative traits as well as neutral markers, both related by a common genetic map so that processes like linkage disequilibrium and genetic hitchhiking can be simulated easily. More precisely, quantiNemo also allows the simulation of neutral markers, such as microsatellites or SNPs with different mutation models (K allele and Stepwise). Quantitative trait under selection composed from various loci can also be added to the same simulation. In this chapter, we explain how to define trait and loci, locate them in a map, set an initial genotype and choose a mutation model for all loci. 
+QuantiNemo allows the simulation of quantitative traits as well as neutral markers, both related by a common genetic map so that processes like linkage disequilibrium and genetic hitchhiking can be simulated easily. More precisely, quantiNemo allows to simulate neutral markers, such as microsatellites or SNPs with different mutation models (K allele and Stepwise). Quantitative trait under selection pressure composed of various loci can also be added to the same simulation. In this chapter, we explain how to define loci and traits, locate them in a map, set an initial genotype and choose a mutation model for them.
 
-Most of the parameter and behavior are the same for neutral and quantitative traits. The main difference is that neutral trait's parameters are defined with a \textsf{ntrl\_} in front while quantitative traits are specified with  \textsf{quanti\_}. In the case where the parameters have the same meaning for neutral and quantitative traits, the \textsf{(ntrl/quanti)\_parameter} notation will be used, which should be read as the existence of two parameters, one \textsf{ntrl\_parameter} and another one \textsf{quanti\_parameter}.  Most of the time, the two parameters have the same meaning for neutral and quantitative traits, but small differences are present for example in the mutations models or in how the initial genotype is randomly drawn. 
+Most of the parameter and behaviour are the same for neutral and quantitative traits (except of course that quantitative traits are under selection, but this will be cover in the next chapter). The main difference is that neutral trait's parameters are defined with a \textsf{ntrl\_} in front while quantitative traits are specified with  \textsf{quanti\_}. In the case where the parameters have the same meaning for neutral and quantitative traits, the \textsf{(ntrl/quanti)\_parameter} notation will be used, which should be read as the existence of two parameters, one \textsf{ntrl\_parameter} and another one \textsf{quanti\_parameter}. If differences are present  ,as for example in the mutations models, both parameters are explained separately. 
 \section{Settings loci}
 \label{sec:SettingsLoci}
 \begin{description}
 \item[(ntrl/quanti)\_loci\index{ntrl\_loci}\index{quanti\_loci}] \textbf{[integer]}\\
-This parameter specifies the number of neutral/quantitative loci per individual. This parameter is mandatory for the simulation of a neutral/quantitative locus \textit{i.e.} it is necessary as soon as we want to study genetic effect.  
+This parameter specifies the number of neutral/quantitative loci per individual per traits (by default, there is only one trait). This parameter is mandatory for the simulation of a neutral/quantitative locus \textit{i.e.} it is necessary as soon as we want to study genetic effect. If this parameter is not present, the other parameters related to genetics make no sense and will not be loaded. 
 
 \item[(ntrl/quanti)\_all\index{ntrl\_all}\index{quanti\_all}] \textbf{[1-256/matrix] (default: 255)}\\
-This parameter specifies the maximal possible number of alleles per locus. Using a matrix it is possible to specify this number for each locus of a trait separately.
+This parameter specifies the maximal possible number of alleles per locus. Using a matrix it is possible to specify this number for each locus of a trait separately. For quantitative trait, it is recommended to take a odd number of allele in order to have a "central allele", but it's not mandatory. 
 \end{description}
 
 \begin{description}
 \item[\label{allelicFile}(ntrl/quanti)\_allelic\_file\index{ntrl\_allelic\_file}\index{quanti\_allelic\_file}]  \textbf{[string] (default: "")} \\
-This parameter allows to pass the name of a file containing allele informations, such as the initial allele frequencies, and/or the mutation probability to an allele. The number of alleles and loci has to be in line with the parameters \textsf{(ntrl/quanti)\_loci} and \textsf{(ntrl/quanti)\_all}. The information can be set globally for all loci, if they have the same specifications, or for each locus separately. The allelic file for neutral markers and for quantitative trait have the same format except for one column specifying the allelic effects:
+This parameter allows to pass the name of a file containing allele informations, such as the initial allele frequencies, and/or the mutation probability to an allele. The number of alleles and loci has to be in line with the parameters \textsf{(ntrl/quanti)\_loci} and \textsf{(ntrl/quanti)\_all}. The information can be set globally for all loci, if they have the same specifications, or for each locus separately. The allelic files for neutral markers and for quantitative trait have similar format except for two columns:
 
 \begin{lstlisting}[frame=single]
 #Allelic file 
@@ -1120,24 +1120,20 @@ This parameter allows to pass the name of a file containing allele informations,
 }
 
 #locus  allele  value   mut_freq  ini_freq  
-1       1       -1.0    0.2       {0  0.2}
-1       2       -0.5    0.2       {0  0.2}
-1       3       0.0     0.2       {1  0.2}
-1       4       0.5     0.2       {0  0.2}
-1       5       1.0     0.2       {0  0.2}
-2       1       -2      0.2       {0  0.2}
-2       2       -1      0.2       {0  0.2}
-2       3       0       0.2       {1  0.2}
-2       4       1       0.2       {0  0.2}
-2       5       2       0.2       {0  0.2}
+1       1       -1.    0.2       {0  0.33}
+1       2       0    0.4       {0  0.33}
+1       3       2.     0.4       {1  0.33}
+2       1       -1.      0.33       {0  0.33}
+2       2       0.      0.33       {0  0.33}
+2       3       1.       0.33       {1  0.33}
 \end{lstlisting}
 
 The file has to start with a file information box \textsf{[FILE\_INFO]}\{...\}. This box contains the information of the structure of the following table allowing a flexible structure of the table. For example the order of the columns in the table may vary, or columns may be ignored. The file information box starts with the keyword \textsf{[FILE\_INFO]} and the information is enclosed by brackets "\{...\}". Line by line the index of the columns to be read have to be declared. Thereby a keyword for the specific setting is followed by the column index (the ordering starts with 1). The following column keywords are available:
 \begin{description}
 \item [col\_locus] This keyword specifies the column containing the locus index. If this column is not declared in the file information box, quantiNemo will use the same settings for all loci. In this case, the length of the table must meet the number of alleles (\textsf{ntrl\_all}). If this keyword is declared the length of the table must meet the number of alleles times the number of loci (\textsf{ntrl\_loci} * \textsf{ntrl\_all}).   
-\item [col\_allelic\_value] This keyword specifies the column containing the allelic effects. If this column is not set the allelic effects will be drawn randomly from a normal distribution with the variance defined by the parameter \textsf{quanti\_all\_effect\_var}. This keyword is only available for quantitative traits.
-\item [col\_allele] This keyword specifies the column containing the allele index. This column is mandatory. The index of the allele goes from 1 to \textsf{ntrl\_loci}.
-\item [col\_mut\_freq] This keyword specifies the column containing the mutation probabilities, \textit{i.e.} the probability to mutate to this allele when a mutation occurs. The behavior of this mutation probability depends on the mutation model (see parameter (\textsf{ntrl\_mutation\_model}).This keyword is only available for quantitative traits.
+\item [col\_allelic\_value] This keyword specifies the column containing the allelic effects, \textit{i.e.} how an allele contribute to the value of a trait (c.f. \ref{sub:AllelicEffect}). If this column is not set the allelic effects will be equally spaced on a range which depend of the parameter \textsf{quanti\_all\_effect\_var}. Since only quantitative trait have an allelic value, this column is only available for quantitative traits.
+\item [col\_allele] This keyword specifies the column containing the allele index. This column is mandatory. The index of the allele goes from 1 to \textsf{quanti/ntrl\_loci}.
+\item [col\_mut\_freq] This keyword specifies the column containing the mutation probabilities, \textit{i.e.} the probability to mutate to this allele when a mutation occurs. The behaviour of this mutation probability depends on the mutation model (see parameter (\textsf{ntrl\_mutation\_model}).This keyword is only available for quantitative traits. 
 \item [col\_ini\_freq] This keyword specifies the column containing the initial frequencies of the alleles. This column allows to explicitly set the allele frequencies at the start of a simulation. The frequencies can be set for each patch separately using a matrix. In the example above, individuals of the first population are initially fixed for the allele 3 at the first locus as well as at the second locus. In the second population, all alleles have the same initial frequency of 0.2. Note, that the matrix is adjusted in length if the number of populations does not correspond to the length of the matrix. If this column is not given the initial allele frequencies are set globally depending on the parameter \textsf{ntrl\_ini\_allele\_model}.
 \end{description} 
 Note, that as in all input files for quantiNemo it is possible to define comments (also in the file information box) using the hash character: '\#' or '\#/ ...any text... /\#'.
@@ -1165,21 +1161,15 @@ If the genotypes or allele frequencies are not already defined in another way, t
 
 \item[quanti\_ini\_allele\_model\index{quanti\_ini\_allele\_model}] \textbf{[0,1] (default: 0)}\\
 
-If the genotypes or allele frequencies are not already defined in another way, the initialization of the genotypes may be either polymorphic, where the probability of each allele is identically or monomorphic, where all populations are fixed for a single allele.  
+If the genotypes or allele frequencies are not already defined in another way, the initialization of the genotypes may be either polymorphic, where the probability of each allele follow a normal distribution or monomorphic, where all populations are fixed for a single allele.  
 
 \begin{description}
 
-\item[0~:~polymorph.] The allele frequency is given by a (discretized) normal distribution with a variance given by the parameter \textbf{quanti\_allelic\_var}.
+\item[0~:~polymorph.] The initial allele frequency is given by a (discretized) normal distribution with a variance given by the parameter \textbf{quanti\_allelic\_var}.
 
 \item[1~:~monomorph.] The populations are monomorphic with respect to allele frequencies at the start of a simulation. All individuals are fixed for a single allele, which is  the "middle" allele, \textit{i.e.} the allele with the index $\left\lfloor \textsf{ntrl\_all}/2\right\rfloor$.
 
 \end{description}
-
-\item[quanti\_allelic\_var\index{quanti\_allelic\_var}] \textbf{[decimal/matrix]  (default: 1)}\\
-
-If the allelic values are not defined explicitly using the allelic file (params. \textbf{(ntrl/quanti)\_allelic\_file}), quantiNemo will proceed as follow. The allelic values will be equally spaced between $-6 \sigma$ and $6 \sigma$, where $\sigma$ is the square root of the variance given by \textbf{quanti\_allelic\_var}. If the initial frequencies and/or the mutations frequencies toward each allele are not set by the allelic file, these frequencies will be set by a (discretized) normal distribution with a variance given by the parameter \textbf{quanti\_allelic\_var}. If dominance is purely additive, this ensures that through the population, the variance of the genotype is $2*quanti\_allelic\_var$ (the factor 2 comes from the diploid character of individuals).
-
-Note that if the number of alleles is small (smaller than 6), the allelic values will be spaced between $-(l-1)\sigma$ and $(l-1)\sigma$ instead of  $-6 \sigma$ and $6 \sigma$  where $l$ is the number of alleles. So for example, for a bi-allelic system, we would have two allelic values at $-\sigma$ and $\sigma$.
 \end{description}
 
 \section{Mutation}
@@ -1196,26 +1186,26 @@ This parameter specifies the mutation rate per locus and generation. If the argu
 \subsection{quantitative mutation model}
 \begin{description}
 \item[quanti\_mutation\_model\index{quanti\_mutation\_model}] \textbf{[0-3] (default: 0)}\\
-This parameter allows specifying the mutation model, which define toward which allele we mutate when a mutation occurs. For quantitative traits offers the possibility to simulate four very common models. Notice that the two first one are more common in quantitative traits while the two last ones are more meaningful for neutral markers, and are proposed here only as a "nice to have". 
+This parameter allows specifying the mutation model, which define toward which allele we mutate when a mutation occurs. For quantitative traits, quantiNemo offers the possibility to simulate four very common models. Notice that the two first one are more common in quantitative traits while the two last ones are more meaningful for neutral markers, and are proposed here only as a "nice to have". 
 \begin{description}
 
 \item[0~:~RMM] (Random Mutation Model)\\
-The new allele is randomly selected following a Gaussian which is centered around 0, the allelic value of the central allele (reference allele). The standard deviation of the Gaussian is the same as the one from which the allelic effects are drawn randomly (see parameter \textsf{quanti\_allelic\_var}). This simulates a system where every mutation has an effect which is distributed around 0.   
+The new allele is randomly selected based on its index, following a Gaussian centred on the allele with an allelic value of 0 (the so-called central allele). The standard deviation of the Gaussian is the same as the one from which the allelic effects are drawn randomly (see parameter \textsf{quanti\_allelic\_var}). This simulates a system where every mutation has an allelic value normaly distributed around 0 with a variance of \textsf{quanti\_allelic\_var}.
 
-If the probability to mutate to a given allele are given explicitly in the allelic file (see section \ref{allelicFile}), then, the new allele is randomly selected following this file. 
+If the probability to mutate to a given allele are given explicitly in the allelic file (see section \ref{allelicFile}), then, the new allele is randomly selected following the given distribution. 
 
 \item[1~:~IMM] (Increment Mutation Model)\\
 The new allele is randomly selected following a Gaussian which is centered around the allelic value of the previous allele, \textit{i.e.} the allele it is mutating from. The standard deviation of the Gaussian is the same as the one from which the allelic effects are drawn randomly (see parameter \textsf{quanti\_allelic\_var}). This simulates a system where every mutation has an effect which is normally distributed around the value of the previous allele.   
 
-Note that with this model, the allelic values are equally space between $-20\sigma$ and $20\sigma$ instead of  $-6\sigma$ and $6\sigma$ ( where $\sigma$ is the square root of the parameter \textsf{quanti\_allelic\_var}) as it is the case for the other mutation model. This lets more freedom to the system to explore value far away from the starting point. 
+Note that with this model, the allelic values are equally space between $-20\sigma$ and $20\sigma$ instead of  $-6\sigma$ and $6\sigma$ ( where $\sigma$ is the square root of the parameter \textsf{quanti\_allelic\_var}) as it is the case for the other mutation model. This lets more freedom to the system to explore value far away from the starting point. It is therefore recommended to select a large number of allele to have a good representation of the possible values. 
 
-If the probability to mutate to a given allele are given explicitly in the allelic file (see section \ref{allelicFile}), then, the new allele is randomly selecting following this file. However, the distribution is re-centered around the current allele. If the new allele does not exist, no mutation is performed. 
+If the probability to mutate to a given allele are given explicitly in the allelic file (see section \ref{allelicFile}), then, the new allele is randomly selecting following this given distribution. However, the distribution is re-centred around the current allele. If the new allele does not exist, no mutation is performed. 
 
 \item[2~:~KAM] (K-Allele Model)\\
 At each mutation, the existing allele is randomly exchanged by another allele within the range of alleles (i.e. $[1; quanti\_all]$) not taking into account any allelic effect. The probability to mutate to any allele is the same. In this case, the frequencies that are given in the allelic file (see section \ref{allelicFile}) are not taken into account. 
 
 \item[3~:~SSM] (Single Step Mutation)\\
-In the single step mutation, the new allele depends on the current allele index. When a mutation occurs the current allele is replaced by one of its neighboring alleles. For example, if the allele with the index 12 mutates, it changes either to the allele with the index 13, or to the allele with the index 11. The boundaries are reflexive, \textit{i.e.} the allele index cannot exceed the range of alleles (i.e. $[1; ntrl\_all]$). Notice also that in quantiNemo the allelic value depend linearly on the allelic index (unless specified otherwise in the allelic file) so that this is equivalent to change incrementally the allelic value. 
+In the single step mutation, the new allele depends on the current allele index. When a mutation occurs the current allele is replaced by one of its neighbouring alleles. For example, if the allele with the index 12 mutates, it changes either to the allele with the index 13, or to the allele with the index 11. The boundaries are reflexive, \textit{i.e.} the allele index cannot exceed the range of alleles (i.e. $[1; ntrl\_all]$). Notice also that in quantiNemo the allelic value depend linearly on the allelic index (unless specified otherwise in the allelic file) so that this is equivalent to change incrementally the allelic value. 
 \end{description}
 The different models are schematically described in Fig. \ref{fig:mutation_model}, where the probability to mutate to a given allele is given taking into account the previous allele and the reference allele (which has an allelic value of 0). 
 
@@ -1231,7 +1221,7 @@ The different models are schematically described in Fig. \ref{fig:mutation_model
 \subsection{neutral mutation model}
 \begin{description}
 \item[ntrl\_mutation\_model\index{ntrl\_mutation\_model}] \textbf{[0,1] (default: 0)}\\
-In the neutral case, there is only access to two of the model, since the allelic value are not define and some of the model don't make sens. 
+In the neutral case, there is only access to two of the model, since the allelic value are not define and some of the model don't make sense. 
 \begin{description}
 \item[0~:~KAM] (K-Allele Model)\\
 At each mutation the existing allele is randomly exchanged by another allele within the range of alleles (i.e. $[1; quanti\_all]$) not taking into account any allelic effect. The probability to mutate to any allele is the same.
@@ -1241,11 +1231,11 @@ In the single step mutation, the new allele depends on the current allele index.
 \end{description}
 \end{description}
 \section{Multiple traits}\label{sec:MultipleTraits}
-quantiNemo allows simulating multiple traits (quantitative and/or neutral) simultaneously. Each trait has its own architecture and quantitative traits may be under different selection pressures.
+QuantiNemo allows simulating multiple traits (quantitative and/or neutral) simultaneously. Each trait has its own architecture and quantitative traits may be under different selection pressures.
 
 \begin{description}
 \item[(quanti/ntrl)\_nb\_trait\index{quanti\_nb\_trait}\index{ngtrl\_nb\_trait}] \textbf{[integer] (default: 1)}\\
-This parameter defines the number of traits.
+This parameter defines the number of traits. Notice that it is possible to have ntrl traits. This has to be thought has a set of neutral loci which share common parameters, like mutation model or mutation rate. 
 \end{description}
 
 Each trait may have its own specifications, but it is also possible to specify parameters for some traits together, named grouping. If several traits are used it is possible to address a certain trait by its number. For instance to specify a parameter for the fifth trait one has to append a \textsf{"\_5"} to the parameter name. In contrast if for the fifth trait no parameter with the suffix \textsf{"\_5"} is passed quantiNemo checks if the parameter is passed for the fourth trait (suffix \textsf{"\_4"}). If this is also not the case quantiNemo checks if the parameter is passed for the third trait (suffix \textsf{"\_3"}), and so forth until a parameter is found. Note, that a parameter without a suffix is the same as the parameter with the suffix  \textsf{"\_1"}. This behavior of quantiNemo allows specifying parameters for a group of traits. Sometimes this grouping is not desired. It can be suppressed by setting 'NOT\_SET' as an argument. In this case, this parameter and all parameters inheriting this parameter will use the default argument. An example for quantitative traits may make it clearer:
@@ -1269,7 +1259,7 @@ quanti_mutation_rate 0.0001
 In this example, we simulate 12 quantitative traits. Traits 1 to 3 consist of 5 loci with up to 10 alleles, traits 4 to 6 consist of 5 loci with up to 20 alleles, traits 7 to 9 consist of 10 loci with up to 10 alleles, and traits 10 to 12 consist of 10 loci with up to 20 alleles. All traits have the same mutation rate of 0.0001. Allele characteristics for traits 1 to 3 are specified in file "file\_1.txt", allele characteristics for the traits 4 to 6 in the file "file\_2.txt". Since 'NOT\_SET' is set for the parameter \textsf{ quanti\_allelic\_file\_7} all allele characteristics for traits 7 to 12 are set automatically without any file. \\
 
 \section{Genetic map}\label{sec:geneticMap}
-quantiNemo has an underlying genetic map, which may consist of several chromosomes. This allows
+QuantiNemo has an underlying genetic map, which may consist of several chromosomes. This allows
 explicitly positioning all types of loci on the map (quantitative trait loci (QTL) and neutral
 markers). The unit of the genetic map is centi Morgans \citep[cM]{Haldane_1919}. This means that
 between two loci separated by 100 cM on average a single recombination event per meiosis is expected.
@@ -1281,8 +1271,6 @@ The relation between centiMorgan (m) and recombination rate (r) is given as
         \includegraphics[width=0.70\textwidth]{cM2r.pdf}
     \label{fig:centiMorgan to recombination rate}
 \end{figure}
-
-
 
 To simulate linked loci two types of parameters have to be set: One to specify the locus positions on the genome (in cM) and one for each trait (QTL or neutral) to attribute the loci of the trait to these locus positions. If a locus of a trait is not attributed to a position then quantiNemo2 assumes that this locus is unlinked to any other locus. A genome is identical for everybody, however, sexes may differ in the rate of recombinations, e.g. hotspots of recombination, or degenerated Y-chromosome (see also parameter \textbf{sex\_ratio\_threshold}). quantiNemo2 accounts for this by allowing specifying different genetic maps (in cM) for each sex using the suffixes \textbf{\_fem} and \textbf{\_mal}. Note, that in this case, the order of loci must be identical, only distances between loci may differ.
 
@@ -1392,19 +1380,20 @@ In this example, the genome consists of two chromosomes containing each 2 loci. 
 In quantiNemo,  selection is based on the fitness of individuals. It generally acts at reproduction level (for efficiency reason) but can also act at the regulation stage. 
 More precisely, in a first step, the fitness of all individuals of the population are computed based on their genetic information (see below). Depending on the type of selection (soft/hard), the fitness can be further rescaled by the mean fitness of the patch/metapopulation. Then, during breeding, the parents of each individual are randomly selected proportionality to their fitness.  
 
-Two different procedure can be used to specify the fitness of an individual. One follows the philosophy of quantitative genetic, calculating the phenotypic value and applying pressure to it. The other one is closer to a population genetic approach, where the fitness is specified explicitly for each genotype and locus. The two approaches can be combined, in different traits (some defined using one approach and the other using the other approach) but also in a single trait. In this case, the final fitness of the trait is the product of the fitness obtained by both procedures. 
+Two different procedure can be used to specify the fitness of an individual. One follows the philosophy of quantitative genetic, calculating the phenotypic value of each trait and applying selection pressure to it. The other one is closer to a population genetic approach, where the fitness is specified explicitly for each genotype and locus. The two approaches can be combined, in different traits (some defined using one approach and the other using the other approach) but also in a single trait. In this case, the final fitness of the trait is the product of the fitness obtained by both procedures. 
 \begin{figure}[h]
     \centering
         \includegraphics[width=0.80\textwidth]{selection.pdf}
     \label{fig:life-cycle}
 \end{figure}
 \subsection{Quantitative genetic approach}
+\fm{I'm not sure if it's better to speak about phenotypic value or just about phenotype, which for me is more vague but maybe make more sens to new comer}
 To compute the fitness of an individual, quantiNemo define a genotypic value, which is the value of a trait would have if no environmental effect plays a role (therefore, if environmental effect are set to zero, the genotypic value is equal to the phenotypic value). So first, the genotypic value for each traits is computed, from the allelic values, the dominance model and if present the epistatic value. Then, the phenotypic value is computed by adding to the genotypic value the environmental value. Overall, the phenotypic value is given by:
 \begin{eqnarray}
 P &=& G + E \\
 G&=&\epsilon+\sum_{i=1}^{nbLoci}a_i+a_{i'}+k_{ii'}|a_{i'}-a_i| 
 \end{eqnarray}
-Where $P$ is the phenotypic value, $G$ the genotypic value, $E$ the environmental effect, $\epsilon$ the epistatic effect, $a_i$ and $a_{i'}$ the allelic value and $k_{ii'}$ the dominance value. 
+Where $P$ is the phenotypic value, $G$ the genotypic value, $E$ the environmental effect, $\epsilon$ the epistatic effect, $a_i$ and $a_{i'}$ the allelic value and $k_{ii'}$ the dominance factor. 
 
 In a second step, the fitness of every trait is computed from its genotypic value using one of the models of selection pressure \textit{e.g.} stabilizing selection where the value of the fitness decrease when the phenotypic value is far from its optimal value. Finally, the overall fitness of each individual, which is the product of the fitness of each trait is computed.
 
@@ -1424,8 +1413,11 @@ Each allele has an allelic effect, its contribution to the genotype, which is re
 
 \begin{description}
 
-\item[quanti\_allelic\_var\index{quanti\_allelic\_var}] \textbf{[decimal/matrix] (default: 1)} \\
-This parameter allows to specify the variance of the normal distribution from where the allelic effects are drawn randomly. The normal distribution is centered around 0 (mean phenotype is by definition 0). By using a matrix it is possible to define different variances of the normal distributions for each locus, \textit{i.e.} specifying different contributions of the QTLs to the trait. 
+\item[quanti\_allelic\_var\index{quanti\_allelic\_var}] \textbf{[decimal/matrix]  (default: 1)}\\
+
+If the allelic values are not defined explicitly using the allelic file (params. \textbf{(ntrl/quanti)\_allelic\_file}), quantiNemo will proceed as follow. The allelic values will be equally spaced between $-6 \sigma$ and $6 \sigma$, where $\sigma$ is the square root of the variance given by \textbf{quanti\_allelic\_var}. If the initial frequencies and/or the mutations frequencies toward each allele are not set by the allelic file, these frequencies will be set by a (discretized) normal distribution with a variance given by the parameter \textbf{quanti\_allelic\_var}. If dominance is purely additive, this ensures that through the population, the variance of the genotype is $2*quanti\_allelic\_var$ (the factor 2 comes from the diploid character of individuals).
+
+Note that if the number of alleles is small (smaller than 6), the allelic values will be spaced between $-(l-1)\sigma$ and $(l-1)\sigma$ instead of  $-6 \sigma$ and $6 \sigma$  where $l$ is the number of alleles. So for example, for a bi-allelic system, we would have two allelic values at $-\sigma$ and $\sigma$.
 \end{description} 
 
 \subsection{Dominance effects}
@@ -1628,13 +1620,13 @@ Directional selection acts on the quantitative trait. A generalized logistic cur
 
     \[ W_{t} = \left(1+s*e^{r(P_{r_{Max}}-P)}\right)^{-1/s}\]
 
-Where $r$ is the growth rate, $P_{r_{Max}}$ is the phenotype with the maximal slope, and $s$ defines the symmetry of the slope ; slope is symmetric by default (value 1)). See subsection \ref{sub:DirectionalSelection} for more details.  
+Where $r$ is the growth rate, $P_{r_{Max}}$ is the phenotype with the maximal slope, and $s$ defines the symmetry of the slope. See subsection \ref{sub:DirectionalSelection} for more details.  
 
 \item [3~:~fitness landscape.] \textbf{}\\
 The selection pressure is defined by a fitness landscape. The fitness value of any phenotype may be specified. The fitness value of a phenotype within the specified range of phenotypes is linearly interpolated, Phenotype outside the range of specified phenotypes will result in the fitness value of the smallest phenotype, respectively in the fitness value of the largest phenotype. See subsection \ref{sub:FitnessLandscape} for more details.  
  
 \item [4~:~selection coefficient.] \textbf{}\\
-The selection pressure of a bi-allelic locus is defined by a selection coefficient. In this simplified, but widespread model, the genotype is directly mapped to a fitness. Note that for this type of selection a quantitative trait may only contain a single bi-allelic locus, without explicitly specified allelic effects.  \\
+The selection pressure of a bi-allelic locus is defined by a selection coefficient $s$ and a dominance factor $h$. In this simplified, but widespread model, the genotype is directly mapped to a fitness. Note that for this type of selection a trait may only contain a single bi-allelic locus, without explicitly specified allelic effects.  See subsection \ref{sub:SelectionCoefficient} for more details.   \\
 
 \begin{tabular}{ccc}
  \hline            
@@ -1646,13 +1638,13 @@ aa & 1 - s     & F - s  \\
 \hline
 \end{tabular}
 
-Where $s$ is the selection coefficient and $h$ is the dominance coefficient. See subsection \ref{sub:SelectionCoefficient} for more details.  
+
 \end{description}
 \end{description}
 
 
 
-\subsection{Stabilizing selection}
+\subsection{Stabilizing selection}\label{sub:StabilizingSelection}
 Stabilizing selection act on the phenotype ($P$) of quantitative traits. The selection pressure is defined by the parameters \textsf{quanti\_stab\_sel\_optima} ($Z_{Opt}$) and \textsf{quanti\_stab\_sel\_intensity} ($\omega$). The fitness (\textit{W}) of a quantitative trait is computed using the following standard Gaussian function for stabilizing selection: 
 
 \[W = e^{\left(-\frac{\left(P-Z_{Opt}\right)^2}{2\omega^{2}}\right)} \]
@@ -1700,7 +1692,7 @@ quanti_stab_sel_intensity 1
 \end{lstlisting}
 In this example the environment consist of two patches with varying selection pressures. Three quantitative traits are simulated. The first trait has a selection optimum at -0.1 in patch 1 and at 0.1 in patch 2. The selection optimum of the second trait is the same in both patches (0.2). The third trait has an optimum at -0.3 in patch 1 and at 0.3 in patch 2. The intensity of the selection is identical for all three traits and in both patches.    
 
-\subsection{Directional selection}
+\subsection{Directional selection}\label{sub:DirectionalSelection}
 Directional selection may act on quantitative traits. The fitness (\textit{W}) of a quantitative trait is computed using the following generalized logistic function \citep{Richards_1959}: 
 
         \[ W = min + \frac{max-min}{(1+s*e^{r(P_{r_{Max}}-P)})^{1/s}} \] 
@@ -1777,7 +1769,7 @@ quanti_dir_sel_symmetry    1
 In this example the selection pressure for all patches and quantitative traits are identical and set to the default values. The specified directional selection pressure favours larger phenotypes (parameter \textsf{quanti\_dir\_sel\_growth\_rate} is positive). This means that individuals with larger phenotypes have on average higher fitnesses and thus higher reproductive successes.
 
 \subsection{Fitness landscape}
-Specifying a fitness landscape allows defining any selection pressure for a given quantitative trait. More precisely, it allows to associate to any value of the trait (\textit{i.e.} phenotypic value) a given fitness. The phenotypic values (parameter \textsf{quanti\_phenotype\_landscape}) and fitness values (parameter \textsf{quanti\_phenotype\_landscape}) are separately passed to quantiNemo as two vectors. The fitness value of any phenotype within the specified range of phenotypes is linearly interpolated and if the phenotype lies outside of the specified range of phenotypes the resulting fitness value will result in the fitness value of the smallest and largest phenotype, respectively. By default, all phenotypes will result in a fitness of 1. 
+Specifying a fitness landscape allows defining any selection pressure for a given quantitative trait. More precisely, it allows to associate to any value of the trait (\textit{i.e.} phenotypic value) a given fitness. The phenotypic values (parameter \textsf{quanti\_phenotype\_landscape}) and fitness values (parameter \textsf{quanti\_fitness\_landscape}) are separately passed to quantiNemo as two vectors. The fitness value of any phenotype within the specified range of phenotypes is linearly interpolated and if the phenotype lies outside of the specified range of phenotypes the resulting fitness value will result in the fitness value of the smallest and largest phenotype, respectively. By default, all phenotypes will result in a fitness of 1. 
 
 \begin{figure}[h]
     \centering
@@ -1815,7 +1807,7 @@ In this example the selection pressure for all patches and quantitative traits a
 
 
 \subsection{Selection coefficient}
-quantiNemo2 supports the simulation of bi-allelic loci where the selection pressure is defined by a selection coefficient. In this simplified, but widespread model, the genotype is directly mapped to a fitness:\\
+QuantiNemo supports the simulation of bi-allelic loci where the selection pressure is defined by a selection coefficient. In this simplified, but widespread model, the genotype is directly mapped to a fitness:\\
 
 \begin{tabular}{ccc}
  \hline            
@@ -1891,10 +1883,10 @@ By default, the selection appends during breeding. This is a reasonable choice f
 \item[selection\_position\index{selection\_position}] \textbf{[0-4] (default: 0)}\\
 The parameter specifies when and how selection acts. By default, selection acts at reproduction where the fecundity of an individual depends on its fitness.
 \begin{description}
-\item [0~:~reproductive success.] Selection acts at the reproduction stage (see section \ref{chap:breeding}), where the number of offspring of an individual depends on its fitness.
+\item [0~:~reproductive success.] Selection acts at the reproduction stage (see section \ref{sec:MatingSystem}), where the number of offspring of an individual depends on its fitness.
 \item [1~:~reproductive success special.] Currently not working (do not use). 
-\item [2~:~offspring survival.] Selection acts at the survival probability of the offspring, \textit{i.e.} before dispersal (see section \ref{5regulation}).
-\item [3~:~adult survival.] Selection acts at the survival probability of the adults, \textit{i.e.} after dispersal (see section \ref{7regulation}).
+\item [2~:~offspring survival.] Selection acts at the survival probability of the offspring, \textit{i.e.} before dispersal (see section \ref{sec:RegulationOffspring}).
+\item [3~:~adult survival.] Selection acts at the survival probability of the adults, \textit{i.e.} after dispersal (see section \ref{sec:RegulationAdults}).
 \item [4~:~no selection.] This option allows performing simulations without any selection.
 \end{description}
 
