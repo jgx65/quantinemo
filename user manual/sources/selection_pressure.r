@@ -8,12 +8,12 @@ plot.fitness.stabilizing<-function(Zopt=0, omega=1, min=-10, max=10)
   lines(c(0,0),c(0.07,1.02))  
   text(0 ,0.02 ,expression(paste("Z"[Opt])))
   
-  arrows(0, 0.6, 1, 0.6, code=3, length=0.1)
-  text(0.5, 0.65,expression(omega))
+  arrows(0, exp((omega - Zopt)^2/((-2)*omega^2)), omega,exp((omega - Zopt)^2/((-2)*omega^2)), code=3, length=0.1)
+  text(omega/2, exp((omega - Zopt)^2/((-2)*omega^2))-0.05,expression(omega))
 }
 
 # how to call the function
-plot.fitness.stabilizing(Zopt=0, omega=1, min=-4, max=4)# function
+plot.fitness.stabilizing(Zopt=0, omega=2, min=-8, max=8)# function
 
 
 
