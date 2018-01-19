@@ -102,7 +102,7 @@ TSimulation::init_paramset()
                         "  2: executable directory\n" \
                         "  string: explicitly defined directory",3);
     
-    _paramSet.add_param("logfile",STR,false,my_NAN,my_NAN,"quantiNemo2.log",false,
+    _paramSet.add_param("logfile",STR,false,my_NAN,my_NAN,"quantiNemo.log",false,
                         "Filename (including extension) of the simulation log. " \
                         " It is stored next to the executable.",5);
     
