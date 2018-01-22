@@ -810,8 +810,8 @@ QuantiNemo is a discrete generation-based simulator. This means that individuals
 \end{description}
 Moreover, during each cycle,  two events are called between breeding and death, allowing to save informations about the simulation.  Notice that at this moment, both adults and Juveniles are present, the main difference between both being that the adult might come from another patch while Juvenile not. 
 \begin{description}
-\item \textbf{\hyperref[sec:Statistics]{Statistics.}} It is the stage were summary statistics can be computed for adults and juveniles.
-\item \textbf{\hyperref[sec:Output]{Outputs.}} Genotypes and/or phenotypes can be dumped to files for adults and/or juveniles.
+\item \textbf{\hyperref[sec:SummaryStatistics]{Statistics}} It is the stage were summary statistics can be computed for adults and juveniles.
+\item \textbf{\hyperref[sec:RawData]{Output}} Genotypes and/or phenotypes can be dumped to files for adults and/or juveniles.
 \end{description}
 Most of the life cycle events are described in the following pages. However, the dispersal is included in the chapter about demography,  section \ref{sec:Dispersal}. All the information about statistics and output is also given in a separate chapter \ref{chap:OutputsAndStatistics}.
 
@@ -837,7 +837,7 @@ Five general mating systems are implemented in quantiNemo. The assignment of the
 
 \item [5~:~monogamy.] For each female a male is randomly assigned to be its partner for all offspring. If there are fewer females than males present in the patch, not all males will mate. In contrast, if there are more females than males present in the patch, males may belong to several mating pairs. For each offspring, a parent pair is randomly assigned depending on the fitness of the female (if no selection acts the parent pairs have the same probability to be selected). Thus parent pairs, where the females have a higher fitness have on average a higher reproductive success. The parameter \textsf{mating\_proportion} allows setting the proportion of random matings.
 
-\item [6~:~no mating/reproduction.] In this case no mating or reproduction occurs, \textit{i.e.} this life cycle event is skipped. This option allows using quantiNemo as a statistical package. The input data may be passed as initial genotype files (ntrl or quanti) in the FSTAT format (see sections \ref{iniGenoQuanti} and \ref{iniGenoNtrl}). The number of generations has to be set to one since a simulation without any mating and reproduction does not make sense.
+\item [6~:~no mating/reproduction.] In this case no mating or reproduction occurs, \textit{i.e.} this life cycle event is skipped. This option allows using quantiNemo as a statistical package. The input data may be passed as initial genotype files (ntrl or quanti) in the FSTAT format (see sections \ref{sec:InitialGenotypes}). The number of generations has to be set to one since a simulation without any mating and reproduction does not make sense.
 
 \end{description}
 
@@ -1131,7 +1131,7 @@ This parameter allows to pass the name of a file containing allele informations,
 The file has to start with a file information box \textsf{[FILE\_INFO]}\{...\}. This box contains the information of the structure of the following table allowing a flexible structure of the table. For example the order of the columns in the table may vary, or columns may be ignored. The file information box starts with the keyword \textsf{[FILE\_INFO]} and the information is enclosed by brackets "\{...\}". Line by line the index of the columns to be read have to be declared. Thereby a keyword for the specific setting is followed by the column index (the ordering starts with 1). The following column keywords are available:
 \begin{description}
 \item [col\_locus] This keyword specifies the column containing the locus index. If this column is not declared in the file information box, quantiNemo will use the same settings for all loci. In this case, the length of the table must meet the number of alleles (\textsf{ntrl\_all}). If this keyword is declared the length of the table must meet the number of alleles times the number of loci (\textsf{ntrl\_loci} * \textsf{ntrl\_all}).   
-\item [col\_allelic\_value] This keyword specifies the column containing the allelic effects, \textit{i.e.} how an allele contribute to the value of a trait (c.f. \ref{sub:AllelicEffect}). If this column is not set the allelic effects will be equally spaced on a range which depend of the parameter \textsf{quanti\_all\_effect\_var}. Since only quantitative trait have an allelic value, this column is only available for quantitative traits.
+\item [col\_allelic\_value] This keyword specifies the column containing the allelic effects, \textit{i.e.} how an allele contribute to the value of a trait (c.f. \ref{sub:AllelicEffects}). If this column is not set the allelic effects will be equally spaced on a range which depend of the parameter \textsf{quanti\_all\_effect\_var}. Since only quantitative trait have an allelic value, this column is only available for quantitative traits.
 \item [col\_allele] This keyword specifies the column containing the allele index. This column is mandatory. The index of the allele goes from 1 to \textsf{quanti/ntrl\_loci}.
 \item [col\_mut\_freq] This keyword specifies the column containing the mutation probabilities, \textit{i.e.} the probability to mutate to this allele when a mutation occurs. The behaviour of this mutation probability depends on the mutation model (see parameter (\textsf{ntrl\_mutation\_model}).This keyword is only available for quantitative traits. 
 \item [col\_ini\_freq] This keyword specifies the column containing the initial frequencies of the alleles. This column allows to explicitly set the allele frequencies at the start of a simulation. The frequencies can be set for each patch separately using a matrix. In the example above, individuals of the first population are initially fixed for the allele 3 at the first locus as well as at the second locus. In the second population, all alleles have the same initial frequency of 0.2. Note, that the matrix is adjusted in length if the number of populations does not correspond to the length of the matrix. If this column is not given the initial allele frequencies are set globally depending on the parameter \textsf{ntrl\_ini\_allele\_model}.
@@ -1140,7 +1140,7 @@ Note, that as in all input files for quantiNemo it is possible to define comment
 \end{description}
 
 
-\section{Initial genotypes}\label{iniGenoQuanti}
+\section{Initial genotypes}\label{sec:InitialGenotypes}
 There are several methods to set the allele frequencies or even the genotypes of the individuals at the start of a simulation (initialization). The genotypes of the individuals may be set using an FSTAT file \citep{Goudet_1995} (parameter \textbf{(ntrl/quanti)\_ini\_genotypes}). If such a FSTAT file is not present the genotypes are randomly drawn following the explicitly set allele frequencies in the allelic file (see parameter \textbf{(ntrl/quanti)\_allelic\_file} and especially column keyword \textbf{col\_ini\_freq}). If the allele frequencies are not set explicitly in the allelic file the initialization is performed following the parameter \textbf{(ntrl/quanti)\_ini\_allele\_model}.  
 
 \begin{description}
@@ -1234,7 +1234,7 @@ In the single step mutation, the new allele depends on the current allele index.
 QuantiNemo allows simulating multiple traits (quantitative and/or neutral) simultaneously. Each trait has its own architecture and quantitative traits may be under different selection pressures.
 
 \begin{description}
-\item[(quanti/ntrl)\_nb\_trait\index{quanti\_nb\_trait}\index{ngtrl\_nb\_trait}] \textbf{[integer] (default: 1)}\\
+\item[(quanti/ntrl)\_nb\_trait\index{quanti\_nb\_trait}\index{ntrl\_nb\_trait}] \textbf{[integer] (default: 1)}\\
 This parameter defines the number of traits. Notice that it is possible to have ntrl traits. This has to be thought has a set of neutral loci which share common parameters, like mutation model or mutation rate. 
 \end{description}
 
@@ -1384,7 +1384,7 @@ Two different procedure can be used to specify the fitness of an individual. One
 \begin{figure}[h]
     \centering
         \includegraphics[width=0.80\textwidth]{selection.pdf}
-    \label{fig:life-cycle}
+    \label{fig:Selection}
 \end{figure}
 \subsection{Quantitative genetic approach}
 \fm{I'm not sure if it's better to speak about phenotypic value or just about phenotype, which for me is more vague but maybe make more sens to new comer}
@@ -1402,13 +1402,13 @@ W &=& \prod_t W_t
 \end{eqnarray}
 where $W$ is the overall fitness and $W_t$ is the fitness of each trait. 
 \subsection{Population genetic approach}
-In this approach, the fitness of an individual is considered to be a product of the fitness of each of its loci. The fitness of its loci is obtained through what is called fitness factor, which directly relates the genotype of a locus to its fitness. This factor can either be specified for each genotype and each locus explicitly using the dominance file (see sub-section: \ref{sub:DominanceEffect}) or globally depending on the heterozygosity (see section \ref{sec:FitnessFactor})
+In this approach, the fitness of an individual is considered to be a product of the fitness of each of its loci. The fitness of its loci is obtained through what is called fitness factor, which directly relates the genotype of a locus to its fitness. This factor can either be specified for each genotype and each locus explicitly using the dominance file (see sub-section: \ref{sub:DominanceEffects}) or globally depending on the heterozygosity (see section \ref{sec:FitnessFactor})
 
 In the following sections, we explain in details the parameters to define quantitative traits, the selection pressure acting and other parameters affecting the fitness and the selection. 
 
 \section{From genotype to genotypic value }
 In this section, we explain how quantiNemo compute the genotypic value from a given genotype taking into account the value of every allele, dominance effect and if it's present, epistasis. 
-\subsection{Allelic effects}
+\subsection{Allelic effects}\label{sub:AllelicEffects}
 Each allele has an allelic effect, its contribution to the genotype, which is represented by a number, the allelic value. There are two possibilities to define these effects. Either they are defined explicitly for each allele using a separate file (see parameter \textsf{quanti\_allelic\_file} in section \ref{sec:SettingsLoci}), or they can be defined by specifying the variance of the normal distribution of the genotypic value (see parameter \textsf{quanti\_allelic\_var}). If the allelic effects are defined in both ways the explicitly defined effects are used. Note, that all effects have to be defined in the same way, \textit{i.e.} explicitly or by their distribution.
 
 \begin{description}
@@ -1768,7 +1768,7 @@ quanti_dir_sel_symmetry    1
 \end{lstlisting}
 In this example the selection pressure for all patches and quantitative traits are identical and set to the default values. The specified directional selection pressure favours larger phenotypes (parameter \textsf{quanti\_dir\_sel\_growth\_rate} is positive). This means that individuals with larger phenotypes have on average higher fitnesses and thus higher reproductive successes.
 
-\subsection{Fitness landscape}
+\subsection{Fitness landscape}\label{sub:FitnessLandscape}
 Specifying a fitness landscape allows defining any selection pressure for a given quantitative trait. More precisely, it allows to associate to any value of the trait (\textit{i.e.} phenotypic value) a given fitness. The phenotypic values (parameter \textsf{quanti\_phenotype\_landscape}) and fitness values (parameter \textsf{quanti\_fitness\_landscape}) are separately passed to quantiNemo as two vectors. The fitness value of any phenotype within the specified range of phenotypes is linearly interpolated and if the phenotype lies outside of the specified range of phenotypes the resulting fitness value will result in the fitness value of the smallest and largest phenotype, respectively. By default, all phenotypes will result in a fitness of 1. 
 
 \begin{figure}[h]
@@ -1806,7 +1806,7 @@ quanti_fitness_landscape   {0.00 0.05 0.72 0.72 0.05 0.00
 In this example the selection pressure for all patches and quantitative traits are identical. The specified fitness landscape corresponds to the above shown figure, however, the resolution of the specification is reduced in the shown example. The binomial landscape is the sum of two stabilizing selections with optima set to -2 and 2 and an intensity of 0.5. 
 
 
-\subsection{Selection coefficient}
+\subsection{Selection coefficient}\label{sub:SelectionCoefficient}
 QuantiNemo supports the simulation of bi-allelic loci where the selection pressure is defined by a selection coefficient. In this simplified, but widespread model, the genotype is directly mapped to a fitness:\\
 
 \begin{tabular}{ccc}
@@ -1923,7 +1923,7 @@ This parameter allows to specify the fitness factor for homozygote loci, \textit
 QuantiNemo has been developed to perform forward in time simulations at the individual level. This allows simulating realistically highly complex quantitative traits under selection. The drawback of this type of simulation is the huge demand of memory and long computation times. In contrast, population-based backward in time simulations based on the coalescence theory are much more efficient in terms of computation time and memory usage but do not allow to simulate realistic quantitative traits under selection. In order to take advantage of both types of simulations, we have added a layer of coalescence to quantiNemo2. Having both individual and population-based simulations allow for the user to switch easily the simulation mode depending on the type of simulation, keeping all the rest of the simulation/demography identical. 
 
 This allows, for example, to explore a demographic history using efficient population-based simulations and then to make the simulations more realistic by switching to individual based simulations. Technically the population-based simulations simulate forward in time the evolution of the entire populations. During this simulation, the population sizes and immigration rates for all patches are stored in an internal database. In a second step, the database is used to simulate backward in time corresponding coalescence trees on which in a third step the mutations are sprinkled to generate the genetic polymorphism.
-Most of the parameters of quantiNemo may be used in both simulation modes, but not all. Thus it is not possible to simulate any quantitative traits and thus no selection using population-based simulations. It is also important to note that population sizes in coalescence simulations are effective population sizes, whereas in individual-based simulation census population sizes. In addition at the current stage, the coalescence simulations are limited to hermaphrodite individuals and unlinked neutral markers. 
+Most of the parameters of quantiNemo may be used in both simulation modes, but not all. Thus it is not possible to simulate any quantitative traits and thus no selection acts in population-based simulations. It is also important to note that population sizes in coalescence simulations are effective population sizes, whereas in individual-based simulation census population sizes. In addition at the current stage, the coalescence simulations are limited to hermaphrodite individuals and unlinked neutral markers. The genetic maps is not taken into account in the population-based mode. 
 
 In this chapter, the coalescence specific parameters are described.
 
@@ -1940,9 +1940,9 @@ The probability $p$ that a single coalescence event per generation and patch occ
     \[
     p = \frac{n(n-1)}{4N}.
 \]  
-This approximation is valid for small numbers of traced lineages compared to the population size ($n<<N$). If $n$ in relation to $N$ gets bigger the probability that more than one coalescence event occurs increases and thus the method above is not any more accurate. Therefore quantiNemo allows setting a threshold (this parameter) for the probability of a single coalescence even $p$ above which the method used to simulate the coalescence events is changed. In this latter case the coalescence process is simulated realistically, \textit{i.e.} for each traced lineage a parental gene is drawn randomly. All lineages with an identical parental gene are then coalesced. In this case, at each generation, several coalescence events may happen but also events involving the fusion of three lineages are possible. 
+This approximation is valid for small numbers of traced lineages compared to the population size ($n<<N$). If $n$ in relation to $N$ gets bigger the probability that more than one coalescence event occurs increases and thus the method above is not any more accurate. Therefore quantiNemo allows setting a threshold (this parameter) for the probability of a single coalescence even $p$ above which the method used to simulate the coalescence events is changed. In this latter case the coalescence process is simulated realistically, \textit{i.e.} for each traced lineage a parental gene is drawn randomly. All lineages with an identical parental gene are then coalesced. In this case, at each generation, several coalescence events may happen but also events involving the fusion of three or more lineages are possible. 
 
-This method is always valid, however much slower in terms of computation time than the previously mentioned one. By default the value of this parameter, \textit{i.e.} the threshold, is set to 0.1 which is an acceptable threshold. Note that the probability that a single coalescence event occurs may exceed extensively 1. A value of 0 implies that the coalescent process is always realistically simulated. And ratios above 0 are used to specify the threshold below which a singe coalescence event is assumed and above which the coalescence process is simulated realistically. A parameter value of 1e6 is arbitrarily used to tell quantiNemo that only single coalescence events should be assumed.    
+This method is always valid, however much slower in terms of computation time than the previously mentioned one (Note however that this is still much faster than forward in time simulation). By default the value of this parameter, \textit{i.e.} the threshold, is set to 0.1 which is an acceptable threshold. Note that the probability that a single coalescence event occurs may exceed extensively 1. A value of 0 implies that the coalescent process is always realistically simulated. And ratios above 0 are used to specify the threshold below which a singe coalescence event is assumed and above which the coalescence process is simulated realistically. A parameter value of 1e6 is arbitrarily used to tell quantiNemo that only single coalescence events should be assumed.    
 
 \item[divergence\_time\index{divergence\_time}] \textbf{[integer] (default: 0)}\\ 
 A coalescence simulation lasts until the most recent common ancestor (MRCA) is reached. Depending on the simulated demography the MRCA may be found within the simulated time, but it can well be that the MRCA of all sampled lineages lays before the start of the demographic simulation. In this case, going backward in time the coalescence simulation is continued behind the demographic simulation assuming no migration between the remaining patches. At the divergence time (parameter \textbf{divergence\_time} all remaining lineages are then merged to a single patch of specified size (parameter \textbf{divergence\_pop\_size} below). By default the value of the parameter \textbf{divergence\_time} is 0. If the divergence time is set to less than the number of simulated generations (as the default) the divergence time will be readjusted to the number of generations, thus all remaining lineages are merged to a single patch when the onset of the demographic simulation is reached. 
@@ -2089,7 +2089,7 @@ This parameter is used to specify an individual base filename for the population
 
 \end{description}
 
-\section{Summary statistics}\label{ssCoal}
+\section{Summary statistics}\label{sec:SummaryStatistics_coalescence}
 The summary statistics listed in the table below are available for coalescence simulations. The column \textsf{Stat name} contains the name of the summary statistic used to specify which summary statistics are computed (parameter \textsf{stat}, for details see section \ref{sec:SummaryStatistics}). These names appear also in the output file. The column \textsf{Description} contains a short description of the summary statistic. 
 
 The summary statistic name (column \textsf{Stat name}) may be used to specify the summary statistic to be computed (e.g. \textsf{mrca.mean}). Similar summary statistics (within a thematic group) may be obtained at once using the name within square brackets after the group title (e.g. \textsf{mrca}). Using this group statistic name all summary statistics of the thematic group marked with a star (*) will be computed. 
@@ -2097,7 +2097,7 @@ The summary statistic name (column \textsf{Stat name}) may be used to specify th
 \\
 \begin{description}
 \item[sample\_all\_or\_nothing\index{sample\_all\_or\_nothing}] \textbf{[0,1] (default: 0)}\\
-This parameter allows to specify when statistics should be computed (only available for the coalescence simulations (see parameter \textsf{coalescence})):
+This parameter allows to specify when statistics should be computed (only available for the coalescence simulations ):
 \begin{description}
 \item[0~:~when possible.] In this case statistics and outputs are generated whenever it is possible, \textit{i.e.} whenever a patch is enough populated that a given statistic may be computed.
 \item[1~:~all or nothing.] In this case statistics and output are generated only if the entire sampling schema may be applied, \textit{i.e.} if the patches are enough populated that the specified sampling may be applied. If this is not the case a NaN or a zero depending on the statistic is outputted for all statistics. Note that in such a case the genetic part of the coalescence simulations are omitted, thus the simulation may be much quicker although useless. A specified sampling may not be applied if (and only if) not all specified patches (parameter \textsf{sampled\_patches} defined as a matrix) may be sampled or the population size is inferior to the sampling size (parameter \textsf{patch\_sample\_size} defined in entire numbers (absolute)).
@@ -2119,7 +2119,7 @@ This parameter allows to specify when statistics should be computed (only availa
 
 \chapter{Ouputs and Statistics}
 \label{chap:OutputsAndStatistics}
-QuantiNemo allows to output summary statistics as well as raw data about the population, including the complete genome, in order to offer the highest flexibility. QuantiNemo can also output log files to resume a simulation or restart it from the beginning with the same random parameter. 
+QuantiNemo allows to output summary statistics as well as raw data about the population, including the complete genome, in order to offer the highest flexibility. QuantiNemo can also output log files to resume a simulation or restart it from the beginning with the same random parameter. More precisely, quantiNemo can output:
 \begin{description}
 \item[summary statistics]\hspace*{\fill}\\
 QuantiNemo provides summary statistics for the different simulation components, including for example genetic variance estimates, quantitative trait analysis (e.g. $Q_{ST}$), and F-statistics. The summary statistics can be computed for any generation during the simulation. If several replicates are performed, the averaged across replicates as well as the value for each replicate can be outputted. 
@@ -2186,7 +2186,7 @@ The summary statistics are computed by default for every trait. If several trait
 
 \begin{description}
 \item[stat\index{stat}] \textbf{[string/matrix]}\\
-This parameter allows specifying the summary statistics to be computed.  A exhaustive list of  existing statistics is given in the next subsection: \ref{sub:Demography}, \ref{sub:NeutralMarkers}, \ref{sub:QuantitativeTraits}. The arguments are keywords standing for one or multiple summary statistics. If multiple keywords are passed they have to be written as a matrix within brackets separated by space. 
+This parameter allows specifying the summary statistics to be computed.  A exhaustive list of  existing statistics is given in the next subsection: \ref{sub:Demography}, \ref{sub:NeutralMarkers}, \ref{sub:QuantitativeTraits} (except for statistic specific to coalescence which are treated in the chapter about coalescence, section \ref{sec:SummaryStatistics_coalescence}). The arguments are keywords standing for one or multiple summary statistics. Keywords have to be written as a matrix within brackets separated by space. 
 
 The summary statistic name (column \textsf{Stat name}) may be used to specify the summary statistic to be computed (e.g. \textsf{adlt.fst}). Similar summary statistics (within a thematic group) may be obtained at once using the name within square brackets after the group title (e.g. \textsf{adlt.fstat}). Using this group statistic name all summary statistics of the thematic group marked with a star (*) will be computed. 
 \begin{lstlisting}[frame=single]
@@ -2316,7 +2316,7 @@ This parameter allows specifying a placeholder used for the output of the summar
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 
-\subsection{neutral markers}
+\subsection{neutral markers}\label{sub:NeutralMarkers}
 \topcaption{\label{ntrlstats}Summary statistics available for neutral markers}
 \tablehead{\hline \multicolumn{2}{l}{Stat name} &Description \\ \hline}
 \tabletail{\hline \multicolumn{3}{l}{\emph{Table \ref{ntrlstats} continued on next page}} \\}
@@ -2447,7 +2447,7 @@ This parameter allows specifying a placeholder used for the output of the summar
 
 
 
-\subsection{quantitative traits}
+\subsection{quantitative traits}\label{sub:QuantitativeTraits}
 
 \topcaption{\label{quantistats}Summary statistics available for quantitative traits}
 \tablehead{\hline \multicolumn{2}{l}{Stat name} &Description \\ \hline}
@@ -2594,9 +2594,9 @@ This parameter allows specifying a placeholder used for the output of the summar
  \hline
                      
 \end{supertabular}
-\section{Raw data}
+\section{Raw data}\label{sec:RawData}
 \subsection{Genotype}\label{sub:Genotype}
-The genotype of the sampled individuals and popualtions may periodically be dumped to files. The output files will be stored in the folder given by the parameter \textsf{(ntrl/quanti)\_genot\_dir} and will have the name of the base file name (see parameter \textsf{filename} in section \ref{chap:GeneralParameters}). The extension is ".dat". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05\_r4.dat"}. Note, that such a genotype file may be used to start a new simulation (see parameter \textbf{(ntrl/quanti\_ini\_genotypes}). By default all individuals of all populations are sampled. Section \ref{sec:Sampling} describes how to specify a sampling schema.
+The genotype of the sampled individuals and populations may periodically be dumped to files. The output files will be stored in the folder given by the parameter \textsf{(ntrl/quanti)\_genot\_dir} and will have the name of the base file name (see parameter \textsf{filename} in section \ref{chap:GeneralParameters}). The extension is ".dat". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05\_r4.dat"}. Note, that such a genotype file may be used to start a new simulation (see parameter \textbf{(ntrl/quanti\_ini\_genotypes}). By default all individuals of all populations are sampled. Section \ref{sec:Sampling} describes how to specify a sampling schema.
 
 \begin{description} 
 \item[(ntrl/quanti)\_save\_genotype\index{quanti\_save\_genotype}\index{ntrl\_save\_genotype}] \textbf{[0-2] (default: 0)} \\
@@ -2721,7 +2721,7 @@ This parameter allows to choose which age is output.
 \end{description}
 
 \subsection{Phenotypic value}\label{phenoQuanti}
-Similar to the genotypes the phenotypic values of the adults may be periodically dumped to files. The phenotype of juveniles cannot be output, as the phenotype is only computed when selection acts, and this is at the reproduction stage, \textit{i.e.} when individuals are adults. The output files will be stored in the folder given by the parameter \textsf{quanti\_phenot\_dir} and will have the name of the base file name (see parameter \textsf{filename} in section \ref{chap:GeneralParameters}). The extension is ".phe". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05r4.phe"}. By default all individuals of all populations are sampled. The chapter \ref{chap:sampling} describes how to specify a sampling schema.
+Similar to the genotypes the phenotypic values of the adults may be periodically dumped to files. The phenotype of juveniles cannot be output, as the phenotype is only computed when selection acts, and this is at the reproduction stage, \textit{i.e.} when individuals are adults. The output files will be stored in the folder given by the parameter \textsf{quanti\_phenot\_dir} and will have the name of the base file name (see parameter \textsf{filename} in section \ref{chap:GeneralParameters}). The extension is ".phe". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05r4.phe"}. By default all individuals of all populations are sampled. The section \ref{sec:Sampling} describes how to specify a sampling schema.
 
 \begin{description} 
 \item[quanti\_save\_phenotype\index{quanti\_save\_phenotype}] \textbf{[0-2] (default: 0)} \\
@@ -2799,8 +2799,27 @@ Depending on the definition of the architecture of the quantitative trait it is 
 
 \begin{appendices}
 \chapter{technical details}\label{chap:TechnicalDetails}
-\section{Multiple traits with varying types of selection}
-A special case arises if multiple quantitative traits are simulated with varying types of selection. The problem is how to specify the individual selection pressures. This is a more technical problem which I would like to illustrate here. First, quantiNemo investigates which types of selection will be simulated based on the settings file. Then, quantiNemo sets for each simulated type of selection the corresponding parameters assuming one selection type after the other that all quantitative traits have the same type of selection: assuming for example first that all quantitative traits are under stabilizing selection, then in a second step assuming that all quantitative traits are under directional selection. This detail is important to understand since this makes it clear how a matrix is treated, \textit{i.e.} how a matrix is expanded if needed. Of, course finally the selection pressure parameters are only set where needed, \textit{i.e.} if the type of selection for a given quantitative trait requires the parameter. In other words, the matrix of a selection pressure has to have the number of rows of the total number of traits and not only of the traits with the corresponding selection pressure (this is controlled by quantiNemo returning a warning if not met). If multiple quantitative traits are simulated with varying selection pressures it is handy to use the row indicator for the rows of the matrix. Example:
+\section{Multiple traits with varying types of selection on various patch: simple case }
+Phenotypes for quantitative traits may be under selection. Selection pressures may vary among quantitative traits, sexes, patches, and time. To specify the selection pressure individually for quantitative traits and patches, matrices may be used. They are adjusted to the number of quantitative traits and to the number of patches if needed. If a parameter does not change among quantitative traits and patches, a single value may be used as argument. Selection pressures have to be specified either for each sex separately (parameters with the suffix "\_fem" for females and "\_mal" for males), or for both sexes together (parameters without a suffix). In the first case both sex specific parameters have to be set if two sexes are simulated. In the latter case, the selection pressure of females and males are assumed to be identical. Each row of the matrix corresponds to a quantitative trait, each column to a patch:
+\begin{lstlisting}[frame=single]
+{ {patch_1 patch_2 . . . patch_n}    # trait 1
+  {patch_1 patch_2 . . . patch_n}    # trait 2
+  ...
+  {patch_1 patch_2 . . . patch_n} }  # trait m
+\end{lstlisting}
+
+\paragraph{Example}\hspace*{\fill}
+\begin{lstlisting}[frame=single]
+patch_number             2
+quanti_nb_trait          3
+patch_stab_sel_optima    {{-0.1  0.1}                            
+                          { 0.2  0.2}
+                          {-0.3  0.3}}    
+patch_stab_sel_intensity 1                                                    
+\end{lstlisting}
+In this example, the environment consists of two patches with varying selection pressures. Three quantitative traits are simulated. The first trait has a selection optimum at -0.1 in patch 1 and at 0.1 in patch 2. The selection optimum of the second trait is the same in both patches (0.2). The third trait has an optimum at -0.3 in patch 1 and at 0.3 in patch 2. The intensity of the selection is identical for all three traits and in both patches.    
+\section{Multiple traits with varying types of selection on various patch: matrix expansion}
+A somehow complicated behaviour is how quantiNemo extend matrix in the case of multiple quantitative traits with varying types of selection. The problem is how to specify the individual selection pressures. First, quantiNemo investigates which types of selection will be simulated based on the settings file. Then, quantiNemo sets for each simulated type of selection the corresponding parameters assuming one selection type after the other that all quantitative traits have the same type of selection: assuming for example first that all quantitative traits are under stabilizing selection, then in a second step assuming that all quantitative traits are under directional selection. This detail is important to understand since this makes it clear how a matrix is treated, \textit{i.e.} how a matrix is expanded if needed. Of, course finally the selection pressure parameters are only set where needed, \textit{i.e.} if the type of selection for a given quantitative trait requires the parameter. In other words, the matrix of a selection pressure has to have the number of rows of the total number of traits and not only of the traits with the corresponding selection pressure (this is controlled by quantiNemo returning a warning if not met). If multiple quantitative traits are simulated with varying selection pressures it is handy to use the row indicator for the rows of the matrix. Example:
 \begin{lstlisting}[frame=single]
 patch_number 3
 quanti_nb_trait 5 
@@ -2845,34 +2864,15 @@ Maybe this behavior was desired, but it could also well be that one anticipated 
 \end{lstlisting}
 Why is this not the case? Assume that all quantitative traits are under directional selection. Thus the matrix of the growth rate has to be repeated leading to the following full matrix: \{\{4 5 6\}\{2 3 7\}\{2 8 3\}\{4 5 6\}\{2 3 7\}\}. This matrix expansion leads to a warning indicating that the number of rows is not an entire subset of the number of quantitative traits. Based on this matrix it is now obvious that the growth rate of the third quantitative trait (thus the first trait under directional selection) has the growth rates \{2 8 3\} and not \{4 5 6\}.
 
-\section{Selection pressure}\label{selPressure}
-Phenotypes for quantitative traits may be under selection. Selection pressures may vary among quantitative traits, sexes, patches, and time. To specify the selection pressure individually for quantitative traits and patches, matrices may be used. They are adjusted to the number of quantitative traits and to the number of patches if needed (see section \ref{matparam}). If a parameter does not change among quantitative traits and patches, a single value may be used as argument. Selection pressures have to be specified either for each sex separately (parameters with the suffix "\_fem" for females and "\_mal" for males), or for both sexes together (parameters without a suffix). In the first case both sex specific parameters have to be set if two sexes are simulated. In the latter case, the selection pressure of females and males are assumed to be identical. Each row of the matrix corresponds to a quantitative trait, each column to a patch:
-\begin{lstlisting}[frame=single]
-{ {patch_1 patch_2 . . . patch_n}    # trait 1
-  {patch_1 patch_2 . . . patch_n}    # trait 2
-  ...
-  {patch_1 patch_2 . . . patch_n} }  # trait m
-\end{lstlisting}
-
-\paragraph{Example}\hspace*{\fill}
-\begin{lstlisting}[frame=single]
-patch_number             2
-quanti_nb_trait          3
-patch_stab_sel_optima    {{-0.1  0.1}                            
-                          { 0.2  0.2}
-                          {-0.3  0.3}}    
-patch_stab_sel_intensity 1                                                    
-\end{lstlisting}
-In this example, the environment consists of two patches with varying selection pressures. Three quantitative traits are simulated. The first trait has a selection optimum at -0.1 in patch 1 and at 0.1 in patch 2. The selection optimum of the second trait is the same in both patches (0.2). The third trait has an optimum at -0.3 in patch 1 and at 0.3 in patch 2. The intensity of the selection is identical for all three traits and in both patches.    
-
 
 \section{Selection pressure definition}\label{chap:SelectionPressureDefinition}
+If the selection varies among patches, but not among traits (or a single trait is defined), it might be easier to specify it with the following parameter. In this case, all the parameter related to selection change from \textbf{quanti\_*} to \textbf{patch\_*}. This is also how QuantiNemo 1 used to work. 
 \begin{description}
-\item[selection\_pressure\_definition\index{}]\textbf{[0;1] (default: 0)}\\
+\item[selection\_pressure\_definition\index{}]\textbf{[0;1] (default: 1)}\\
 This parameter specifies how the selection pressure is defined. 
 \begin{description}
-\item[0~:~patch.] The selection pressure is defined at the patch level as described in section \ref{selPressure}. The advantage is that across quantitative traits the matrix expansion may be used.
-\item[1~:~quanti.] The selection pressure is defined a the quantitative trait level as described in this section. The advantage is that the parameters may be extended by the postix "\_1", "\_2". This allows to define the selection pressure separately for each quantitative trait or to group the selection pressure among groups.
+\item[0~:~patch.] The selection pressure is defined at the patch level. The advantage is that across quantitative traits the matrix expansion may be used.
+\item[1~:~quanti.] The selection pressure is defined a the quantitative trait level. The advantage is that the parameters may be extended by the postix "\_1", "\_2". This allows to define the selection pressure separately for each quantitative trait or to group the selection pressure among groups.
 \end{description}
 \end{description}
 
