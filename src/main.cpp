@@ -58,23 +58,7 @@ int main (int argc, char **argv)
     
 	try{
 		try{
-			string date = VERSION_DATE;
-			string expDate;
-			int expDays = check_expiration(VERSION_DATE, EXPIRATION, expDate);
-            if(expDays<0) {
-                message("\n**************************************************"   \
-                        "\n*              q u a n t i N e m o 2             *"   \
-                        "\n**************************************************"   \
-                        "\n*     Release: %i.%i.%i%s [%s; %s]     *"             \
-                        "\n*    Copyright (C) %s Samuel Neuenschwander    *"     \
-                        "\n* http://www.unil.ch/popgen/softwares/quantinemo *"   \
-                        "\n* this is a CONFIDENTIAL version of quantiNemo2  *",
-                        RELEASE,REVISION,MINOR_VERSION,TEMP_VERSION,VERSION_DATE,VERSION_TIME,
-                        date.substr(date.rfind(' ')+1).c_str());
-                if(expDays!=my_NAN) message("\n*          expiration Date: %s          *", expDate.c_str());
-                message("\n**************************************************\n");
-                if(expDays<0) error("The current quantiNemo2 executable has expired. Please ask for a new one (samuel.neuenschwander@unil.ch)!\n");
-            }
+			
 
 #ifdef _DEBUG
             message("\n***** DEBUG MODE *****\n\n");
