@@ -321,7 +321,7 @@ void FileHandler::write_Arlequin(bool extened)
     // write the heading
     FILE << "[Profile]"
     << "\n  Title=\"Genetic data simulated with quantiNemo2\""
-    << "\n  # quantiNemo2 v" << RELEASE << "." << REVISION << "."
+    << "\n  # quantiNemo 2 v" << RELEASE << "." << REVISION << "."
     << MINOR_VERSION << TEMP_VERSION << "[" << VERSION_DATE << "; "
     << VERSION_TIME << "]" << "\n  # File created the " << curTime
     << "\n  NbSamples=" << _popPtr->get_nbSamplePatch()
@@ -449,7 +449,7 @@ void FileHandler::write_Plink_ped(bool extended)
         appended = false;
         
         // write a comment heading line
-        FILE << "# PLINK .ped file created by quantiNemo2 v" << RELEASE << "."
+        FILE << "# PLINK .ped file created by quantiNemo 2 v" << RELEASE << "."
         << REVISION << "." << MINOR_VERSION << TEMP_VERSION << "[" << VERSION_DATE << "; "
         << VERSION_TIME << "]" << "\n";
 
@@ -573,7 +573,7 @@ void FileHandler::write_Plink_pheno(bool extended, bool appended)
         if (!FILE) error("Could not open Plink (*.pheno) output file '%s'!\n", _filename_pheno.c_str());
         
         // write a comment heading line
-        FILE << "# PLINK .pheno file created by quantiNemo2 v" << RELEASE << "."
+        FILE << "# PLINK .pheno file created by quantiNemo 2 v" << RELEASE << "."
         << REVISION << "." << MINOR_VERSION << TEMP_VERSION << "[" << VERSION_DATE << "; "
         << VERSION_TIME << "]" << "\n";
         
@@ -693,7 +693,7 @@ void FileHandler::write_Plink_map(string filename, sex_t SEX, bool extended)
         error("Could not open Plink (*.map) output file '%s'!\n", filename.c_str());
     
     // write a comment heading line
-    FILE<< "# PLINK .map file created by quantiNemo2 v" << RELEASE << "."
+    FILE<< "# PLINK .map file created by quantiNemo 2 v" << RELEASE << "."
     << REVISION << "." << MINOR_VERSION << TEMP_VERSION << "[" << VERSION_DATE << "; "
     << VERSION_TIME << "]\n";
     

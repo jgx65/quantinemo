@@ -592,9 +592,12 @@ void
 TSimulation::save_simparams(list< ParamSet* >&  params, ostream& FH)
 {
     FH << "#############################################"
-    <<  "\n#           q u a n t i N E M O 2           #"
+    <<  "\n#                quantiNemo 2               #"
     <<  "\n#   version "<<RELEASE<<"."<<REVISION<<"."<<MINOR_VERSION<<TEMP_VERSION
     <<" ["<<VERSION_DATE << "; " << VERSION_TIME <<"]   #"
+#ifdef VERSIONGIT
+        <<  "\n#       Commit N° : " << VERSIONGIT <<  "           #"
+#endif
     << "\n#                                           #"
     << "\n#              Simulation log               #"
     << "\n# simulation started on " << _startTimeSimStr << " #\n";

@@ -276,7 +276,7 @@ void TSimManager::printVersion()
 {
        string date = VERSION_DATE;
 
-    message("Program:    quantiNemo2 (quantitative genetics simulator)");
+    message("Program:    quantiNemo 2 (quantitative genetics simulator)");
     message("\n\nVersion:    %i.%i.%i%s [%s; %s]", RELEASE,
             REVISION, MINOR_VERSION, TEMP_VERSION, VERSION_DATE,
             VERSION_TIME, date.substr(date.rfind(' ') + 1).c_str());
