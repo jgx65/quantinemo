@@ -34,7 +34,6 @@
 #include "tmetapop.h"
 
 
-unsigned int TGenomeProto::MUTATION_TRIAL;
 //---------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------
 // TGenome
@@ -245,10 +244,6 @@ void TGenomeProto::ini_paramset()
     add_parameter("genome_mal", MAT, false, my_NAN, my_NAN, "", false,
                   "The genetic map for males in cM.",5);
     
-
-    add_parameter("mutation_trial", INT2, false, 1, my_NAN, "1e4", false,
-                  "The number of trials to perform to draw a new allele at a mutation event " \
-                  " before resigning.",5);
     
 }
 
@@ -916,7 +911,6 @@ void TGenomeProto::_recombine_qtrait(TIndividual* parent, unsigned char** child,
  */
 void TGenomeProto::ini_all()
 {
-    MUTATION_TRIAL = (unsigned int)this->get_parameter_value("mutation_trial");
 	ini_genetic_map();
 	ini_recombination_factor();
 	ini_mutate(); // this function has to be called after ini_genetic_map() has been executed

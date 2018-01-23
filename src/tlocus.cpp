@@ -196,12 +196,24 @@ TLocus::_mutate_RMM(unsigned char* curPos)
 	unsigned char mutPos;
 	unsigned int i=0;
 
+	//Compute the probability to find another allele to mutate too. 
+	double p(0);
+	if(*curPos > 0){
+		p = _pTrait->get_mutationFreq(_locus_id_trait)[*curPos] -_pTrait->get_mutationFreq(_locus_id_trait)[*curPos-1];
+	}
+	else{
+		p = _pTrait->get_mutationFreq(_locus_id_trait)[*curPos];
+	}
+
 	//assign an arbitrary allele value:
-	do{
-		mutPos = (unsigned char) (_popPtr->rand().AfterDistribution(_pTrait->get_mutationFreq(_locus_id_trait), _nb_allele));
-		++i;                                 // used to asure that the loop ends
-    } while (mutPos == *curPos && i<TGenomeProto::MUTATION_TRIAL);  // it has to change (except if after 1e4 trials it has not yet changed)
-	*curPos = mutPos;
+	if(p < (1-std::numeric_limits<double>::epsilon())) // probability shoud be smaller than one, though we include numerical imprecision by removing a small factor
+	{
+		do{
+			mutPos = (unsigned char) (_popPtr->rand().AfterDistribution(_pTrait->get_mutationFreq(_locus_id_trait), _nb_allele));
+			++i;                                 // used to asure that the loop ends
+		} while (mutPos == *curPos);
+		*curPos = mutPos;
+	}
 }
 
 // ----------------------------------------------------------------------------------------
