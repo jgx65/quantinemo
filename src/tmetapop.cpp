@@ -1571,7 +1571,7 @@ void TMetapop::set_patch_parameter_array_ofTrait(TTraitProto* pTrait,
         if(!m) error("Parameter %s is not set, but needed!\n", (name+trait).c_str());
         if(m->get_oneDims()) set_patch_array_byArray_ofTrait(curTrait, m, FEM, name_full, pt2Func);
         else                 set_patch_array_byMatrix_ofTrait(curTrait, m, FEM, name_full, pt2Func);
-        
+        m = pTrait->get_parameter_matrix(name+trait);               // get the general matrix
         if(_sexInitRatio){
             if(m->get_oneDims()) set_patch_array_byArray_ofTrait(curTrait, m, MAL, name_full, pt2Func);
             else                 set_patch_array_byMatrix_ofTrait(curTrait, m, MAL, name_full, pt2Func);
