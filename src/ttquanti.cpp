@@ -1553,7 +1553,7 @@ TTraitQuantiProto::read_locus_file(string filename)
     unsigned int nbCols  = mat.getNbCols();
     
     const unsigned int colsSize=5;
-    unsigned int cols[5] = {my_NAN,my_NAN,my_NAN,my_NAN};  // 0: locus; 1: allele1; 2: allele2; 3: value; 4: fitness_factor
+    unsigned int cols[5] = {my_NAN,my_NAN,my_NAN,my_NAN,my_NAN};  // 0: locus; 1: allele1; 2: allele2; 3: value; 4: fitness_factor
     string colsName[5]   = {"col_locus","col_allele1","col_allele2","col_dominance","col_fitness_factor"};
     
     // get col values form file info
