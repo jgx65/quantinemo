@@ -69,7 +69,7 @@ _currentAge(NONE),  _sexInitRatio(0.5), _service(0), _pSelection(0),
 _total_carrying_capacity(my_NAN), _pReplicate(p),
 _density_threshold(0), _density_threshold_param(0),  _sampleAllOrNothingCur(0),
 _current_replicate(rep), _current_index_stat_db(my_NAN), func_ptr_new_fullPatch(0),
-func_ptr_new_emptyPatch(0), func_ptr_add_tempPatch(0)
+func_ptr_new_emptyPatch(0), func_ptr_add_tempPatch(0),_last_nbSamplePatch(0),_current_nbSamplePatch(0)
 {
     _pReplicate  = p;
     _pSimulation = p->get_pSimulation();
