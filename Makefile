@@ -18,7 +18,11 @@ INCS      =     -I.  -D_SHOW_MEMORY
 
 .PHONY: all clean debug release profile
 
-all:  release
+all:   touch release
+
+#so that git version and compiled time is always correct
+touch:
+	touch src/tsim_manager.cpp  
 
 thread: CFLAGS += -std=c++11
 thread: INCS += -D_THREAD
