@@ -407,8 +407,10 @@ TReplicate::run_replicate_coal(map<string, string>& params, map<string, string>&
     //--------------------------- GENERATION LOOP ---------------------------
     
     _thePop->Loop_generation_coal(start);
-    _thePop->set_samples_coalescence();
-    _thePop->run_coalescence();
+    if(_thePop->set_samples_coalescence()){
+        _thePop->run_coalescence();
+    }
+
     
     //-----------------------------------------------------------------------
     
