@@ -2094,7 +2094,15 @@ The summary statistics listed in the table below are available for coalescence s
 
 The summary statistic name (column \textsf{Stat name}) may be used to specify the summary statistic to be computed (e.g. \textsf{mrca.mean}). Similar summary statistics (within a thematic group) may be obtained at once using the name within square brackets after the group title (e.g. \textsf{mrca}). Using this group statistic name all summary statistics of the thematic group marked with a star (*) will be computed. 
 \\
-
+\\
+\begin{description}
+\item[sample\_all\_or\_nothing\index{sample\_all\_or\_nothing}] \textbf{[0,1] (default: 0)}\\
+This parameter allows to specify when statistics should be computed (only available for the coalescence simulations ):
+\begin{description}
+\item[0~:~when possible.] In this case statistics and outputs are generated whenever it is possible, \textit{i.e.} whenever a patch is enough populated that a given statistic may be computed.
+\item[1~:~all or nothing.] In this case statistics and output are generated only if the entire sampling schema may be applied, \textit{i.e.} if the patches are enough populated that the specified sampling may be applied. If this is not the case a NaN or a zero depending on the statistic is outputted for all statistics. Note that in such a case the genetic part of the coalescence simulations are omitted, thus the simulation may be much quicker although useless. A specified sampling may not be applied if (and only if) not all specified patches (parameter \textsf{sampled\_patches} defined as a matrix) may be sampled or the population size is inferior to the sampling size (parameter \textsf{patch\_sample\_size} defined in entire numbers (absolute)).
+\end{description}
+\end{description}
 \topcaption{\label{coalstats}Summary statistics available for coalescence simulations}
 \tablehead{\hline \multicolumn{2}{l}{Stat name} &Description \\ \hline}
 \tabletail{\hline \multicolumn{3}{l}{\emph{Table \ref{coalstats} continued on next page}} \\}

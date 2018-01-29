@@ -140,8 +140,14 @@ protected:
      */
 	double getCoaTheta (unsigned int i, const age_t& AGE){
 		age_idx curAge=age_t2idx(AGE);
-		setCoaMatrixTheta(curAge);
-		return _coa_matrix[curAge][i][i];           // diagonal
+        unsigned int sampleID1 = get_vPatch(i)->get_sampleID();
+       //if this statistic cannot be computed, return my_Nan
+        if(sampleID1==my_NAN||sampleID1==SAMPLED){
+            return my_NAN;
+        }
+        setCoaMatrixTheta(curAge);
+        return _coa_matrix[curAge][sampleID1][sampleID1];           // diagonal
+
     }
 	double getCoaAlpha (unsigned int i, const age_t& AGE){
 		age_idx curAge=age_t2idx(AGE);
@@ -520,6 +526,8 @@ public:
 		if(sampleID1>sampleID2) swap(sampleID1, sampleID2);
 		return true;  // return true if both patches are populated
 	}
+    
+    
     
 	inline bool id2sampleIDs(const unsigned int& in, unsigned int& sampleID1, unsigned int& sampleID2, unsigned int& locus)
 	{
