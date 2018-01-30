@@ -590,8 +590,10 @@ bool LCE_DisperseCoalescence::_computeTotEmigrants(TPatch* curPatch,
     if(_paramSet->getValue("dispersal_rate_model")==2) m = factor;
 	
 	sum_m = m;                        // this is the sum of all emigration rates
-	if (!m) return 0;
-    
+    if (!m){
+        curPatch->add_size(FEM, ADLTx, popSize);
+        return 0;
+    }
 	// compute number of emigrants
 	switch (_rel_abs_disp_rate[FEM]) {
 		case 0:
