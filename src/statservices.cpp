@@ -120,7 +120,19 @@ StatServices::init_statArgs()
 #endif
             
             if(!is_set) {
-                warning("The string \"%s\" is not a valid statistic option and is therfore not considered!\n", statName.c_str());
+                warning("The string \"%s\" is not a valid statistic option and is therefore not considered!\n", statName.c_str());
+            }
+        }
+    }
+    //we check that no statistic for offspring are computed in coalescence simulation
+    //In case it is we emit a warning
+    if(_popPtr->isCoalescence()){
+        for(HIT = _children.begin(); HIT != _children.end(); ++HIT) {
+            list<StatRecBase*> all_stat((*HIT)->getStats());
+            for(list<StatRecBase*>::iterator stat = all_stat.begin();stat != all_stat.end();stat++){
+                if((*stat)->getAge()==OFFSPRG){
+                    warning("The statistic \"%s\" will not be computed since offspring do not exist in coalescence mode \n", statName.c_str());
+                }
             }
         }
     }
