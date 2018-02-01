@@ -188,7 +188,7 @@ QuantiNemo provides summary statistics for the different simulation components, 
 \end{description}
 
 \section{Availability}
-The website \linebreak\url{http://www.unil.ch/popgen/softwares/quantinemo} \tbc{} includes executables for Windows, Linux and Mac, the source code, a detailed user's manual, tutorials and also a syntax highlighting definition to edit the settings file with the shareware TextPad (\linebreak\url{http://www.textpad.com}).  \tbc{} All downloads are freely available under the terms of the GNU General Public License.
+The website \linebreak\url{http://www.unil.ch/popgen/softwares/quantinemo} \tbc{} includes executables for Windows, Linux and Mac, the source code, a detailed user's manual and  tutorials.  All downloads are freely available under the terms of the GNU General Public License.
 
 \section{Technical}
 quantiNemo is a console program and is coded in standard C++ using an object oriented approach. This allows compiling quantiNemo on any computer platform which supports standard C++ compilation. There is no limit on the number of populations, individuals, genes, etc that quantiNemo can handle, apart from the available hardware capacities (CPU and memory). QuantiNemo was optimized for high computation efficiency in particular for large simulations on clusters. 
@@ -2875,7 +2875,31 @@ This parameter specifies how the selection pressure is defined.
 \item[1~:~quanti.] The selection pressure is defined a the quantitative trait level. The advantage is that the parameters may be extended by the postix "\_1", "\_2". This allows to define the selection pressure separately for each quantitative trait or to group the selection pressure among groups.
 \end{description}
 \end{description}
+\chapter{Glossary}\label{chap:Glossary}
+In this chapter we define more precisely what is meant by some term in this manual, beyond the common knowledge about them. 
 
+\begin{itemize}
+\item \textbf{Adults} is a status given to all individuals after the life cycle migration occurs. Even if no migration occurs, the offspring become adult at that moment of the life cycle. They die after reproducing but live long enough so that we can compute statistics. 
+\item \textbf{The Allelic value} is the contribution to a quantitative trait from one allele. In the simple case (no dominance, epistasis, environmental effect, etc), the phenotype is simply the sum of the allelic values. 
+\item \textbf{Coalescence simulations} are simulations where we only follow the lineages which were present at the end of the demography (last generation). It allows for very fast simulation since the individuals of the last generation generally come from only a few lineages in the past. If all lineages are exactly followed, we call it \textit{exact coalescence}. If only a few are followed, approximations can be made which speed-up furthermore the simulation. This is what is in general meant by \textit{coalescence}
+\item \textbf{Females} are individual which can only reproduce with males. 
+\item \textbf{The fitness} of an individual indicates the likeliness that this individual reproduces. In some special cases (hermaphrodite with a fecundity of one under hard selection, ...), it actually corresponds to the average number of offspring, but in most cases, the number of offspring also depend on other factors. The number of offspring is however always linearly proportional to the fitness so that an individual twice as fit as another one produce twice as many offsprings (on average).  
+\item \textbf{The genotypic value} is a number representing the contribution of the genotype to the phenotypic value, i.e. to the quantitative trait. 
+\item \textbf{Hermaphrodites} are individuals which can reproduce between each other. In general, hermaphrodite can reproduce with them self, so a single individual can colonize a new patch. It might not be the case for some special value of the mating system. In quantiNemo, females are used to simulate hermaphrodite, so parameters specific to female are also applied to hermaphrodite. 
+\item \textbf{Individual based simulation} is a type of simulation where all individuals are actually created and each of them is described by some specific values (genotype, parents, natal patch, etc). It is much more time and memory expensive than population-based since each individual exists. 
+\item \textbf{The life cycle } is the set of events (creation, dispersal, reproduction, death, etc. ) that each individual might go through in its life. In quantiNemo, each individual goes only once through its life cycle, which means that it can only reproduce once. 
+\item \textbf{A loci} is a position in the genome where we can have various allele. Note that one locus can either be though as one base or as a sequence of various bases. Locus should not be confused with position on the genome. Two loci can have the same position, which means that they don't recombine,  but still have a different set of alleles. 
+\item \textbf{Male} are individual which can only reproduce with female. 
+\item \textbf{The metapopulation} is formed by all the population of various patch. Unlike population, they might be under different selection pressure
+\item \textbf{Offsprings} are individual before the migration was performed. They are present along with the adult just after breeding to compute statistics separately and becomes adult during migration. 
+\item \textbf{A patch} is a physical location where a population might be. It is characterized by a capacity and is related to the others patches through the migration model. A patch is also characterized by having a specific value for the selection pressure. So for example, the temperature or the altitude of various patches can be different
+\item \textbf{The patch capacity} is the number of individuals that can leave ideally on a patch. Note however that depending on the population growth model and other parameters, the actual population size might be much smaller or much larger than the actual patch capacity.
+\item \textbf{The phenotypic value}  is a number representing a quantitative trait. It can be either the actual value, but can also be a deviation from the average value in the population. 
+\item \textbf{The population} is formed by all the individuals of a single patch. All the individuals feel the same selection pressure.  
+\item \textbf{Population based simulation} is a type of simulation where only the number of individual on each patch is store
+\item \textbf{A quantitive trait} is a trait with a phenotype. It might, however, be under no selection pressure. Notice also that it can be continuous as well as discrete. 
+\item \textbf{A trait} in quantiNemo is not exactly what is meant by a trait in a usual genetics textbook. It is more a set of loci which share common characteristics (number of alleles, mutation rate, etc). In particular, it is possible to define neutral traits which have no allelic value and no related phenotype but mutate all using the same mutation model, for example, to simulate a set of micro-satellite. 
+\end{itemize}
 \end{appendices}
 
 \end{document}
