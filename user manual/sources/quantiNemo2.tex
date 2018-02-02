@@ -2789,12 +2789,7 @@ Depending on the definition of the architecture of the quantitative trait it is 
 \bibliographystyle{agsm} 
 \bibliography{biblio}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\clearpage
-\phantomsection
-\addcontentsline{toc}{chapter}{Index} 
-\printindex
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 
 \begin{appendices}
@@ -2875,6 +2870,36 @@ This parameter specifies how the selection pressure is defined.
 \item[1~:~quanti.] The selection pressure is defined a the quantitative trait level. The advantage is that the parameters may be extended by the postix "\_1", "\_2". This allows to define the selection pressure separately for each quantitative trait or to group the selection pressure among groups.
 \end{description}
 \end{description}
+
+\chapter{Speeding up simulation}\label{chap:SpeedingUpSimulation}
+Individual-based simulations are time and memory consuming. While quantiNemo is a well-optimized software using C++, simulations are still time-consuming as soon as the number of loci and individuals are both larger than, let's say, 1000. In this chapter, we just want to introduce the user to some general knowledge about how simulation consumption evolves and little details that might speed-up simulation. First part is really more for people with interests and basics knowledge of optimization, while the second part is easier to understand and apply for anyone. 
+
+In general, if one wants to understand how to speed up a simulation, it's useful to understand what are the key point that can take time in quantiNemo. A few hints about that is given in the following section. Common sense will, in general, be your first ally, but might be sometimes misleading. It is in general useful play with the parameters to see which one makes a difference, and which one doesn't. For example, one can try to remove migration, mutation, selection or outputting statistics to see what is time-consuming. This can help to grasp what is time-consuming which is the first necessary step in order to improve simulation time. 
+\section{general consideration}
+The memory consumption is almost never a problem in Quantinemo. The largest variable is by far the genotype which is stored as an array of char. Since a char occupies 8 octets in the memory, the total amount of memory used by the genotype is about $8\times2\times 2\times n \times l$, where the first $2$ comes from the fact that every individual has $2$ chromosomes, and the second one because during breeding, both parents and offsprings are present. We see that even with 10'000 individuals with 10'000 loci, the memory is still reasonable, of about 4 Go, which is complete with most modern computers.  For such a large number of loci and individual, the simulation would anyway be very slow, so memory is not really a problem. We, however, see that quantiNemo is not designed and could not simulate full genome with, let's say, $10^9$ base because each individual would need about 32 Go. 
+
+In general, the time-consuming part of quantiNemo is building individual from their parents. In particular, to create an individual, quantiNemo has to duplicate half of the genome of both parents. This step is in general one of the most time-consuming step. Another step which is performed at the same time is to compute whether a mutation occurs at a locus. If the mutation rate is not the same among locus, then quantiNemo has to check independently for each locus and it's time-consuming. Finally, for each parent, quantiNemo has to compute the phenotype from the genotype, and this is also long if the individual has a lot of loci. All this step have in common that quantiNemo has to access and do something with all loci of all individual. It is therefore easy to see that the time needed to do this step grows linearly in terms of individuals and loci, so a simulation with $10'00$ individuals with $1000$ loci is about $10 \times 10 = 100$ times longer than one with $1000$ individual with $100$ loci. 
+
+If only a few loci are simulated (of the order of ten or less), then the above part is not so long, and other aspects of quantiNemo might be more time-consuming. In the quantitative case, randomly selecting the parents accordingly with their fitness is a consuming task which scale as $n\log_2n$ where $n$ is the total number of individuals. While most part of quantiNemo scale linearly with the number of individual, this one scale in a worst way, so for very large population, this might be the bottleneck of the population. A very crude approximation would be to compare $n\log_2n$ to $n\times l$ where $n$ is the size of the population and $l$ is the number of loci to see what is more time-consuming for your simulation, but the second one actually comes with an important pre-factor so you would expect selection of the parent to be longer iff $n\log_2n \gg n\times l$.
+
+Most of the time, the breeding is the most costly part of quantiNemo. However, if the number of patches is large ($\sim 1000$) and the number of individuals per patch is low ($\sim 10$), then the migration can become time-consuming. In particular, in the Island model, individuals might migrate from any patch to any patch, so there are $1000 \times 1000$ possible migration path. QuantiNemo checks for each of them if migration occurs, so this might be more time-consuming than breeding. Because breeding still involves more step than migration, we expect migration to be longer than breeding only if $N^2  \gg n\times l$ where $N$ is the number of patches. 
+
+Finally, statistics can also be time-consuming. In general, they are faster or scale as other events. A lot of them need to access all loci of all individual, so they scale in the same way as breeding, \textit{i.e.} as $n\times l$. It is tempting to think that statistics computed per patch or per allele are more costly than overall statistic since there are more of them, but this is not true since quantiNemo need to access anyways the information of all individual. Nevertheless, some statistics still have a different scaling. This is, in particular, the case when we compute pairwise statistic for the patch like \textsf{q.adlt.fst.wc\_pair}. In term of scaling, we expect something like $N\times n\times l$.
+
+
+\section{How to improve simulation time}
+As we have seen before, one of the most important quantity is the total number of loci in the population, \textit{i.e.} the number of loci per individual times the number of individuals. Decreasing this quantity would, therefore, improve computation time. In general, these parameters are fixed by external constrains. However, sometimes tricks can be used to try to cut down one of this quantity. For example, quantiNemo can have up to 256 alleles per locus. When simulating quantitative trait, increasing the number of allele per locus while decreasing the number locus will speed up simulation while keeping a reasonable diversity (not exactly the same though). Here, a compromise should be found between simulating exactly the biology and observing similar effect with different configurations. 
+
+As we have seen, writing and reading the genotype from the memory is one of the longest steps in quantiNemo. It is therefore not surprising that writing it on a hard drive (where the access is much slower than on the memory) is very long. Therefore, outputting raw data is very costly in term of time and should be avoided when possible. A good practice here is to save it only from time to time and not at every generation. When running quantiNemo on a cluster, these data should be written when possible on a local hard drive and not on a shared drive since it can take much more time to send the data through a network. 
+
+This recommendation also stands if you compute a large number of statistics. If only a few basic stats are outputted, such as number of individuals, average fitness, etc, it should not be very time-consuming. However, if you start having loci or patch specific statistic (like n.adlt.nbAll_l or adlt.nbInd_p) with a lot of loci or patches, writing them on the hard drive is time-consuming and you should try to output them only every few generations. 
+
+Another trick to quicken the statistics event is to sample only a subpart of the Metapopulation. Most of the time, this will make no difference and is not recommended due to the extra complication that it brings. However, for some specific statistics mentioned before, this might make a difference, in particular in the case of coalescence where populations can grow really large. 
+
+Another thing that should be taken into account is that often, quantiNemo deals more easily with constant parameters than by specific parameters. For example, if the mutation rate is constant over loci, it's faster than if every locus has a different mutation rate (because in the first cast quantiNemo can randomly draw the number of mutation for the entire genome in a binomial and only pick a few loci to change, while in the latter case it has to go through every locus to check if a mutation occurs). This stand also for example for migration, where the pre-defined models are faster than when the user specifies a dispersal matrix. 
+
+At the opposite, the amplitude of these type of parameters makes in general not much of a difference. For example, It's not because the mutation rate is low, so that few mutation occurs, that the program will run more quickly. The actual number of mutation is not important. Same stand for recombination rate, migration rate, etc. 
+
 \chapter{Glossary}\label{chap:Glossary}
 In this chapter we define more precisely what is meant by some term in this manual, beyond the common knowledge about them. 
 
@@ -2900,6 +2925,12 @@ In this chapter we define more precisely what is meant by some term in this manu
 \item \textbf{A quantitive trait} is a trait with a phenotype. It might, however, be under no selection pressure. Notice also that it can be continuous as well as discrete. 
 \item \textbf{A trait} in quantiNemo is not exactly what is meant by a trait in a usual genetics textbook. It is more a set of loci which share common characteristics (number of alleles, mutation rate, etc). In particular, it is possible to define neutral traits which have no allelic value and no related phenotype but mutate all using the same mutation model, for example, to simulate a set of micro-satellite. 
 \end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Index} 
+\printindex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{appendices}
 
 \end{document}
