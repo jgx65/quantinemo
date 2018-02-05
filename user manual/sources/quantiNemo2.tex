@@ -134,20 +134,20 @@ QuantiNemo is an individual-based, genetically explicit stochastic simulation pr
 \section{How to read this Manual}
 A full understanding of quantiNemo is not necessary to start using it, and most of the reader will find themselves only using a small part of the manual, therefore reading it from the beginning to the end is not recommended. 
 
-If you are only interested in simple simulation, you may directly go to getting started \ref{chap:GettingStarted}, which will help you grasp the very basic concept of quantiNemo, and then jump to whatever chapter is of interests for you. Most of the chapters have an introduction which detail the philosophy of the simulation component.  If you are planing to run advance simulation and want to have a deeper understanding of quantiNemo, then reading the chapter about settings file \ref{chap:InputFiles} and understanding the concept of the life cycle's chapter \ref{chap:LifeCycle} is important. The introduction of chapter \ref{chap:QuantitativeTraitsAndSelection} and \ref{chap:Genetics} are also important to grasp the philosophy of quantiNemo. All the other part can be skipped or read in details depending on the type of simulation that you want to perform. 
-At the end of the Manual, you will find an index with all possible parameters. 
+If you are only interested in simple simulation, you may directly go to getting started \ref{chap:GettingStarted}, which will help you grasp the very basic concept of quantiNemo, and then jump to whatever chapter is of interests for you. Most of the chapters have an introduction which detail the philosophy of the simulation component.  If you are planing to run advanced simulation and want to have a deeper understanding of quantiNemo, then reading the chapter about settings file \ref{chap:InputFileStructure} and understanding the concept of the life cycle's chapter \ref{chap:LifeCycle} is important. The introduction of chapter \ref{chap:QuantitativeTraitsAndSelection} and \ref{chap:GenotypeConfiguration} are also important to grasp the philosophy of quantiNemo. All the other part can be skipped or read in details depending on the type of simulation that you want to perform. 
+At the end of the manual, you will find an index with all possible parameters: see  \ref{chap:Index}. 
 
 The structure of the manual is the following:
 \begin{enumerate}
-\item Chapter \hyperref[chap:Introduction]{Introduction} present the program, giving general information about it (license, citation, etc) and oresenting keys features. It is attended for people who wants to know more about quantiNemo, but no information is provided about how to run it. 
-\item Chapter \hyperref[chap:GettingStarted] {Getting started} give the minimal necessary knowledge to launch a basic quantiNemo simulation and output simple result about the simulation. Newcomers should start with this chapter. 
-\item Chapter \hyperref[chap:InputFiles]{Input files} give deeper information about how to write an input file. It is recommended for more advanced users and can be skipped at first reading: simple example given in the chapter Getting started are already sufficient for simple simulation. It's more relevant to advance user. 
-\item Chapter \hyperref[chap:GeneralParameters]{General Parameters} give details information about the parameters used for meta-information about the simulation, \textit{i.e.} relevant but not modifying the scenario itself, like the folder, the number of replicates, the initial seed, etc. 
-\item Chapter \hyperref[chap:LifeCycle]{Life cycle} explain a bit more about how the different event through which all individual go (birth, migration, etc) and give information about how to change their behaviors. 
+\item Chapter \hyperref[chap:Introduction]{Introduction} presents the program, giving general information about it (license, citation, etc) and presents keys features. It is attended for people who wants to know more about quantiNemo, but no information is provided about how to run it. 
+\item Chapter \hyperref[chap:GettingStarted] {Getting started} gives the minimal necessary knowledge to launch a basic quantiNemo simulation and output simple result about the simulation. Newcomers should start with this chapter. 
+\item Chapter \hyperref[chap:InputFileStructure]{Input file structure} gives deeper information about how to write an input file. It is recommended for more advanced users and can be skipped at first reading: simple example given in the chapter Getting started are already sufficient for simple simulation. It's more relevant to advance user. 
+\item Chapter \hyperref[chap:GeneralSimulationSettings]{General Simulation settings} gives details information about the parameters used for meta-information about the simulation, \textit{i.e.} relevant but not modifying the scenario itself, like the folder, the number of replicates, the initial seed, etc. 
+\item Chapter \hyperref[chap:LifeCycle]{Life cycle} explains a bit more about how the different event through which all individual go (birth, migration, etc) and give information about how to change their behaviors. 
 \item Chapter \hyperref[chap:Demography]{Demography} contains all the information about how to setup a specific demographical scenario, tuning the number of individuals, the population growth model, the dispersal model, etc. 
-\item Chapter \hyperref[chap:Genetics]{Genetics} contains all the information about how to set the genetic information of all individual, like the number of loci, their position on the genome, their mutation rate, etc. 
+\item Chapter \hyperref[chap:GenotypeConfiguration]{Genotype configuration} contains all the information about how to set the genetic information of all individual, like the number of loci, their position on the genome, their mutation rate, etc. 
 \item Chapter \hyperref[chap:QuantitativeTraitsAndSelection]{Quantitative traits and selection} is about how to define quantitative traits and add selection pressure to them. 
-\item Chapter \hyperref[chap:Coalescence]{Coalescence} define all parameters needed to perform a backward in time simulation. This type of simulation is much more efficient in term of CPU and memory usage (i.e. much faster) but can only simulate neutral marker and no quantitative traits.
+\item Chapter \hyperref[chap:Coalescence]{Coalescence} defines all parameters needed to perform a backward in time simulation. This type of simulation is much more efficient in term of CPU and memory usage (i.e. much faster) but can only simulate neutral marker and no quantitative traits.
 \item Chapter \hyperref[chap:OutputsAndStatistics]{Outputs and statistics} describes in great detail how to output information about the simulation such as summary statistics or raw data (like population genome).  
 \item In the \hyperref[chap:TechnicalDetails]{annex}, a few more technical points are discussed. If you have technical difficulties to implement a scenario, you may want to check if  an annex could help. 
 \end{enumerate}
@@ -174,7 +174,7 @@ QuantiNemo allows simulating realistic population dynamics. Population sizes may
 Each individual undergoes a single life cycle (non-overlapping generations). The life-cycle starts with breeding and reproduction. Several mating systems are available: random mating, selfing or cloning for hermaphrodites; promiscuity, monogamy or polygyny for dioecious (gonochoric) species. Selection acts by default on the reproductive fitness of individuals, however selection at other life cycle stages is also supported. After reproduction, juveniles may disperse to other populations, and then population size is possibly regulated. Environmental stochasticity can also be introduced, where populations may go extinct due to an external factor, independent of population size or genetic constitution of the population.
 
 \item[Coalescence]\hspace*{\fill}\\\
-To simulate larger population size and genome, QuantiNemo offers the possibility to switch from individual to population based simulation, using coalescence. In coalescence, a forward in time simulation in first performed to simulate any complex demographical scenario, and then a coalescence simulation is performed. This setup allows for much more elaborate scenarios than common coalescence tools. 
+To simulate larger population size and genome, QuantiNemo offers the possibility to switch from individual to population based simulation, using coalescence. In coalescence, a forward in time simulation in first performed to simulate any complex demographical scenario, followed by a backwards coalescence simulation. This setup allows for much more elaborate scenarios than common coalescence tools. 
 \end{description}
 
 
@@ -203,7 +203,7 @@ quantiNemo has been published in the journal \textit{Bioinformatics}. If you are
 
 \section{Acknowledgments}
 \tbc{}\fm{Jérôme, can you update this?}
-We are grateful to Ricardo Kanitz, Sylvain Antoniazza, Yves Rousselle, Patrick Meirmans, Christine Grossen, Claire Mouton, and Olivier Blaser, Alex von Ungern-Sternberg. These persons helped us to improve quantiNemo by reporting bugs and/or great discussions. 
+We are grateful to Elisa Cavoto, Olivier Blaser, Christine Grossen, Ricardo Kanitz, Sylvain Antoniazza and Elsa Guillot for feedback on the new version of quantiNemo. We are also grateful to Fardo Witzenburg who did most of the tutorials.
 
 
 
@@ -220,7 +220,7 @@ Executables of quantiNemo for several operating systems can be downloaded from t
 
 
 \section{Launching quantiNemo}\label{launchQuantiNemo}
-There are different ways to launch a simulation with quantiNemo. Normally a simulation is defined using a settings file and the settings file is then passed to quantiNemo, but it is also possible to specify the simulation parameters directly as arguments passed to the program. See chapter \ref{chap:InputFiles} for more details. 
+There are different ways to launch a simulation with quantiNemo. Normally a simulation is defined using a settings file and the settings file is then passed to quantiNemo, but it is also possible to specify the simulation parameters directly as arguments passed to the program. See chapter \ref{chap:InputFileStructure} for more details. 
 
 \begin{description}
 \item[no argument]\hspace*{\fill}\\ 
@@ -351,7 +351,7 @@ simulation_g120_r2.dat       # genotype raw data
 \end{lstlisting}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
-\chapter{Input files}\label{chap:InputFiles}
+\chapter{Input file structure}\label{chap:InputFileStructure}
 This section describes the format of the settings file. The settings file is a text file with in general one parameter per line in a key-value scheme. For example
 \begin{lstlisting}[frame=single]
 patch_capacity 1000
@@ -487,7 +487,7 @@ external file named "dispersal\_file.txt":
   {0.0  0.0  0.4  0.4  0.2} }
 \end{lstlisting}
 
-\section{Parameters to quantiNemo}\label{paramInput}
+\section{Command line parameters}\label{sec:CommandLineParameters}
 Parameters are normally defined in a settings file which is then passed to the command line. All parameters and their arguments may also be passed directly to the command line. Command line options provide a convenient mechanism to override commonly altered parameter values. Parameters and their argument passed to the command line override the arguments defined in the settings file. To do so, the argument must be specified after the name of the input file. The parameter itself should have two -- in front, and the value it takes should be right after it, separated by a space:   
 
 On Windows:
@@ -719,7 +719,7 @@ To prevent the output from overwriting the preceding simulation a unique base fi
 Notice that if you specify a folder using the parameter \textsf{folder}, all simulation will be saved in the same folder and each result will override the previous one.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
-\chapter{General parameters}\label{chap:GeneralParameters}
+\chapter{General simulation settings}\label{chap:GeneralSimulationSettings}
 This section describes general parameters of a simulation: 
 \begin{description}
 
@@ -798,20 +798,21 @@ QuantiNemo is a discrete generation-based simulator. This means that individuals
 \begin{figure}[h]
     \centering
         \includegraphics[width=0.80\textwidth]{life_cycle.pdf}
+        \caption{Schematic representation of the life cycle.}
     \label{fig:life-cycle}
 \end{figure}
 \begin{description}
-\item \textbf{\hyperref[sec:MatingSystem]{1 : Breeding.}} Adults mate and may produce offspring. By default, selection acts at this stage.
-\item \textbf{\hyperref[sec:Death]{2 : Death.}} Adults are removed from the population. Only the juveniles remain in the model.
-\item \textbf{\hyperref[sec:RegulationOffspring]{3 : Regulation.}} Reduce if necessary the population size to carrying capacity on each patch before dispersal. 
-\item \textbf{\hyperref[sec:Dispersal]{4 : Dispersal.}} Individual can migrate to other patches and become adults. 
-\item \textbf{\hyperref[sec:RegulationAdults]{5 : Regulation.}} Reduce if necessary the population size to carrying capacity on each patch after dispersal. 
-\item \textbf{\hyperref[sec:Extinction]{6 : Extinction.}} Due to stochastic events populations may go extinct.
+\item \textbf{\hyperref[sec:MatingSystem]{1 : Reproduction: }} Adults mate and may produce offspring. By default, selection acts at this stage.
+\item \textbf{\hyperref[sec:Death]{2 : Death: }} Adults are removed from the population. Only the juveniles remain in the model.
+\item \textbf{\hyperref[sec:RegulationOffspring]{3 : Regulation offspring: }} Reduce if necessary the population size to carrying capacity on each patch before dispersal. 
+\item \textbf{\hyperref[sec:Dispersal]{4 : Dispersal:}} Individual can migrate to other patches and become adults. 
+\item \textbf{\hyperref[sec:RegulationAdults]{5 : Regulation adult: }} Reduce if necessary the population size to carrying capacity on each patch after dispersal. 
+\item \textbf{\hyperref[sec:Extinction]{6 : Extinction: }} Due to stochastic events populations may go extinct.
 \end{description}
 Moreover, during each cycle,  two events are called between breeding and death, allowing to save informations about the simulation.  Notice that at this moment, both adults and Juveniles are present, the main difference between both being that the adult might come from another patch while Juvenile not. 
 \begin{description}
-\item \textbf{\hyperref[sec:SummaryStatistics]{Statistics}} It is the stage were summary statistics can be computed for adults and juveniles.
-\item \textbf{\hyperref[sec:RawData]{Output}} Genotypes and/or phenotypes can be dumped to files for adults and/or juveniles.
+\item \textbf{\hyperref[sec:SummaryStatistics]{Statistics: }} It is the stage were summary statistics can be computed for adults and juveniles.
+\item \textbf{\hyperref[sec:RawData]{Output: }} Genotypes and/or phenotypes can be dumped to files for adults and/or juveniles.
 \end{description}
 Most of the life cycle events are described in the following pages. However, the dispersal is included in the chapter about demography,  section \ref{sec:Dispersal}. All the information about statistics and output is also given in a separate chapter \ref{chap:OutputsAndStatistics}.
 
@@ -938,7 +939,7 @@ The carrying capacities may vary among sexes, patches, and time. The carrying ca
 This parameter specifies the number of patches in the metapopulation.
 \end{description}
 \section{Initialization}
-This section allows specifying how the metapopulation is initialized. The population size of the patches may be set in three different ways. Also, the genotypes of the individuals of the initial populations may be set differently. By default, \textit{i.e.} if no special parameters of this section are defined, the initial population size of each patch corresponds to its carrying capacity (see parameter \textbf{patch\_capacity} above). If the initial population sizes deviate from the carrying capacities the parameter \textbf{patch\_ini\_size} allows setting the initial population size for each patch separately. Finally, it is possible to define the genotypes of each individual explicitly using an FSTAT file \citep{Goudet_1995}. By doing this also the initial population sizes are defined. For details please have a look at the parameters \textbf{quanti\_ini\_genotypes} and \textbf{ntrl\_ini\_genotypes} in the chapter about \hyperref[chap:Genetics]{genetic}. If a genotype file is present the initial population sizes are defined using this file.
+This section allows specifying how the metapopulation is initialized. The population size of the patches may be set in three different ways. Also, the genotypes of the individuals of the initial populations may be set differently. By default, \textit{i.e.} if no special parameters of this section are defined, the initial population size of each patch corresponds to its carrying capacity (see parameter \textbf{patch\_capacity} above). If the initial population sizes deviate from the carrying capacities the parameter \textbf{patch\_ini\_size} allows setting the initial population size for each patch separately. Finally, it is possible to define the genotypes of each individual explicitly using an FSTAT file \citep{Goudet_1995}. By doing this also the initial population sizes are defined. For details please have a look at the parameters \textbf{quanti\_ini\_genotypes} and \textbf{ntrl\_ini\_genotypes} in the chapter about \hyperref[chap:GenotypeConfiguration]{genotype configuration}. If a genotype file is present the initial population sizes are defined using this file.
 
 \begin{description}
 
@@ -1089,13 +1090,14 @@ this parameter define how the dispersal rate is set.
 \end{description}
 
 
-\chapter{Genetics}\label{chap:Genetics}
+\chapter{Genotype configuration}\label{chap:GenotypeConfiguration}
 \section{Introduction}
+\fm{I'm still not sure about the title of this chapter. It was first "genetics", which is probably too broad, I then though about "genome prototype", but Guillaume doesn't find it very clear. We could also say "reference genome", though it's not exactly that neither. }
 QuantiNemo allows the simulation of quantitative traits as well as neutral markers, both related by a common genetic map so that processes like linkage disequilibrium and genetic hitchhiking can be simulated easily. More precisely, quantiNemo allows to simulate neutral markers, such as microsatellites or SNPs with different mutation models (K allele and Stepwise). Quantitative trait under selection pressure composed of various loci can also be added to the same simulation. In this chapter, we explain how to define loci and traits, locate them in a map, set an initial genotype and choose a mutation model for them.
 
 Most of the parameter and behaviour are the same for neutral and quantitative traits (except of course that quantitative traits are under selection, but this will be cover in the next chapter). The main difference is that neutral trait's parameters are defined with a \textsf{ntrl\_} in front while quantitative traits are specified with  \textsf{quanti\_}. In the case where the parameters have the same meaning for neutral and quantitative traits, the \textsf{(ntrl/quanti)\_parameter} notation will be used, which should be read as the existence of two parameters, one \textsf{ntrl\_parameter} and another one \textsf{quanti\_parameter}. If differences are present  ,as for example in the mutations models, both parameters are explained separately. 
-\section{Settings loci}
-\label{sec:SettingsLoci}
+\section{Defining loci}
+\label{sec:DefiningLoci}
 \begin{description}
 \item[(ntrl/quanti)\_loci\index{ntrl\_loci}\index{quanti\_loci}] \textbf{[integer]}\\
 This parameter specifies the number of neutral/quantitative loci per individual per traits (by default, there is only one trait). This parameter is mandatory for the simulation of a neutral/quantitative locus \textit{i.e.} it is necessary as soon as we want to study genetic effect. If this parameter is not present, the other parameters related to genetics make no sense and will not be loaded. 
@@ -1212,7 +1214,7 @@ The different models are schematically described in Fig. \ref{fig:mutation_model
 \begin{figure}[htbp]
     \centering
         \includegraphics[width=1\textwidth]{mutation_model.pdf}
-    \caption{Schematic representation of the various mutation model for a system with 27 alleles, where the reference allele is 14 and the allele from which we mutate is 7. $P_{\text{Mutate}}$ represent the probability to mutate to a given allele. Notice also that the allelic value is almost equivalent as the allelic index in quantiNemo}
+    \caption{Schematic representation of the various mutation model for a system with 27 alleles, where the middle allele is 14 and the allele from which we mutate (present allele) is 7. $P_{\text{Mutate}}$ represent the probability to mutate to a given allele. Notice also that the allelic value is almost equivalent as the allele index in quantiNemo}
     \label{fig:mutation_model}
 \end{figure}
 
@@ -1383,7 +1385,7 @@ More precisely, in a first step, the fitness of all individuals of the populatio
 Two different procedure can be used to specify the fitness of an individual. One follows the philosophy of quantitative genetic, calculating the phenotypic value of each trait and applying selection pressure to it. The other one is closer to a population genetic approach, where the fitness is specified explicitly for each genotype and locus. The two approaches can be combined, in different traits (some defined using one approach and the other using the other approach) but also in a single trait. In this case, the final fitness of the trait is the product of the fitness obtained by both procedures. 
 \begin{figure}[h]
     \centering
-        \includegraphics[width=0.80\textwidth]{selection.pdf}
+        \includegraphics[width=1\textwidth]{selection.pdf}
     \label{fig:Selection}
 \end{figure}
 \subsection{Quantitative genetic approach}
@@ -1409,7 +1411,7 @@ In the following sections, we explain in details the parameters to define quanti
 \section{From genotype to genotypic value }
 In this section, we explain how quantiNemo compute the genotypic value from a given genotype taking into account the value of every allele, dominance effect and if it's present, epistasis. 
 \subsection{Allelic effects}\label{sub:AllelicEffects}
-Each allele has an allelic effect, its contribution to the genotype, which is represented by a number, the allelic value. There are two possibilities to define these effects. Either they are defined explicitly for each allele using a separate file (see parameter \textsf{quanti\_allelic\_file} in section \ref{sec:SettingsLoci}), or they can be defined by specifying the variance of the normal distribution of the genotypic value (see parameter \textsf{quanti\_allelic\_var}). If the allelic effects are defined in both ways the explicitly defined effects are used. Note, that all effects have to be defined in the same way, \textit{i.e.} explicitly or by their distribution.
+Each allele has an allelic effect, its contribution to the genotype, which is represented by a number, the allelic value. There are two possibilities to define these effects. Either they are defined explicitly for each allele using a separate file (see parameter \textsf{quanti\_allelic\_file} in section \ref{sec:DefiningLoci}), or they can be defined by specifying the variance of the normal distribution of the genotypic value (see parameter \textsf{quanti\_allelic\_var}). If the allelic effects are defined in both ways the explicitly defined effects are used. Note, that all effects have to be defined in the same way, \textit{i.e.} explicitly or by their distribution.
 
 \begin{description}
 
@@ -2596,7 +2598,7 @@ This parameter allows specifying a placeholder used for the output of the summar
 \end{supertabular}
 \section{Raw data}\label{sec:RawData}
 \subsection{Genotype}\label{sub:Genotype}
-The genotype of the sampled individuals and populations may periodically be dumped to files. The output files will be stored in the folder given by the parameter \textsf{(ntrl/quanti)\_genot\_dir} and will have the name of the base file name (see parameter \textsf{filename} in section \ref{chap:GeneralParameters}). The extension is ".dat". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05\_r4.dat"}. Note, that such a genotype file may be used to start a new simulation (see parameter \textbf{(ntrl/quanti\_ini\_genotypes}). By default all individuals of all populations are sampled. Section \ref{sec:Sampling} describes how to specify a sampling schema.
+The genotype of the sampled individuals and populations may periodically be dumped to files. The output files will be stored in the folder given by the parameter \textsf{(ntrl/quanti)\_genot\_dir} and will have the name of the base file name (see parameter \textsf{filename} in section \ref{chap:GeneralSimulationSettings}). The extension is ".dat". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05\_r4.dat"}. Note, that such a genotype file may be used to start a new simulation (see parameter \textbf{(ntrl/quanti\_ini\_genotypes}). By default all individuals of all populations are sampled. Section \ref{sec:Sampling} describes how to specify a sampling schema.
 
 \begin{description} 
 \item[(ntrl/quanti)\_save\_genotype\index{quanti\_save\_genotype}\index{ntrl\_save\_genotype}] \textbf{[0-2] (default: 0)} \\
@@ -2661,7 +2663,7 @@ This parameter allows to choose which age is output.
 
 
 \subsection{Genotypic value}\label{genoValQuanti}
-Similar to the genotypes the genotypic values may be periodically dumped to files. The output files will be stored in the folder given by the parameter \textsf{quanti\_geno\_value\_dir} and will have the name of the base file name (see parameter \textsf{filename} in chapter \ref{chap:GeneralParameters}). The extension is ".gen". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05r4.gen"}. By default, all individuals of all populations are sampled. The section \ref{sec:Sampling} describes how to specify a sampling schema.
+Similar to the genotypes the genotypic values may be periodically dumped to files. The output files will be stored in the folder given by the parameter \textsf{quanti\_geno\_value\_dir} and will have the name of the base file name (see parameter \textsf{filename} in chapter \ref{chap:GeneralSimulationSettings}). The extension is ".gen". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05r4.gen"}. By default, all individuals of all populations are sampled. The section \ref{sec:Sampling} describes how to specify a sampling schema.
 
 \begin{description} 
 \item[quanti\_save\_geno\_value\index{quanti\_save\_geno\_value}] \textbf{[0-2] (default: 0)} \\
@@ -2721,7 +2723,7 @@ This parameter allows to choose which age is output.
 \end{description}
 
 \subsection{Phenotypic value}\label{phenoQuanti}
-Similar to the genotypes the phenotypic values of the adults may be periodically dumped to files. The phenotype of juveniles cannot be output, as the phenotype is only computed when selection acts, and this is at the reproduction stage, \textit{i.e.} when individuals are adults. The output files will be stored in the folder given by the parameter \textsf{quanti\_phenot\_dir} and will have the name of the base file name (see parameter \textsf{filename} in section \ref{chap:GeneralParameters}). The extension is ".phe". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05r4.phe"}. By default all individuals of all populations are sampled. The section \ref{sec:Sampling} describes how to specify a sampling schema.
+Similar to the genotypes the phenotypic values of the adults may be periodically dumped to files. The phenotype of juveniles cannot be output, as the phenotype is only computed when selection acts, and this is at the reproduction stage, \textit{i.e.} when individuals are adults. The output files will be stored in the folder given by the parameter \textsf{quanti\_phenot\_dir} and will have the name of the base file name (see parameter \textsf{filename} in section \ref{chap:GeneralSimulationSettings}). The extension is ".phe". A counter for the generation (e.g. \_g05) and the replicate (e.g. \_r4) is inserted before the extension. An example of such a file name is \textsf{"simulation\_g05r4.phe"}. By default all individuals of all populations are sampled. The section \ref{sec:Sampling} describes how to specify a sampling schema.
 
 \begin{description} 
 \item[quanti\_save\_phenotype\index{quanti\_save\_phenotype}] \textbf{[0-2] (default: 0)} \\
@@ -2892,7 +2894,7 @@ As we have seen before, one of the most important quantity is the total number o
 
 As we have seen, writing and reading the genotype from the memory is one of the longest steps in quantiNemo. It is therefore not surprising that writing it on a hard drive (where the access is much slower than on the memory) is very long. Therefore, outputting raw data is very costly in term of time and should be avoided when possible. A good practice here is to save it only from time to time and not at every generation. When running quantiNemo on a cluster, these data should be written when possible on a local hard drive and not on a shared drive since it can take much more time to send the data through a network. 
 
-This recommendation also stands if you compute a large number of statistics. If only a few basic stats are outputted, such as number of individuals, average fitness, etc, it should not be very time-consuming. However, if you start having loci or patch specific statistic (like n.adlt.nbAll_l or adlt.nbInd_p) with a lot of loci or patches, writing them on the hard drive is time-consuming and you should try to output them only every few generations. 
+This recommendation also stands if you compute a large number of statistics. If only a few basic stats are outputted, such as number of individuals, average fitness, etc, it should not be very time-consuming. However, if you start having loci or patch specific statistic (like n.adlt.nbAll\_l or adlt.nbInd\_p) with a lot of loci or patches, writing them on the hard drive is time-consuming and you should try to output them only every few generations. 
 
 Another trick to quicken the statistics event is to sample only a subpart of the Metapopulation. Most of the time, this will make no difference and is not recommended due to the extra complication that it brings. However, for some specific statistics mentioned before, this might make a difference, in particular in the case of coalescence where populations can grow really large. 
 
@@ -2927,7 +2929,7 @@ In this chapter we define more precisely what is meant by some term in this manu
 \end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
-\phantomsection
+\phantomsection\label{chap:Index}
 \addcontentsline{toc}{chapter}{Index} 
 \printindex
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
