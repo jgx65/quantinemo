@@ -199,6 +199,7 @@ TLocus::_mutate_RMM(unsigned char* curPos)
 	//Compute the probability to find another allele to mutate too. 
 	double p(0);
 	if(*curPos > 0){
+        //array is cumulative, so we just have to do the difference and do not need to loop over all probability.
 		p = _pTrait->get_mutationFreq(_locus_id_trait)[*curPos] -_pTrait->get_mutationFreq(_locus_id_trait)[*curPos-1];
 	}
 	else{
