@@ -8,7 +8,7 @@
 %\usepackage{framed}
 
 \usepackage{amsmath}
-
+\usepackage{float}
 \usepackage{array,supertabular}
 \newcolumntype{G}{p{0cm}p{4.1cm}p{10.5cm}}
 
@@ -2796,6 +2796,47 @@ Depending on the definition of the architecture of the quantitative trait it is 
 
 \begin{appendices}
 \chapter{technical details}\label{chap:TechnicalDetails}
+\section{Allelic value distribution}\label{sec:AllelicValueDistribution}
+In this appendix, we will see why quantiNemo simulates allelic value the way it does. 
+The goal of simulation software in general is not to match nature as close as possible, but more to simulate a model which retains the essential ingredient of reality, letting apart unimportant parameters. QuantiNemo uses a lot of such approximations. This section is about such an approximation used in quantiNemo which might seem strange at first sight but is actually quite powerful. 
+
+The phenotype of a quantitative trait is determined by the genotype of the individual (and maybe some environmental effects). When one of the underlying genes mutates, leading to a new allele, the phenotype generally also changes. In general, it is rather likely that the mutation will only lead to a small change in the phenotype. This could be easily modeled by drawing the value of a new allele in a normal distribution.  In quantiNemo, allelic values are drawn at the beginning of a simulation. Then a simple idea would be to proceed as follow:
+\begin{itemize}
+\item	Draw all allelic value in a normal distribution centered around zero at the beginning of the simulation
+\item 	Mutate to any allele with the same probability
+\end{itemize}
+This leads however to two problems. First, the genotype is somehow stuck around zero, since most of the alleles have a value close to zero, and only a few are further away. If a locus switch to an allele with a high value, my next mutation is likely to get me back close to 0, which mean that I cannot gradually increase my phenotype. This problem could probably be overcome by various ways but at some cost. 
+
+The second problem is somehow more fundamental. If the number of alleles is small, it is likely that it will be drawn with some bias at the beginning of the simulation (i.e. that the mean phenotype will not be exactly zero). Since the values are determined once and for all at the beginning of the simulation, the bias will stay the same. 
+
+To illustrate this problem, let's suppose that we have a stabilizing selection around zero but some noise due to mutation. If we average over generations, we expect the mean value of the phenotype to converge towards zero. However, due to the initial bias, this will not be the case. This bias would of course also appear in other statistics adding unnecessary complexity to the data analysis.   
+
+To overcome these problems, quantiNemo rather follow the following algorithm:
+\begin{itemize}
+\item	The allelic values are equally spaced (like in [-3; -2; -1; 0; 1; 2; 3])
+\item	 At the beginning of the simulation, the frequency of the central allele is higher than the frequency of allele with a very high or very low value, following a Gaussian distribution. 
+\item	When a mutation occurs, it is more likely to draw an allele close to the current value than far from it (or close or far from zero, depending on the mutation model). 
+\end{itemize}
+
+We see that at the beginning of the simulation, both algorithms lead to a phenotype with a normal shape with a variance twice as big as the one of the allelic value. And it allows to overcome the previously mentioned problem:
+
+For the first one, there are as many alleles around zero than around a large value. The new allele can be drawn from a re-centered normal distribution, allowing the mean phenotype to evolve smoothly through time, or always around zero to simulate a "reference allele". 
+
+For the second problem, since we choose the allelic values to be equally spaced and centered around zero, we know that if we average over enough generation, the mean phenotype will be zero and not bias will come from here. In Fig. \ref{fig:EquallySpacedAllele} we sketch the main differences between the two approaches
+
+More precisely, quantiNemo proceed as follow:
+\begin{itemize}
+\item	At the beginning of the simulation, the allele are defined with values equally spaced between $-6 \sigma$ and $6\sigma$ or between  $-20 \sigma$ and $20\sigma$ depending of the mutation model (see parameter \textsf{quanti\_mutation\_model} ).  $\sigma$ is defined by the parameter \textsf{quanti\_allelic\_var}. If the number of allele is smaller than $6$, the value will be spaced between  $-(l - 1)\sigma$ and $(l - 1)\sigma$ where $l$ is the number of allele. 
+\item	 By default, the initial allele frequency will follow a Gaussian law: $f(a_i) = \frac{1}{N} \exp(-a_i^2/2\sigma^2)$, were $N$ allow to normalize the frequency (the sum of frequency should be one) and $a_i$ is the allelic value of allele $i$. 
+\item	When a mutation occurs,the probability to switch to a given allele is given by $f(a_i) = \frac{1}{N} \exp(-a_i^2/2\sigma^2)$ in the RMM model and by $f(a_i) = \frac{1}{N} \exp(-(a_i-a_c)^2/2\sigma^2)$ in the IMM model (where $a_c$ is the allelic value of the current allele). Loosely speaking, this mean that in the RMM model, it is likely to go to an allele with a value close to zero, while in the IMM model, it is likely to mutate to an allele close to the current allelic value $a_c$. 
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+        \includegraphics[width=1\textwidth]{equally_spaced_allele.pdf}
+        \caption{Schematic comparison between a "natural" algorithm and the one adopted by quantiNemo to set allelic values}
+    \label{fig:EquallySpacedAllele}
+\end{figure}
 \section{Multiple traits with varying types of selection on various patch: simple case }
 Phenotypes for quantitative traits may be under selection. Selection pressures may vary among quantitative traits, sexes, patches, and time. To specify the selection pressure individually for quantitative traits and patches, matrices may be used. They are adjusted to the number of quantitative traits and to the number of patches if needed. If a parameter does not change among quantitative traits and patches, a single value may be used as argument. Selection pressures have to be specified either for each sex separately (parameters with the suffix "\_fem" for females and "\_mal" for males), or for both sexes together (parameters without a suffix). In the first case both sex specific parameters have to be set if two sexes are simulated. In the latter case, the selection pressure of females and males are assumed to be identical. Each row of the matrix corresponds to a quantitative trait, each column to a patch:
 \begin{lstlisting}[frame=single]
@@ -2927,6 +2968,8 @@ In this chapter we define more precisely what is meant by some term in this manu
 \item \textbf{A quantitive trait} is a trait with a phenotype. It might, however, be under no selection pressure. Notice also that it can be continuous as well as discrete. 
 \item \textbf{A trait} in quantiNemo is not exactly what is meant by a trait in a usual genetics textbook. It is more a set of loci which share common characteristics (number of alleles, mutation rate, etc). In particular, it is possible to define neutral traits which have no allelic value and no related phenotype but mutate all using the same mutation model, for example, to simulate a set of micro-satellite. 
 \end{itemize}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage
 \phantomsection\label{chap:Index}

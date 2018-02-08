@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="125mm"
+   width="99.53788mm"
    height="49.966789mm"
-   viewBox="0 0 442.91338 177.04768"
+   viewBox="0 0 352.69327 177.04768"
    id="svg2"
    version="1.1"
    inkscape:version="0.92.2 5c3e80d, 2017-08-06"
@@ -19,96 +19,19 @@
   <defs
      id="defs4">
     <marker
-       inkscape:isstock="true"
-       style="overflow:visible"
-       id="marker5774"
-       refX="0"
-       refY="0"
-       orient="auto"
-       inkscape:stockid="Arrow1Mend">
-      <path
-         inkscape:connector-curvature="0"
-         transform="matrix(-0.4,0,0,-0.4,-4,0)"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
-         d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         id="path5772" />
-    </marker>
-    <marker
        inkscape:stockid="Arrow1Mend"
        orient="auto"
        refY="0"
        refX="0"
-       id="marker4034"
-       style="overflow:visible"
-       inkscape:isstock="true"
-       inkscape:collect="always">
-      <path
-         id="path4032"
-         d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
-         transform="matrix(-0.4,0,0,-0.4,-4,0)"
-         inkscape:connector-curvature="0" />
-    </marker>
-    <marker
-       inkscape:stockid="Arrow1Mend"
-       orient="auto"
-       refY="0"
-       refX="0"
-       id="marker1750"
-       style="overflow:visible"
-       inkscape:isstock="true">
-      <path
-         id="path1748"
-         d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
-         transform="matrix(-0.4,0,0,-0.4,-4,0)"
-         inkscape:connector-curvature="0" />
-    </marker>
-    <marker
-       inkscape:isstock="true"
-       style="overflow:visible"
-       id="marker1606"
-       refX="0"
-       refY="0"
-       orient="auto"
-       inkscape:stockid="Arrow1Mend"
-       inkscape:collect="always">
-      <path
-         inkscape:connector-curvature="0"
-         transform="matrix(-0.4,0,0,-0.4,-4,0)"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
-         d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         id="path1604" />
-    </marker>
-    <marker
-       inkscape:stockid="Arrow1Mend"
-       orient="auto"
-       refY="0"
-       refX="0"
-       id="marker1406"
+       id="marker1579"
        style="overflow:visible"
        inkscape:isstock="true">
       <path
          inkscape:connector-curvature="0"
-         id="path1404"
+         id="path1577"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
          transform="matrix(-0.4,0,0,-0.4,-4,0)" />
-    </marker>
-    <marker
-       inkscape:isstock="true"
-       style="overflow:visible"
-       id="marker1246"
-       refX="0"
-       refY="0"
-       orient="auto"
-       inkscape:stockid="Arrow1Mend">
-      <path
-         inkscape:connector-curvature="0"
-         transform="matrix(-0.4,0,0,-0.4,-4,0)"
-         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
-         d="M 0,0 5,-5 -12.5,0 5,5 Z"
-         id="path1244" />
     </marker>
     <marker
        inkscape:stockid="Arrow1Mend"
@@ -117,8 +40,7 @@
        refX="0"
        id="marker1852"
        style="overflow:visible"
-       inkscape:isstock="true"
-       inkscape:collect="always">
+       inkscape:isstock="true">
       <path
          id="path1850"
          d="M 0,0 5,-5 -12.5,0 5,5 Z"
@@ -133,7 +55,8 @@
        refX="0"
        refY="0"
        orient="auto"
-       inkscape:stockid="Arrow1Mend">
+       inkscape:stockid="Arrow1Mend"
+       inkscape:collect="always">
       <path
          transform="matrix(-0.4,0,0,-0.4,-4,0)"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
@@ -178,8 +101,7 @@
        refX="0"
        refY="0"
        orient="auto"
-       inkscape:stockid="Arrow1Mend"
-       inkscape:collect="always">
+       inkscape:stockid="Arrow1Mend">
       <path
          transform="matrix(-0.4,0,0,-0.4,-4,0)"
          style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
@@ -419,9 +341,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2"
-     inkscape:cx="233.96945"
-     inkscape:cy="94.449457"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="286.54445"
+     inkscape:cy="25.24916"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -444,7 +366,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -607,9 +529,20 @@
            x="398.8555"
            sodipodi:role="line">trait</tspan></text>
     </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="381.39514"
+       y="542.07062"
+       id="text179"><tspan
+         sodipodi:role="line"
+         x="381.39514"
+         y="542.07062"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';fill:#000000;fill-opacity:1"
+         id="tspan177">Fitness</tspan></text>
     <g
        id="g2152"
-       transform="translate(78.281249,-47.42662)">
+       transform="translate(-2.8125,-0.08287048)">
       <rect
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#323232;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1"
          id="rect181"
@@ -695,8 +628,14 @@
          style="line-height:0.80000001">Selection</flowPara><flowPara
          id="flowPara7366"
          style="line-height:0.80000001">pressure</flowPara><flowPara
-         id="flowPara7360" /></flowRoot>    <flowRoot
-       transform="matrix(0.9375,0,0,0.9375,166.84112,111.24582)"
+         id="flowPara7360" /></flowRoot>    <path
+       sodipodi:nodetypes="cssc"
+       inkscape:connector-curvature="0"
+       id="path7374"
+       d="m 386.05976,466.43069 c 0,0 -15.60402,9.02357 -15.61561,28.84237 -0.008,13.14261 7.02369,20.90395 11.56011,25.03605 2.30442,2.09903 2.35429,2.14377 2.35429,2.14377"
+       style="fill:none;stroke:#000000;stroke-width:0.93400133px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker7378)" />
+    <flowRoot
+       transform="matrix(0.9375,0,0,0.9375,122.77862,120.62082)"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:0.80000001;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Italic';text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none"
        id="flowRoot7924"
        xml:space="preserve"><flowRegion
@@ -708,14 +647,9 @@
            height="66.670082"
            width="104.55078"
            id="rect7914" /></flowRegion><flowPara
-         id="flowPara7928"
-         style="text-align:center;text-anchor:middle"> </flowPara><flowPara
-         id="flowPara1590"
-         style="text-align:center;text-anchor:middle">F<flowSpan
-   style="line-height:1.25"
-   id="flowSpan2038">itness factor</flowSpan></flowPara><flowPara
-         id="flowPara1592"
-         style="line-height:1.25;text-align:center;text-anchor:middle">at trait level</flowPara><flowPara
+         id="flowPara7920">Product</flowPara><flowPara
+         id="flowPara1569">over</flowPara><flowPara
+         id="flowPara7928">traits</flowPara><flowPara
          id="flowPara7922" /></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot1121"
@@ -738,7 +672,7 @@
            y="519.71118" /></flowRegion><flowPara
          id="flowPara1135" /></flowRoot>    <g
        id="g1848"
-       transform="translate(-2.8125,-5.9020233)">
+       transform="translate(-2.8125,-0.74577332)">
       <rect
          ry="1.6"
          y="523.11578"
@@ -762,11 +696,17 @@
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1"
            y="547.66846"
            x="311.13419"
-           sodipodi:role="line"> locus</tspan></text>
+           sodipodi:role="line"> trait</tspan></text>
     </g>
     <path
-       style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1606)"
-       d="m 239.57169,517.87667 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 2.14861,2.36432 2.14861,2.36432"
+       sodipodi:nodetypes="csc"
+       inkscape:connector-curvature="0"
+       id="path1183"
+       d="m 327.09714,522.90475 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 20.86081,7.5422 25.00226,12.09795"
+       style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1852)"
+       d="m 237.22794,523.03292 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 2.14861,2.36432 2.14861,2.36432"
        id="path1185"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cssc" />
@@ -774,10 +714,10 @@
        sodipodi:nodetypes="cssc"
        inkscape:connector-curvature="0"
        id="path1187"
-       d="m 140.34196,516.68996 c 0,0 10.35258,-16.36521 30.33286,-16.26964 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 3.2033,3.5362 3.2033,3.5362"
+       d="m 137.99821,521.84621 c 0,0 10.35258,-16.36521 30.33286,-16.26964 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 3.2033,3.5362 3.2033,3.5362"
        style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1579)" />
     <flowRoot
-       transform="matrix(0.9375,0,0,0.9375,-20.862067,116.8781)"
+       transform="matrix(0.9375,0,0,0.9375,-26.955817,130.47185)"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman,  Italic';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        id="flowRoot1201"
        xml:space="preserve"><flowRegion
@@ -790,11 +730,11 @@
            width="104.55078"
            id="rect1189" /></flowRegion><flowPara
          id="flowPara1197">Fitness factor</flowPara><flowPara
-         id="flowPara1574">at loci level</flowPara></flowRoot>    <flowRoot
+         id="flowPara1199" /></flowRoot>    <flowRoot
        xml:space="preserve"
        id="flowRoot1213"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:0.80000001;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Italic';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
-       transform="matrix(0.9375,0,0,0.9375,72.72259,117.89102)"><flowRegion
+       transform="matrix(0.9375,0,0,0.9375,70.378837,129.14102)"><flowRegion
          id="flowRegion1205"
          style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:0.80000001;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Italic';text-align:center;text-anchor:middle"><rect
            id="rect1203"
@@ -803,13 +743,11 @@
            x="156.06857"
            y="386.1185"
            style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:0.80000001;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Italic';text-align:center;text-anchor:middle" /></flowRegion><flowPara
-         id="flowPara2036"
-         style="line-height:1.25">Fitness factor</flowPara><flowPara
-         style="line-height:1.25"
-         id="flowPara2048">at global level</flowPara><flowPara
+         id="flowPara1209">Product over </flowPara><flowPara
+         id="flowPara1411">loci</flowPara><flowPara
          id="flowPara1211" /></flowRoot>    <g
        id="g1842"
-       transform="translate(0.56515503,-5.9020233)">
+       transform="translate(0.56515503,-0.74577332)">
       <rect
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#008000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1"
          id="rect1145"
@@ -828,16 +766,16 @@
            x="217.0006"
            y="535.16846"
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1"
-           id="tspan1147">Pre-fitness</tspan><tspan
+           id="tspan1147">Fitness per</tspan><tspan
            id="tspan1161"
            sodipodi:role="line"
            x="217.0006"
            y="547.66846"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1"> per locus</tspan></text>
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1"> loci</tspan></text>
     </g>
     <g
        id="g1836"
-       transform="translate(0.31414795,-4.2447357)">
+       transform="translate(0.31414795,0.91151428)">
       <rect
          ry="1.6"
          y="521.4585"
@@ -862,11 +800,11 @@
        sodipodi:nodetypes="cssc"
        inkscape:connector-curvature="0"
        id="path1061"
-       d="m -3.7087145,725.06767 c 0,0 9.1807,-15.5449 29.1609805,-15.44933 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 2.14861,2.36432 2.14861,2.36432"
-       style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1246)" />
+       d="m 329.57254,435.38017 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 2.14861,2.36432 2.14861,2.36432"
+       style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker6950)" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker6704)"
-       d="m -93.577914,724.61579 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 21.03659,7.13204 25.178039,11.68779 2.10377,2.31423 2.14861,2.36432 2.14861,2.36432"
+       d="m 239.70334,434.92829 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 2.14861,2.36432 2.14861,2.36432"
        id="path1063"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cssc" />
@@ -874,10 +812,10 @@
        sodipodi:nodetypes="cssc"
        inkscape:connector-curvature="0"
        id="path1065"
-       d="m -192.80764,724.59507 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 2.14861,2.36432 2.14861,2.36432"
+       d="m 140.47361,434.90757 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 2.14861,2.36432 2.14861,2.36432"
        style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker5441)" />
     <flowRoot
-       transform="translate(-332.33424,247.07169)"
+       transform="translate(0.94701801,-42.61581)"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0.01%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="flowRoot1073"
        xml:space="preserve"><flowRegion
@@ -891,8 +829,7 @@
            id="rect1067" /></flowRegion><flowPara
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, '"
          id="flowPara1071"> </flowPara></flowRoot>    <g
-       id="g1081"
-       transform="translate(-333.28125,289.6875)">
+       id="g1081">
       <rect
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ab0000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1"
          id="rect1075"
@@ -914,8 +851,7 @@
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';fill:#000000;fill-opacity:1">Genotype</tspan></text>
     </g>
     <g
-       id="g1091"
-       transform="translate(-333.28125,289.6875)">
+       id="g1091">
       <rect
          ry="1.6"
          y="435.14795"
@@ -942,8 +878,7 @@
            id="tspan1087">value</tspan></text>
     </g>
     <g
-       id="g1101"
-       transform="translate(-333.28125,289.6875)">
+       id="g1101">
       <rect
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ab0000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1"
          id="rect1093"
@@ -974,23 +909,22 @@
        id="rect1103"
        width="64.93824"
        height="29.915373"
-       x="33.349266"
-       y="725.78247"
+       x="366.63052"
+       y="436.09497"
        ry="1.6" />
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="43.833519"
-       y="745.40021"
+       x="377.11478"
+       y="455.71268"
        id="text1107"><tspan
          sodipodi:role="line"
-         x="43.833519"
-         y="745.40021"
+         x="377.11478"
+         y="455.71268"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';fill:#000000;fill-opacity:1"
          id="tspan1105">Fitness</tspan></text>
     <g
-       id="g1117"
-       transform="translate(-333.28125,289.6875)">
+       id="g1117">
       <rect
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ab0000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1"
          id="rect1109"
@@ -1018,17 +952,17 @@
     </g>
     <text
        id="text1121"
-       y="831.75812"
-       x="48.113884"
+       y="542.07062"
+       x="381.39514"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:0%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"><tspan
          id="tspan1119"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';fill:#000000;fill-opacity:1"
-         y="831.75812"
-         x="48.113884"
+         y="542.07062"
+         x="381.39514"
          sodipodi:role="line">Fitness</tspan></text>
     <g
-       transform="translate(-336.09375,289.60463)"
+       transform="translate(-2.8125,-0.08287048)"
        id="g1131">
       <rect
          ry="1.6"
@@ -1056,7 +990,7 @@
            id="tspan1127">Fitness</tspan></text>
     </g>
     <flowRoot
-       transform="matrix(0.9375,0,0,0.9375,-354.11565,315.7305)"
+       transform="matrix(0.9375,0,0,0.9375,-20.834396,26.042995)"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman,  Italic';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        id="flowRoot1146"
        xml:space="preserve"><flowRegion
@@ -1075,7 +1009,7 @@
        xml:space="preserve"
        id="flowRoot1158"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman,  Italic';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
-       transform="matrix(0.9375,0,0,0.9375,-261.78615,322.83313)"><flowRegion
+       transform="matrix(0.9375,0,0,0.9375,71.495101,33.14563)"><flowRegion
          id="flowRegion1150"
          style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman,  Italic';text-align:center;text-anchor:middle"><rect
            id="rect1148"
@@ -1089,7 +1023,7 @@
          style="line-height:0.80000001"
          id="flowPara1154">effect</flowPara><flowPara
          id="flowPara1156" /></flowRoot>    <flowRoot
-       transform="matrix(0.9375,0,0,0.9375,-168.45277,325.09646)"
+       transform="matrix(0.9375,0,0,0.9375,164.82848,35.408956)"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman,  Italic';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
        id="flowRoot1170"
        xml:space="preserve"><flowRegion
@@ -1107,7 +1041,7 @@
          id="flowPara1166">pressure</flowPara><flowPara
          id="flowPara1168" /></flowRoot>    <path
        style="fill:none;stroke:#000000;stroke-width:0.93400133px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker7378)"
-       d="m 52.778506,756.11819 c 0,0 -15.60402,9.02357 -15.61561,28.84237 -0.008,13.14261 7.02369,20.90395 11.56011,25.03605 2.30442,2.09903 2.35429,2.14377 2.35429,2.14377"
+       d="m 386.05976,466.43069 c 0,0 -15.60402,9.02357 -15.61561,28.84237 -0.008,13.14261 7.02369,20.90395 11.56011,25.03605 2.30442,2.09903 2.35429,2.14377 2.35429,2.14377"
        id="path1172"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cssc" />
@@ -1115,7 +1049,7 @@
        xml:space="preserve"
        id="flowRoot1186"
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:0.80000001;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Italic';text-align:end;letter-spacing:0px;word-spacing:0px;text-anchor:end;fill:#000000;fill-opacity:1;stroke:none"
-       transform="matrix(0.9375,0,0,0.9375,-210.50263,410.30832)"><flowRegion
+       transform="matrix(0.9375,0,0,0.9375,122.77862,120.62082)"><flowRegion
          id="flowRegion1176"
          style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:0.80000001;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Italic';text-align:end;text-anchor:end"><rect
            id="rect1174"
@@ -1128,7 +1062,7 @@
          id="flowPara1180">over</flowPara><flowPara
          id="flowPara1182">traits</flowPara><flowPara
          id="flowPara1184" /></flowRoot>    <g
-       transform="translate(-336.09375,288.94173)"
+       transform="translate(-2.8125,-0.74577332)"
        id="g1196">
       <rect
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#008000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1"
@@ -1157,7 +1091,7 @@
     </g>
     <path
        style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m -6.1841145,812.59225 c 0,0 9.1807,-15.5449 29.1609805,-15.44933 13.24971,0.0634 20.86081,7.5422 25.00226,12.09795"
+       d="m 327.09714,522.90475 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 20.86081,7.5422 25.00226,12.09795"
        id="path1198"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="csc" />
@@ -1165,154 +1099,13 @@
        sodipodi:nodetypes="cssc"
        inkscape:connector-curvature="0"
        id="path1200"
-       d="m -96.053314,812.72042 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 21.03659,7.13204 25.178039,11.68779 2.10377,2.31423 2.14861,2.36432 2.14861,2.36432"
+       d="m 237.22794,523.03292 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 2.14861,2.36432 2.14861,2.36432"
        style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1852)" />
     <path
        style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1579)"
-       d="m -195.28304,811.53371 c 0,0 10.35258,-16.36521 30.33286,-16.26964 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 3.2033,3.5362 3.2033,3.5362"
+       d="m 137.99821,521.84621 c 0,0 10.35258,-16.36521 30.33286,-16.26964 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 3.2033,3.5362 3.2033,3.5362"
        id="path1202"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cssc" />
-    <flowRoot
-       xml:space="preserve"
-       id="flowRoot1212"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman,  Italic';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
-       transform="matrix(0.9375,0,0,0.9375,-360.23707,420.15935)"><flowRegion
-         id="flowRegion1206"
-         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman,  Italic';text-align:center;text-anchor:middle"><rect
-           id="rect1204"
-           width="104.55078"
-           height="66.670082"
-           x="156.06857"
-           y="386.1185"
-           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman,  Italic';text-align:center;text-anchor:middle" /></flowRegion><flowPara
-         id="flowPara1208">Fitness factor</flowPara><flowPara
-         id="flowPara1210" /></flowRoot>    <flowRoot
-       transform="matrix(0.9375,0,0,0.9375,-262.90242,418.82852)"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:0.80000001;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Italic';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
-       id="flowRoot1224"
-       xml:space="preserve"><flowRegion
-         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:0.80000001;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Italic';text-align:center;text-anchor:middle"
-         id="flowRegion1216"><rect
-           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:0.80000001;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, Italic';text-align:center;text-anchor:middle"
-           y="386.1185"
-           x="156.06857"
-           height="66.670082"
-           width="104.55078"
-           id="rect1214" /></flowRegion><flowPara
-         id="flowPara1218">Product over </flowPara><flowPara
-         id="flowPara1220">loci</flowPara><flowPara
-         id="flowPara1222" /></flowRoot>    <g
-       transform="translate(-332.7161,288.94173)"
-       id="g1234">
-      <rect
-         ry="1.6"
-         y="523.11578"
-         x="184.55359"
-         height="29.915373"
-         width="64.93824"
-         id="rect1226"
-         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#008000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1" />
-      <text
-         id="text1232"
-         y="535.16846"
-         x="217.0006"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:0%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"><tspan
-           id="tspan1228"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1"
-           y="535.16846"
-           x="217.0006"
-           sodipodi:role="line">Fitness per</tspan><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1"
-           y="547.66846"
-           x="217.0006"
-           sodipodi:role="line"
-           id="tspan1230"> loci</tspan></text>
-    </g>
-    <g
-       transform="translate(-332.96711,290.59902)"
-       id="g1242">
-      <rect
-         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#008000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1"
-         id="rect1236"
-         width="64.93824"
-         height="29.915373"
-         x="93.734558"
-         y="521.4585"
-         ry="1.6" />
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:0%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         x="126.06548"
-         y="538.9162"
-         id="text1240"><tspan
-           sodipodi:role="line"
-           x="126.06548"
-           y="538.9162"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1"
-           id="tspan1238">Genotype</tspan></text>
-    </g>
-    <g
-       transform="translate(87.943359,-5.9020233)"
-       id="g1602">
-      <rect
-         style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#008000;stroke-width:1;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1"
-         id="rect1594"
-         width="64.93824"
-         height="29.915373"
-         x="278.68716"
-         y="523.11578"
-         ry="1.6" />
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:0%;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         x="311.13419"
-         y="535.16846"
-         id="text1600"><tspan
-           sodipodi:role="line"
-           x="311.13419"
-           y="535.16846"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1"
-           id="tspan1596">Fitness per</tspan><tspan
-           sodipodi:role="line"
-           x="311.13419"
-           y="547.66846"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman, ';text-align:center;text-anchor:middle;fill:#000000;fill-opacity:1"
-           id="tspan1598"> trait</tspan></text>
-    </g>
-    <path
-       sodipodi:nodetypes="cssc"
-       inkscape:connector-curvature="0"
-       id="path1746"
-       d="m 330.97794,517.40792 c 0,0 9.1807,-15.5449 29.16098,-15.44933 13.24971,0.0634 21.03659,7.13204 25.17804,11.68779 2.10377,2.31423 2.14861,2.36432 2.14861,2.36432"
-       style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1750)" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker4034)"
-       d="m 426.08521,516.33793 c -0.0919,-10.4966 6.6107,-16.40093 14.191,-16.52548 3.41024,-0.10141 5.76212,-0.0586 5.76212,-0.0586"
-       id="path4030"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccc" />
-    <flowRoot
-       transform="matrix(0.9375,0,0,0.9375,229.59689,123.81071)"
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;line-height:1.25;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman,  Italic';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none"
-       id="flowRoot4430"
-       xml:space="preserve"><flowRegion
-         style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman,  Italic';text-align:center;text-anchor:middle"
-         id="flowRegion4422"><rect
-           style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333302px;font-family:'Latin Modern Roman';-inkscape-font-specification:'Latin Modern Roman,  Italic';text-align:center;text-anchor:middle"
-           y="386.1185"
-           x="156.06857"
-           height="66.670082"
-           width="104.55078"
-           id="rect4420" /></flowRegion><flowPara
-         style="line-height:0.80000001"
-         id="flowPara6070">Product</flowPara><flowPara
-         id="flowPara4428" /></flowRoot>    <path
-       sodipodi:nodetypes="ccc"
-       inkscape:connector-curvature="0"
-       id="path5770"
-       d="m 426.08521,466.5568 c -0.0919,10.4966 6.6107,16.40093 14.191,16.52548 3.41024,0.10141 5.76212,0.0586 5.76212,0.0586"
-       style="fill:none;stroke:#000000;stroke-width:0.9375px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker5774)" />
   </g>
 </svg>
