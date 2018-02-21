@@ -588,7 +588,6 @@ public:
 	double getHo                    (const age_idx& AGE);
 	double getHo                    (const age_t& AGE) {return getHo(age_t2idx(AGE));}
 	double*getHo_perLocus           (const age_idx& AGE);
-	double*getHo_perLocus           (const age_idx& AGE, vector<TPatch*>& vPatch);
 	double getHo_ofLocus            (unsigned int i, const age_t& AGE){return getHo_perLocus(age_t2idx(AGE))[i];}
 	double getHo_ofPatch            (TPatch* curPatch, const age_idx& AGE);
 	double getHo_ofPatch            (unsigned int i, const age_t& AGE){return getHo_ofPatch(get_vPatch(i), age_t2idx(AGE));}
