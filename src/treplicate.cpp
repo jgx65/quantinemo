@@ -738,10 +738,10 @@ TReplicate::print_info(TMetapop* thePop)
                             _pSimulation->stats->get_tot_occurrence());
                 }
                 else{
-                    message("\n    %s (%i statistics) computed at %i generations",
+                 /*   message("\n    %s (%i statistics) computed at %i generations",
                             (*curFile)->get_name().c_str(),
                             _StatServices->get_nb_stats(),
-                            _pSimulation->stats->get_tot_occurrence());
+                            _pSimulation->stats->get_tot_occurrence());*/
                 }
             }
             else {                                           // any other file

@@ -97,10 +97,10 @@ LCE("save_stats", "statistics", "", rank), _service(0) {
 void LCE_StatServiceNotifier::loadStatServices(StatServices* loader)
 {
     _service = loader;
-    _fileHandler.set_statService(loader);
+    if(_popPtr->get_pStat_db())_fileHandler.set_statService(loader);
     _service->set_statArg(_stat_arg);
     _service->set_paramArg(_param_arg);
-    _fileHandler.set_save_choice(_save_choiceTemp);
+    if(_popPtr->get_pStat_db()) _fileHandler.set_save_choice(_save_choiceTemp);
     loader->attach(&_statHandler);
 }
 
