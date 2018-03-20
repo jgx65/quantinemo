@@ -2914,6 +2914,88 @@ This parameter specifies how the selection pressure is defined.
 \end{description}
 \end{description}
 
+\section{Simulating sexual chromosome}
+Quantinemo does not come with a direct parameter to have a sexual chromosome but gives the possibility for a trait to code for the sex of individuals. As we will see it, this allows to simulate classical sexual chromosome, preserving the freedom to simulate other more complex scenarios. 
+
+For example, the XY and WZ model can be simulated easily, but we can also simulate systems where the environment plays a role in the sex determination or with more than two allele coding for the sex. Moreover, one can also simulate situations where the trait is not located on a single locus but on various locus on different chromosomes. 
+
+\subsection{Main idea}
+To simulate sexual chromosomes, the main idea is the following. The sex of all individual should be determined by one gene, in Qn language a quantitative trait on a single locus. This gene should have two alleles, one making individuals to be male, and another one female. This locus can be located on the genetic map, making the chromosome which carries it the so called\textit{sexual chromosome}. In the case of the XY model, a chromosome carrying an allele which makes you male would be the Y chromosome, while a chromosome with the other allele would be called the X chromosome. 
+
+In order to set one gene to be sex-determining, we need to set the parameter \textsf{sex\_ratio\_threshold}. If this parameter is set, the sex of individuals is determined by the phenotypic value of the first quantitative trait instead of randomly (as it is usually the case). More precisely, this parameter gives the threshold above which an individual becomes a male. Typically, it will be set to zero, and individuals with a positive genotype will be male while individuals with a negative genotype will be female. For the XY system, we can fine-tune the allelic value so that XX individual have a negative genotype and XY individual a positive one. 
+\subsection{Example: XY system}
+In this section, we explicit and detail the necessary step in order to simulate a minimalistic sexual chromosome of the XY system type.
+\begin{enumerate}
+\item    Set a dioecious mating system
+\item   Set the parameter \textsf{sex\_ratio\_threshold} to 0
+\item    Have the first quantitative trait to be determined by a single diallelic locus
+\item    Locate this locus on a given chromosome
+\item    Set the value of the allele so that two X leads to a negative genotype and XY leads to a positive genotype
+\end{enumerate}
+In the following input file, we specify all these values. Notice that to make our example easy to adapt, we also added a second trait coded by a single locus placed on the sexual chromosome but with more possible alleles.  This second trait could then be under any type of selection:
+
+\textbf{input file}
+\begin{lstlisting}[frame=single]
+patch_capacity      100    # number of individuals         
+generations         100    # number of generation     
+sex_ratio_threshold  0     # male have positive phenotype    
+                           # female have negative genotype    
+quanti_nb_trait      2     # we want two traits
+quanti_loci          1     # one loci per trait,
+quanti_all_1         2     # two allele for x and y
+quanti_all_2         255   # much more allele 
+                           # to simulate a continuous trait
+mating_system       3      # dioecious random mating    
+genome            {{0 100}}# single chromosom with 2 locus 
+                           #  at 100 cm from each other          
+quanti_locus_index_1 {1}   # Sexual gene at the beginning 
+quanti_locus_index_2 {2}   # other quanti trait at the end     
+quanti_dominance_file         "quanti_dominance_file.ini"         
+quanti_allelic_file_1         "quanti_allelic_file.ini"    
+quanti_allelic_file_2         NOT_SET
+recombination_factor_mal {0}# No recombination in Y
+quanti_environmental_proportion 0 # phenotype is set at birth 
+\end{lstlisting}
+\textbf{quanti\_allelic\_file.ini}
+\begin{lstlisting}[frame=single]
+[FILE_INFO]{
+col_locus          1         
+col_allele         2         
+col_allelic_value  3         
+} 
+#locus allele value
+1       1     -1 # Allele carried by the chromosome X
+1       2      1 # Allele carried by the chromosome Y
+\end{lstlisting}
+\textbf{quanti\_dominance\_file.ini}
+\begin{lstlisting}[frame=single]
+[FILE_INFO]{
+col_locus         1         
+col_allele1         2         
+col_allele2         3         
+col_dominance         4         
+} 
+#locus allele 1 allele2 dominance
+1      1      1      1
+1      1      2      1 #allele 2 is dominant, making xy male 
+1      2      2      1     
+\end{lstlisting}
+
+
+    
+    
+Notice that here, at the first generation, some individuals will be YY, which is not the case in real populations, and we will have 75\% of male and only 25\% of female . This leads to a smaller effective population size.  However, after one generation, the YY individuals will disappear and the sex ratio will be back to one. It is also possible to specify explicitly the genotype of all individual using an FSTAT file so that we don't have any YY individual during the first generation. 
+\subsection{More complex scenario}
+From the example above, setting a WZ model is straightforward. The main difference would be that the dominance should be different so that heterozygote individuals are female. 
+To include a partially determining gene, we need to add an environmental effect.  To add it, we can, for example, set the value \textsf{quanti\_environmental\_model} to 0 and \textsf{quanti\_heritability} to 1. In this way, we will have a genotype which is not fully deterministic but only partially. 
+   
+To include several loci, the parameter \textsf{quanti\_loci} should be set to more than one. The corresponding loci can then either be all independent, or we can place same on the genetic map. 
+
+
+
+
+
+
 \chapter{Speeding up simulation}\label{chap:SpeedingUpSimulation}
 Individual-based simulations are time and memory consuming. While quantiNemo is a well-optimized software using C++, simulations are still time-consuming as soon as the number of loci and individuals are both larger than, let's say, 1000. In this chapter, we just want to introduce the user to some general knowledge about how simulation consumption evolves and little details that might speed-up simulation. First part is really more for people with interests and basics knowledge of optimization, while the second part is easier to understand and apply for anyone. 
 
