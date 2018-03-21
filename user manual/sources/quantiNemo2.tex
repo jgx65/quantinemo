@@ -717,6 +717,57 @@ To prevent the output from overwriting the preceding simulation a unique base fi
 \end{lstlisting}
 
 Notice that if you specify a folder using the parameter \textsf{folder}, all simulation will be saved in the same folder and each result will override the previous one.
+
+\section{Command line help}
+Quantinemo comes with a build-in manual which can be accessed through the command line. It is useful mainly when looking for a specific parameter or to know which value of a parameter correspond to which behavior.    
+
+In quantiNemo, the parameters are regrouped in various sets, depending on what concept they are related to. For example, all parameters starting with \textsf{quanti\_} are related to quantitative traits. If you ask quantinemo for help without any other parameters, it will display the various existing set of parameters:
+
+\textsf{./quantinemo --help }
+\begin{lstlisting}[frame=single]
+[...]
+Available parameter sets:
+         simulation            (simulation)
+         metapop               (metapopulation)
+         quanti                (quantitative traits)
+         ntrl                  (neutral traits)
+         breed                 (reproduction)
+         aging                 (aging)
+         genome                (genetic map)
+         save_stats            (statistics)
+         save_files            (output of files)
+         regulation_offspring  (population size regulation )
+         dispersal             (dispersal)
+         regulation_adults     (population size regulation )
+         extinction            (population extinction)
+         store_pop_size        (population size storage )
+         coalesce              (coalescence)
+[...]
+\end{lstlisting}
+
+To have more information about a specific parameter within one of these sets, we have to use the same command than before but adding the name of the parameter set. QuantiNemo will display all the parameters within this set, ordered by their (subjective) importance. The possible values, default value and their meaning are also explained.    
+
+\textsf{./simulation   --help simulation}
+\begin{lstlisting}[frame=single]
+[...]
+simulation
+==========
+
+--folder....[string] (default: simulation_yyyy-mm-dd_hh)  {0}
+        Output folder of the output. If not specified the folder
+        will have a date and time stamp. "" may be used to store the
+        output directly in the working directory.
+
+--replicates......  [integer] [0;-[ (default: 1)  {0}
+        Number of replicates to perform per simulation.
+
+--filename.... [string] (default: simulation)  {1}
+        Base filename for all outputs, if they are not specified
+        individually.
+[...]
+\end{lstlisting}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \chapter{General simulation settings}\label{chap:GeneralSimulationSettings}
