@@ -740,14 +740,6 @@ This parameter allows defining the working directory, the directory where the si
 \item[folder\index{folder}]\textbf{[string] (default: "simulation\_yyyy-mm-dd\_hh-mm-ss")}\\
 This parameter specifies the folder for the output. The default argument of this parameter differs from the rules, as the default folder name is dynamic, \textit{i.e.} comprises the start time and date of the simulation. The default folder name is "inputfilename\_" with the date and time as a suffix in the format "yyyy-mm-dd\_hh-mm-ss" (Year-Month-Day\_Hour-Minute-Second). This dynamic default folder name allows storing each simulation separately, avoiding that previous outputs are overwritten. If the parameter is set, the passed argument will be used as folder name (i.e. without any addition of the time). In this case, it may happen that the new output wants to overwrite previous outputs. The parameter \textsf{overwrite} (see below) allows specifying the rules for overwriting other outputs. If the output should be stored directly in the working directory this parameter has to be listed in the settings file followed by an empty argument "" (for this special parameter an empty argument is not identical to a missing one).
 
-\fm{this parameter is actually not working.File are always overwritten without asking, i.e. value 1. What should we do? }
-\item[overwrite\index{overwrite}]\textbf{[integer] (default: 0)}\\
-This parameter specifies how present output is treated if there is a danger of overwriting:
-\begin{description}
-\item[0~:~no.] If the output of the running simulation will overwrite present files, quantiNemo will ask the user how to proceed (\textit{Do you want to overwrite all the files that use it ? (y(es)/n(o)/s(kip)):} ), and will suspend the simulation until the user responds to the question.
-\item[1 : yes.] Present output is overwritten without asking.    
-\end{description}
-
 
 \item[filename\index{filename}]\textbf{[string] (default: "simulation")}\\
 This name will be used as the base filename for all outputs if they are not specified individually. The output file extensions are added to this base filename. If a file is written on a replicate-periodic basis, the replicate number will be added between the base name and the extension, so that the same file is not overwritten periodically.  
