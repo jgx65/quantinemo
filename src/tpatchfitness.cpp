@@ -1,7 +1,8 @@
 /** @file tpatchfitness.cpp
  *
  *   Copyright (C) 2008 Samuel Neuenschwander <samuel.neuenschwander@unil.ch>
- *
+ *   Copyright (C) 2018 Frederic Michaud <frederic.michaud@unil.ch>
+
  *   quantiNemo2:
  *   quantiNemo2 is an individual-based, genetically explicit stochastic
  *   simulation program. It was developed to investigate the effects of
