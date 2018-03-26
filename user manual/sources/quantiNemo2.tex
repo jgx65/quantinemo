@@ -103,7 +103,7 @@ Fr\'ed\'eric Michaud \\
 \\
 \\
 \textbf{website}\\
-\tbc{}\url{http://www.unil.ch/popgen/softwares/quantinemo}\\
+\url{http://www.unil.ch/popgen/softwares/quantinemo}\\
 
 \vspace*{\stretch{1}}
 \end{titlepage}
@@ -188,7 +188,7 @@ QuantiNemo provides summary statistics for the different simulation components, 
 \end{description}
 
 \section{Availability}
-The website \linebreak\url{http://www.unil.ch/popgen/softwares/quantinemo} \tbc{} includes executables for Windows, Linux and Mac, the source code, a detailed user's manual and  tutorials.  All downloads are freely available under the terms of the GNU General Public License.
+The website \linebreak\url{http://www.unil.ch/popgen/softwares/quantinemo} includes executables for Windows, Linux and Mac, the source code, a detailed user's manual and  tutorials.  All downloads are freely available under the terms of the GNU General Public License.
 
 \section{Technical}
 quantiNemo is a console program and is coded in standard C++ using an object oriented approach. This allows compiling quantiNemo on any computer platform which supports standard C++ compilation. There is no limit on the number of populations, individuals, genes, etc that quantiNemo can handle, apart from the available hardware capacities (CPU and memory). QuantiNemo was optimized for high computation efficiency in particular for large simulations on clusters. 
@@ -197,13 +197,12 @@ quantiNemo is a console program and is coded in standard C++ using an object ori
 QuantiNemo is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. quantiNemo is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with quantiNemo. If not, see \linebreak\url{http://www.gnu.org/licenses/}.
 
 \section{Citation}
-\tbc{}
 quantiNemo has been published in the journal \textit{Bioinformatics}. If you are using quantiNemo for your research please cite it as \\
  Neuenschwander S, Hospital F, Guillaume F, Goudet J, 2008. QuantiNemo: an individual-based program to simulate quantitative traits with explicit genetic architecture in a dynamic metapopulation. \textbf{Bioinformatics} 24, 1552-1553.
 
 \section{Acknowledgments}
-\tbc{}\fm{Jérôme, can you update this?}
-We are grateful to Elisa Cavoto, Olivier Blaser, Christine Grossen, Ricardo Kanitz, Sylvain Antoniazza and Elsa Guillot for feedback on the new version of quantiNemo. We are also grateful to Fardo Witzenburg who did most of the tutorials.
+
+We are grateful to Elisa Cavoto, Olivier Blaser, Christine Grossen, Ricardo Kanitz, Sylvain Antoniazza, Elsa Guillot and Pauls Saunders for feedback on the new version of quantiNemo. We are also grateful to Fardo Witzenburg who developed most of the tutorials and to Valeria Montano, Guillaume Dumont and Ana Paula Machado for revising them. 
 
 
 
@@ -216,7 +215,7 @@ This chapter explains how to use quantiNemo starting from the basics.
 
 
 \section{Installation}
-Executables of quantiNemo for several operating systems can be downloaded from the web site \url{http://www.unil.ch/popgen/softwares/quantinemo} \tbc{}. The executables are standalones, meaning that quantiNemo does not require an installation. After downloading the compressed file with the executable corresponding to your operating system simply extract it to a folder of your choice. The compressed file includes the executable for your operating system, the user manual, and also an example settings file.\tbc{}.
+Executables of quantiNemo for several operating systems can be downloaded from the web site \url{http://www.unil.ch/popgen/softwares/quantinemo}. The executables are standalones, meaning that quantiNemo does not require an installation. After downloading the compressed file with the executable corresponding to your operating system simply extract it to a folder of your choice. The compressed file includes the executable for your operating system, the user manual, and also an example settings file.
 
 
 \section{Launching quantiNemo}\label{launchQuantiNemo}
@@ -277,7 +276,7 @@ stat                      {q.adlt.ho}
 \end{lstlisting}
 
 A simulation based on this settings file named "quantiNemo2\_example.ini" produces the following output to your terminal window:
-\tbc{}
+
 \begin{lstlisting}[frame=single]
 Program:    quantiNemo2 (quantitative genetics simulator)
 
@@ -1135,7 +1134,6 @@ this parameter define how the dispersal rate is set.
 
 \chapter{Genotype configuration}\label{chap:GenotypeConfiguration}
 \section{Introduction}
-\fm{I'm still not sure about the title of this chapter. It was first "genetics", which is probably too broad, I then though about "genome prototype", but Guillaume doesn't find it very clear. We could also say "reference genome", though it's not exactly that neither. }
 QuantiNemo allows the simulation of quantitative traits as well as neutral markers, both related by a common genetic map so that processes like linkage disequilibrium and genetic hitchhiking can be simulated easily. More precisely, quantiNemo allows to simulate neutral markers, such as microsatellites or SNPs with different mutation models (K allele and Stepwise). Quantitative trait under selection pressure composed of various loci can also be added to the same simulation. In this chapter, we explain how to define loci and traits, locate them in a map, set an initial genotype and choose a mutation model for them.
 
 Most of the parameter and behaviour are the same for neutral and quantitative traits (except of course that quantitative traits are under selection, but this will be cover in the next chapter). The main difference is that neutral trait's parameters are defined with a \textsf{ntrl\_} in front while quantitative traits are specified with  \textsf{quanti\_}. In the case where the parameters have the same meaning for neutral and quantitative traits, the \textsf{(ntrl/quanti)\_parameter} notation will be used, which should be read as the existence of two parameters, one \textsf{ntrl\_parameter} and another one \textsf{quanti\_parameter}. If differences are present  ,as for example in the mutations models, both parameters are explained separately. 
@@ -1432,7 +1430,6 @@ Two different procedure can be used to specify the fitness of an individual. One
     \label{fig:Selection}
 \end{figure}
 \subsection{Quantitative genetic approach}
-\fm{I'm not sure if it's better to speak about phenotypic value or just about phenotype, which for me is more vague but maybe make more sens to new comer}
 To compute the fitness of an individual, quantiNemo define a genotypic value, which is the value of a trait would have if no environmental effect plays a role (therefore, if environmental effect are set to zero, the genotypic value is equal to the phenotypic value). So first, the genotypic value for each traits is computed, from the allelic values, the dominance model and if present the epistatic value. Then, the phenotypic value is computed by adding to the genotypic value the environmental value. Overall, the phenotypic value is given by:
 \begin{eqnarray}
 P &=& G + E \\
