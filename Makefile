@@ -11,7 +11,7 @@ done)
 
 GIT_VERSION := $(shell git describe --abbrev=7 --always --tags --dirty)
 
-PRGNAME=quantiNemo2
+PRGNAME=quantinemo
 PRGDIR=bin
 
 INCS      =     -I.  -D_SHOW_MEMORY
