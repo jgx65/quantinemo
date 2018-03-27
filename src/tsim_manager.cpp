@@ -176,7 +176,7 @@ TSimManager::readInputFiles(int ARGC, char **ARGV,
     // read arguments passed to the program
     if (ARGC == 1) {  // if no argument is passed use the default file name
         // is there a default settings file?
-        if (STRING::file_exists("quantinemo2.ini")) inputfiles.push_back("quantinemo2.ini");
+        if (STRING::file_exists("quantinemo.ini")) inputfiles.push_back("quantinemo.ini");
         else { // if not present ask for a name
             string name;
             message("\nPlease enter the settings file name (or 'help'): ");
