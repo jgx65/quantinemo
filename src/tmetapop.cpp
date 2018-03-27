@@ -4,32 +4,32 @@
  *   Copyright (C) 2008 Samuel Neuenschwander <samuel.neuenschwander@unil.ch>
  *   Copyright (C) 2018 Frederic Michaud <frederic.michaud@unil.ch>
 
- *   quantiNemo2:
- *   quantiNemo2 is an individual-based, genetically explicit stochastic
+ *   quantiNemo:
+ *   quantiNemo is an individual-based, genetically explicit stochastic
  *   simulation program. It was developed to investigate the effects of
  *   selection, mutation, recombination, and drift on quantitative traits
  *   with varying architectures in structured populations connected by
  *   migration and located in a heterogeneous habitat.
  *
- *   quantiNemo2 is built on the evolutionary and population genetics
+ *   quantiNemo is built on the evolutionary and population genetics
  *   programming framework NEMO (Guillaume and Rougemont, 2006, Bioinformatics).
  *
  *
  *   Licensing:
- *   This file is part of quantiNemo2.
+ *   This file is part of quantiNemo.
  *
- *   quantiNemo2 is free software: you can redistribute it and/or modify
+ *   quantiNemo is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
  *
- *   quantiNemo2 is distributed in the hope that it will be useful,
+ *   quantiNemo is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with quantiNemo2.  If not, see <http://www.gnu.org/licenses/>.
+ *   along with quantiNemo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "tmetapop.h"
@@ -564,7 +564,7 @@ TMetapop::set_sampled_patches(bool allGens)
      * if matrix:       the numbers correspond to the ID of the patches to sample
      * if single value: the number correponds to the number of patches to randomly sample
      * if 0 (default):  all patches are sampled
-     * Caution: input: id starts at 1 - in quantiNemo2 id starts at 0
+     * Caution: input: id starts at 1 - in quantiNemo id starts at 0
      */
     // if the patches are explicitly defined by their ID
     if(_paramSet->get_param("sampled_patches")->is_matrix()){

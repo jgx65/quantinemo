@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(quantiNemo2)
+project(quantiNemo)
 
 SET(GCC_COVERAGE_COMPILE_FLAGS "-Iinclude")
 add_definitions(${GCC_COVERAGE_COMPILE_FLAGS})

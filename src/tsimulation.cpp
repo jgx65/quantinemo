@@ -3,32 +3,32 @@
  *   Copyright (C) 2008 Samuel Neuenschwander <samuel.neuenschwander@unil.ch>
  *   Copyright (C) 2018 Frederic Michaud <frederic.michaud@unil.ch>
 
- *   quantiNemo2:
- *   quantiNemo2 is an individual-based, genetically explicit stochastic
+ *   quantiNemo:
+ *   quantiNemo is an individual-based, genetically explicit stochastic
  *   simulation program. It was developed to investigate the effects of
  *   selection, mutation, recombination, and drift on quantitative traits
  *   with varying architectures in structured populations connected by
  *   migration and located in a heterogeneous habitat.
  *
- *   quantiNemo2 is built on the evolutionary and population genetics
+ *   quantiNemo is built on the evolutionary and population genetics
  *   programming framework NEMO (Guillaume and Rougemont, 2006, Bioinformatics).
  *
  *
  *   Licensing:
- *   This file is part of quantiNemo2.
+ *   This file is part of quantiNemo.
  *
- *   quantiNemo2 is free software: you can redistribute it and/or modify
+ *   quantiNemo is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation, either version 3 of the License, or
  *   (at your option) any later version.
  *
- *   quantiNemo2 is distributed in the hope that it will be useful,
+ *   quantiNemo is distributed in the hope that it will be useful,
  *   but WITHOUT ANY WARRANTY; without even the implied warranty of
  *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with quantiNemo2.  If not, see <http://www.gnu.org/licenses/>.
+ *   along with quantiNemo.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "tsimulation.h"
@@ -85,7 +85,7 @@ TSimulation::init_paramset()
     _paramSet.set_isRequired(true);
     _paramSet.set_pParamManager(this);
     
-    _paramSet.add_param("_settings_file",STR,false,my_NAN,my_NAN,"quantiNemo2.ini",false,
+    _paramSet.add_param("_settings_file",STR,false,my_NAN,my_NAN,"quantiNemo.ini",false,
                         "Settings file name with path.",5);
     
     _paramSet.add_param("filename",STR,false,my_NAN,my_NAN,"simulation",false,
