@@ -7,4 +7,4 @@ A specific feature is that it allows to switch between an individual-based full-
 Several demographic, genetic and selective parameters can be fine tuned in QuantiNemo 2:  
 population,  selection,  trait(s) architecture,  genetic  map  for  QTL  and/or  markers,  environment, demography, mating system are the main ones.
 
-QuantiNemo 2 is a C++ program with a source code available under the GNU General Public License version 3. 
+QuantiNemo 2 is a C++ program with a source code available under the GNU General Public License version 3. More information is available on https://www2.unil.ch/popgen/softwares/quantinemo/
