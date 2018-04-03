@@ -1,0 +1,21 @@
+\documentclass[letterpaper,12pt,oneside]{article}
+
+\begin{document}
+\title{Incompatibilities between Quantinemo 1 and Quantinemo 2 input files}
+\maketitle
+Here, we list all the differences that there are between input file from quantiNemo 1 to quantiNemo 2. Obviously, a lot of parameters were added to quantiNemo 2 and are not listed here. Here, we just give a (hopefully) exhaustive list of all the parameters which should be updated in quantiNemo 1 input file in order to get the same behaviour in quantiNemo 2. 
+\begin{description}
+\item[mating\_nb\_offspring\_model ]\hspace*{\fill}\\\
+The order of the parameter \textsf{mating\_nb\_offspring\_model} is different since some models were added. 
+
+\item[mating\_system]\hspace*{\fill}\\\
+The order of the parameters \textsf{mating\_system} is different since some models were added. 
+
+\item[quanti\_ instead of patch\_]\hspace*{\fill}\\\
+Now, by default, the parameters related to quantitative trait all start with \textsf{quanti\_} instead of \textsf{patch\_}. For example \textsf{patch\_stab\_optima} is now \textsf{quanti\_stab\_optima}. This can be changed through the parameter \textsf{selection\_pressure\_definition}
+
+\item[Density dispersal rate]\hspace*{\fill}\\\
+The density dispersal rate has been updated. See new manual for the exact functionality of the current model. As a consequence, all the parameters of the form \textsf{dispersal\_k\_*} are not taken into account. 
+
+\end{description}
+\end{document}
