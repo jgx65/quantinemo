@@ -11,8 +11,8 @@ The order of the parameter \textsf{mating\_nb\_offspring\_model} is different si
 \item[mating\_system]\hspace*{\fill}\\\
 The order of the parameters \textsf{mating\_system} is different since some models were added. 
 
-\item[quanti\_ instead of patch\_]\hspace*{\fill}\\\
-Now, by default, the parameters related to quantitative trait all start with \textsf{quanti\_} instead of \textsf{patch\_}. For example \textsf{patch\_stab\_optima} is now \textsf{quanti\_stab\_optima}. This can be changed through the parameter \textsf{selection\_pressure\_definition}
+\item[selection\_pressure\_definition \& quanti\_ instead of patch\_]\hspace*{\fill}\\\
+The default value of  \textsf{selection\_pressure\_definition} has been changed from zero to one. This has impact on your input file even if you don't use this parameter explicitly. Now, by default, the parameters related to selection strength in quantitative trait all start with \textsf{quanti\_} instead of \textsf{patch\_}. For example \textsf{patch\_stab\_optima} is now \textsf{quanti\_stab\_optima}. You can switch back to the old behaviour by setting \textsf{selection\_pressure\_definition = 0}.
 
 \item[Density dispersal rate]\hspace*{\fill}\\\
 The density dispersal rate has been updated. See new manual for the exact functionality of the current model. As a consequence, all the parameters of the form \textsf{dispersal\_k\_*} are not taken into account. 
