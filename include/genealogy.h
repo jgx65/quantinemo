@@ -31,14 +31,13 @@
 *   along with quantiNemo.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+#include "types.h"
 #ifndef genealogyH
 #define genealogyH
 
-#include "types.h"
+
 //#include <vector>
 //#include <assert.h>
-
 #include <map>
 #include <vector>
 
@@ -71,7 +70,7 @@ public:
 
 	unsigned long recombTime;	// if number it is the time when a recombination event will happen on the ancestor branch
 
-	unsigned char sequence;
+	ALLELE sequence;
 
 	unsigned int ID_Node; 			// id node starting at 0
 
@@ -93,7 +92,7 @@ public:
 		desc1 = NULL;
 		desc2 = NULL;
 		ancestor = NULL;
-		sequence = (unsigned char) 0;
+		sequence = (ALLELE) 0;
 		nbMutations=0;
 		ID_Node=my_NAN;
 		recombTime = my_NAN;

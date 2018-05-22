@@ -913,7 +913,7 @@ bool LCE_Coalescence::evacuate_stepping_stone(TDeme* origDeme, unsigned int id,
 /** we have the tree: now generate the genetic data
  * seq[ind]
  */
-void LCE_Coalescence::generateGeneticData(unsigned char** seq, TLocus** genome,
+void LCE_Coalescence::generateGeneticData(ALLELE** seq, TLocus** genome,
                                           const unsigned int& curLoc)
 {
     // initialize the MRCA sequence

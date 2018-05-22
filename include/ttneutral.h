@@ -74,7 +74,7 @@ public:
     virtual void*   set_trait            (void* value)           {return NULL;}
     inline virtual void**  get_sequence  ( )  const              {return (void**)sequence;}
     inline virtual void*   get_allele    (const unsigned int& loc, const unsigned int& all)  const;
-    virtual void    set_sequence         (void** seq)            {reset();sequence = (unsigned char**)seq;}
+    virtual void    set_sequence         (void** seq)            {reset();sequence = (ALLELE**)seq;}
     virtual void    set_value            ( )                     { }
     virtual void    set_value            (double value)          {return;}
     virtual double  get_value            ( )					           {return my_NAN;}

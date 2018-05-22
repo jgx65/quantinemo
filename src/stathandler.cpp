@@ -833,7 +833,7 @@ double StatHandler<SH>::get_allele_freq_local(unsigned int i, const age_t & AGE)
     unsigned int sampleID = get_vPatch(p)->get_sampleID();
     if(sampleID==SAMPLED) return my_NAN;
     
-    map<unsigned char, double>::iterator pos = _alleleFreq_local[age_pos][sampleID][l].find(a);
+    map<ALLELE, double>::iterator pos = _alleleFreq_local[age_pos][sampleID][l].find(a);
     if (pos == _alleleFreq_local[age_pos][sampleID][l].end()) return 0; // allele not present
     return pos->second;
 }
@@ -853,7 +853,7 @@ double StatHandler<SH>::get_allele_freq_global(unsigned int i, const age_t & AGE
     unsigned int l,a;
     fromID(i, l, a, _nb_locus, _nb_allele_max);
     
-    map<unsigned char, double>::iterator pos = _alleleFreq_global[age_pos][l].find(a);
+    map<ALLELE, double>::iterator pos = _alleleFreq_global[age_pos][l].find(a);
     if (pos == _alleleFreq_global[age_pos][l].end()) return 0; // allele not present
     return pos->second;
 }
@@ -875,10 +875,10 @@ double StatHandler<SH>::get_locus_freq_local(unsigned int i, const age_t & AGE)
     unsigned int sampleID = get_vPatch(p)->get_sampleID();
     if(sampleID==SAMPLED) return my_NAN;
     
-    map<unsigned char, map<unsigned char, double> >::iterator pos = _locusFreq_local[age_pos][sampleID][l].find(a1);
+    map<ALLELE, map<ALLELE, double> >::iterator pos = _locusFreq_local[age_pos][sampleID][l].find(a1);
     if (pos == _locusFreq_local[age_pos][sampleID][l].end()) return 0; // allele not present
     
-    map<unsigned char, double>::iterator pos2 = pos->second.find(a2);
+    map<ALLELE, double>::iterator pos2 = pos->second.find(a2);
     if (pos2 == pos->second.end()) return 0; // allele not present
     return pos2->second;
 }
@@ -899,10 +899,10 @@ double StatHandler<SH>::get_locus_freq_global(unsigned int i, const age_t & AGE)
     fromID(i, l, a1, a2, _nb_locus, _nb_allele_max, _nb_allele_max);
     assert(a1<=a2);
     
-    map<unsigned char, map<unsigned char, double> >::iterator pos = _locusFreq_global[age_pos][l].find(a1);
+    map<ALLELE, map<ALLELE, double> >::iterator pos = _locusFreq_global[age_pos][l].find(a1);
     if (pos == _locusFreq_global[age_pos][l].end()) return 0; // allele not present
     
-    map<unsigned char, double>::iterator pos2 = pos->second.find(a2);
+    map<ALLELE, double>::iterator pos2 = pos->second.find(a2);
     if (pos2 == pos->second.end()) return 0; // allele not present
     return pos2->second;
 }
@@ -924,14 +924,14 @@ StatHandler<SH>::set_alleleFreq(const age_idx & AGE)
     
     unsigned int l, p;
     
-    if (!_alleleFreq_global) { // first time             <map<unsigned char, double>*>
-        ARRAY::create_1D<map<unsigned char, double> *>(_alleleFreq_global, NB_AGE_CLASSES, NULL); // [age][locus][allele]
-        ARRAY::create_1D<map<unsigned char, double> **>(_alleleFreq_local, NB_AGE_CLASSES, NULL); // [age][sampleID][locus][allele]
+    if (!_alleleFreq_global) { // first time             <map<ALLELE, double>*>
+        ARRAY::create_1D<map<ALLELE, double> *>(_alleleFreq_global, NB_AGE_CLASSES, NULL); // [age][locus][allele]
+        ARRAY::create_1D<map<ALLELE, double> **>(_alleleFreq_local, NB_AGE_CLASSES, NULL); // [age][sampleID][locus][allele]
     }
     
     if (!_alleleFreq_global[AGE]) { // first time this age class
-        ARRAY::create_1D<map<unsigned char, double> >(_alleleFreq_global[AGE], _nb_locus); // [age][locus][allele]
-        ARRAY::create_2D<map<unsigned char, double> >(_alleleFreq_local[AGE],get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
+        ARRAY::create_1D<map<ALLELE, double> >(_alleleFreq_global[AGE], _nb_locus); // [age][locus][allele]
+        ARRAY::create_2D<map<ALLELE, double> >(_alleleFreq_local[AGE],get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
     }
     else { // reset
         // global freqs
@@ -941,8 +941,8 @@ StatHandler<SH>::set_alleleFreq(const age_idx & AGE)
         
         // local freqs
         if (get_current_nbSamplePatch() != get_last_nbSamplePatch()) { // number of sampled and populated patches change over time
-            ARRAY::delete_2D<map<unsigned char, double> >(_alleleFreq_local[AGE],get_last_nbSamplePatch());
-            ARRAY::create_2D<map<unsigned char, double> >(_alleleFreq_local[AGE],get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
+            ARRAY::delete_2D<map<ALLELE, double> >(_alleleFreq_local[AGE],get_last_nbSamplePatch());
+            ARRAY::create_2D<map<ALLELE, double> >(_alleleFreq_local[AGE],get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
         }
         else { // the number of sampled patches has not changed
             for (p = 0; p < get_current_nbSamplePatch(); ++p) {
@@ -965,7 +965,7 @@ StatHandler<SH>::set_alleleFreq(const age_idx & AGE)
     }
     
     // compute global allele frequencies
-    map<unsigned char, double>::iterator curAllele, endAllele;
+    map<ALLELE, double>::iterator curAllele, endAllele;
     for (l = 0; l < _nb_locus; ++l) {
         curAllele = _alleleFreq_global[AGE][l].begin();
         endAllele = _alleleFreq_global[AGE][l].end();
@@ -994,14 +994,14 @@ StatHandler<SH>::set_locusFreq(const age_idx & AGE)
     
     unsigned int l, p;
     
-    if (!_locusFreq_global) { // first time             <map<unsigned char, double>*>
-        ARRAY::create_1D<map<unsigned char, map<unsigned char, double> >*>(_locusFreq_global, NB_AGE_CLASSES, NULL); // [age][locus][allele]
-        ARRAY::create_1D<map<unsigned char, map<unsigned char, double> >**>(_locusFreq_local, NB_AGE_CLASSES, NULL); // [age][sampleID][locus][allele]
+    if (!_locusFreq_global) { // first time             <map<ALLELE, double>*>
+        ARRAY::create_1D<map<ALLELE, map<ALLELE, double> >*>(_locusFreq_global, NB_AGE_CLASSES, NULL); // [age][locus][allele]
+        ARRAY::create_1D<map<ALLELE, map<ALLELE, double> >**>(_locusFreq_local, NB_AGE_CLASSES, NULL); // [age][sampleID][locus][allele]
     }
     
     if (!_locusFreq_global[AGE]) { // first time this age class
-        ARRAY::create_1D<map<unsigned char, map<unsigned char, double> > >(_locusFreq_global[AGE], _nb_locus); // [age][locus][allele]
-        ARRAY::create_2D<map<unsigned char, map<unsigned char, double> > >(_locusFreq_local[AGE],	get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
+        ARRAY::create_1D<map<ALLELE, map<ALLELE, double> > >(_locusFreq_global[AGE], _nb_locus); // [age][locus][allele]
+        ARRAY::create_2D<map<ALLELE, map<ALLELE, double> > >(_locusFreq_local[AGE],	get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
     }
     else { // reset
         // global freqs
@@ -1011,8 +1011,8 @@ StatHandler<SH>::set_locusFreq(const age_idx & AGE)
         
         // local freqs
         if (get_current_nbSamplePatch() != get_last_nbSamplePatch()) { // number of sampled and populated patches change over time
-            ARRAY::delete_2D<map<unsigned char, map<unsigned char, double> > >(_locusFreq_local[AGE],get_last_nbSamplePatch());
-            ARRAY::create_2D<map<unsigned char, map<unsigned char, double> > >(_locusFreq_local[AGE],get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
+            ARRAY::delete_2D<map<ALLELE, map<ALLELE, double> > >(_locusFreq_local[AGE],get_last_nbSamplePatch());
+            ARRAY::create_2D<map<ALLELE, map<ALLELE, double> > >(_locusFreq_local[AGE],get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
         }
         else { // the number of sampled patches has not changed
             for (p = 0; p < get_current_nbSamplePatch(); ++p) {
@@ -1033,8 +1033,8 @@ StatHandler<SH>::set_locusFreq(const age_idx & AGE)
     }
     
     // compute global locus genotype frequencies
-    map<unsigned char, map<unsigned char, double> >::iterator curAllele1, endAllele1;
-    map<unsigned char, double>::iterator curAllele2, endAllele2;
+    map<ALLELE, map<ALLELE, double> >::iterator curAllele1, endAllele1;
+    map<ALLELE, double>::iterator curAllele2, endAllele2;
     for (l = 0; l < _nb_locus; ++l) {
         curAllele1 = _locusFreq_global[AGE][l].begin();
         endAllele1 = _locusFreq_global[AGE][l].end();
@@ -1060,11 +1060,11 @@ StatHandler<SH>::set_locusFreq(const age_idx & AGE)
 template<class SH> unsigned int
 StatHandler<SH>::set_alleleFreq_ofPatch(TPatch * curPatch,
                                         const age_idx & AGE,
-                                        map<unsigned char, double>*&freqs,
-                                        map<unsigned char, double>*&global_freqs)
+                                        map<ALLELE, double>*&freqs,
+                                        map<ALLELE, double>*&global_freqs)
 {
     unsigned int l, p, nbAllele;
-    unsigned char** genes;
+    ALLELE** genes;
     
     // if patch is empty all frequencies are zero
     vector<TIndividual*>&curFem = curPatch->get_sampled_inds(FEM, AGE);
@@ -1073,12 +1073,12 @@ StatHandler<SH>::set_alleleFreq_ofPatch(TPatch * curPatch,
     if (!nbAllele) return 0; // patch is empty
     
     // get female allele counts
-    map<unsigned char, double>::iterator poss;
+    map<ALLELE, double>::iterator poss;
     vector<TIndividual*>::iterator curInd, endInd;
     
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd;
          ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             for (p = 0; p < ploidy; ++p) {
                 ++freqs[l][genes[l][p]]; // local freqs (it is initialized with zero)
@@ -1089,7 +1089,7 @@ StatHandler<SH>::set_alleleFreq_ofPatch(TPatch * curPatch,
     // get male allele counts
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd;
          ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)
         ->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             for (p = 0; p < ploidy; ++p) {
@@ -1099,8 +1099,8 @@ StatHandler<SH>::set_alleleFreq_ofPatch(TPatch * curPatch,
     }
     
     // compute local allele frequencies
-    map<unsigned char, double>::iterator pos, end;
-    map<unsigned char, double>* cur_globalFreqs;
+    map<ALLELE, double>::iterator pos, end;
+    map<ALLELE, double>* cur_globalFreqs;
     for (l = 0; l < _nb_locus; ++l) {
         cur_globalFreqs = &(global_freqs[l]);
         for (pos = freqs[l].begin(), end = freqs[l].end(); pos != end; ++pos) {
@@ -1122,8 +1122,8 @@ StatHandler<SH>::set_alleleFreq_ofPatch(TPatch * curPatch,
 template<class SH> unsigned int
 StatHandler<SH>::set_locusFreq_ofPatch(TPatch * curPatch,
                                        const age_idx & AGE,
-                                       map<unsigned char, map<unsigned char, double> >*&freqs,
-                                       map<unsigned char, map<unsigned char, double> >*&global_freqs)
+                                       map<ALLELE, map<ALLELE, double> >*&freqs,
+                                       map<ALLELE, map<ALLELE, double> >*&global_freqs)
 {
     unsigned int l, nbInds;
     
@@ -1134,14 +1134,14 @@ StatHandler<SH>::set_locusFreq_ofPatch(TPatch * curPatch,
     if (!nbInds) return 0; // patch is empty
     
     // get female allele counts
-    map<unsigned char, double>::iterator poss;
+    map<ALLELE, double>::iterator poss;
     vector<TIndividual*>::iterator curInd, endInd;
-    unsigned char a1, a2;
-    unsigned char** genes;
+    ALLELE a1, a2;
+    ALLELE** genes;
     
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd;
          ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             a1 = genes[l][0];
             a2 = genes[l][1];
@@ -1153,7 +1153,7 @@ StatHandler<SH>::set_locusFreq_ofPatch(TPatch * curPatch,
     // get male allele counts
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd;
          ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)
         ->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             a1 = genes[l][0];
@@ -1164,10 +1164,10 @@ StatHandler<SH>::set_locusFreq_ofPatch(TPatch * curPatch,
     }
     
     // compute local locus gentoype frequencies
-    map<unsigned char, map<unsigned char, double> >::iterator pos1, end1;
-    map<unsigned char, double>::iterator pos2, end2;
-    map<unsigned char, map<unsigned char, double> >* cur_globalFreqs;
-    map<unsigned char, double>* cur_globalFreqs2;
+    map<ALLELE, map<ALLELE, double> >::iterator pos1, end1;
+    map<ALLELE, double>::iterator pos2, end2;
+    map<ALLELE, map<ALLELE, double> >* cur_globalFreqs;
+    map<ALLELE, double>* cur_globalFreqs2;
     for (l = 0; l < _nb_locus; ++l) {
         cur_globalFreqs = &(global_freqs[l]);
         for (pos1 = freqs[l].begin(), end1 = freqs[l].end(); pos1 != end1; ++pos1) {
@@ -1193,11 +1193,11 @@ StatHandler<SH>::set_locusFreq_ofPatch(TPatch * curPatch,
 template<class SH> unsigned int
 StatHandler<SH>::set_alleleFreq_ofPatch_allInds(TPatch * curPatch,
                                                 const age_idx & AGE,
-                                                map<unsigned char, double>*&freqs,
-                                                map<unsigned char, double>*&global_freqs)
+                                                map<ALLELE, double>*&freqs,
+                                                map<ALLELE, double>*&global_freqs)
 {
     unsigned int l, p, nbAllele;
-    unsigned char** genes;
+    ALLELE** genes;
     
     // if patch is empty all frequencies are zero
     vector<TIndividual*>&curFem = curPatch->get_all_inds(FEM, AGE);
@@ -1206,12 +1206,12 @@ StatHandler<SH>::set_alleleFreq_ofPatch_allInds(TPatch * curPatch,
     if (!nbAllele) return 0; // patch is empty
     
     // get female allele counts
-    map<unsigned char, double>::iterator poss;
+    map<ALLELE, double>::iterator poss;
     vector<TIndividual*>::iterator curInd, endInd;
     
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd;
          ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             for (p = 0; p < ploidy; ++p) {
                 ++freqs[l][genes[l][p]]; // local freqs (it is initialized with zero)
@@ -1222,7 +1222,7 @@ StatHandler<SH>::set_alleleFreq_ofPatch_allInds(TPatch * curPatch,
     // get male allele counts
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd;
          ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)
         ->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             for (p = 0; p < ploidy; ++p) {
@@ -1232,8 +1232,8 @@ StatHandler<SH>::set_alleleFreq_ofPatch_allInds(TPatch * curPatch,
     }
     
     // compute local allele frequencies
-    map<unsigned char, double>::iterator pos, end;
-    map<unsigned char, double>* cur_globalFreqs;
+    map<ALLELE, double>::iterator pos, end;
+    map<ALLELE, double>* cur_globalFreqs;
     for (l = 0; l < _nb_locus; ++l) {
         cur_globalFreqs = &(global_freqs[l]);
         for (pos = freqs[l].begin(), end = freqs[l].end(); pos != end; ++pos) {
@@ -1256,11 +1256,11 @@ template<class SH> unsigned int
 StatHandler<SH>::get_locusGenotypeCounts_ofPatch_andSex(TPatch * curPatch,
                                                         const age_idx & AGE, sex_t SEX,
                                                         unsigned int traitID,
-                                                        map<unsigned char, map<unsigned char, double> >*& freqs)
+                                                        map<ALLELE, map<ALLELE, double> >*& freqs)
 {
     unsigned int l;
-    unsigned char** genes;
-    unsigned char a1, a2;
+    ALLELE** genes;
+    ALLELE a1, a2;
     assert(freqs);
     
     // if patch is empty all frequencies are zero
@@ -1270,7 +1270,7 @@ StatHandler<SH>::get_locusGenotypeCounts_ofPatch_andSex(TPatch * curPatch,
     // get locus genotype counts
     vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(traitID)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(traitID)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             a1 = genes[l][0];
             a2 = genes[l][1];
@@ -1292,7 +1292,7 @@ StatHandler<SH>::get_locusGenotypeCounts_ofPatch_andSex(TPatch * curPatch,
 template<class SH> unsigned int
 StatHandler<SH>::get_locusGenotypeCounts_ofPatch(TPatch * curPatch, const age_idx & AGE,
                                                  unsigned int traitID,
-                                                 map<unsigned char, map<unsigned char, double> >*& freqs)
+                                                 map<ALLELE, map<ALLELE, double> >*& freqs)
 {
     assert(freqs);
     
@@ -1309,7 +1309,7 @@ StatHandler<SH>::get_locusGenotypeCounts_ofPatch(TPatch * curPatch, const age_id
  */
 template<class SH> unsigned int
 StatHandler<SH>::get_locusGenotypeFreqs_ofPatch(TPatch * curPatch, const age_idx & AGE,
-                                                map<unsigned char, map<unsigned char, double> >*& freqs)
+                                                map<ALLELE, map<ALLELE, double> >*& freqs)
 {
     get_locusGenotypeFreqs_ofPatch(curPatch, AGE, _SHLinkedTraitIndex, freqs);
 }
@@ -1323,10 +1323,10 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch(TPatch * curPatch, const age_idx
 template<class SH> unsigned int
 StatHandler<SH>::get_locusGenotypeFreqs_ofPatch(TPatch * curPatch, const age_idx & AGE,
                                                 unsigned int traitID,
-                                                map<unsigned char, map<unsigned char, double> >*& freqs)
+                                                map<ALLELE, map<ALLELE, double> >*& freqs)
 {
     unsigned int l;
-    if(!freqs) freqs = ARRAY::new_1D<map<unsigned char, map<unsigned char, double> > >(_nb_locus);
+    if(!freqs) freqs = ARRAY::new_1D<map<ALLELE, map<ALLELE, double> > >(_nb_locus);
     else{
         for (l = 0; l < _nb_locus; ++l) {
             freqs[l].clear();
@@ -1336,8 +1336,8 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch(TPatch * curPatch, const age_idx
     unsigned int nbInd = get_locusGenotypeCounts_ofPatch(curPatch, AGE, traitID, freqs);
     
     // compute local frequencies
-    map<unsigned char, map<unsigned char, double> >::iterator pos1, end1;
-    map<unsigned char, double>::iterator pos2, end2;
+    map<ALLELE, map<ALLELE, double> >::iterator pos1, end1;
+    map<ALLELE, double>::iterator pos2, end2;
     for (l = 0; l < _nb_locus; ++l) {
         for (pos1 = freqs[l].begin(), end1 = freqs[l].end(); pos1 != end1; ++pos1) {
             for (pos2 = pos1->second.begin(), end2 = pos1->second.end(); pos2 != end2; ++pos2) {
@@ -1358,10 +1358,10 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch(TPatch * curPatch, const age_idx
 template<class SH> unsigned int
 StatHandler<SH>::get_locusGenotypeFreqs_ofPatch_allInds(TPatch * curPatch, const age_idx & AGE,
                                                         unsigned int traitID,
-                                                        map<unsigned char, map<unsigned char, double> >*& freqs)
+                                                        map<ALLELE, map<ALLELE, double> >*& freqs)
 {
     unsigned int l;
-    if(!freqs) freqs = ARRAY::new_1D<map<unsigned char, map<unsigned char, double> > >(_nb_locus);
+    if(!freqs) freqs = ARRAY::new_1D<map<ALLELE, map<ALLELE, double> > >(_nb_locus);
     else{
         for (l = 0; l < _nb_locus; ++l) {
             freqs[l].clear();
@@ -1376,10 +1376,10 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch_allInds(TPatch * curPatch, const
     
     // get locus genotype counts FEM
     vector<TIndividual*>::iterator curInd, endInd;
-    unsigned char** genes;
-    unsigned char a1, a2;
+    ALLELE** genes;
+    ALLELE a1, a2;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(traitID)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(traitID)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             a1 = genes[l][0];
             a2 = genes[l][1];
@@ -1390,7 +1390,7 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch_allInds(TPatch * curPatch, const
     
     // get locus genotype counts MAL
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd; ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(traitID)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(traitID)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             a1 = genes[l][0];
             a2 = genes[l][1];
@@ -1400,8 +1400,8 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch_allInds(TPatch * curPatch, const
     }
     
     // compute local genotype frequencies
-    map<unsigned char, map<unsigned char, double> >::iterator pos1, end1;
-    map<unsigned char, double>::iterator pos2, end2;
+    map<ALLELE, map<ALLELE, double> >::iterator pos1, end1;
+    map<ALLELE, double>::iterator pos2, end2;
     for (l = 0; l < _nb_locus; ++l) {
         for (pos1 = freqs[l].begin(), end1 = freqs[l].end(); pos1 != end1; ++pos1) {
             for (pos2 = pos1->second.begin(), end2 = pos1->second.end(); pos2 != end2; ++pos2) {
@@ -1418,13 +1418,13 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch_allInds(TPatch * curPatch, const
 /** computation of the global allele frequencies of the given patches using the local allele frerqs
  */
 template<class SH> void
-StatHandler<SH>::set_alleleFreq_global(map<unsigned char, double> **localFreqs,
-                                       map<unsigned char, double> *globalFreqs,
+StatHandler<SH>::set_alleleFreq_global(map<ALLELE, double> **localFreqs,
+                                       map<ALLELE, double> *globalFreqs,
                                        unsigned int*popSizes, const unsigned int&tot_popSize,
                                        const unsigned int&nbPatch)
 {
     // get the global allele frequencies for each locus
-    map<unsigned char, double>::iterator pos, end;
+    map<ALLELE, double>::iterator pos, end;
     for (unsigned int l = 0; l < _nb_locus; ++l) { // for each locus
         set_alleleFreq_global_ofLocus(l, localFreqs, &globalFreqs[l], popSizes, tot_popSize, nbPatch);
     }
@@ -1437,8 +1437,8 @@ StatHandler<SH>::set_alleleFreq_global(map<unsigned char, double> **localFreqs,
  * popSizes has to be the sample size!!!
  */
 template<class SH> void
-StatHandler<SH>::set_alleleFreq_global_ofLocus(const unsigned int&l, map<unsigned char, double> **localFreqs,
-                                               map<unsigned char, double> *globalFreqs, unsigned int*popSizes,
+StatHandler<SH>::set_alleleFreq_global_ofLocus(const unsigned int&l, map<ALLELE, double> **localFreqs,
+                                               map<ALLELE, double> *globalFreqs, unsigned int*popSizes,
                                                const unsigned int&tot_popSize, const unsigned int&nbPatch)
 {
     assert(tot_popSize == ARRAY::sum(popSizes, nbPatch));
@@ -1446,7 +1446,7 @@ StatHandler<SH>::set_alleleFreq_global_ofLocus(const unsigned int&l, map<unsigne
     globalFreqs->clear(); // clear the global freqs of this locus
     
     // get the global allele count
-    map<unsigned char, double>::iterator pos, end;
+    map<ALLELE, double>::iterator pos, end;
     for (unsigned int p = 0; p < nbPatch; ++p) { // for each patch
         for (pos = localFreqs[p][l].begin(), end = localFreqs[p][l].end();
              pos != end; ++pos) { // for each present allele
@@ -1470,18 +1470,18 @@ StatHandler<SH>::set_alleleFreq_global_ofLocus(const unsigned int&l, map<unsigne
  * the returned map has to be deleted!
  * returned map: [allele1][allele2]
  */
-template<class SH>map<unsigned char, map<unsigned char,double> > *
+template<class SH>map<ALLELE, map<ALLELE,double> > *
 StatHandler<SH>::get_genotypeFreq(const age_idx & AGE, TPatch* curPop, const unsigned int&l1, const unsigned int&l2)
 {
-    map<unsigned char, map<unsigned char, double> > *freqs = new map<unsigned char, map<unsigned char, double> >;
+    map<ALLELE, map<ALLELE, double> > *freqs = new map<ALLELE, map<ALLELE, double> >;
     unsigned int a;
-    unsigned char ** genes;
+    ALLELE ** genes;
     vector<TIndividual*>::iterator curInd, endInd;
     
     // females
     vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (a = 0; a < ploidy; ++a) {
             ++(*freqs)[genes[l1][a]][genes[l2][a]]; // it is initialized with zero
         }
@@ -1490,7 +1490,7 @@ StatHandler<SH>::get_genotypeFreq(const age_idx & AGE, TPatch* curPop, const uns
     // males
     vector<TIndividual*>&curMal = curPop->get_sampled_inds(MAL, AGE);
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd; ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (a = 0; a < ploidy; ++a) {
             ++(*freqs)[genes[l1][a]][genes[l2][a]]; // it is initialized with zero
         }
@@ -1498,8 +1498,8 @@ StatHandler<SH>::get_genotypeFreq(const age_idx & AGE, TPatch* curPop, const uns
     
     // compute genotype frequencies
     unsigned int totSize = 2*((unsigned int)curFem.size()+(unsigned int)curMal.size()); // from inds to number of alleles
-    map<unsigned char, map<unsigned char, double> >::iterator pos1, end1;
-    map<unsigned char, double>::iterator pos2, end2;
+    map<ALLELE, map<ALLELE, double> >::iterator pos1, end1;
+    map<ALLELE, double>::iterator pos2, end2;
     for (pos1 = freqs->begin(), end1 = freqs->end(); pos1 != end1; ++pos1) {
         for (pos2 = pos1->second.begin(), end2 = pos1->second.end(); pos2 != end2; ++pos2) {
             pos2->second /= totSize;
@@ -1763,8 +1763,8 @@ template<class SH>void StatHandler<SH>::setFstat_Beaumont_Nichols_perLocus
     
     unsigned int l, size1, nbPatch = 0;
     double x0, x2, yy;
-    map<unsigned char, double>::iterator pos1, end1, pos2, end2;
-    map<unsigned char, double> *curAllele1, *curAllele2;
+    map<ALLELE, double>::iterator pos1, end1, pos2, end2;
+    map<ALLELE, double> *curAllele1, *curAllele2;
     vector<TPatch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
     
     for (l = 0; l < _nb_locus; ++l) { // for each locus
@@ -1954,7 +1954,7 @@ unsigned int StatHandler<SH>::getNbFixedLocus_ofPatch(TPatch * p, const age_idx 
     if(p->get_sampleID()==SAMPLED) return my_NAN;
     set_alleleFreq(AGE);
     
-    map<unsigned char, double> *curPatchFreqs = _alleleFreq_local[AGE][p->get_sampleID()];
+    map<ALLELE, double> *curPatchFreqs = _alleleFreq_local[AGE][p->get_sampleID()];
     if (curPatchFreqs[0].empty()) return my_NAN; // if pop is empty
     
     unsigned int l, sum = 0;
@@ -2191,7 +2191,7 @@ template<class SH>
 double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cur_patch, double*array)
 {
     unsigned int l;
-    unsigned char** genes;
+    ALLELE** genes;
     
     vector<TIndividual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
     vector<TIndividual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
@@ -2211,7 +2211,7 @@ double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cu
     // count heterozygote females
     vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             array[l] += (genes[l][0] != genes[l][1]);
         }
@@ -2219,7 +2219,7 @@ double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cu
     
     // count heterozygote males
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd;++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             array[l] += (genes[l][0] != genes[l][1]);
         }
@@ -2241,7 +2241,7 @@ double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cu
 template<class SH> double
 StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cur_patch, const unsigned int&l)
 {
-    unsigned char** genes;
+    ALLELE** genes;
     
     vector<TIndividual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
     vector<TIndividual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
@@ -2254,13 +2254,13 @@ StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cur_patch,
     // count heterozygote females
     vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         ho += (genes[l][0] != genes[l][1]);
     }
     
     // count heterozygote males
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd; ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         ho += (genes[l][0] != genes[l][1]);
     }
     
@@ -2271,15 +2271,15 @@ StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cur_patch,
 /** get observed heterozygosity of the patch for each allele separately array[locus][allele]
  * if no array is passed then the returned array has to be deleted !
  */
-template<class SH>map<unsigned char,
+template<class SH>map<ALLELE,
 double> *StatHandler<SH>::getHo_ofPatchperAllele(const age_idx & AGE, TPatch * cur_patch,
-                                                 map<unsigned char, double> *array)
+                                                 map<ALLELE, double> *array)
 {
     if (array) delete[]array;
-    array = new map<unsigned char, double>[_nb_locus];
+    array = new map<ALLELE, double>[_nb_locus];
     
     unsigned int l;
-    unsigned char** genes;
+    ALLELE** genes;
     
     vector<TIndividual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
     vector<TIndividual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
@@ -2291,7 +2291,7 @@ double> *StatHandler<SH>::getHo_ofPatchperAllele(const age_idx & AGE, TPatch * c
     // count heterozygote females
     vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             if (genes[l][0] != genes[l][1]) {
                 ++array[l][genes[l][0]]; // auto-initialization with zero
@@ -2302,7 +2302,7 @@ double> *StatHandler<SH>::getHo_ofPatchperAllele(const age_idx & AGE, TPatch * c
     
     // count heterozygote males
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd; ++curInd) {
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();
         for (l = 0; l < _nb_locus; ++l) {
             if (genes[l][0] != genes[l][1]) {
                 ++array[l][genes[l][0]]; // auto-initialization with zero
@@ -2312,7 +2312,7 @@ double> *StatHandler<SH>::getHo_ofPatchperAllele(const age_idx & AGE, TPatch * c
     }
     
     // compute the mean heterozygosity for each locus
-    map<unsigned char, double>::iterator pos, end;
+    map<ALLELE, double>::iterator pos, end;
     for (l = 0; l < _nb_locus; ++l) { // for each locus
         for (pos = array[l].begin(), end = array[l].end(); pos != end; ++pos) {
             // for each allele
@@ -2420,7 +2420,7 @@ StatHandler<SH>::getHs_ofPatch_andLocus(const age_idx & AGE, TPatch * p, const u
     if(p->get_sampleID()==SAMPLED) return my_NAN;
     
     double hs = 1;
-    map<unsigned char, double>::iterator pos, end;
+    map<ALLELE, double>::iterator pos, end;
     pos = _alleleFreq_local[AGE][p->get_sampleID()][l].begin();
     end = _alleleFreq_local[AGE][p->get_sampleID()][l].end();
     for (; pos != end; ++pos) {
@@ -2484,7 +2484,7 @@ StatHandler<SH>::getHt_ofLocus(const age_idx & AGE,	const unsigned int&l)
     if (!set_alleleFreq(AGE)) return my_NAN;
     
     double ht = 1;
-    map<unsigned char, double>::iterator pos, end;
+    map<ALLELE, double>::iterator pos, end;
     pos = _alleleFreq_global[AGE][l].begin();
     end = _alleleFreq_global[AGE][l].end();
     for (; pos != end; ++pos) {
@@ -2513,8 +2513,8 @@ double StatHandler<SH>::getHt_ofLocus(const age_idx & AGE,const unsigned int&l, 
     unsigned int tot_size = size[0] + size[1];
     
     // compute the global allele frequencies for the two patches
-    map<unsigned char, double>allFreqGlobal;
-    map<unsigned char, double> *allFreqLocal[2];
+    map<ALLELE, double>allFreqGlobal;
+    map<ALLELE, double> *allFreqLocal[2];
     
     allFreqLocal[0] = _alleleFreq_local[AGE][p1->get_sampleID()];
     allFreqLocal[1] = _alleleFreq_local[AGE][p2->get_sampleID()];
@@ -2522,7 +2522,7 @@ double StatHandler<SH>::getHt_ofLocus(const age_idx & AGE,const unsigned int&l, 
     
     // compute the Ht
     double ht = 1;
-    map<unsigned char, double>::iterator pos, end;
+    map<ALLELE, double>::iterator pos, end;
     for (pos = allFreqGlobal.begin(), end = allFreqGlobal.end(); pos != end;
          ++pos) {
         ht -= pos->second * pos->second;
@@ -2573,7 +2573,7 @@ StatHandler<SH>::setFstat_Weir_Cockerham_perLocus(const age_idx & AGE)
     set_alleleFreq(AGE);
     
     unsigned int* pop_sizes = new unsigned int[get_current_nbSamplePatch()];
-    map<unsigned char, double> **ho_patch_allele = new map<unsigned char,
+    map<ALLELE, double> **ho_patch_allele = new map<ALLELE,
     double> *[get_current_nbSamplePatch()]; // ho_patch_allele[p][l][a]
     unsigned int l, tot_size = 0, cur_size, p, nbFullPatch = 0;
     double a2, b2, w2, tot_square_size = 0, nc;
@@ -2649,12 +2649,12 @@ StatHandler<SH>::setFstat_Weir_Cockerham_perPatchPair(const age_idx & AGE)
     else ARRAY::reset_2D(_fst_matrix_wc[AGE], get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
     
     unsigned int* pop_sizes = new unsigned int[get_current_nbSamplePatch()];
-    map<unsigned char, double> **ho_patch_allele = new map<unsigned char, double> *[get_current_nbSamplePatch()]; // ho_patch_allele[p][l][a]
+    map<ALLELE, double> **ho_patch_allele = new map<ALLELE, double> *[get_current_nbSamplePatch()]; // ho_patch_allele[p][l][a]
     unsigned int tot_size, l, i, j, cur_pop_sizes[2];
     double a2, b2, w2, tot_square_size, nc;
-    map<unsigned char, double> *cur_ho_patch_allele[2];
-    map<unsigned char, double> *cur_allele_freq_local[2];
-    map<unsigned char, double> *cur_allele_freq_global = new map<unsigned char, double>[_nb_locus];
+    map<ALLELE, double> *cur_ho_patch_allele[2];
+    map<ALLELE, double> *cur_allele_freq_local[2];
+    map<ALLELE, double> *cur_allele_freq_global = new map<ALLELE, double>[_nb_locus];
     
     // get pop sizes and Ho
     vector<TPatch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
@@ -2734,19 +2734,19 @@ double StatHandler<SH>::getFstat_Weir_Cockerham_perPatchPair(const age_idx & AGE
     unsigned int tot_square_size = size[0] * size[0] + size[1] * size[1];
     
     // get Ho
-    map<unsigned char, double> *ho[2];
+    map<ALLELE, double> *ho[2];
     
     ho[0] = getHo_ofPatchperAllele(AGE, pop1);
     ho[1] = getHo_ofPatchperAllele(AGE, pop2);
     
     // allele freqs
-    map<unsigned char, double> *allFreqLocal[2];
+    map<ALLELE, double> *allFreqLocal[2];
     
     allFreqLocal[0] = _alleleFreq_local[AGE][pop1->get_sampleID()];
     allFreqLocal[1] = _alleleFreq_local[AGE][pop2->get_sampleID()];
     
     // compute the global allele frequencies
-    map<unsigned char, double> *allFreqGlobal = new map<unsigned char,
+    map<ALLELE, double> *allFreqGlobal = new map<ALLELE,
     double>[_nb_locus];
     set_alleleFreq_global(allFreqLocal, allFreqGlobal, size, tot_size, nbPop);
     
@@ -2798,19 +2798,19 @@ double StatHandler<SH>::getFstat_Weir_Cockerham_perPatchPair_andLocus(const age_
     unsigned int tot_square_size = size[0] * size[0] + size[1] * size[1];
     
     // get Ho
-    map<unsigned char, double> *ho[2];
+    map<ALLELE, double> *ho[2];
     
     ho[0] = getHo_ofPatchperAllele(AGE, pop1);
     ho[1] = getHo_ofPatchperAllele(AGE, pop2);
     
     // allele freqs
-    map<unsigned char, double> *allFreqLocal[2];
+    map<ALLELE, double> *allFreqLocal[2];
     
     allFreqLocal[0] = _alleleFreq_local[AGE][pop1->get_sampleID()];
     allFreqLocal[1] = _alleleFreq_local[AGE][pop2->get_sampleID()];
     
     // compute the global allele frequencies
-    map<unsigned char, double> *allFreqGlobal = new map<unsigned char,double>[_nb_locus];
+    map<ALLELE, double> *allFreqGlobal = new map<ALLELE,double>[_nb_locus];
     set_alleleFreq_global(allFreqLocal, allFreqGlobal, size, tot_size, nbPop);
     
     double nc = (tot_size - (tot_square_size / tot_size)) / (nbPop - 1);
@@ -2835,12 +2835,12 @@ double StatHandler<SH>::getFstat_Weir_Cockerham_perPatchPair_andLocus(const age_
 /** computes the global F-statistics following Weir and Cockerham (1984) for the given patches */
 template<class SH>
 void StatHandler<SH>::setFstat_Weir_Cockerham(const age_idx & AGE, vector<TPatch*>&aPatch,
-                                              map<unsigned char, double> **alleleFreqs,
-                                              map<unsigned char, double> *alleleFreqsGlobal,
+                                              map<ALLELE, double> **alleleFreqs,
+                                              map<ALLELE, double> *alleleFreqsGlobal,
                                               double&fst, double&fis, double&fit)
 {
     unsigned int* pop_sizes = new unsigned int[get_current_nbSamplePatch()];
-    map<unsigned char, double> **ho_patch_allele = new map<unsigned char, double> *[get_current_nbSamplePatch()]; // ho_patch_allele[p][l][a]
+    map<ALLELE, double> **ho_patch_allele = new map<ALLELE, double> *[get_current_nbSamplePatch()]; // ho_patch_allele[p][l][a]
     unsigned int tot_size = 0, cur_size, p, l, nbFullPatch = 0;
     double a2, b2, w2, tot_square_size = 0, nc;
     
@@ -2897,18 +2897,18 @@ template<class SH>
 void StatHandler<SH>::get_sigma_of_locus_Weir_Cockerham(double&sigma_a2, double&sigma_b2, double&sigma_w2,
                                                         const unsigned int&nbPatch,
                                                         const unsigned int&nbFullPatch,
-                                                        map<unsigned char, double> **alleleFreqs,
-                                                        map<unsigned char,double> *alleleFreqsGlobal,
+                                                        map<ALLELE, double> **alleleFreqs,
+                                                        map<ALLELE,double> *alleleFreqsGlobal,
                                                         const unsigned int&l,
                                                         const unsigned int&tot_size,
                                                         unsigned int*pop_sizes,
-                                                        map<unsigned char, double> **ho_patch_allele,
+                                                        map<ALLELE, double> **ho_patch_allele,
                                                         const double&nc)
 {
     double p_freq, sum1, sum2, nom, bloc, val;
     unsigned int p;
     
-    map<unsigned char, double>::iterator pos_global, end_global, pos_local,
+    map<ALLELE, double>::iterator pos_global, end_global, pos_local,
     end_local;
     pos_global = alleleFreqsGlobal[l].begin();
     end_global = alleleFreqsGlobal[l].end();
@@ -2969,9 +2969,9 @@ double StatHandler<SH>::getChordDist2_perPatchPair(const age_idx& AGE, TPatch* p
     assert(pop2->sampleSize(AGE));
     
     // allele freqs
-    map<unsigned char, double> *allFreqs1 = _alleleFreq_local[AGE][sampleID1];
-    map<unsigned char, double> *allFreqs2 = _alleleFreq_local[AGE][sampleID2];
-    map<unsigned char, double>::iterator curAll1, curAll2, endAll1, endAll2;
+    map<ALLELE, double> *allFreqs1 = _alleleFreq_local[AGE][sampleID1];
+    map<ALLELE, double> *allFreqs2 = _alleleFreq_local[AGE][sampleID2];
+    map<ALLELE, double>::iterator curAll1, curAll2, endAll1, endAll2;
     
     unsigned int l, nbAll=0;
     double product=0;
@@ -3021,9 +3021,9 @@ double StatHandler<SH>::getChordDist_perPatchPair(const age_idx& AGE, TPatch* po
     assert(pop2->sampleSize(AGE));
     
     // allele freqs
-    map<unsigned char, double> *allFreqs1 = _alleleFreq_local[AGE][sampleID1];
-    map<unsigned char, double> *allFreqs2 = _alleleFreq_local[AGE][sampleID2];
-    map<unsigned char, double>::iterator curAll1, curAll2, endAll1, endAll2;
+    map<ALLELE, double> *allFreqs1 = _alleleFreq_local[AGE][sampleID1];
+    map<ALLELE, double> *allFreqs2 = _alleleFreq_local[AGE][sampleID2];
+    map<ALLELE, double>::iterator curAll1, curAll2, endAll1, endAll2;
     
     unsigned int l;
     double sum_all, sum_loc=0;
@@ -3081,8 +3081,8 @@ double StatHandler<SH>::getChordDist(const age_t& AGE)
 // ----------------------------------------------------------------------------------------
 // coancestry
 // ----------------------------------------------------------------------------------------
-template<class SH>double StatHandler<SH>::Coancestry(unsigned char**seq1,
-                                                     unsigned char**seq2) {
+template<class SH>double StatHandler<SH>::Coancestry(ALLELE**seq1,
+                                                     ALLELE**seq2) {
     unsigned int k, p = 0;
     for (k = 0; k < _nb_locus; ++k) {
         p += !(seq1[k][0] ^ seq2[k][0]) + !(seq1[k][0] ^ seq2[k][1]) + !
@@ -3132,18 +3132,18 @@ StatHandler<SH>::setCoaMatrixTheta(const age_idx & AGE)
             // fem-fem coa
             for (curInd1 = curFem.begin(), endInd = curFem.end(); curInd1 != endInd; ++curInd1) {
                 for (curInd2 = curInd1 + 1; curInd2 != endInd; ++curInd2) {
-                    coa += Coancestry((unsigned char**)(*curInd1)->getTrait
+                    coa += Coancestry((ALLELE**)(*curInd1)->getTrait
                                       (_SHLinkedTraitIndex)->get_sequence(),
-                                      (unsigned char**)(*curInd2)->getTrait(_SHLinkedTraitIndex)->get_sequence());
+                                      (ALLELE**)(*curInd2)->getTrait(_SHLinkedTraitIndex)->get_sequence());
                 }
             }
             
             // mal-mal coa
             for (curInd1 = curMal.begin(), endInd = curMal.end(); curInd1 != endInd;++curInd1) {
                 for (curInd2 = curInd1 + 1; curInd2 != endInd; ++curInd2) {
-                    coa += Coancestry((unsigned char**)(*curInd1)->getTrait
+                    coa += Coancestry((ALLELE**)(*curInd1)->getTrait
                                       (_SHLinkedTraitIndex)->get_sequence(),
-                                      (unsigned char**)(*curInd2)->getTrait(_SHLinkedTraitIndex)->get_sequence());
+                                      (ALLELE**)(*curInd2)->getTrait(_SHLinkedTraitIndex)->get_sequence());
                 }
             }
             // fem-mal coa
@@ -3257,8 +3257,8 @@ template<class SH>double StatHandler<SH>::get_coancestry(TPatch * P1,
         for (cur2 = P2->get_sampled_inds(SEX2, AGE).begin(),
              // for each individual of patch 2
              end2 = P2->get_sampled_inds(SEX2, AGE).end(); cur2 != end2; ++cur2) {
-            sum += Coancestry((unsigned char**)(*cur1)->getTrait(_SHLinkedTraitIndex)
-                              ->get_sequence(), (unsigned char**)(*cur2)->getTrait
+            sum += Coancestry((ALLELE**)(*cur1)->getTrait(_SHLinkedTraitIndex)
+                              ->get_sequence(), (ALLELE**)(*cur2)->getTrait
                               (_SHLinkedTraitIndex)->get_sequence());
         }
     }
@@ -3304,9 +3304,9 @@ template<class SH>void StatHandler<SH>::setSexspecific_Theta
             for (curInd1 = curFem.begin(), endInd1 = curFem.end();
                  curInd1 != endInd1; ++curInd1) {
                 for (curInd2 = curInd1 + 1; curInd2 != endInd1; ++curInd2) {
-                    mean += Coancestry((unsigned char**)(*curInd1)->getTrait
+                    mean += Coancestry((ALLELE**)(*curInd1)->getTrait
                                        (_SHLinkedTraitIndex)->get_sequence(),
-                                       (unsigned char**)(*curInd2)->getTrait(_SHLinkedTraitIndex)
+                                       (ALLELE**)(*curInd2)->getTrait(_SHLinkedTraitIndex)
                                        ->get_sequence());
                 }
             }
@@ -3319,9 +3319,9 @@ template<class SH>void StatHandler<SH>::setSexspecific_Theta
             for (curInd1 = curMal.begin(), endInd1 = curMal.end();
                  curInd1 != endInd1; ++curInd1) {
                 for (curInd2 = curInd1 + 1; curInd2 != endInd1; ++curInd2) {
-                    mean += Coancestry((unsigned char**)(*curInd1)->getTrait
+                    mean += Coancestry((ALLELE**)(*curInd1)->getTrait
                                        (_SHLinkedTraitIndex)->get_sequence(),
-                                       (unsigned char**)(*curInd2)->getTrait(_SHLinkedTraitIndex)
+                                       (ALLELE**)(*curInd2)->getTrait(_SHLinkedTraitIndex)
                                        ->get_sequence());
                 }
             }
@@ -3335,9 +3335,9 @@ template<class SH>void StatHandler<SH>::setSexspecific_Theta
                  curInd1 != endInd1; ++curInd1) {
                 for (curInd2 = curMal.begin(), endInd2 = curMal.end();
                      curInd2 != endInd2; ++curInd2) {
-                    mean += Coancestry((unsigned char**)(*curInd1)->getTrait
+                    mean += Coancestry((ALLELE**)(*curInd1)->getTrait
                                        (_SHLinkedTraitIndex)->get_sequence(),
-                                       (unsigned char**)(*curInd2)->getTrait(_SHLinkedTraitIndex)
+                                       (ALLELE**)(*curInd2)->getTrait(_SHLinkedTraitIndex)
                                        ->get_sequence());
                 }
             }
@@ -3446,8 +3446,8 @@ template<class SH>void StatHandler<SH>::setSibStats(const age_idx & AGE) {
  */
 template<class SH>void StatHandler<SH>::setSibCoa(TIndividual * I1,
                                                   TIndividual * I2, const age_idx & AGE) {
-    double coa = Coancestry((unsigned char**)I1->getTrait(_SHLinkedTraitIndex)
-                            ->get_sequence(), (unsigned char**)I2->getTrait(_SHLinkedTraitIndex)
+    double coa = Coancestry((ALLELE**)I1->getTrait(_SHLinkedTraitIndex)
+                            ->get_sequence(), (ALLELE**)I2->getTrait(_SHLinkedTraitIndex)
                             ->get_sequence());
     if (I1->getMotherID() == I2->getMotherID()) {
         if (I1->getFatherID() == I2->getFatherID()) {
@@ -3510,19 +3510,19 @@ StatHandler<SH>::getDprime_ofPatch(const age_idx & AGE, TPatch* p,
 {
     set_alleleFreq(AGE); // allele freuqencies are used
     
-    map<unsigned char, double>* freqs = _alleleFreq_local[AGE][p->get_sampleID()];
+    map<ALLELE, double>* freqs = _alleleFreq_local[AGE][p->get_sampleID()];
     if (freqs[l1].size() == 1) return my_NAN; // locus 1 is monomorph
     if (freqs[l2].size() == 1) return my_NAN; // locus 2 is monomorph
     
-    map<unsigned char, map<unsigned char, double> > *pAB = get_genotypeFreq(AGE, p, l1, l2);
-    map<unsigned char, map<unsigned char, double> > geno1;
-    map<unsigned char, double>::iterator geno, a1, a2, end1=freqs[l1].end(), end2=freqs[l2].end();
+    map<ALLELE, map<ALLELE, double> > *pAB = get_genotypeFreq(AGE, p, l1, l2);
+    map<ALLELE, map<ALLELE, double> > geno1;
+    map<ALLELE, double>::iterator geno, a1, a2, end1=freqs[l1].end(), end2=freqs[l2].end();
     
     // for each pariwise allele combination (also if the given genotype does not exist)
     double D, pA, pB, Dprime=0;
     for(a1=freqs[l1].begin(); a1!=end1; ++a1){
         pA=a1->second;
-        map<unsigned char, double>& geno1=(*pAB)[a1->first];
+        map<ALLELE, double>& geno1=(*pAB)[a1->first];
         for(a2=freqs[l2].begin(); a2!=end2; ++a2){
             pB=a2->second;
             geno = geno1.find(a2->first);
@@ -3580,19 +3580,19 @@ StatHandler<SH>::getR2_ofPatch(const age_idx & AGE, TPatch* p, const unsigned in
 {
     set_alleleFreq(AGE); // allele frequencies are used
     
-    map<unsigned char, double>* freqs = _alleleFreq_local[AGE][p->get_sampleID()];
+    map<ALLELE, double>* freqs = _alleleFreq_local[AGE][p->get_sampleID()];
     if (freqs[l1].size() == 1) return my_NAN; // locus 1 is monomorph
     if (freqs[l2].size() == 1) return my_NAN; // locus 2 is monomorph
     
-    map<unsigned char, map<unsigned char, double> > *pAB = get_genotypeFreq(AGE, p, l1, l2);
-    map<unsigned char, map<unsigned char, double> > geno1;
-    map<unsigned char, double>::iterator geno, a1, a2, end1=freqs[l1].end(), end2=freqs[l2].end();
+    map<ALLELE, map<ALLELE, double> > *pAB = get_genotypeFreq(AGE, p, l1, l2);
+    map<ALLELE, map<ALLELE, double> > geno1;
+    map<ALLELE, double>::iterator geno, a1, a2, end1=freqs[l1].end(), end2=freqs[l2].end();
     
     // for each pariwise allele combination (also if the given genotype does not exist)
     double D, pA, pB, R2=0;
     for(a1=freqs[l1].begin(); a1!=end1; ++a1){
         pA=a1->second;
-        map<unsigned char, double>& geno1=(*pAB)[a1->first];
+        map<ALLELE, double>& geno1=(*pAB)[a1->first];
         for(a2=freqs[l2].begin(); a2!=end2; ++a2){
             pB=a2->second;
             geno = geno1.find(a2->first);
@@ -3640,19 +3640,19 @@ StatHandler<SH>::getDstar_ofPatch(const age_idx & AGE, TPatch* p, const unsigned
 {
     set_alleleFreq(AGE); // allele freuqencies are used
     
-    map<unsigned char, double>* freqs = _alleleFreq_local[AGE][p->get_sampleID()];
+    map<ALLELE, double>* freqs = _alleleFreq_local[AGE][p->get_sampleID()];
     if (freqs[l1].size() == 1) return my_NAN; // locus 1 is monomorph
     if (freqs[l2].size() == 1) return my_NAN; // locus 2 is monomorph
     
-    map<unsigned char, map<unsigned char, double> > *pAB = get_genotypeFreq(AGE, p, l1, l2);
-    map<unsigned char, map<unsigned char, double> > geno1;
-    map<unsigned char, double>::iterator geno, a1, a2, end1=freqs[l1].end(), end2=freqs[l2].end();
+    map<ALLELE, map<ALLELE, double> > *pAB = get_genotypeFreq(AGE, p, l1, l2);
+    map<ALLELE, map<ALLELE, double> > geno1;
+    map<ALLELE, double>::iterator geno, a1, a2, end1=freqs[l1].end(), end2=freqs[l2].end();
     
     // for each pariwise allele combination (also if the given genotype does not exist)
     double D, pA, pB, sumD=0;
     for(a1=freqs[l1].begin(); a1!=end1; ++a1){
         pA=a1->second;
-        map<unsigned char, double>& geno1=(*pAB)[a1->first];
+        map<ALLELE, double>& geno1=(*pAB)[a1->first];
         for(a2=freqs[l2].begin(); a2!=end2; ++a2){
             pB=a2->second;
             geno = geno1.find(a2->first);
@@ -3705,19 +3705,19 @@ StatHandler<SH>::getChi2_ofPatch(const age_idx & AGE, TPatch* p, const unsigned 
 {
     set_alleleFreq(AGE); // allele frequencies are used
     
-    map<unsigned char, double>* freqs = _alleleFreq_local[AGE][p->get_sampleID()];
+    map<ALLELE, double>* freqs = _alleleFreq_local[AGE][p->get_sampleID()];
     if (freqs[l1].size() == 1) return my_NAN; // locus 1 is monomorph
     if (freqs[l2].size() == 1) return my_NAN; // locus 2 is monomorph
     
-    map<unsigned char, map<unsigned char, double> > *pAB = get_genotypeFreq(AGE, p, l1, l2);
-    map<unsigned char, map<unsigned char, double> > geno1;
-    map<unsigned char, double>::iterator geno, a1, a2, end1=freqs[l1].end(), end2=freqs[l2].end();
+    map<ALLELE, map<ALLELE, double> > *pAB = get_genotypeFreq(AGE, p, l1, l2);
+    map<ALLELE, map<ALLELE, double> > geno1;
+    map<ALLELE, double>::iterator geno, a1, a2, end1=freqs[l1].end(), end2=freqs[l2].end();
     
     // for each pairwise allele combination (also if the given genotype does not exist)
     double D, pA, pB, Chi2=0;
     for(a1=freqs[l1].begin(); a1!=end1; ++a1){
         pA=a1->second;
-        map<unsigned char, double>& geno1=(*pAB)[a1->first];
+        map<ALLELE, double>& geno1=(*pAB)[a1->first];
         for(a2=freqs[l2].begin(); a2!=end2; ++a2){
             pB=a2->second;
             geno = geno1.find(a2->first);
@@ -4468,7 +4468,7 @@ template<class SH> void
 StatHandler<SH>::set_stat_locus_freq_local_text(string t, string i, string trait,
                                                 string ageStr, unsigned int p,
                                                 unsigned int l, unsigned int a1,
-                                                unsigned char a2,
+                                                ALLELE a2,
                                                 string& stat, string & text)
 {
     stat = i + "." + (ageStr=="adult" ? "adlt" : "off") + ".l.freq";
@@ -4593,7 +4593,7 @@ template<class SH> void
 StatHandler<SH>::set_stat_locus_freq_global_text(string t, string i, string trait,
                                                  string ageStr,
                                                  unsigned int l, unsigned int a1,
-                                                 unsigned char a2,
+                                                 ALLELE a2,
                                                  string& stat, string & text)
 {
     stat = i + "." + (ageStr=="adult" ? "adlt" : "off") + "l.freq_global";
@@ -4963,7 +4963,7 @@ StatHandler<SH>::getRs_ofPatch_andLocus(const age_idx & AGE, TPatch * p,
     unsigned int nbAll, curSize = 2 * p->sampleSize(AGE); // number of alleles
     minN *= 2; // number of alleles
     double const_part = factln(curSize-minN)-factln(curSize);
-    map<unsigned char, double>::iterator pos, end;
+    map<ALLELE, double>::iterator pos, end;
     pos = _alleleFreq_local[AGE][p->get_sampleID()][l].begin();
     end = _alleleFreq_local[AGE][p->get_sampleID()][l].end();
     for (; pos != end; ++pos) { // for each allele
@@ -5007,7 +5007,7 @@ double StatHandler<SH>::getRt_ofLocus(const unsigned int&l, const age_idx & AGE,
     unsigned int nbAll, curSize = 2 * _popPtr->sampleSize(AGE); // number of alleles
     minN *= 2; // minimal number of alleles
     double const_part = factln(curSize-minN)-factln(curSize);
-    map<unsigned char, double>::iterator pos, end;
+    map<ALLELE, double>::iterator pos, end;
     pos = _alleleFreq_global[AGE][l].begin();
     end = _alleleFreq_global[AGE][l].end();
     for (; pos != end; ++pos) { // for each allele of this locus

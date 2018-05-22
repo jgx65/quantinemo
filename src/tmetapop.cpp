@@ -48,6 +48,7 @@
 #include "tselection.h"
 
 #include "stathandler.cpp"
+#include "types.h"
 #include <time.h>
 
 using namespace std;
@@ -2326,8 +2327,8 @@ TMetapop::setPopulation_FSTAT(const age_t& requiredAge)
     unsigned int i, l, p, curLocus, nbAllele;
     unsigned int** curGenotype;
     unsigned int** array;
-    unsigned char** seq;
-    unsigned char a;
+    ALLELE** seq;
+    ALLELE a;
     unsigned int *aMax = ARRAY::new_1D<unsigned int>(_patchNbr, (unsigned int)0);   // array for each patch to find the maximal index (only used when infos are present)
     for(i=0; i<nbInd; ++i){                               // for each individual
         array   = (*vAny)[i];                               // get the individual array which has the complete information

@@ -84,30 +84,30 @@ TLocus::~TLocus(){
 // ----------------------------------------------------------------------------------------
 /** initialization of the sequences based on the _initAlleleFreq array (settings file) */
 void
-TLocus::_ini_sequence_dist(unsigned char* seq, TPatch* patch, unsigned int size)
+TLocus::_ini_sequence_dist(ALLELE* seq, TPatch* patch, unsigned int size)
 {
 	double* freq_dist = _pTrait->get_ini_alleleFreq(patch, _locus_id_trait);
 	for(unsigned int a = 0; a < size; ++a) {
-		seq[a] = (unsigned char)_popPtr->rand().AfterDistribution(freq_dist, _nb_allele);
+		seq[a] = (ALLELE)_popPtr->rand().AfterDistribution(freq_dist, _nb_allele);
 	}
 }
 
 /** initialization of the sequences: alleles are randomly distributed -> maximal variance */
 void
-TLocus::_ini_sequence_uniform(unsigned char* seq, TPatch* patch, unsigned int size)
+TLocus::_ini_sequence_uniform(ALLELE* seq, TPatch* patch, unsigned int size)
 {
 	for(unsigned int a = 0; a < size; ++a) {
-		seq[a] = (unsigned char)_popPtr->rand().Uniform(_nb_allele);
+		seq[a] = (ALLELE)_popPtr->rand().Uniform(_nb_allele);
 	}
 }
 
 /** initialization of the sequences: populations are fixed for the middle allele -> minimal variance
  * if number of alleles is even, then the lower allele is used, ie.e nb_allele=2 => 0*/
 void
-TLocus::_ini_sequence_monomorph(unsigned char* seq, TPatch* patch, unsigned int size)
+TLocus::_ini_sequence_monomorph(ALLELE* seq, TPatch* patch, unsigned int size)
 {
 	for(unsigned int a = 0; a < size; ++a) {
-		seq[a] = (unsigned char)(_nb_allele-1)/2;
+		seq[a] = (ALLELE)(_nb_allele-1)/2;
 	}
 }
 
@@ -134,7 +134,7 @@ TLocus::set_mutationModel(const mut_model_t& model)
 // ----------------------------------------------------------------------------------------
 /** check if a mutation occurs at this locus */
 void
-TLocus::mutate(unsigned char* seq)
+TLocus::mutate(ALLELE* seq)
 {
 	unsigned int NbMut;
 	for(NbMut = _popPtr->rand().Poisson(ploidy*_mut_rate) ; NbMut != 0; --NbMut) {
@@ -145,7 +145,7 @@ TLocus::mutate(unsigned char* seq)
 // ----------------------------------------------------------------------------------------
 /** a mutation occurs, make it */
 void
-TLocus::mutate_now(unsigned char* curPos)
+TLocus::mutate_now(ALLELE* curPos)
 {
 	(this->*_mut_model_func_ptr)(curPos);
 }
@@ -154,13 +154,13 @@ TLocus::mutate_now(unsigned char* curPos)
 // mutate_KAM
 // ----------------------------------------------------------------------------------------
 void
-TLocus::_mutate_KAM(unsigned char* curPos)
+TLocus::_mutate_KAM(ALLELE* curPos)
 {
 	//assign an arbitrary allele value:
-	unsigned char mut;
+	ALLELE mut;
 
 	do{
-		mut = (unsigned char) _popPtr->rand().Uniform(_nb_allele);
+		mut = (ALLELE) _popPtr->rand().Uniform(_nb_allele);
 	} while (mut == *curPos);  // it has to change
 	*curPos = mut;
 }
@@ -170,7 +170,7 @@ TLocus::_mutate_KAM(unsigned char* curPos)
 // ----------------------------------------------------------------------------------------
 /** SMM mutation model with a common mutation model and rate */
 void
-TLocus::_mutate_SSM(unsigned char* curPos)
+TLocus::_mutate_SSM(ALLELE* curPos)
 {
 	//alleles values are from 0 to NtrlAll - 1 !!!
 	if(_popPtr->rand().Bool() && (unsigned int)*curPos < _nb_allele-1){   // Direction
@@ -191,9 +191,9 @@ TLocus::_mutate_SSM(unsigned char* curPos)
 	* RMM: rekursive mutation model
 	*/
 void
-TLocus::_mutate_RMM(unsigned char* curPos)
+TLocus::_mutate_RMM(ALLELE* curPos)
 {
-	unsigned char mutPos;
+	ALLELE mutPos;
 	unsigned int i=0;
 
 	//Compute the probability to find another allele to mutate too. 
@@ -210,7 +210,7 @@ TLocus::_mutate_RMM(unsigned char* curPos)
 	if(p < (1-std::numeric_limits<double>::epsilon())) // probability shoud be smaller than one, though we include numerical imprecision by removing a small factor
 	{
 		do{
-			mutPos = (unsigned char) (_popPtr->rand().AfterDistribution(_pTrait->get_mutationFreq(_locus_id_trait), _nb_allele));
+			mutPos = (ALLELE) (_popPtr->rand().AfterDistribution(_pTrait->get_mutationFreq(_locus_id_trait), _nb_allele));
 			++i;                                 // used to asure that the loop ends
 		} while (mutPos == *curPos);
 		*curPos = mutPos;
@@ -225,13 +225,13 @@ TLocus::_mutate_RMM(unsigned char* curPos)
 	* If the new allele is out of range, nothing is made (following fl)
 	*/
 void
-TLocus::_mutate_IMM(unsigned char* curPos)
+TLocus::_mutate_IMM(ALLELE* curPos)
 {
 	unsigned int mutStep, newPos;
 	mutStep = _popPtr->rand().AfterDistribution(_pTrait->get_mutationFreq(_locus_id_trait), _nb_allele) - (_nb_allele-1)/2;  // _nb_allele/2 is the middle index
 	newPos = mutStep+(unsigned int)(*curPos);
 	if(newPos<_nb_allele){   // do nothing if the new allele is out of range
-		*curPos += (unsigned char)mutStep;
+		*curPos += (ALLELE)mutStep;
 	}
 }
 
@@ -240,7 +240,7 @@ TLocus::_mutate_IMM(unsigned char* curPos)
 	* true is returned if mutation was successful and false if not
 	*/
 bool
-TLocus::mutate_now(unsigned char* curPos, const double& ran)
+TLocus::mutate_now(ALLELE* curPos, const double& ran)
 {
 	return (this->*_mut_model2_func_ptr)(curPos, ran);
 }
@@ -252,14 +252,14 @@ TLocus::mutate_now(unsigned char* curPos, const double& ran)
 	* RMM: rekursive mutation model
 	*/
 bool
-TLocus::_mutate_RMM(unsigned char* curPos, const double& ran)
+TLocus::_mutate_RMM(ALLELE* curPos, const double& ran)
 {
-	unsigned char mutPos;
+	ALLELE mutPos;
 	unsigned int i=0;
 
 	//assign an arbitrary allele value:
 	do{
-		mutPos = (unsigned char) (_popPtr->rand().AfterDistribution(_pTrait->get_mutationFreq(_locus_id_trait), _nb_allele));
+		mutPos = (ALLELE) (_popPtr->rand().AfterDistribution(_pTrait->get_mutationFreq(_locus_id_trait), _nb_allele));
 		++i;                                 // used to asure that the loop ends
 		} while (mutPos == *curPos && i<1e4);  // it has to change (except if after 1e4 trials it has not yet changed)
 	*curPos = mutPos;
@@ -274,13 +274,13 @@ TLocus::_mutate_RMM(unsigned char* curPos, const double& ran)
 	* If the new allele is out of range, nothing is made (following fl)
 	*/
 bool
-TLocus::_mutate_IMM(unsigned char* curPos, const double& ran)
+TLocus::_mutate_IMM(ALLELE* curPos, const double& ran)
 {
 	unsigned int mutStep, newPos;
 	mutStep = _popPtr->rand().AfterDistribution(_pTrait->get_mutationFreq(_locus_id_trait), _nb_allele) - (_nb_allele-1)/2;  // _nb_allele/2 is the middle index
 	newPos = mutStep+(unsigned int)(*curPos);
 	if(newPos<_nb_allele){   // do nothing if the new allele is out of range
-		*curPos += (unsigned char)mutStep;
+		*curPos += (ALLELE)mutStep;
 	}
 	return true;
 }

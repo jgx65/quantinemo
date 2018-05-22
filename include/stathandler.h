@@ -37,6 +37,7 @@
 
 #include "stathandlerbase.h"
 #include "stat_rec_base.h"
+#include "types.h"
 
 class TTraitProto;
 class TIndividual;
@@ -66,12 +67,12 @@ protected:
 	unsigned int* _nb_allele;         // number of allele per locus (do not delete this array, it is just pointing to another array)
 	unsigned int _nb_allele_max;      // the highest number of alleles across loci
     
-	map<unsigned char, double>*** _alleleFreq_local;  // [age][patch][locus][allele]
-	map<unsigned char, double>**  _alleleFreq_global; // [age][locus][allele]
-	map<unsigned char, map<unsigned char, double> >*** _locusFreq_local;  // [age][patch][locus][allele1][allele2]
-	map<unsigned char, map<unsigned char, double> >**  _locusFreq_global; // [age][locus][allele1][allele2]
+	map<ALLELE, double>*** _alleleFreq_local;  // [age][patch][locus][allele]
+	map<ALLELE, double>**  _alleleFreq_global; // [age][locus][allele]
+	map<ALLELE, map<ALLELE, double> >*** _locusFreq_local;  // [age][patch][locus][allele1][allele2]
+	map<ALLELE, map<ALLELE, double> >**  _locusFreq_global; // [age][locus][allele1][allele2]
     
-	map<unsigned char, map<unsigned char, double> >* get_genotypeFreq(const age_idx& AGE, TPatch* p,
+	map<ALLELE, map<ALLELE, double> >* get_genotypeFreq(const age_idx& AGE, TPatch* p,
                                                                       const unsigned int& l1, const unsigned int& l2);
     
     
@@ -97,12 +98,12 @@ protected:
     void set_stat_locus_freq_local_text(string t, string i, string trait,
                                    string ageStr, unsigned int p,
                                    unsigned int l, unsigned int a1,
-                                   unsigned char a2,
+                                   ALLELE a2,
                                         string& stat, string & text);
     void set_stat_locus_freq_global_text(string t, string i, string trait,
                                    string ageStr,
                                    unsigned int l, unsigned int a1,
-                                   unsigned char a2,
+                                   ALLELE a2,
                                          string& stat, string & text);
     
 	///@}
@@ -119,10 +120,10 @@ protected:
     
     /**Gives the coancestry (probability of identity by state) of two gene sequences.
      The probability returned is the averageproportion of identical alleles per locus between the two sequences.
-     @param ind1 first sequence, treated as of type (unsigned char**)
-     @param ind2 second sequence, treated as of type (unsigned char**)
+     @param ind1 first sequence, treated as of type (ALLELE**)
+     @param ind2 second sequence, treated as of type (ALLELE**)
      */
-    double Coancestry               (unsigned char** seq1, unsigned char** seq2);
+    double Coancestry               (ALLELE** seq1, ALLELE** seq2);
     
     /**Computes the within and between patches coancestry coefficients.
      @param age_pos the age class index
@@ -398,14 +399,14 @@ public:
 	double  get_allele_freq_local(unsigned int i, const age_t& AGE);
 	double  get_allele_freq_global(unsigned int i, const age_t& AGE);
 	bool    set_alleleFreq(const age_idx& AGE);
-	unsigned int set_alleleFreq_ofPatch(TPatch* crnt_patch, const age_idx& AGE, map<unsigned char, double>*& freqs, map<unsigned char, double>*& global_freqs);
+	unsigned int set_alleleFreq_ofPatch(TPatch* crnt_patch, const age_idx& AGE, map<ALLELE, double>*& freqs, map<ALLELE, double>*& global_freqs);
     unsigned int set_alleleFreq_ofPatch_allInds(TPatch* crnt_patch, const age_idx& AGE,
-                                                map<unsigned char, double>*& freqs,
-                                                map<unsigned char, double>*& global_freqs);
+                                                map<ALLELE, double>*& freqs,
+                                                map<ALLELE, double>*& global_freqs);
 	void    set_alleleFreq_global_ofLocus(const unsigned int& l,
-                                          map<unsigned char, double>** localFreqs, map<unsigned char, double>* globalFreqs,
+                                          map<ALLELE, double>** localFreqs, map<ALLELE, double>* globalFreqs,
                                           unsigned int* popSizes, const unsigned int& tot_popSize, const unsigned int& nbPatch);
-	void    set_alleleFreq_global(map<unsigned char, double>** localFreqs, map<unsigned char, double>* globalFreqs,
+	void    set_alleleFreq_global(map<ALLELE, double>** localFreqs, map<ALLELE, double>* globalFreqs,
                                   unsigned int* popSizes, const unsigned int& tot_popSize, const unsigned int& nbPatch);
     
 	double  getHarmonicMean_ofPopSize(const age_idx& AGE, const vector<TPatch*>& aPatch, unsigned int& nbPopFull); // for any number of patches
@@ -415,22 +416,22 @@ public:
 	double  get_locus_freq_global(unsigned int i, const age_t& AGE);
 	bool    set_locusFreq(const age_idx& AGE);
 	unsigned int set_locusFreq_ofPatch(TPatch* crnt_patch, const age_idx& AGE,
-                                       map<unsigned char, map<unsigned char, double> >*& freqs,
-                                       map<unsigned char, map<unsigned char, double> >*& global_freqs);
+                                       map<ALLELE, map<ALLELE, double> >*& freqs,
+                                       map<ALLELE, map<ALLELE, double> >*& global_freqs);
     unsigned int get_locusGenotypeFreqs_ofPatch(TPatch * curPatch, const age_idx & AGE,
-                                                map<unsigned char, map<unsigned char, double> >*& freqs);
+                                                map<ALLELE, map<ALLELE, double> >*& freqs);
     unsigned int get_locusGenotypeFreqs_ofPatch(TPatch * curPatch, const age_idx & AGE,
                                                 unsigned int traitID,
-                                                map<unsigned char, map<unsigned char, double> >*& freqs);
+                                                map<ALLELE, map<ALLELE, double> >*& freqs);
     unsigned int get_locusGenotypeFreqs_ofPatch_allInds(TPatch * curPatch, const age_idx & AGE,
                                                 unsigned int traitID,
-                                                map<unsigned char, map<unsigned char, double> >*& freqs);
+                                                map<ALLELE, map<ALLELE, double> >*& freqs);
     unsigned int get_locusGenotypeCounts_ofPatch(TPatch * curPatch, const age_idx & AGE,
                                                  unsigned int traitID,
-                                                map<unsigned char, map<unsigned char, double> >*& freqs);
+                                                map<ALLELE, map<ALLELE, double> >*& freqs);
     unsigned int get_locusGenotypeCounts_ofPatch_andSex(TPatch * curPatch, const age_idx & AGE, sex_t SEX,
                                                         unsigned int traitID,
-                                                        map<unsigned char, map<unsigned char, double> >*& freqs);
+                                                        map<ALLELE, map<ALLELE, double> >*& freqs);
     
 	///@name F-stats:
 	///@{
@@ -438,8 +439,8 @@ public:
 	/** Computes the weighted within and between patch Fst's as well as the overall Fst (Theta) */
 	void   setFstat_Weir_Cockerham          (const age_idx& AGE);      // across loci
 	void   setFstat_Weir_Cockerham(const age_idx& AGE, vector<TPatch*>& aPatch,
-                                   map<unsigned char, double>** alleleFreqs,
-                                   map<unsigned char, double>* alleleFreqsGlobal,
+                                   map<ALLELE, double>** alleleFreqs,
+                                   map<ALLELE, double>* alleleFreqsGlobal,
                                    double& fst, double& fis, double &fit);
 	void   setFstat_Weir_Cockerham_perLocus (const age_idx& AGE);      // for each locus separately
 	void   setFstat_Weir_Cockerham_perPatchPair(const age_idx& AGE);
@@ -447,9 +448,9 @@ public:
 	double getFstat_Weir_Cockerham_perPatchPair_andLocus(const age_idx& AGE, TPatch* pop1, TPatch* p2, unsigned int l);
 	void   get_sigma_of_locus_Weir_Cockerham(double& sigma_a2,
                                              double& sigma_b2, double& sigma_w2, const unsigned int& nbPatch, const unsigned int& nbPop,
-                                             map<unsigned char, double>** alleleFreqs, map<unsigned char, double>* alleleFreqsGlobal,
+                                             map<ALLELE, double>** alleleFreqs, map<ALLELE, double>* alleleFreqsGlobal,
                                              const unsigned int& l, const unsigned int& tot_size, unsigned int* pop_sizes,
-                                             map<unsigned char, double>** ho_patch_allele, const double& nc);
+                                             map<ALLELE, double>** ho_patch_allele, const double& nc);
     
     /** F-statistics following Weir & Cockeram (1984) */
 	double getFst_WC (const age_t& AGE) {age_idx curAGE=age_t2idx(AGE); setFstat_Weir_Cockerham(curAGE); return _fst_wc[curAGE];}
@@ -599,7 +600,7 @@ public:
 		fromID(i, id, loc, _nb_patch, _nb_locus);
 		return getHo_ofPatch_andLocus(age_t2idx(AGE), get_vPatch(id), loc);
 	}
-	map<unsigned char, double>* getHo_ofPatchperAllele  (const age_idx& AGE, TPatch* cur_patch, map<unsigned char, double>* array=NULL);
+	map<ALLELE, double>* getHo_ofPatchperAllele  (const age_idx& AGE, TPatch* cur_patch, map<ALLELE, double>* array=NULL);
     
 	double getHs                    (const age_idx& AGE);
 	double getHs                    (const age_t& AGE){return getHs(age_t2idx(AGE));}

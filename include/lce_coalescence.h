@@ -56,7 +56,7 @@ class LCE_Coalescence {
 protected:
     LCE_Coalescence_base*    _pCoalBase;
     
-    unsigned char**         _seq;           // belongs to LCE_Coalescnece_base (don't delete it)
+    ALLELE**         _seq;           // belongs to LCE_Coalescnece_base (don't delete it)
     
     unsigned int            _curLocus;      // the locus id (staerting at 0) which is simulated
     unsigned int            _endLocus;      // the after last locus to simulate
@@ -175,7 +175,7 @@ public:
     
     virtual bool check_db(const unsigned int& gen);
     
-    virtual void generateGeneticData(unsigned char** seq, TLocus** genome, const unsigned int& curLoc);
+    virtual void generateGeneticData(ALLELE** seq, TLocus** genome, const unsigned int& curLoc);
     virtual void clear_tree();
     virtual void clear_tree(TTNode*);
     

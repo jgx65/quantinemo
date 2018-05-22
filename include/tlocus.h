@@ -34,9 +34,11 @@
 
 //---------------------------------------------------------------------------
 
+
 #ifndef tlocusH
 #define tlocusH
 //---------------------------------------------------------------------------
+
 #include "types.h"
 class TTraitProto;
 class TPatch;
@@ -119,22 +121,22 @@ private:
     double _mut_rate;
     double* _mutationFreq;       		// _mutationFreq[allele]
     mut_model_t _mut_model;             // mutation model
-    void (TLocus::*_mut_model_func_ptr)(unsigned char* seq);
-    void  _mutate_none                 (unsigned char* seq){ }
-    void  _mutate_KAM                  (unsigned char* seq);
-    void  _mutate_SSM                  (unsigned char* seq);
-    void  _mutate_RMM                  (unsigned char* seq);
-    void  _mutate_IMM                  (unsigned char* seq);
-    bool (TLocus::*_mut_model2_func_ptr)(unsigned char* seq, const double& ran);
-    bool  _mutate_RMM                   (unsigned char* seq, const double& ran);
-    bool  _mutate_IMM                   (unsigned char* seq, const double& ran);
+    void (TLocus::*_mut_model_func_ptr)(ALLELE* seq);
+    void  _mutate_none                 (ALLELE* seq){ }
+    void  _mutate_KAM                  (ALLELE* seq);
+    void  _mutate_SSM                  (ALLELE* seq);
+    void  _mutate_RMM                  (ALLELE* seq);
+    void  _mutate_IMM                  (ALLELE* seq);
+    bool (TLocus::*_mut_model2_func_ptr)(ALLELE* seq, const double& ran);
+    bool  _mutate_RMM                   (ALLELE* seq, const double& ran);
+    bool  _mutate_IMM                   (ALLELE* seq, const double& ran);
     
     // sequence initialization
     double** _ini_frequencies; 	// frequencies to initialize a locus _ini_frequencies[patch][allele](only used for _ini_sequence_dist())
-    void (TLocus::*_ini_seq_model_func_ptr)(unsigned char* seq, TPatch* patch, unsigned int size);
-    void  _ini_sequence_monomorph      (unsigned char* seq, TPatch* patch, unsigned int size=ploidy);
-    void  _ini_sequence_uniform        (unsigned char* seq, TPatch* patch, unsigned int size=ploidy);
-    void  _ini_sequence_dist           (unsigned char* seq, TPatch* patch, unsigned int size=ploidy);
+    void (TLocus::*_ini_seq_model_func_ptr)(ALLELE* seq, TPatch* patch, unsigned int size);
+    void  _ini_sequence_monomorph      (ALLELE* seq, TPatch* patch, unsigned int size=ploidy);
+    void  _ini_sequence_uniform        (ALLELE* seq, TPatch* patch, unsigned int size=ploidy);
+    void  _ini_sequence_dist           (ALLELE* seq, TPatch* patch, unsigned int size=ploidy);
     
     // mutational correlation
 private:
@@ -167,10 +169,10 @@ public:
     mut_model_t     get_mutationModel()       {return _mut_model;}
     TTraitProto*    get_pTrait()              {return _pTrait;}
     
-    void mutate(unsigned char* seq);
-    void mutate_now(unsigned char* seq);
-    bool mutate_now(unsigned char* seq, const double& rand);
-    void ini_sequence(unsigned char* seq, TPatch* p, unsigned int s=ploidy){(this->*_ini_seq_model_func_ptr)(seq, p, s);}
+    void mutate(ALLELE* seq);
+    void mutate_now(ALLELE* seq);
+    bool mutate_now(ALLELE* seq, const double& rand);
+    void ini_sequence(ALLELE* seq, TPatch* p, unsigned int s=ploidy){(this->*_ini_seq_model_func_ptr)(seq, p, s);}
     
     void reset();
     

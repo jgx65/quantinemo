@@ -1420,7 +1420,7 @@ TTraitQuantiProto::set_epistaticValues(const string& trait)
             for(unsigned int l=0; l<_nb_locus; ++l){
                 if(nb_allele_max<_nb_allele[l]) nb_allele_max=_nb_allele[l];
             }
-            _phenoTree = new Tree<unsigned char>(_nb_locus, nb_allele_max);
+            _phenoTree = new Tree<ALLELE>(_nb_locus, nb_allele_max);
         }
     }
     else get_genotype_func_ptr = &TTraitQuantiProto::get_genotype_additive;   // no epistatic effects
@@ -1689,7 +1689,7 @@ TTraitQuantiProto::read_genome_file(string filename)
             for(unsigned int l=0; l<_nb_locus; ++l){
                 if(nb_allele_max<_nb_allele[l]) nb_allele_max=_nb_allele[l];
             }
-            _phenoTree = new Tree<unsigned char>(_nb_locus, nb_allele_max);
+            _phenoTree = new Tree<ALLELE>(_nb_locus, nb_allele_max);
         }
         else if(_phenoTree){delete _phenoTree; _phenoTree=NULL;}
         
@@ -1711,7 +1711,7 @@ TTraitQuantiProto::read_genome_file(string filename)
             for(unsigned int l=0; l<_nb_locus; ++l){
                 if(nb_allele_max<_nb_allele[l]) nb_allele_max=_nb_allele[l];
             }
-            _fitnessFactorTree = new Tree<unsigned char>(_nb_locus, nb_allele_max);
+            _fitnessFactorTree = new Tree<ALLELE>(_nb_locus, nb_allele_max);
         }
         else if(_fitnessFactorTree){delete _fitnessFactorTree; _fitnessFactorTree=NULL;}
         
@@ -1721,7 +1721,7 @@ TTraitQuantiProto::read_genome_file(string filename)
         
         
         unsigned int length, digit=my_NAN;       // number of characters representing an allele
-        unsigned char** genotype = ARRAY::new_2D<unsigned char>(_nb_locus, ploidy);
+        ALLELE** genotype = ARRAY::new_2D<ALLELE>(_nb_locus, ploidy);
         double value;
         string text, t;
         unsigned int locus;
@@ -1750,13 +1750,13 @@ TTraitQuantiProto::read_genome_file(string filename)
                 
                 try{
                     // get first allele of locus i
-                    genotype[locus][0] = (unsigned char) (strTo<unsigned int>(text.substr(0, digit))-1);
+                    genotype[locus][0] = (ALLELE) (strTo<unsigned int>(text.substr(0, digit))-1);
                     if((unsigned int)genotype[locus][0] >= (unsigned int)_nb_allele[locus]){
                         error("Epistatic values: Allele 1 of locus %i (line %i) is out of range (only %i alleles specified)!\n", locus+1, i+1, _nb_allele);
                     }
                     
                     // get second allele of locus i
-                    genotype[locus][1] = (unsigned char) (strTo<unsigned int>(text.substr(digit, digit))-1);
+                    genotype[locus][1] = (ALLELE) (strTo<unsigned int>(text.substr(digit, digit))-1);
                     if((unsigned int)genotype[locus][1] >= (unsigned int)_nb_allele[locus]){
                         error("Epistatic values: Allele 2 of locus %i (line %i) is out of range (only %i alleles specified)!\n", locus+1, i+1, _nb_allele);
                     }
@@ -2069,7 +2069,7 @@ TTraitQuantiProto::print_epistatic_values(string name)
     if(_fitnessFactorTree) FILE <<"\tfitnessFactor";
     
     // create the first possible genotype to explore all possible genotypes
-    unsigned char** seq = ARRAY::new_2D<unsigned char>(_nb_locus, ploidy, (unsigned char) 0);
+    ALLELE** seq = ARRAY::new_2D<ALLELE>(_nb_locus, ploidy, (ALLELE) 0);
     
     double val_pheno, val_fitness;
     do{
@@ -2104,7 +2104,7 @@ TTraitQuantiProto::print_epistatic_values(string name)
 // operator=
 // ----------------------------------------------------------------------------------------
 void
-TTraitQuantiProto::print_gentoype(ostream& FILE, unsigned char** seq, const unsigned int& digit)
+TTraitQuantiProto::print_gentoype(ostream& FILE, ALLELE** seq, const unsigned int& digit)
 {
     unsigned int l, a;
     for(l=0; l<_nb_locus; ++l){
@@ -2124,7 +2124,7 @@ TTraitQuantiProto::print_gentoype(ostream& FILE, unsigned char** seq, const unsi
  * returns true if this was possible and false if the last possible genotype is reached
  */
 bool
-TTraitQuantiProto::get_next_gentoype(unsigned char** seq)
+TTraitQuantiProto::get_next_gentoype(ALLELE** seq)
 {
     int l;
     
@@ -2150,7 +2150,7 @@ TTraitQuantiProto::get_next_gentoype(unsigned char** seq)
 // getAllelicValue
 // ----------------------------------------------------------------------------------------
 double
-TTraitQuantiProto::getAllelicValue(const unsigned int& l, const unsigned char& i)
+TTraitQuantiProto::getAllelicValue(const unsigned int& l, const ALLELE& i)
 {
     assert(_allelicValues[l][i] != my_NAN);
     return _allelicValues[l][i];
@@ -2160,7 +2160,7 @@ TTraitQuantiProto::getAllelicValue(const unsigned int& l, const unsigned char& i
 // getDominanceValue
 // ----------------------------------------------------------------------------------------
 double
-TTraitQuantiProto::getDominanceValue(const unsigned int& l, const unsigned char& a1, const unsigned char& a2)
+TTraitQuantiProto::getDominanceValue(const unsigned int& l, const ALLELE& a1, const ALLELE& a2)
 {
     double *value;
     assert(a1<a2);
@@ -2177,13 +2177,13 @@ TTraitQuantiProto::getDominanceValue(const unsigned int& l, const unsigned char&
 // get_locus_genotype
 // ----------------------------------------------------------------------------------------
 double
-TTraitQuantiProto::get_locus_genotype_additive(const unsigned int& l, const unsigned char& a1, const unsigned char& a2)
+TTraitQuantiProto::get_locus_genotype_additive(const unsigned int& l, const ALLELE& a1, const ALLELE& a2)
 {
     return (getAllelicValue(l, a1) + getAllelicValue(l, a2));
 }
 
 double
-TTraitQuantiProto::get_locus_genotype_dominance_array(const unsigned int& l, const unsigned char& a1, const unsigned char& a2){
+TTraitQuantiProto::get_locus_genotype_dominance_array(const unsigned int& l, const ALLELE& a1, const ALLELE& a2){
     double a_1 = getAllelicValue(l, a1);    // get effect of allele 1
     double a_2 = getAllelicValue(l, a2);    // get effect of allele 2
     if(a1<a2) return get_genotype_dominance(a_1, a_2, getDominanceValue(l, a1, a2));
@@ -2192,7 +2192,7 @@ TTraitQuantiProto::get_locus_genotype_dominance_array(const unsigned int& l, con
 }
 
 double
-TTraitQuantiProto::get_locus_genotype_dominance_single(const unsigned int& l, const unsigned char& a1, const unsigned char& a2)
+TTraitQuantiProto::get_locus_genotype_dominance_single(const unsigned int& l, const ALLELE& a1, const ALLELE& a2)
 {
     return get_genotype_dominance(getAllelicValue(l, a1), getAllelicValue(l, a2), _dominance_mean);
 }
@@ -2229,7 +2229,7 @@ TTraitQuantiProto::get_genotype_dominance_k(double a1, double a2, double k)
 // get_genotype
 // ----------------------------------------------------------------------------------------
 double
-TTraitQuantiProto::get_genotype_additive(unsigned char** seq)
+TTraitQuantiProto::get_genotype_additive(ALLELE** seq)
 {
     double sum=0;
     for(unsigned int l=0; l<_nb_locus; ++l){
@@ -2239,7 +2239,7 @@ TTraitQuantiProto::get_genotype_additive(unsigned char** seq)
 }
 
 double
-TTraitQuantiProto::get_genotype_epistatic(unsigned char** seq)
+TTraitQuantiProto::get_genotype_epistatic(ALLELE** seq)
 {
     double val  = _phenoTree->get_value(seq);
     if(val != my_NAN) return val;
@@ -2256,7 +2256,7 @@ TTraitQuantiProto::get_genotype_epistatic(unsigned char** seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified explicitly for each genome */
 double
-TTraitQuantiProto::get_fitnessFactor_genome(unsigned char** seq)
+TTraitQuantiProto::get_fitnessFactor_genome(ALLELE** seq)
 {
     double val  = _fitnessFactorTree->get_value(seq);
     if(val != my_NAN) return val;
@@ -2271,12 +2271,12 @@ TTraitQuantiProto::get_fitnessFactor_genome(unsigned char** seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified at the locus level */
 double
-TTraitQuantiProto::get_fitnessFactor_locus(unsigned char** seq)
+TTraitQuantiProto::get_fitnessFactor_locus(ALLELE** seq)
 {
     assert(_fitnessFactor);
     
     double product=1, value;
-    unsigned char a1, a2;
+    ALLELE a1, a2;
     for(unsigned int l=0; l<_nb_locus; ++l){
         a1 = seq[l][0];     // get allele 1
         a2 = seq[l][1];     // get allele 2
@@ -2299,7 +2299,7 @@ TTraitQuantiProto::get_fitnessFactor_locus(unsigned char** seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specifed globally for heterozygote/homozygote loci */
 double
-TTraitQuantiProto::get_fitnessFactor_global(unsigned char** seq)
+TTraitQuantiProto::get_fitnessFactor_global(ALLELE** seq)
 {
     double product=1;
     for(unsigned int l=0; l<_nb_locus; ++l){
@@ -2316,7 +2316,7 @@ TTraitQuantiProto::get_fitnessFactor_global(unsigned char** seq)
  * Noe: _locusFreqs have to be recomputed at each generation and patch
  */
 double
-TTraitQuantiProto::get_fitnessFactor_freqDepend(unsigned char** seq)
+TTraitQuantiProto::get_fitnessFactor_freqDepend(ALLELE** seq)
 {
     assert(_locusFreqs);
     
@@ -2325,7 +2325,7 @@ TTraitQuantiProto::get_fitnessFactor_freqDepend(unsigned char** seq)
     
     // and now add the frequency depend part on it (since it is multiplicate the order does not matter)
     double freqDependFactor;
-    unsigned char a1, a2;
+    ALLELE a1, a2;
     for(unsigned int l=0; l<_nb_locus; ++l){
         freqDependFactor = _fitnessFactor_freqDepend[l];
         if(!freqDependFactor) continue; // if zero it is not set
@@ -2580,7 +2580,7 @@ TTQuantiSH::setVar_Va(const age_idx& AGE)
  */
 void
 TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
-                                         double& meanA, double& varA, map<unsigned char, double>* freqs)
+                                         double& meanA, double& varA, map<ALLELE, double>* freqs)
 {
     vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
     vector<TIndividual*>& curMal = curPop->get_sampled_inds(MAL, AGE);
@@ -2591,19 +2591,19 @@ TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
     
     double G, meanG=0;
     double *curElem;
-    TTree<unsigned char, double>       condMeanGG(3, 0);
-    TTree<unsigned char, unsigned int> condMeanGGsize(3, 0);
-    unsigned char aTemp[3];
+    TTree<ALLELE, double>       condMeanGG(3, 0);
+    TTree<ALLELE, unsigned int> condMeanGGsize(3, 0);
+    ALLELE aTemp[3];
     unsigned int l, a;
-    unsigned char a1, a2;
+    ALLELE a1, a2;
     double* aGeno = new double[size];
-    unsigned char** genes;
+    ALLELE** genes;
     
     // females
     vector<TIndividual*>::iterator curInd, endInd;
     for(curInd= curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd) {
         meanG += G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotype
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // sequence
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // sequence
         for (l = 0; l < _nb_locus; ++l){
             aTemp[0] = l;
             a1 = genes[l][0];          // 1. allele
@@ -2625,7 +2625,7 @@ TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
     // males
     for(curInd= curMal.begin(), endInd=curMal.end(); curInd!=endInd; ++curInd) {
         meanG += G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotype
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // sequence
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // sequence
         for (l = 0; l < _nb_locus; ++l){
             aTemp[0] = l;
             a1 = genes[l][0];          // 1. allele
@@ -2646,7 +2646,7 @@ TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
     
     // for each present genotype
     meanG /= size;
-    map<unsigned char, double>* alphaStar = new map<unsigned char, double>[_nb_locus];
+    map<ALLELE, double>* alphaStar = new map<ALLELE, double>[_nb_locus];
     for(curElem = condMeanGG.first(aTemp); curElem; curElem = condMeanGG.next(aTemp)){
         // correct the dominance effects for the sample number
         (*curElem) /= condMeanGGsize.get(aTemp);
@@ -2666,7 +2666,7 @@ TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
     // compute the additive variance
     varA = 0;
     double aStar; // corrected alphaStar value (subtraction of meanG)
-    map<unsigned char, double>::iterator pos, end;
+    map<ALLELE, double>::iterator pos, end;
     for(l=0; l<_nb_locus; ++l){
         pos = freqs[l].begin();
         end = freqs[l].end();
@@ -2690,7 +2690,7 @@ TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
 void
 TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
                                       double& meanA, double& varA,
-                                      map<unsigned char, double>* freqs)
+                                      map<ALLELE, double>* freqs)
 {
     vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
     vector<TIndividual*>& curMal = curPop->get_sampled_inds(MAL, AGE);
@@ -2701,32 +2701,32 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     
     unsigned int i, l;
     double* arrayG = new double[size];
-    unsigned char a1, a2;
-    unsigned char** genes;
+    ALLELE a1, a2;
+    ALLELE** genes;
     double G, meanG=0;
     unsigned int nbFailure = 0;
     
     // dynamic pairwise allele container: condMeanGG[l][a1][a2]
-    map<unsigned char, map<unsigned char, double> >* condMeanGG = new map<unsigned char, map<unsigned char, double> >[_nb_locus];
-    map<unsigned char, double>::iterator pos2, end2;                         // inner iterator
-    map<unsigned char, map<unsigned char, double> >::iterator pos1, end1;    // outer iterator
+    map<ALLELE, map<ALLELE, double> >* condMeanGG = new map<ALLELE, map<ALLELE, double> >[_nb_locus];
+    map<ALLELE, double>::iterator pos2, end2;                         // inner iterator
+    map<ALLELE, map<ALLELE, double> >::iterator pos1, end1;    // outer iterator
     
     // container: condMeanGGsize[l][a1][a2]
-    map<unsigned char, map<unsigned char, unsigned int> >* condMeanGGsize = new map<unsigned char, map<unsigned char, unsigned int> >[_nb_locus];
-    map<unsigned char, unsigned int >::iterator pos2_size;                      // inner iterator
-    map<unsigned char, map<unsigned char, unsigned int> >::iterator pos1_size;  // outer iterator
+    map<ALLELE, map<ALLELE, unsigned int> >* condMeanGGsize = new map<ALLELE, map<ALLELE, unsigned int> >[_nb_locus];
+    map<ALLELE, unsigned int >::iterator pos2_size;                      // inner iterator
+    map<ALLELE, map<ALLELE, unsigned int> >::iterator pos1_size;  // outer iterator
     
     
     // make matrix of predictor values (each column for an allele, each row for an individual)
-    map<unsigned char, int*>*  predMatrix = new map<unsigned char, int*>[_nb_locus]; // array[locus][allele][individual]
-    map<unsigned char, int*>::iterator posM;
+    map<ALLELE, int*>*  predMatrix = new map<ALLELE, int*>[_nb_locus]; // array[locus][allele][individual]
+    map<ALLELE, int*>::iterator posM;
     
     // females
     vector<TIndividual*>::iterator curInd, endInd;
     for(i=0, curInd= curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd, ++i) {
         // get the genotype and genotypic value
         meanG += arrayG[i] = G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotypic value
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // genotype
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // genotype
         for (l = 0; l < _nb_locus; ++l){
             a1 = genes[l][0];          // 1. allele
             a2 = genes[l][1];          // 2. allele
@@ -2743,12 +2743,12 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
             // create the predictor matrix
             posM = predMatrix[l].find(a1); 			// allele 1 already present?
             if(posM == predMatrix[l].end()){    // if a1 apears the first time
-                posM = predMatrix[l].insert(pair<unsigned char, int*>(a1, ARRAY::new_1D<int>(size, (int)0))).first;
+                posM = predMatrix[l].insert(pair<ALLELE, int*>(a1, ARRAY::new_1D<int>(size, (int)0))).first;
             }
             ++posM->second[i];
             posM = predMatrix[l].find(a2); 			// allele 2 already present?
             if(posM == predMatrix[l].end()){    // if a2 apears the first time
-                posM = predMatrix[l].insert(pair<unsigned char, int*>(a2, ARRAY::new_1D<int>(size, (int)0))).first;
+                posM = predMatrix[l].insert(pair<ALLELE, int*>(a2, ARRAY::new_1D<int>(size, (int)0))).first;
             }
             ++posM->second[i];
         }
@@ -2758,7 +2758,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     for(curInd= curMal.begin(), endInd=curMal.end(); curInd!=endInd; ++curInd, ++i) {
         // get the genotype and genotypic value
         meanG += arrayG[i] = G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotypic value
-        genes = (unsigned char**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // genotype
+        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // genotype
         for (l = 0; l < _nb_locus; ++l){
             a1 = genes[l][0];          // 1. allele
             a2 = genes[l][1];          // 2. allele
@@ -2775,12 +2775,12 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
             // create the predictor matrix
             posM = predMatrix[l].find(a1); 			// allele 1 already present?
             if(posM == predMatrix[l].end()){    // if a1 apears the first time
-                posM = predMatrix[l].insert(pair<unsigned char, int*>(a1, ARRAY::new_1D<int>(size, (int)0))).first;
+                posM = predMatrix[l].insert(pair<ALLELE, int*>(a1, ARRAY::new_1D<int>(size, (int)0))).first;
             }
             ++posM->second[i];
             posM = predMatrix[l].find(a2); 			// allele 2 already present?
             if(posM == predMatrix[l].end()){    // if a2 apears the first time
-                posM = predMatrix[l].insert(pair<unsigned char, int*>(a2, ARRAY::new_1D<int>(size, (int)0))).first;
+                posM = predMatrix[l].insert(pair<ALLELE, int*>(a2, ARRAY::new_1D<int>(size, (int)0))).first;
             }
             ++posM->second[i];
         }
@@ -2793,7 +2793,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     }
     
     // compute the additive effects (alpha, time consuming!)
-    map<unsigned char, double>* alpha = new map<unsigned char, double>[_nb_locus];
+    map<ALLELE, double>* alpha = new map<ALLELE, double>[_nb_locus];
     for(l=0; l<_nb_locus; ++l){
         if(!compute_alpha(arrayG, predMatrix[l], size, alpha[l], freqs[l])){
             if(!remove_private_alleles_compute_alpha(curPop, sizeF, sizeM, alpha[l], arrayG, AGE, freqs[l], l)){
@@ -2803,7 +2803,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     }
     
     // compute the average excess (alphaStar)  (loop through all present pairwise-combinations of alleles)
-    map<unsigned char, double>* alphaStar = new map<unsigned char, double>[_nb_locus];
+    map<ALLELE, double>* alphaStar = new map<ALLELE, double>[_nb_locus];
     for(l=0; l<_nb_locus; ++l){                             // for each locus
         pos1 = condMeanGG[l].begin();
         end1 = condMeanGG[l].end();
@@ -2831,7 +2831,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     
     // compute the additive variance  var = 2*sum(p a a*)
     varA = 0;
-    map<unsigned char, double>::iterator curAlpha, curAlphaStar, curFreq, endFreq;
+    map<ALLELE, double>::iterator curAlpha, curAlphaStar, curFreq, endFreq;
     for(l=0; l<_nb_locus; ++l){
         curAlpha     = alpha[l].begin();
         curAlphaStar = alphaStar[l].begin();
@@ -2854,7 +2854,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     delete[] condMeanGG;
     delete[] condMeanGGsize;
     
-    map<unsigned char, int*>::iterator pos, end;
+    map<ALLELE, int*>::iterator pos, end;
     for(l=0; l<_nb_locus; ++l){
         pos = predMatrix[l].begin();
         end = predMatrix[l].end();
@@ -2875,18 +2875,18 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
  * singular value decomposition method
  */
 bool
-TTQuantiSH::compute_alpha(double* y, const map<unsigned char, int*>& x, const unsigned int& nb_ind,
-                          map<unsigned char, double>& alpha, const map<unsigned char, double>& availableAllele)
+TTQuantiSH::compute_alpha(double* y, const map<ALLELE, int*>& x, const unsigned int& nb_ind,
+                          map<ALLELE, double>& alpha, const map<ALLELE, double>& availableAllele)
 {
     alpha.clear();
-    map<unsigned char, double>::const_iterator pos, end = availableAllele.end();
-    map<unsigned char, int*>::const_iterator posX, endX = x.end();
+    map<ALLELE, double>::const_iterator pos, end = availableAllele.end();
+    map<ALLELE, int*>::const_iterator posX, endX = x.end();
     unsigned int i, nbAllele = (unsigned int)availableAllele.size();  // number of alleles present in the population
     
     // test if the population is fixed for one allele
     if(nbAllele <=1){
         for(pos = availableAllele.begin(); pos != end; ++pos){
-            alpha.insert(pair<unsigned char, double>(pos->first, 0));  // if singular matrix
+            alpha.insert(pair<ALLELE, double>(pos->first, 0));  // if singular matrix
         }
         return (nbAllele != 0); // was the computation successful or not?
     }
@@ -2899,7 +2899,7 @@ TTQuantiSH::compute_alpha(double* y, const map<unsigned char, int*>& x, const un
         }
         if(i==nb_ind){      // if singular matrix
             for(pos = availableAllele.begin(); pos != end; ++pos){
-                alpha.insert(pair<unsigned char, double>(pos->first, 0));  // if singular matrix
+                alpha.insert(pair<ALLELE, double>(pos->first, 0));  // if singular matrix
             }
             return true;
         }
@@ -2921,13 +2921,13 @@ TTQuantiSH::compute_alpha(double* y, const map<unsigned char, int*>& x, const un
         ColumnVector A = (X.t() * X).i() * (X.t() * Y);  // .i(): inverse; .t(): transpose
         
         for(i = 1, pos = availableAllele.begin(); pos != end; ++pos, ++i){
-            alpha.insert(pair<unsigned char, double>(pos->first, A(i)));  // all the other values
+            alpha.insert(pair<ALLELE, double>(pos->first, A(i)));  // all the other values
         }
     }catch(BaseException&){
         // the problem is that "X.t() * X" can result in a singular matrix
         // thus there is no solution to the regression
         for(pos = availableAllele.begin(); pos != end; ++pos){
-            alpha.insert(pair<unsigned char, double>(pos->first, 0));  // if singular matrix
+            alpha.insert(pair<ALLELE, double>(pos->first, 0));  // if singular matrix
         }                                                            // no additive effect at this locus
         
         // the exception has to be deleted
@@ -2953,14 +2953,14 @@ TTQuantiSH::compute_alpha(double* y, const map<unsigned char, int*>& x, const un
  */
 bool
 TTQuantiSH::remove_private_alleles_compute_alpha(TPatch* crnt_patch, const unsigned int& sizeF,
-                                                 const unsigned int& sizeM, map<unsigned char, double>& alpha,
+                                                 const unsigned int& sizeM, map<ALLELE, double>& alpha,
                                                  double* arrayG, const age_idx& age_pos,
-                                                 map<unsigned char, double>& allele_freq, const unsigned int& l)
+                                                 map<ALLELE, double>& allele_freq, const unsigned int& l)
 {
     // the regression was not possible to compute: remove all individuals with two private alleles
     unsigned int i;
-    unsigned char* g;
-    vector<unsigned char*> geno;    // vector with all "good" locus genotypes
+    ALLELE* g;
+    vector<ALLELE*> geno;    // vector with all "good" locus genotypes
     vector<double>   vectorG1;      // vector of the corrected genotypic values
     vector<int> rem_all;            // vector of alleles to remove
     bool stop = false;
@@ -2968,8 +2968,8 @@ TTQuantiSH::remove_private_alleles_compute_alpha(TPatch* crnt_patch, const unsig
     
     // check each individual if it has two private alleles
     for(i = 0; i < sizeF+sizeM; ++i) {
-        if(i<sizeF) g = (unsigned char*)crnt_patch->get(FEM, age_pos, i)->getTrait(_SHLinkedTraitIndex)->get_sequence()[l];       // get the female
-        else        g = (unsigned char*)crnt_patch->get(MAL, age_pos, i-sizeF)->getTrait(_SHLinkedTraitIndex)->get_sequence()[l]; // get the male
+        if(i<sizeF) g = (ALLELE*)crnt_patch->get(FEM, age_pos, i)->getTrait(_SHLinkedTraitIndex)->get_sequence()[l];       // get the female
+        else        g = (ALLELE*)crnt_patch->get(MAL, age_pos, i-sizeF)->getTrait(_SHLinkedTraitIndex)->get_sequence()[l]; // get the male
         
         assert(allele_freq.find(g[0]) != allele_freq.end() && allele_freq.find(g[1]) != allele_freq.end());
         if(   allele_freq[g[0]] == private_allele_freq   // check if both alleles are private
@@ -2987,8 +2987,8 @@ TTQuantiSH::remove_private_alleles_compute_alpha(TPatch* crnt_patch, const unsig
     if(geno.size() > 0.1*(sizeF+sizeM)) stop = true;
     else{
         // create the new available allele vector
-        map<unsigned char, double> availableAllele1;
-        map<unsigned char, double>::iterator pos, end;
+        map<ALLELE, double> availableAllele1;
+        map<ALLELE, double>::iterator pos, end;
         pos = allele_freq.begin();
         end = allele_freq.end();
         for(; pos != end; ++pos){
@@ -2998,9 +2998,9 @@ TTQuantiSH::remove_private_alleles_compute_alpha(TPatch* crnt_patch, const unsig
         // create the new predMatrix
         unsigned int size1 = (unsigned int)geno.size();
         double* arrayG1 = new double[size1];
-        map<unsigned char, int*> predMatrix1;       // array[allele][individual]
-        map<unsigned char, int*>::iterator posM;
-        unsigned char a1, a2;
+        map<ALLELE, int*> predMatrix1;       // array[allele][individual]
+        map<ALLELE, int*>::iterator posM;
+        ALLELE a1, a2;
         
         for(i=0; i<size1; ++i){                     // for each individual
             a1 = geno[i][0];                        // allele 1
@@ -3106,7 +3106,7 @@ TTQuantiSH::setMeanAndVar_Vg(const age_idx& AGE, sex_t SEX)
 /** compute Vg across all individuals of the patch */
 void
 TTQuantiSH::setMeanAndVar_Vg_ofPatch_allInds(TPatch* curPop, const age_idx& AGE,
-                                             double& meanG, double& varG, map<unsigned char, double>* freqs)
+                                             double& meanG, double& varG, map<ALLELE, double>* freqs)
 {
     // create a temporary array with all individuals
     vector<TIndividual*>& curFem = curPop->get_containers(FEM, AGE);
@@ -3141,7 +3141,7 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch_allInds(TPatch* curPop, const age_idx& AGE,
 /** compute Vg for the sampled individuals */
 void
 TTQuantiSH::setMeanAndVar_Vg_ofPatch(TPatch* curPop, const age_idx& AGE,
-                                     double& meanG, double& varG, map<unsigned char, double>* freqs)
+                                     double& meanG, double& varG, map<ALLELE, double>* freqs)
 {
     // create a temporary array with all individuals
     vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
@@ -3175,7 +3175,7 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch(TPatch* curPop, const age_idx& AGE,
 // ----------------------------------------------------------------------------------------
 void
 TTQuantiSH::setMeanAndVar_Vg_ofPatch(TPatch* curPop, const age_idx& AGE,
-                                     double& meanG, double& varG, sex_t SEX, map<unsigned char, double>* freqs)
+                                     double& meanG, double& varG, sex_t SEX, map<ALLELE, double>* freqs)
 {
     // create a temporary array with all individuals
     vector<TIndividual*>& cur = curPop->get_sampled_inds(SEX, AGE);

@@ -80,7 +80,7 @@ class TTrait{
 public:
     
     
-    unsigned char** sequence; 			// pointer to the allele of the genetic map sequence[locus][allele]
+    ALLELE** sequence; 			// pointer to the allele of the genetic map sequence[locus][allele]
     
     virtual void* get_allele(const unsigned int& loc, const unsigned int& all)  const;
     

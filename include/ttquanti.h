@@ -78,7 +78,7 @@ public:
 	virtual void**  get_sequence         ()  const              {return (void**)sequence;}
 	virtual void    set_sequence         (void** seq){
 		reset();
-		sequence = (unsigned char**)seq;
+		sequence = (ALLELE**)seq;
 	}
 	virtual void    set_value            (); // set the genotype
 	virtual void    set_value            (double val)          {_phenotype = val+_genotype;}   // set the phenotype
@@ -117,8 +117,8 @@ private:
 	int     _Va_model;            // 0: always valid, but slow, 1: limited to random mating, but fast
 
 public:
-    double getAllelicValue(const unsigned int& l, const unsigned char& i);
-    double getDominanceValue(const unsigned int& l, const unsigned char& a1, const unsigned char& a2);
+    double getAllelicValue(const unsigned int& l, const ALLELE& i);
+    double getDominanceValue(const unsigned int& l, const ALLELE& a1, const ALLELE& a2);
 
 	TTQuantiSH*             _stats;
 	TTQuantiFH*      _writer;        // only one instance per type of trait: the first trait (index 1) owns it
@@ -137,17 +137,17 @@ public:
 	double*              _fitnessFactor_homozygote;     // _fitnessFactor_homozygote[locus]
 	double*              _fitnessFactor_freqDepend;     // _fitnessFactor_freqDepend[locus]
 	double***            _fitnessFactor;                // _fitnessFactor[locus][allele1][allele2]
-	map<unsigned char, map< unsigned char, double> >*  _locusFreqs; // _locusFreqs[locus][allele1][allele2] used for _fitnessFactor_freqDepend
-	Tree<unsigned char>* _fitnessFactorTree;            //  fitness factor defined for the entire genome
+	map<ALLELE, map< ALLELE, double> >*  _locusFreqs; // _locusFreqs[locus][allele1][allele2] used for _fitnessFactor_freqDepend
+	Tree<ALLELE>* _fitnessFactorTree;            //  fitness factor defined for the entire genome
 
-	Tree<unsigned char>* _phenoTree;          // only for epistatic effect
+	Tree<ALLELE>* _phenoTree;          // only for epistatic effect
 	double               _epistatic_sd;
 
 	// determination of the genotype
-	double  (TTraitQuantiProto::* get_locus_genotype_func_ptr)(const unsigned int& l, const unsigned char& a1, const unsigned char& a2);
-	double  get_locus_genotype_additive (const unsigned int& l, const unsigned char& a1, const unsigned char& a2);
-	double  get_locus_genotype_dominance_single (const unsigned int& l, const unsigned char& a1, const unsigned char& a2);
-	double  get_locus_genotype_dominance_array (const unsigned int& l, const unsigned char& a1, const unsigned char& a2);
+	double  (TTraitQuantiProto::* get_locus_genotype_func_ptr)(const unsigned int& l, const ALLELE& a1, const ALLELE& a2);
+	double  get_locus_genotype_additive (const unsigned int& l, const ALLELE& a1, const ALLELE& a2);
+	double  get_locus_genotype_dominance_single (const unsigned int& l, const ALLELE& a1, const ALLELE& a2);
+	double  get_locus_genotype_dominance_array (const unsigned int& l, const ALLELE& a1, const ALLELE& a2);
 
 	double (TTraitQuantiProto::* get_genotype_dominace_func_ptr)(double a1, double a2, double dom);
 	double get_genotype_dominance(double a1, double a2, double h){
@@ -158,24 +158,24 @@ public:
 
 	double get_dominance_mean(){return _dominance_mean;}
 
-	double  (TTraitQuantiProto::* get_genotype_func_ptr)(unsigned char** seq);
-	double  get_genotype_additive (unsigned char** seq);
-	double  get_genotype_epistatic (unsigned char** seq);
+	double  (TTraitQuantiProto::* get_genotype_func_ptr)(ALLELE** seq);
+	double  get_genotype_additive (ALLELE** seq);
+	double  get_genotype_epistatic (ALLELE** seq);
 
 	double* get_fitnessFactor_heterozygote(){return _fitnessFactor_heterozygote;}
 	double* get_fitnessFactor_homozygote()  {return _fitnessFactor_homozygote;}
 	double*** get_fitnessFactor_array()  {return _fitnessFactor;}
 	bool    fitnessFactor_used() {return (get_fitnessFactor_func_ptr != NULL || get_fitnessFactor2_func_ptr != NULL);}
 	bool    fitnessFactor_freqDep_used() {return (get_fitnessFactor2_func_ptr != NULL);}
-	double  (TTraitQuantiProto::* get_fitnessFactor_func_ptr)(unsigned char** seq);
-	double  (TTraitQuantiProto::* get_fitnessFactor2_func_ptr)(unsigned char** seq);
-	double  get_fitnessFactor_genome(unsigned char** seq);
-	double  get_fitnessFactor_locus(unsigned char** seq);
-	double  get_fitnessFactor_global(unsigned char** seq);
-    double  get_fitnessFactor_freqDepend(unsigned char** seq);
+	double  (TTraitQuantiProto::* get_fitnessFactor_func_ptr)(ALLELE** seq);
+	double  (TTraitQuantiProto::* get_fitnessFactor2_func_ptr)(ALLELE** seq);
+	double  get_fitnessFactor_genome(ALLELE** seq);
+	double  get_fitnessFactor_locus(ALLELE** seq);
+	double  get_fitnessFactor_global(ALLELE** seq);
+    double  get_fitnessFactor_freqDepend(ALLELE** seq);
     double* get_fitnessFactor_freqDepend(){return _fitnessFactor_freqDepend;}
     
-    map<unsigned char, map< unsigned char, double> >*& get_locusFreqs() {return _locusFreqs;}
+    map<ALLELE, map< ALLELE, double> >*& get_locusFreqs() {return _locusFreqs;}
 
 
 	void    check_allelicValues_IMM();
@@ -227,8 +227,8 @@ public:
 	void print_allelic_values (string name);
 	void print_dominance_values (string name);
 	void print_epistatic_values (string name);
-	void print_gentoype(ostream& FILE, unsigned char** seq, const unsigned int& digit);
-	bool get_next_gentoype(unsigned char** seq);
+	void print_gentoype(ostream& FILE, ALLELE** seq, const unsigned int& digit);
+	bool get_next_gentoype(ALLELE** seq);
 
 	virtual void temporal_change(const unsigned int& gen);
 	virtual void executeAfterEachReplicate(const unsigned int& rep);
@@ -361,16 +361,16 @@ public:
 
 
 	// variance components
-	bool compute_alpha(double* y, const map<unsigned char, int*>& x, const unsigned int& nb_ind,
-			map<unsigned char, double>& alpha, const map<unsigned char, double>& availableAllele);
+	bool compute_alpha(double* y, const map<ALLELE, int*>& x, const unsigned int& nb_ind,
+			map<ALLELE, double>& alpha, const map<ALLELE, double>& availableAllele);
 	bool remove_private_alleles_compute_alpha(TPatch* crnt_patch, const unsigned int& sizeF,
-			const unsigned int& sizeM, map<unsigned char, double>& alpha,
+			const unsigned int& sizeM, map<ALLELE, double>& alpha,
 			double* arrayG, const age_idx& age_pos,
-			map<unsigned char, double>& allele_freq, const unsigned int& l);
-	void (TTQuantiSH::*get_Va_ofPatch_func_ptr)(TPatch*, const age_idx&, double&, double&, map<unsigned char, double>*);
-	void get_Va_ofPatch(TPatch* p, const age_idx& a, double& m, double& v, map<unsigned char, double>* f){(this->*get_Va_ofPatch_func_ptr)(p,a,m,v,f);}
-	void get_Va_ofPatch_regression(TPatch*, const age_idx&, double&, double&, map<unsigned char, double>*);    // any case, but slower
-	void get_Va_ofPatch_random_mating(TPatch*, const age_idx&, double&, double&, map<unsigned char, double>*); // only random mating
+			map<ALLELE, double>& allele_freq, const unsigned int& l);
+	void (TTQuantiSH::*get_Va_ofPatch_func_ptr)(TPatch*, const age_idx&, double&, double&, map<ALLELE, double>*);
+	void get_Va_ofPatch(TPatch* p, const age_idx& a, double& m, double& v, map<ALLELE, double>* f){(this->*get_Va_ofPatch_func_ptr)(p,a,m,v,f);}
+	void get_Va_ofPatch_regression(TPatch*, const age_idx&, double&, double&, map<ALLELE, double>*);    // any case, but slower
+	void get_Va_ofPatch_random_mating(TPatch*, const age_idx&, double&, double&, map<ALLELE, double>*); // only random mating
 
 	double getVarA      (unsigned int i, const age_t& AGE){return getVarA(i, age_t2idx(AGE));}
 	double getVarA      (unsigned int i, const age_idx& AGE)  {
@@ -502,9 +502,9 @@ public:
 	void   setVar_Va(const age_idx& AGE);
 	void   setMeanAndVar_Vg(const age_idx& AGE);
 	void   setMeanAndVar_Vg(const age_idx& AGE, sex_t SEX);
-	void   setMeanAndVar_Vg_ofPatch_allInds(TPatch*, const age_idx&, double&, double&, map<unsigned char, double>* freqs=NULL);
-	void   setMeanAndVar_Vg_ofPatch(TPatch*, const age_idx&, double&, double&, map<unsigned char, double>* freqs=NULL);
-	void   setMeanAndVar_Vg_ofPatch(TPatch*, const age_idx&, double&, double&, sex_t SEX, map<unsigned char, double>* freqs=NULL);
+	void   setMeanAndVar_Vg_ofPatch_allInds(TPatch*, const age_idx&, double&, double&, map<ALLELE, double>* freqs=NULL);
+	void   setMeanAndVar_Vg_ofPatch(TPatch*, const age_idx&, double&, double&, map<ALLELE, double>* freqs=NULL);
+	void   setMeanAndVar_Vg_ofPatch(TPatch*, const age_idx&, double&, double&, sex_t SEX, map<ALLELE, double>* freqs=NULL);
 	void   setMeanAndVar_Vp();
 	void   setMeanAndVar_Vp(sex_t SEX);
 	void   setMeanAndVar_Vp_ofPatch(TPatch* crnt_patch, double& meanP, double& varP);

@@ -137,8 +137,8 @@ TPatch::set_Ve(const int& model, const int& trait, sex_t sex)
 		TTQuantiSH* pStats = _pSelectionType[trait]->get_pQuantiProto()->_stats;
 		if(model==1 || model==2){ // narrow-sense heritability
 			unsigned int nb_locus  = _pSelectionType[trait]->get_pQuantiProto()->get_nb_locus();
-			map<unsigned char, double>* freqs = new map<unsigned char, double>[nb_locus];
-			map<unsigned char, double>* freqs2 = new map<unsigned char, double>[nb_locus];  // just a placeholder for the global allele frequency
+			map<ALLELE, double>* freqs = new map<ALLELE, double>[nb_locus];
+			map<ALLELE, double>* freqs2 = new map<ALLELE, double>[nb_locus];  // just a placeholder for the global allele frequency
 			pStats->set_alleleFreq_ofPatch_allInds(this, ADLTx, freqs, freqs2);
 			pStats->get_Va_ofPatch(this, ADLTx, mean, var, freqs);  // compute Va
 			if(var == my_NAN){      // if it could not be computed -> use the method for random mating to compute Va

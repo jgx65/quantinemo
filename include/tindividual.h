@@ -286,20 +286,20 @@ public:
 	}
 
 	/**Creates an individual's genotypes and phenotypes for first generation.**/
-	inline void create_dadFirst(unsigned char* seq_dad, unsigned char* seq_mum){create(seq_mum, seq_dad);}
-	inline void create (unsigned char* seq_mum, unsigned char* seq_dad){
+	inline void create_dadFirst(ALLELE* seq_dad, ALLELE* seq_mum){create(seq_mum, seq_dad);}
+	inline void create (ALLELE* seq_mum, ALLELE* seq_dad){
 		genome.ini_sequence(seq_mum, seq_dad);
 		for(unsigned int i = 0; i < _trait_nb; i++) {
 			Traits[i]->set_value();
 		}
 	}
-	inline void create (unsigned char** seq){    // seq: 0: mum, 1: dad
+	inline void create (ALLELE** seq){    // seq: 0: mum, 1: dad
 		genome.ini_sequence(seq);
 		for(unsigned int i = 0; i < _trait_nb; i++) {
 			Traits[i]->set_value();
 		}
 	}
-	inline void create_dadFirst (unsigned char** seq){    // seq: 0: dad, 1: mum
+	inline void create_dadFirst (ALLELE** seq){    // seq: 0: dad, 1: mum
 		genome.ini_sequence_dadFirst(seq);
 		for(unsigned int i = 0; i < _trait_nb; i++) {
 			Traits[i]->set_value();

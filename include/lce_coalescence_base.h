@@ -57,7 +57,7 @@ class LCE_Coalescence_base : public LCE {
 private:
     unsigned int             _nbSamples;         // number of samples (haploid)
     map<unsigned int, unsigned int> _iniSamples; // container with the initial samples
-    unsigned char**          _seq;               // _seq[sample][locus]
+    ALLELE**          _seq;               // _seq[sample][locus]
     double                   _model_threshold;   // 0: just multiple coalescence events
     unsigned int             _nbGen;             // number of generations to store (time of the demographic simulation)
     unsigned int             _nbLocus;           // total number of loci
@@ -106,7 +106,7 @@ public:
     inline dbCoalescence* get_dbCoalescence(){return _dbCoalescence;}
     inline unsigned int get_nbGen(){return _nbGen;}
     inline unsigned int get_nbLocus(){return _nbLocus;}
-    inline unsigned char** get_seq(){return _seq;}
+    inline ALLELE** get_seq(){return _seq;}
     inline unsigned long* get_vMRCA() {return _vMRCA;}
 
     LCE_CoalescenceFH*           get_writer(){return _writer;}

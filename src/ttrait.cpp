@@ -508,7 +508,7 @@ TTraitProto::ini_paramset()
     add_parameter(_type+"_loci"+trait,INT2,true,0,my_NAN,"0", false,
                   "Number of loci to simulate per " + trait_temp + ".", 5);
     
-    add_parameter(_type+"_all"+trait,INT_MAT,false,1,256,"255", false,
+    add_parameter(_type+"_all"+trait,INT_MAT,false,1,255,"255", false,
                   "Maximum number of alleles per locus.", 5);
     
 
@@ -736,8 +736,8 @@ TTrait::ini(TIndividual* ind)
 
 	unsigned int nbLocus = 	pTraitProto->_nb_locus;
 	TLocus* aLocus       = pTraitProto->_aLocus;
-	sequence             = new unsigned char*[nbLocus];
-	unsigned char** cur_seq = ind->genome.get_sequence();
+	sequence             = new ALLELE*[nbLocus];
+	ALLELE** cur_seq = ind->genome.get_sequence();
 	for(unsigned int l=0; l<nbLocus; ++l){
 		sequence[l] = cur_seq[aLocus[l].get_locus_id_tot()];
 	}

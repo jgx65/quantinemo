@@ -247,7 +247,7 @@ void LCE_Coalescence_base::set_up_metapop()
     
     // set up the metapopulation with the simulated genotypes
     map<unsigned int, unsigned int>::iterator curPos, endPos;
-    unsigned char** curSeq = _seq;  // iterator
+    ALLELE** curSeq = _seq;  // iterator
     unsigned int i;
     TPatch* curPatch;
     for (curPos = _iniSamples.begin(), endPos = _iniSamples.end(); curPos != endPos; ++curPos) {
