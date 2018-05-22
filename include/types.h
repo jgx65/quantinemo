@@ -47,7 +47,7 @@
 typedef unsigned short int POP_SIZE;
 typedef unsigned short int PATCH_ID;
 typedef unsigned short int MIGR_SIZE;
-typedef unsigned char ALLELE;
+typedef unsigned short ALLELE;
 #define PI 3.1415926535897932384626433832795028841972
 
 #include <string>

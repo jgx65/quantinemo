@@ -508,7 +508,7 @@ TTraitProto::ini_paramset()
     add_parameter(_type+"_loci"+trait,INT2,true,0,my_NAN,"0", false,
                   "Number of loci to simulate per " + trait_temp + ".", 5);
     
-    add_parameter(_type+"_all"+trait,INT_MAT,false,1,255,"255", false,
+    add_parameter(_type+"_all"+trait,INT_MAT,false,1,65535,"255", false,
                   "Maximum number of alleles per locus.", 5);
     
 
