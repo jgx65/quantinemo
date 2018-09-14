@@ -506,10 +506,10 @@ QuantiNemo supports several macros allowing to write more easily the settings fi
 \item[option "Time"]\hspace*{\fill}\\
 Adding this option to most of the macro allows generating temporal arguments. If this option is used with a macro allowing to draw random deviates it is possible to simulate temporal fluctuations. In principle, the macro draws for the given time interval random numbers following the specifications and generates a corresponding temporal argument with $nb$ intervals. The option \textit{Time} has to follow directly the macro name, e.g. \textit{rnormTime} for the macro \textit{rnorm} and the arguments of the macro have to be extended at the end by two values which are the start and the end time, e.g. \textit{rnorm(nb, mean, sd, timeFrom, timeTo)}. In this example the number of random deviates (\textit{nb}) specifies the number of regular temporal changes between \textit{timeFrom} and \textit{timeTo}. The time intervals are generated internally as $seq(timeFrom, timeTo, nb)$. An example of such a temporal macro is shown with the macro $seq$ below.
 
-\item[seq($from, to, steps$)\index{seq}]\hspace*{\fill}\\
+\item[seq($from, to, nb.steps$)\index{seq}]\hspace*{\fill}\\
 \vspace{-9mm}
-\item[seqTime($from, to, steps, timeFrom, timeTo$)]\hspace*{\fill}\\
-With this macro it is possible to specify a sequence of data points. \textit{seq} works similar as \textit{seq} in the statistical package R. The macro needs three arguments separated by a comma: $from$ is the first data point of the sequence, $to$ is the last data point of the sequence and $steps$ specifies the number of data points including the edges (equivalent to \textit{length.out} in R). $from$ and $to$ may be single values or matrices while $steps$ has to be a number. If the matrices of $from$ and $to$ do not have identical dimensions the matrices are adjusted to each other. Example of $seq$:
+\item[seqTime($from, to, nb.steps, timeFrom, timeTo$)]\hspace*{\fill}\\
+With this macro it is possible to specify a sequence of data points. \textit{seq} works similar as \textit{seq} in the statistical package R though \textit{length.out} is used by default instead of \textit{by}. The macro needs three arguments separated by a comma: $from$ is the first data point of the sequence, $to$ is the last data point of the sequence and $nb.steps$ specifies the number of data points including the edges. $from$ and $to$ may be single values or matrices while $nb.steps$ has to be a number. If the matrices of $from$ and $to$ do not have identical dimensions the matrices are adjusted to each other. Example of $seq$:
 \begin{lstlisting}[frame=single]
 patch_capacity {seq(100, 1000, 10)}
 patch_capacity {100 200 300 400 500 600 700 800 900 1000}
