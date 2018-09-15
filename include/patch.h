@@ -82,7 +82,7 @@ protected:
 	unsigned int _N_ini, _N_ini_sex[2];      /** Sex specific initial population sizes */
 	double _N_sample, _N_sample_sex[2];      /** Sample size of the patch, if <1 then proportion of the pop size, if >1 then number of samples */
 	unsigned int _sampleID;                  /** if the patch is sampled AND CURRETLY populated it contains the  sample id (index in the vector _vFullPatch)
-	 * if sampled but CURRENTLY not populated it is 55555
+	 * if sampled but CURRENTLY not populated it is 5555555
 	 * if not sampled at all it is NaN
 	 */
 

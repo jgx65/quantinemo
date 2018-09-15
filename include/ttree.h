@@ -54,7 +54,7 @@ using namespace std;
 	* template E: data type of the element to store
 	*/
 
-const unsigned int NOT_SET=99999;
+const unsigned int NOT_SET=9999999;
 
 /** input and output declarations */
 template <class K, class E> class TNode;
