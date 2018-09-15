@@ -94,14 +94,14 @@ inline age_idx age_t2idx(const age_t& AGE){
 #define ploidy 2
 
 
-#define my_NAN 99999
+#define my_NAN 9999999
 #define my_NANstr (string)("NaN")
 
-#define my_STR 22222
+#define my_STR 2222222
 #define my_STRstr (string)("STR")
 
-#define SAMPLED 55555
-#define RECOMB 66666
+#define SAMPLED 5555555
+#define RECOMB 6666666
 
 #define NB_AGE_CLASSES 2
 
