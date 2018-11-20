@@ -1475,9 +1475,9 @@ void LCE_Disperse::migrate_2D_ss_8Neighbour_all() {
 		for (x = 1, ++curPop, ++id; x <= _x_size - 2; ++x, ++curPop, ++id) {
 			//ID2Coord(id, xx, yy);
 			//assert(yy>0 && yy<_y_size && xx<_x_size && xx>0);
-			migrate_8_neighbours(*curPop, id, id - 1, id - _x_size,
+			migrate_8_neighbours(*curPop, id, id - _x_size - 1, id - _x_size,
                                  id - _x_size + 1, id + 1, id + _x_size + 1, id + _x_size,
-                                 id + _x_size - 1, id - x - 1, _migr_rate, _migr_rate,
+                                 id + _x_size - 1, id - 1, _migr_rate, _migr_rate,
                                  _migr_rate, _migr_rate, _migr_rate, _migr_rate, _migr_rate,
                                  _migr_rate, _tot_emigRate);
 		}
