@@ -2665,7 +2665,7 @@ TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
     
     // compute the additive variance
     varA = 0;
-    double aStar; // corrected alphaStar value (subtraction of meanG)
+    double aStar; // corrected alphaStar value (subtraction of meanG) E423b
     map<ALLELE, double>::iterator pos, end;
     for(l=0; l<_nb_locus; ++l){
         pos = freqs[l].begin();
@@ -2786,7 +2786,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
         }
     } // for each indvidual
     
-    // correct the genotype by the mean genotype
+    // correct the genotype by the mean genotype E4.16a
     meanG /= size;
     for(i = 0; i < size; ++i) {
         arrayG[i] -= meanG;
@@ -2829,7 +2829,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
         }
     }
     
-    // compute the additive variance  var = 2*sum(p a a*)
+    // compute the additive variance  var = 2*sum(p a a*) E4.23a
     varA = 0;
     map<ALLELE, double>::iterator curAlpha, curAlphaStar, curFreq, endFreq;
     for(l=0; l<_nb_locus; ++l){
@@ -2837,7 +2837,13 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
         curAlphaStar = alphaStar[l].begin();
         curFreq      = freqs[l].begin();
         endFreq      = freqs[l].end();
-        for(; curFreq != endFreq; ++curAlpha, ++curAlphaStar, ++curFreq){   // for each allele
+        for(unsigned int gg=0; gg<freqs[l].size(); ++gg){   // for each allele
+            if(gg){
+                ++curAlpha;
+                ++curAlphaStar;
+                ++curFreq;
+            }
+        //for(; curFreq != endFreq; ++curAlpha, ++curAlphaStar, ++curFreq){   // for each allele
             varA += curAlpha->second * (curAlphaStar->second - meanG) * curFreq->second; // any case
             // var += alphaStar[l][a]*alphaStar[l][a]*freqs[l][a1];            // limited to random mating
         }
@@ -2868,7 +2874,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
 // ----------------------------------------------------------------------------------------
 // compute_alpha
 // ----------------------------------------------------------------------------------------
-/** traditional sum of squares and products method of calculation
+/** traditional sum of squares and products method of calculation E4.19
  * compute the alpha
  * returns false if the regression was not able to compute due to
  * individuals which have two private alleles
