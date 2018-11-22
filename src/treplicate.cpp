@@ -667,7 +667,6 @@ TReplicate::print_info(TMetapop* thePop)
     message("\n    %i generations", thePop->getGenerations());
     message("\n    %i replicates", _pSimulation->get_replicates());
     message("\n    %i. of %i batch simulations", 1+_pSimulation->_current_sim, _pSimulation->_nbSims);
-    message("\n    %i threads used", _pSimulation->_threads);
     if (_pSimulation->get_fixedSeed()) message("\n    random generator initialized by the user");
     else message("\n    random generator initialized by the time");
     
