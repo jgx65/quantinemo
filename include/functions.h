@@ -314,7 +314,7 @@ template<typename T>
 inline string toStr(const T& x)
 {
 	ostringstream o;
-	if (!(o << x))
+	if (!(o << std::setprecision(10)<< x))
 		throw BadConversion(string("toStr(") + typeid(x).name() + ")");
 	return o.str();
 }
