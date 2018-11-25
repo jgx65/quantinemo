@@ -31,7 +31,7 @@
 *   along with quantiNemo.  If not, see <http://www.gnu.org/licenses/>.
 */
 #define RELEASE 2
-#define REVISION 0
+#define REVISION 1
 #define MINOR_VERSION 0
 #define TEMP_VERSION ""
 
