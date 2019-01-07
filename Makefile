@@ -32,7 +32,7 @@ debug: INCS += -D_DEBUG
 debug: CFLAGS  += -Wall
 debug: bin
 
-release: CFLAGS  += -O3 #-static
+release: CFLAGS  += -O3 -static
 release: CFLAGS  += -DVERSIONGIT=\"$(GIT_VERSION)\"
 release: bin
 
