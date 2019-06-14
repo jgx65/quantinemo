@@ -254,7 +254,7 @@ void StatServices::notify ()
     if(file_stat){          // if stats are directly written to file (file remains open during the entire simulation)
         //	ofstream FH(_file_stats.c_str(), ios::app);
         //	if (!FH) error("Could not open stat output file \"%s\"!\n", _file_stats.c_str());
-       // _popPtr->printGenRep2File(*file_stat); // already done with the params
+        _popPtr->printGenRep2File(*file_stat); // already done with the params
         Service::notify(*file_stat);
         *file_stat << endl;       // flush the stream...
         //	FH.close();
