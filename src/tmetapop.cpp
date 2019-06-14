@@ -1453,7 +1453,7 @@ void TMetapop::set_patch_array_byMatrix_ofTrait(unsigned int curTrait,
     // get the vals for each patch
     double* array = new double[count_vals];
     for(p = 0; p < _patchNbr; ++p) {
-        m->getRowView(p % count_patch, count_vals, array);
+        m->getColumnView(p % count_patch, count_vals, array);
         _vPatch[p]->set_localParameter_matrix_ofTrait(curTrait, array, count_vals, SEX, pt2Func);
     }
     
