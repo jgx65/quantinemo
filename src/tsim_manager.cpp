@@ -1,7 +1,7 @@
 /** @file tsim_manager.cpp
  *
  *   Copyright (C) 2008 Samuel Neuenschwander <samuel.neuenschwander@unil.ch>
- *   Copyright (C) 2018 Frederic Michaud <frederic.michaud@unil.ch>
+ *   Copyright (C) 2018 Frederic Michaud <frederic.a.michaud@gmail.com>
 
  *   quantiNemo:
  *   quantiNemo is an individual-based, genetically explicit stochastic
@@ -285,7 +285,7 @@ void TSimManager::printVersion()
     message("\nCommit N°:  %s",VERSIONGIT);
 #endif
     message("\n\nAuthors:    Samuel Neuenschwander (samuel.neuenschwander@unil.ch) &");
-    message(  "\n            Frederic Michaud (frederic.michaud@unil.ch)");
+    message(  "\n            Frederic Michaud (frederic.a.michaud@gmail.com)");
     message(  "\n            Jerome Goudet (jerome.goudet@unil.ch)");
     message(  "\n            Department of Ecology and Evolution");
     message(  "\n            University of Lausanne, Switzerland\n");

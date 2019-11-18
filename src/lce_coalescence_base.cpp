@@ -1,7 +1,7 @@
 /** @file lce_coalescence_base.cpp
  *
  *   Copyright (C) 2010 Samuel Neuenschwander <samuel.neuenschwander@unil.ch>
- *   Copyright (C) 2018 Frederic Michaud <frederic.michaud@unil.ch>
+ *   Copyright (C) 2018 Frederic Michaud <frederic.a.michaud@gmail.com>
  *
  *   quantiNemo:
  *   quantiNemo is an individual-based, genetically explicit stochastic

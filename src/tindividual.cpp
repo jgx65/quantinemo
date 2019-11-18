@@ -1,7 +1,7 @@
 /** @file individual.cpp
 *
 *   Copyright (C) 2006 Frederic Guillaume    <guillaum@zoology.ubc.ca>
-*   Copyright (C) 2018 Frederic Michaud <frederic.michaud@unil.ch>
+*   Copyright (C) 2018 Frederic Michaud <frederic.a.michaud@gmail.com>
 
 *
 *   quantiNemo:

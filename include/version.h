@@ -2,7 +2,7 @@
 *
 *   Copyright (C) 2006 Frederic Guillaume    <guillaum@zoology.ubc.ca>
 *   Copyright (C) 2008 Samuel Neuenschwander <samuel.neuenschwander@unil.ch>
- *   Copyright (C) 2018 Frederic Michaud <frederic.michaud@unil.ch>
+ *   Copyright (C) 2018 Frederic Michaud <frederic.a.michaud@gmail.com>
 *   quantiNemo:
 *   quantiNemo is an individual-based, genetically explicit stochastic
 *   simulation program. It was developed to investigate the effects of
