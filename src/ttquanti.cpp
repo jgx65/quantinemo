@@ -2412,7 +2412,7 @@ void TTQuantiFHvalue::FHwrite (const age_idx& cur_age, const sex_t& cur_sex, ost
     
     for(j = 0; j < nbInd; ++j){
         ind = current_patch->get(cur_sex,cur_age, j);
-        FILE << (patch_id+1);
+        FILE << current_patch->get_IDstr();
         for(t=0; t<_nb_trait; ++t){
             value = (this->*get_value_func_ptr)(ind, t);
             FILE << "\t" << (value==my_NAN ? my_NAN : value);

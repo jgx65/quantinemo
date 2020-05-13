@@ -242,6 +242,7 @@ public:
 	///@name Getters
 	///@{
 	inline unsigned int  get_ID             ()               {return _ID;}
+    inline string  get_IDstr             ()               {return _IDstr;}
 	string        get_next_IDofIndividual   ()               {return toStr(_ID_individual++)+"_"+_IDstr;}  // "234_1": individual 234 of patch 1
 	unsigned int  get_K                     ()               {return _K;}
 	unsigned int  get_K                (sex_t SEX)           {return _Ksex[SEX];}
