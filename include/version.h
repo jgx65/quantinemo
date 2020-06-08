@@ -32,7 +32,7 @@
 */
 #define RELEASE 2
 #define REVISION 0
-#define MINOR_VERSION 1
+#define MINOR_VERSION 2
 #define TEMP_VERSION ""
 
 #define VERSION_DATE __DATE__//"[08 May 2007]"       __DATE__ /__TIME__ /__TIMESTAMP__
