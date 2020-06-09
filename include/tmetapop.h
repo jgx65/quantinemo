@@ -38,11 +38,7 @@
 
 #include "patch.h"
 
-#ifdef _RANDOM_C11
-#include "randomC11.h"
-#else
 #include "random.h"
-#endif
 
 class LCE;
 class LCE_Breed;
