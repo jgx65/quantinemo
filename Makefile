@@ -1,6 +1,6 @@
 #CC=icpc -static -O3
 #CC=g++ -static #-O3
-#CFLAGS= -O3 #-static
+CFLAGS = -std=c++11
 #CFLAGS_DB="" #-static
 CC=g++ # for mac os x
 
