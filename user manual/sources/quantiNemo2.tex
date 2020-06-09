@@ -6,10 +6,11 @@
 
 \usepackage[T1]{fontenc}
 %\usepackage{framed}
-
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{float}
-\usepackage{array,supertabular}
+\usepackage{array}
+\usepackage{supertabular}
 \newcolumntype{G}{p{0cm}p{4.1cm}p{10.5cm}}
 
 %\usepackage{graphicx}          %% used with latex
@@ -47,7 +48,7 @@
 \citestyle{nntrueapa}
 
 \usepackage{listings}
-\lstset{xleftmargin=18pt,framexleftmargin=15pt,xrightmargin=3pt, basicstyle=\footnotesize}
+\lstset{xleftmargin=18pt,framexleftmargin=15pt,xrightmargin=3pt, basicstyle=\footnotesize,literate={-}{{\-}}1}
 
 \usepackage{makeidx}
 \makeindex
@@ -67,6 +68,7 @@
 \newcommand{\jg}[1]{\small {\bf \color{orange} [JG:  #1]} \normalsize}
 \newcommand{\fm}[1]{\small {\bf \color{blue} [FM:  #1]} \normalsize}
 \newcommand{\tbc}[1]{\small {\bf \color{red} [Is temporal]} \normalsize} %to be check
+\newcommand{\bug}[1]{\small {\bf \color{red} [issue: #1]} \normalsize} %to be check
 
 
 %% does not work with pdflatex
@@ -84,7 +86,7 @@
 \vspace*{\stretch{1}}
 \begin{flushright}
 \bfseries\sffamily {\Huge quantiNemo}\\
-\Large release 2.0.0
+\Large release 2.0.2
 \end{flushright}
 \noindent\rule{\linewidth}{1.5pt}
 \vspace*{\stretch{1}}
@@ -1591,7 +1593,7 @@ This parameter specifies how the environmental variance is defined. The followin
 \begin{description}
 \item [0~:~set $V_{E}$ directly.] The variance of the environment is set directly by the parameter \textsf{quanti\_heritability}, which is in this case not the heritability, but the environmental variance.
 \item [1~:~$V_{E}$ defined by the narrow-sense heritability ($V_{E}$ constant).] The variance of the environment ($V_{E}$) is set at the beginning of a simulation (generation 1) and is based on the narrow-sense heritability ($h^{2}$, parameter \textsf{quanti\_heritability}) and the additive genetic variance ($V_{A}$ at generation 1). Note, that in this case, the environmental variance remains constant over time, but not the heritability.
-\item [2~:~$V_{E}$ defined by the narrow-sense heritability ($h^{2}$ constant).] This is the same as model 1, but the environmental variance is readjusted at each generation. Thus the narrow-sense heritability remains constant over time, but not the environmental variance. 
+\item [2~:~$V_{E}$ defined by the narrow-sense heritability ($h^{2}$ constant).] This is the same as model 1, but the environmental variance is readjusted at each generation. Thus the narrow-sense heritability remains constant over time, but not the environmental variance. \bug{We do not recommend using this option for the time being}
 \item [3~:~$V_{E}$ defined by the broad-sense heritability ($V_{E}$ constant).] The variance of the environment ($V_{E}$) is set at the beginning of a simulation (generation 1) and is based on the broad-sense heritability ($H^{2}$, parameter \textsf{quanti\_heritability}) and the genetic variance ($V_{G}$ at generation 1). Note, that in this case, the environmental variance remains constant over time, but not the heritability.
 \item [4~:~$V_{E}$ defined by the broad-sense heritability ($H^{2}$ constant).] This is the same as model 3, but the environmental variance is readjusted at each generation. Thus the broad-sense heritability remains constant over time, but not the environmental variance. 
 \end{description}
@@ -1610,12 +1612,21 @@ Note, that a heritability (narrow and broad sense) of 0 (no genetic component) m
 This parameter specifies which environment affects the phenotype of the quantitative trait: the natal or the current (at the adult stage) environment? The argument specifies the relative weight of the current patch effect on the phenotype: if the value is 1 (default value) only the environmental variance of the current patch affects the phenotype while if the value is 0 only the environmental variance of the natal patch affects the phenotype.
 
 \item [quanti\_va\_model\index{quanti\_va\_model}] \textbf{[0-2] (default: 0)}\\
+
+
+
 This parameter specifies how the additive genetic variance ($V_{A}$) of a quantitative trait is computed. The additive genetic variance of a trait is used in several statistics. For instance it is used to set the environmental variance of the patches if this variance is specified by the narrow-sense heritability ($h2$, parameter \textsf{quanti\_environmental\_model} set to 2 or 3, see also parameter \textsf{quanti\_heritability}), the additive genetic variance may also be directly output as summary statistic (stat option $q.varA$), or indirectly in the population differentiation measurement $Q_{ST}$ (stat option $q.qst$, $q.qst.f$, $q.qst_pair$, and $q.qst.f_pair$).
 The additive genetic variance ($V_{A}$) is computed following \citet[p85-87]{Lynch_1998}. For a quantitative trait determined by a single locus this is:
 
 \[ V_{A} = 2\sum_{i=1}^{nbAllele}p_{i}\alpha_{i}\alpha_{i}^{*} \]
 
-Where $p_{i}$ is the allele frequency of allele $i$, $\alpha_{i}$ is the additive effect of allele $i$, and $\alpha_{i}^{*}$ is the average excess of allele $i$. Note, that we show here the computation for a single locus for simplicity reasons. In quantiNemo, a full version for traits determined by multiple loci is implemented. However, the implementation does not take into account linkage between loci, thus the additive genetic variance is underestimated when loci are linked.
+Where $p_{i}$ is the allele frequency of allele $i$, $\alpha_{i}$ is the additive effect of allele $i$, and $\alpha_{i}^{*}$ is the average excess of allele $i$. 
+
+We show the computation for a single locus. For multiple loci, we sum over the loci and do not account for LD
+%Note that we show here the computation for a single locus for simplicity reasons. In quantiNemo, a full version for traits determined by multiple loci is implemented. However,currently  the implementation does not take into account linkage between loci.
+
+\bug{Addivite variance is overestimated with quanti\_va\_model set to  0 or 1, the more so the more loci encode for the trait.  This will affect all the statistics using additive variance. If the trait is purely additive, option 2 provides the correct  additive variance. We are working on a fix.}   
+
 
 \begin{description}
 \item [0~:~for any case.] If this model is chosen the additive effect ($\alpha_{i}$) and the average excess ($\alpha_{i}^{*}$) are computed. While the average excess is simple to compute, the computation of the additive effect requires a time consuming least-square regression. This formula is valid for any mating system, but its computation is rather slow. 
@@ -1631,7 +1642,7 @@ This warning is returned the first 10 times the problem occurs and then every hu
  
 \item [1~:~limited to random mating.] In case of random mating, the additive effect ($\alpha_{i}$) and the average excess ($\alpha_{i}^{*}$) are identical. Therefore the time consuming computation of the additive effect can be omitted. Note, that even when the mating system is set to random mating (parameter \textsf{mating\_system} set to 0 or 2) mating is not randomly if selection acts, as the choice of the parents depends on their fitnesses. It's up to the user to decide whether this quick way to compute the additive genetic variance is appropriate or not.  
 
-\item [1~:~$V_{A} = V_{G}$.] This model assumes that the additive genetic variance $V_{A}$ is identical or may be approximated by the genetic variance $V_{G}$. 
+\item [2~:~$V_{A} = V_{G}$.] This model assumes that the additive genetic variance $V_{A}$ is identical or may be approximated by the genetic variance $V_{G}$. 
 \end{description}
 \end{description}
 
@@ -2144,15 +2155,19 @@ This parameter allows to specify when statistics should be computed (only availa
 \item[0~:~when possible.] In this case statistics and outputs are generated whenever it is possible, \textit{i.e.} whenever a patch is enough populated that a given statistic may be computed.
 \item[1~:~all or nothing.] In this case statistics and output are generated only if the entire sampling schema may be applied, \textit{i.e.} if the patches are enough populated that the specified sampling may be applied. If this is not the case a NaN or a zero depending on the statistic is outputted for all statistics. Note that in such a case the genetic part of the coalescence simulations are omitted, thus the simulation may be much quicker although useless. A specified sampling may not be applied if (and only if) not all specified patches (parameter \textsf{sampled\_patches} defined as a matrix) may be sampled or the population size is inferior to the sampling size (parameter \textsf{patch\_sample\_size} defined in entire numbers (absolute)).
 \end{description}
+
 \end{description}
+
+
 \topcaption{\label{coalstats}Summary statistics available for coalescence simulations}
 \tablehead{\hline \multicolumn{2}{l}{Stat name} &Description \\ \hline}
 \tabletail{\hline \multicolumn{3}{l}{\emph{Table \ref{coalstats} continued on next page}} \\}
-\tablelasttail{\hline \multicolumn{3}{l}{\emph{Table \ref{coalstats}: Summary statistics available for coalescence simulations continued}}}
+\tablelasttail{\hline \multicolumn{3}{l}{\emph{Table \ref{coalstats}: Summary statistics available for coalescence simulations continued}} \\}
+
 \begin{supertabular}{G}
-\multicolumn{3}{l}{\emph{MRCA} [mrca]}\\
- &mrca.mean            &mean time to the MRCA*\\
- &mrca.var            &variance of the time to the MRCA* \\
+\multicolumn{3}{l}{\emph{MRCA} [mrca]} \\
+ &mrca.mean            & mean time to the MRCA* \\
+ &mrca.var            & variance of the time to the MRCA* \\
 \end{supertabular}
 
 
@@ -2247,7 +2262,9 @@ The column \textsf{Stat name} contains the name of the summary statistic used to
 \begin{description}
 
 \item[0 : All.] Output includes all types of summary statistic (files "generic\_name\_stats.txt", "generic\_name\_mean.txt", and "generic\_name\_var.txt").
-\item[1 : Detailed.] Output includes only the file containing the summary statistics for each replicate separately (file "generic\_name\_stats.txt"). Since in this case (in contrast to all other options) it is not necessary to save the statistics over all replicates, the statistics are written to file when they are computed. This means that the internal database to store the statistics is not used, consequently, the memory used by quantiNemo does not increase with each generation and replicate.
+\item[1 : Detailed.] \bug{Output includes only the file containing the summary statistics for the last replicate} 
+%Output includes only the file containing the summary statistics for each replicate separately 
+(file "generic\_name\_stats.txt"). Since in this case (in contrast to all other options) it is not necessary to save the statistics over all replicates, the statistics are written to file when they are computed. This means that the internal database to store the statistics is not used, consequently, the memory used by quantiNemo does not increase with each generation.% and replicate.
 \item[2 : Summed up.] Output includes the files containing the summary statistics summed up by their mean and variance across replicates (files "generic\_name\_mean.txt", and "generic\_name\_var.txt"). 
 \item[3 : Mean.] Output includes only the file containing the summary statistics summed up by their mean across replicates (file "generic\_name\_mean.txt").
 \item[4 : Variance.] Output includes only the file containing the summary statistics summed up by their variance across replicates (file "generic\_name\_var.txt").
@@ -2283,7 +2300,7 @@ This parameter allows specifying a placeholder used for the output of the summar
 \topcaption{\label{popstats}Summary statistics available for the demographic structure}
 \tablehead{\hline \multicolumn{2}{l}{Stat name} &Description \\ \hline}
 \tabletail{\hline \multicolumn{3}{l}{\emph{Table \ref{popstats} continued on next page}} \\}
-\tablelasttail{\hline \multicolumn{3}{l}{\emph{Table \ref{popstats}: Summary statistics available for the demographic structure continued}}}
+\tablelasttail{\hline \multicolumn{3}{l}{\emph{Table \ref{popstats}: Summary statistics available for the demographic structure continued}} \\}
 \begin{supertabular}{G}
 \multicolumn{3}{l}{\emph{Demography} [(adlt/off).demo]} \\
  &(adlt/off).nbInd                    &total number of individuals in the metapopulation*\\
@@ -2362,7 +2379,7 @@ This parameter allows specifying a placeholder used for the output of the summar
 \topcaption{\label{ntrlstats}Summary statistics available for neutral markers}
 \tablehead{\hline \multicolumn{2}{l}{Stat name} &Description \\ \hline}
 \tabletail{\hline \multicolumn{3}{l}{\emph{Table \ref{ntrlstats} continued on next page}} \\}
-\tablelasttail{\hline \multicolumn{3}{l}{\emph{Table \ref{ntrlstats}: Summary statistics available for neutral markers continued}}}
+\tablelasttail{\hline \multicolumn{3}{l}{\emph{Table \ref{ntrlstats}: Summary statistics available for neutral markers continued}} \\}
 \begin{supertabular}{G}
 \multicolumn{3}{l}{\emph{Genotype coancestry} [n.(adlt/off).coa]}\\
  &n.(adlt/off).theta            &mean within patch coancestry*\\
@@ -2494,7 +2511,7 @@ This parameter allows specifying a placeholder used for the output of the summar
 \topcaption{\label{quantistats}Summary statistics available for quantitative traits}
 \tablehead{\hline \multicolumn{2}{l}{Stat name} &Description \\ \hline}
 \tabletail{\hline \multicolumn{3}{l}{\emph{Table \ref{quantistats} continued on next page}} \\}
-\tablelasttail{\hline \multicolumn{3}{l}{\emph{Table \ref{quantistats}: Summary statistics available for quantitative traits continued}}}
+\tablelasttail{\hline \multicolumn{3}{l}{\emph{Table \ref{quantistats}: Summary statistics available for quantitative traits continued}} \\}
 \begin{supertabular}{G}
 \multicolumn{3}{l}{\emph{Quantitative trait statistics} [quanti, available only for adults]}\\
  &q.VgW                         &genetic variance within patches*\\
