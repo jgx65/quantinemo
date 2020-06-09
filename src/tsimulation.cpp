@@ -414,8 +414,9 @@ TSimulation::isCoalescence(map<string, string>& inputParams)
 bool
 TSimulation::init_fileServices()
 {
-    set_basename(_paramSet.getArg("filename"));
-
+    string base_name =_paramSet.getArg("filename");
+    if (_nbSims > 1) base_name += "-" + to_string(_current_sim);
+    set_basename(base_name);
 	string wd = _paramSet.getArg("working_directory");
     if (isNumber<unsigned int>(wd)) {
         switch (strTo<unsigned int>(wd)) {
@@ -431,20 +432,19 @@ TSimulation::init_fileServices()
         }
 	}
     else set_working_directory(wd); // working directory is explicitly defined
-    
+    string name;
     // set the simulation folder name
     if (!this->_paramSet.isSet("folder")) {
         // generate the default folder name with current date
         char datetime[20];
         time_t t = time(NULL);
         strftime(datetime, 20, "%Y-%m-%d_%H-%M-%S", localtime(&t));
-        string name = STRING::get_file_basename(this->_paramSet.getArg("_settings_file")) + "_";
+        name = STRING::get_file_basename(this->_paramSet.getArg("_settings_file")) + "_";
         //string name = "simulation_";
         name += datetime;
-        set_simfolder(name);
     }
-    else set_simfolder(this->_paramSet.getArg("folder")); // folder name is set
-    
+    else name = this->_paramSet.getArg("folder"); // folder name is set
+    set_simfolder(name);
     set_logfile(get_working_directory() + _paramSet.getArg("logfile"));
     set_logfile_type((int) _paramSet.getValue("logfile_type"));
     setOverwriteFiles((bool) this->_paramSet.getValue("overwrite"));
