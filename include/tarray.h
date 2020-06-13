@@ -660,43 +660,36 @@ public:
         return out.str();
     }
     
+    
     //------------------------------------------------------------------------------
-    /** compute the unbiased estimated variance of an array */
+    /** compute the unbiased variance of an array */
     template <typename T>
-    static double varUnbiased(T* array, unsigned int size){
-        if(size<=1) return my_NAN;
-        
-        double sum=0.0, sq_sum=0.0;
-        unsigned int nb = 0;
-        T* end = array + size;          // get the end
-        
-        for(; array != end; ++array) {
-            if(*array == my_NAN) continue;
-            sum    += (*array);
-            sq_sum += (*array) * (*array);
-            ++nb;
-        }
-        
-        return (nb>1) ? (double)(sq_sum - sum*sum/nb) / (nb-1) : my_NAN;
+    static double varUnbiased(T* array, unsigned  int size, double mu=my_NAN){
+        if (size == 1) return my_NAN;
+        double bias_var = var(array, size, mu);
+        double unbias_var = bias_var*size/(size-1);
+        return unbias_var;
     }
     
     //------------------------------------------------------------------------------
-    /** compute the unbiased estimated variance of an array */
+    /** compute the biased variance of an vector */
     template <typename T>
-    static double varUnbiased(vector<T>& vec){
-        double sum=0.0, sq_sum=0.0;
-        unsigned int nb = 0;
-        
-        typename vector<T>::iterator cur, end;
-        for(cur=vec.begin(), end=vec.end(); cur!=end; ++cur){
-            if(*cur == my_NAN) continue;
-            sum    += (*cur);
-            sq_sum += (*cur) * (*cur);
-            ++nb;
-        }
-        
-        return (nb>1) ? (double)(sq_sum - sum*sum/nb) / (nb-1) : my_NAN;
+    static double varUnbiased(vector<T>& vec, double mu=my_NAN){
+        unsigned int size = vec.size();
+        if ( size == 1) return my_NAN;
+        double bias_var = var(vec, mu);
+        double unbias_var = bias_var*(size)/(size - 1);
+        return unbias_var;
     }
+    
+    //------------------------------------------------------------------------------
+    /** compute the biased variance of a vector */
+    template <typename T>
+    static double var(vector<T>& vec, double mu=my_NAN){
+        double bias_var = var(&vec[0], vec.size(), mu);
+        return bias_var;
+    }
+    
     
     //------------------------------------------------------------------------------
     /** compute the biased variance of an array */
@@ -720,23 +713,7 @@ public:
         return (abs(sum) > 1e-30) ? sum : 0;                                 // no control as it was alredy checked
     }
     
-    //------------------------------------------------------------------------------
-    /** compute the biased variance of an array */
-    template <typename T>
-    static double var(vector<T>& vec, double mu=my_NAN){
-        if(mu == my_NAN) mu = mean(vec);  // if the mean has not be computed
-        if(mu == my_NAN) return my_NAN;   // the array has no valid values
-        
-        double sum=0, diff;
-        typename vector<T>::iterator cur, end;
-        for(cur=vec.begin(), end=vec.end(); cur!=end; ++cur){
-            diff = (*cur)-mu;
-            sum  += diff*diff;
-        }
-        
-        sum /=vec.size();
-        return (std::abs(sum) > 1e-30) ? sum : 0;                                 // no control as it was alredy checked
-    }
+
     
     //------------------------------------------------------------------------------
     /** compute the biased variance of a column of a 2D matrix */

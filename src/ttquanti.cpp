@@ -3137,7 +3137,7 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch_allInds(TPatch* curPop, const age_idx& AGE,
     
     // compute mean and var
     meanG = ARRAY::mean(array, size);
-    varG  = ARRAY::var(array, size, meanG);
+    varG  = ARRAY::varUnbiased(array, size, meanG);
     delete[] array;
 }
 
@@ -3172,7 +3172,7 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch(TPatch* curPop, const age_idx& AGE,
     
     // compute mean and var
     meanG = ARRAY::mean(array, size);
-    varG  = ARRAY::var(array, size, meanG);
+    varG  = ARRAY::varUnbiased(array, size, meanG);
     delete[] array;
 }
 
@@ -3200,7 +3200,7 @@ TTQuantiSH::setMeanAndVar_Vg_ofPatch(TPatch* curPop, const age_idx& AGE,
     
     // compute mean and var
     meanG = ARRAY::mean(array, size);
-    varG  = ARRAY::var(array, size, meanG);
+    varG  = ARRAY::varUnbiased(array, size, meanG);
     delete[] array;
 }
 
@@ -3298,7 +3298,7 @@ TTQuantiSH::setMeanAndVar_Vp_ofPatch(TPatch* curPop, double& meanP, double& varP
     
     // compute mean and var
     meanP = ARRAY::mean(array, size);
-    varP  = ARRAY::var(array, size, meanP);
+    varP  = ARRAY::varUnbiased(array, size, meanP);
     delete[] array;
 }
 
@@ -3327,7 +3327,7 @@ TTQuantiSH::setMeanAndVar_Vp_ofPatch(TPatch* curPop, double& meanP, double& varP
     
     // compute mean and var
     meanP = ARRAY::mean(array, size);
-    varP  = ARRAY::var(array, size, meanP);
+    varP  = ARRAY::varUnbiased(array, size, meanP);
     delete[] array;
 }
 
@@ -3425,7 +3425,7 @@ TTQuantiSH::setMeanAndVar_Wp_ofPatch(TPatch* curPop, double& meanW, double& varW
     
     // compute mean and var
     meanW = ARRAY::mean(array, size);
-    varW  = ARRAY::var(array, size, meanW);
+    varW  = ARRAY::varUnbiased(array, size, meanW);
     delete[] array;
 }
 
@@ -3454,7 +3454,7 @@ TTQuantiSH::setMeanAndVar_Wp_ofPatch(TPatch* curPop, double& meanW, double& varW
     
     // compute mean and var
     meanW = ARRAY::mean(array, size);
-    varW  = ARRAY::var(array, size, meanW);
+    varW  = ARRAY::varUnbiased(array, size, meanW);
     delete[] array;
 }
 
@@ -3520,7 +3520,7 @@ TTQuantiSH::setQst_perPatchPair(const age_idx& AGE)
             assert(j==(*curPop2)->get_sampleID());
             if(_meanP[2][j] == my_NAN) continue;                   // both pops have to be populated
             array[1] = _meanP[2][j];
-            Vb = ARRAY::var(array, 2);         		// var of means
+            Vb = ARRAY::varUnbiased(array, 2);         		// var of means
             Va = (_varA[i] +_varA[j])/2.0;    // mean of vars
             
             _qst_matrix[i][j] = (2*Va+Vb) ? Vb/(2*Va+Vb) : my_NAN;
@@ -3603,7 +3603,7 @@ TTQuantiSH::setQstF_perPatchPair(const age_idx& AGE)
             assert(j==(*curPop2)->get_sampleID());
             if(_meanP[2][j] == my_NAN) continue;                   // both pops have to be populated
             array[1] = _meanP[2][j];
-            Vb = ARRAY::var(array, 2);         		// var of means
+            Vb = ARRAY::varUnbiased(array, 2);         		// var of means
             Va = (_varA[i] +_varA[j])/2.0;        // mean of vars
             
             // inbreeding coefficient
@@ -3627,7 +3627,7 @@ double
 TTQuantiSH::getVgB(const age_idx& AGE)
 {
     setMeanAndVar_Vg(AGE);
-    return ARRAY::var(_meanG[2], get_current_nbSamplePatch());
+    return ARRAY::varUnbiased(_meanG[2], get_current_nbSamplePatch());
 }
 
 // ----------------------------------------------------------------------------------------
@@ -3637,7 +3637,7 @@ double
 TTQuantiSH::getVpB()
 {
     setMeanAndVar_Vp();
-    return ARRAY::var(_meanP[2], get_current_nbSamplePatch());
+    return ARRAY::varUnbiased(_meanP[2], get_current_nbSamplePatch());
 }
 // ----------------------------------------------------------------------------------------
 // getVaW
