@@ -1,0 +1,7 @@
+# Revisions to ignore in `git blame` (bulk reformatting / mechanical changes).
+#
+# Add the commit hash of the eventual repo-wide clang-format pass here, then run:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+# so the formatting commit does not pollute blame output.
+#
+# (No bulk-format commit has been made yet — this file is a placeholder.)
