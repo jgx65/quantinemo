@@ -85,10 +85,11 @@ int main (int argc, char **argv)
 	catch(const int value){
 		if(nb_warning) message("\nCaution: %i WARNINGs were raised.", nb_warning);
 		if(nb_error)   message("\nCaution: %i ERRORs were raised.", nb_error);
-		if(value!=1111) message("\nquantiNemo was not able to run successfully!\n");  // error re-throws
-		//else message("\nquantiNemo terminated!\n");
-        returnVal=1;
-        
+		if(value!=1111){
+			message("\nquantiNemo was not able to run successfully!\n");  // error re-throws
+			returnVal=1;
+		}
+		// value==1111 is an intentional stop (e.g. --version / --help): exit 0
 	}
 	catch(...){
 		if(nb_warning) message("\nCaution: %i WARNINGs were raised.", nb_warning);
