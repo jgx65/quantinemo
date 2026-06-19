@@ -1,0 +1,41 @@
+name: build
+
+# Runs on a fresh, ephemeral GitHub-hosted Ubuntu VM (free + unlimited minutes
+# for public repos). Triggers on pushes to the main branches and on every PR.
+on:
+  push:
+    branches: [master, "cleanup/**"]
+  pull_request:
+
+jobs:
+  cmake:
+    name: CMake build (Release) + smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history + tags so `git describe` can embed the version.
+          fetch-depth: 0
+
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build -j "$(nproc)"
+
+      - name: Smoke test
+        run: ./bin/quantinemo --version
+
+  make-debug:
+    name: Makefile debug build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: make debug
+        run: make debug
+
+      - name: Smoke test
+        run: ./bin/quantinemo --version
