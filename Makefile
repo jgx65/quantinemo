@@ -16,13 +16,13 @@ PRGDIR=bin
 
 INCS      =     -I.  -D_SHOW_MEMORY
 
-.PHONY: all clean debug release profile
+.PHONY: all clean debug release profile static thread
 
 all:   touch release
 
 #so that git version and compiled time is always correct
 touch:
-	touch src/tsim_manager.cpp  
+	touch src/tsim_manager.cpp
 
 thread: CFLAGS += -std=c++11
 thread: INCS += -D_THREAD
@@ -32,9 +32,14 @@ debug: INCS += -D_DEBUG
 debug: CFLAGS  += -Wall
 debug: bin
 
-release: CFLAGS  += -O3 -static
+release: CFLAGS  += -O3
 release: CFLAGS  += -DVERSIONGIT=\"$(GIT_VERSION)\"
 release: bin
+
+# Static linking is opt-in: it does not link on macOS, so `make` stays dynamic.
+# Use `make static` for a statically linked release (e.g. for Linux deployment).
+static: CFLAGS += -static
+static: touch release
 
 profile: CFLAGS += -pg
 profile: bin
