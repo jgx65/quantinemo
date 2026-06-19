@@ -1,140 +1,76 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.16)
 
-project(quantiNemo)
+project(quantiNemo
+        VERSION 2.0.2
+        DESCRIPTION "Individual-based stochastic simulation for population and quantitative genetics"
+        LANGUAGES CXX)
 
-SET(GCC_COVERAGE_COMPILE_FLAGS "-Iinclude")
-add_definitions(${GCC_COVERAGE_COMPILE_FLAGS})
+# ---------------------------------------------------------------------------
+# Language standard
+# ---------------------------------------------------------------------------
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# files to be compiled
-set(SRCS
-src/bandmat.cpp
-src/mtrand.cpp
-src/statservices.cpp
-src/basicsimulation.cpp
-src/myexcept.cpp
-src/submat.cpp
-src/cholesky.cpp
-src/newmat1.cpp
-src/svd.cpp
-src/coal_deme.cpp
-src/newmat2.cpp
-src/tequation.cpp
-src/filehandler.cpp
-src/newmat3.cpp
-src/tgenome.cpp
-src/fileservices.cpp
-src/newmat4.cpp
-src/tlocus.cpp
-src/functions.cpp
-src/newmat5.cpp
-src/tmatrix.cpp
-src/genealogy.cpp
-src/newmat6.cpp
-src/tpatchfitness.cpp
-src/hholder.cpp
-src/newmat7.cpp
-src/tree.cpp
-src/indfactory.cpp
-src/newmat8.cpp
-src/treplicate.cpp
-src/tindividual.cpp
-src/newmat9.cpp
-src/tselection.cpp
-src/lce_breed.cpp
-src/newmatex.cpp
-src/tselectiontrait.cpp
-src/lce_coalescence_base.cpp 
-src/newmatnl.cpp
-src/tselectiontype.cpp
-src/lce_coalescence.cpp
-src/newmatrm.cpp
-src/tsim_manager.cpp
-src/lce_disperse.cpp
-src/node.cpp
-src/tsimulation.cpp
-src/lce_extinction.cpp
-src/param.cpp
-src/tstat_db.cpp
-src/lce_misc.cpp
-src/patch.cpp
-src/tstring.cpp
-src/lce_regulation.cpp
-src/sort.cpp
-src/ttneutral.cpp
-src/main.cpp
-src/stathandlerbase.cpp 
-src/ttquanti.cpp
-src/tmetapop.cpp
-src/stathandler.cpp 
-src/ttrait.cpp
-src/metapop_sh.cpp
-src/stat_rec_base.cpp
-)
+# Default to a Release build when the user did not pick one.
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo)
+endif()
 
-set(HEADERS
-include/basicsimulation.h
-include/lce_misc.h
-include/precisio.h
-include/treplicate.h
-include/coal_deme.h
-include/lce_regulation.h
-include/randomC11.h
-include/tselection.h
-include/controlw.h
-include/lifecycleevent.h
-include/random.h
-include/tselectiontrait.h
-include/filehandler.h
-include/tmetapop.h
-include/service.h
-include/tselectiontype.h
-include/fileservices.h
-include/metapop_sh.h
-include/simcomponent.h
-include/tsim_manager.h
-include/functions.h
-include/mtrand.h
-include/stathandlerbase.h 
-include/tsimulation.h
-include/genealogy.h
-include/myexcept.h
-include/stathandler.h
-include/tstat_db.h
-include/handler.h
-include/newmatap.h
-include/stat_rec_base.h
-include/tstring.h
-include/include.h
-include/newmat.h
-include/statservices.h
-include/ttneutral.h
-include/indfactory.h
-include/newmatio.h
-include/tarray.h
-include/ttquanti.h
-include/tindividual.h
-include/newmatnl.h
-include/tequation.h
-include/ttrait.h
-include/lce_breed.h
-include/newmatrc.h
-include/tgenome.h
-include/ttree.h
-include/lce_coalescence_base.h 
-include/newmatrm.h
-include/tlocus.h
-include/types.h
-include/lce_coalescence.h
-include/node.h
-include/tmatrix.h
-include/version.h
-include/lce_disperse.h
-include/param.h
-include/tpatchfitness.h
-include/lce_extinction.h
-include/patch.h
-include/tree.h
-)
+# ---------------------------------------------------------------------------
+# Options
+# ---------------------------------------------------------------------------
+option(QN_STATIC "Link the executable statically" OFF)
+option(QN_THREAD "Enable the multithreaded sweep (-D_THREAD)" OFF)
 
-#What to compile
+# ---------------------------------------------------------------------------
+# Sources — globbed so this list can never drift from the Makefile's glob.
+# CONFIGURE_DEPENDS re-runs the glob when files are added/removed.
+# ---------------------------------------------------------------------------
+file(GLOB SRCS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+file(GLOB HEADERS CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h")
+
 add_executable(quantinemo ${SRCS} ${HEADERS})
+
+target_include_directories(quantinemo PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include")
+
+target_compile_definitions(quantinemo PRIVATE _SHOW_MEMORY)
+if(QN_THREAD)
+    target_compile_definitions(quantinemo PRIVATE _THREAD)
+    find_package(Threads REQUIRED)
+    target_link_libraries(quantinemo PRIVATE Threads::Threads)
+endif()
+
+# ---------------------------------------------------------------------------
+# Embed the git version (mirrors the Makefile's VERSIONGIT define).
+# ---------------------------------------------------------------------------
+find_package(Git QUIET)
+if(GIT_FOUND)
+    execute_process(
+        COMMAND "${GIT_EXECUTABLE}" describe --abbrev=7 --always --tags --dirty
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        OUTPUT_VARIABLE QN_GIT_VERSION
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET)
+endif()
+if(QN_GIT_VERSION)
+    target_compile_definitions(quantinemo PRIVATE "VERSIONGIT=\"${QN_GIT_VERSION}\"")
+endif()
+
+# ---------------------------------------------------------------------------
+# Static linking (opt-in; off by default so it links on macOS).
+# ---------------------------------------------------------------------------
+if(QN_STATIC)
+    if(APPLE)
+        message(WARNING "QN_STATIC is not supported on macOS; ignoring.")
+    else()
+        target_link_options(quantinemo PRIVATE -static)
+    endif()
+endif()
+
+# Put the binary in bin/ to match the Makefile layout.
+set_target_properties(quantinemo PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/bin")
