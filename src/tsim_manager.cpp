@@ -34,6 +34,7 @@
 #include "version.h"
 #include "tsimulation.h"
 #include "functions.h"
+#include "emit_json.h"   // --emit-json requires a single simulation
 
 
 
@@ -121,7 +122,16 @@ TSimManager::run()
     message("\n\n**************************************************");
     message("\n***** Run simulations ...");
 #endif
-    
+
+    // --emit-json requires exactly ONE simulation. If the .ini expands to several
+    // via sequential/sweep parameters we refuse rather than silently picking one
+    // (the caller would not know which was run). Checked here, up front, before
+    // any work. error() throws, caught in main.
+    if (g_emit_json && _nbSims > 1)
+        error("--emit-json: the .ini expands to %u simulations via sequential/sweep "
+              "parameters; --emit-json requires exactly one (run each simulation "
+              "separately).\n", _nbSims);
+
     run_sims_withinThread(this, 0, _nbSims, _nbThreadsTot);
 
     
