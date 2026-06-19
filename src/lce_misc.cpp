@@ -34,6 +34,7 @@
 
 #include "lce_misc.h"
 #include "stathandler.cpp"
+#include "emit_json.h"   // --emit-json record hook (declaration only)
 
 /* _/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/ */
 
@@ -115,10 +116,22 @@ void LCE_StatServiceNotifier::execute()
 #endif
     
     assert(_service);
-    if (!(_popPtr->getCurrentGeneration() % _pStat_db->get_occurrence())){
+    bool onCadence = !(_popPtr->getCurrentGeneration() % _pStat_db->get_occurrence());
+    // With --emit-json we ALSO emit on the very last generation even when it is
+    // not a multiple of stat_log_time, so the JSON output always covers each
+    // logged generation plus the final one. Native behaviour (cadence only) is
+    // unchanged when the flag is absent.
+    bool finalGen = g_emit_json &&
+                    (_popPtr->getCurrentGeneration() == _popPtr->getGenerations());
+
+    if (onCadence || finalGen){
         _service->update_states();
         _service->notify_params();
         _service->notify();
+
+        // --emit-json: emit one flushed JSON record for this generation.
+        // No-op unless --emit-json was set.
+        emit_json_record(_popPtr);
     }
     
 #ifdef _DEBUG
@@ -300,6 +313,10 @@ bool LCE_store_popSizes::init(TMetapop* popPtr) {
     LCE::init(popPtr);
     return true;
 }
+
+// --emit-json record emitter: compiled here (NOT standalone) so it shares this
+// translation unit's StatHandler<SH> template instantiations.
+#include "emit_json_record.inc"
 
 
 

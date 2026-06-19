@@ -36,6 +36,7 @@
 #include "filehandler.h"
 #include "treplicate.h"
 #include "version.h"
+#include "emit_json.h"   // --emit-json requires a single replicate
 #include <errno.h>
 #include <limits>
 #include <algorithm>
@@ -227,6 +228,8 @@ void TSimulation::run_sim(map<string, string> params,
     
     /////////////////////////////////////////////////////////////////////////////
     // for each replicate
+    // (--emit-json already required _replicates == 1 in ini_stats, so this loop
+    // then runs exactly ONE replicate.)
     run_replicates(this, params, keys, 0, _replicates, 0, _threads);
 
     
@@ -728,6 +731,13 @@ TSimulation::ini_stats(map<string, string> params, map<string, string> keys,
     
     // get the replicate number
     _replicates = (unsigned int)_paramSet.getValue("replicates");
+    // --emit-json requires exactly ONE replicate. We refuse more rather than
+    // silently collapsing, so the caller cannot mistake which run produced the
+    // output. Checked here, before TStat_db and the per-replicate arrays are
+    // sized. error() throws, caught in main.
+    if (g_emit_json && _replicates > 1)
+        error("--emit-json: 'replicates' is %u; --emit-json requires exactly one "
+              "(run replicates separately).\n", _replicates);
     _randomPerReplicate = (bool)_paramSet.getValue("random_per_replicate");
     
 

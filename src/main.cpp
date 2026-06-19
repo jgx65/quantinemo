@@ -42,6 +42,7 @@ unsigned int verbose_error;
 
 
 #include "functions.h"
+#include "emit_json.h"   // --emit-json JSON output mode
 
 using namespace std;
 
@@ -65,6 +66,11 @@ int main (int argc, char **argv)
             message("\n***** DEBUG MODE *****\n\n");
 
 #endif
+            // --emit-json: detect & strip the flag before the .ini/CLI parser
+            // sees argv. When set, this also silences stdout chatter so stdout
+            // carries ONLY JSON records.
+            argc = emit_json_parse_cli(argc, argv);
+
             // read settings file(s) ///////////////////////////////////////////
             TSimManager simManager(argc, argv);
             
