@@ -1,0 +1,34 @@
+# quantiNemo C++ formatting style.
+#
+# NOTE: this config is intentionally NOT yet applied across the existing tree.
+# A repo-wide reformat would conflict with in-flight feature branches, so we add
+# the config first and apply it later in one dedicated commit (which should then
+# be listed in .git-blame-ignore-revs). New/edited code may be formatted with it.
+#
+# Do NOT reformat the vendored Newmat numerics (newmat*, cholesky, svd, hholder,
+# bandmat, submat, sort) — see the .clang-format-ignore-style note in CLAUDE.md.
+---
+Language: Cpp
+BasedOnStyle: LLVM
+
+# Match the existing code: 4-space indent, never tabs.
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+AccessModifierOffset: -4
+
+# Do not reflow existing lines — keeps the eventual reformat diff small.
+ColumnLimit: 0
+
+# Pointers/refs bind to the type (char* p), the dominant style in the tree.
+PointerAlignment: Left
+DerivePointerAlignment: false
+
+# Brace placement close to the existing mix (Allman is too disruptive here).
+BreakBeforeBraces: Attach
+
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 2
+SortIncludes: false
+SpaceBeforeParens: ControlStatements
+IndentCaseLabels: true
