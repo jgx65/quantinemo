@@ -42,7 +42,7 @@ void ej_put_num_or_null(std::ostream& os, double v)
 {
     if (!std::isfinite(v) || v == (double)my_NAN) { os << "null"; return; }
     std::ostringstream tmp;
-    tmp.precision(10);
+    tmp.precision(6);
     tmp << v;
     os << tmp.str();
 }
@@ -50,7 +50,7 @@ void ej_put_num_or_null(std::ostream& os, double v)
 void ej_put_num(std::ostream& os, double v)
 {
     std::ostringstream tmp;
-    tmp.precision(10);
+    tmp.precision(6);
     tmp << v;
     os << tmp.str();
 }
