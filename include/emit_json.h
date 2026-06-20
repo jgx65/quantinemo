@@ -3,25 +3,16 @@
  *   JSON output mode for quantiNemo.
  *
  *   ADDITIVE, opt-in. When the engine is invoked with --emit-json it:
- *     - requires exactly ONE simulation and ONE replicate: if the .ini expands to
- *       several simulations (sequential/sweep parameters) or sets replicates > 1
- *       the engine ERRORS OUT rather than silently picking one, so the caller
- *       always knows which run produced the output;
+ *     - requires exactly ONE simulation and ONE replicate;
  *     - silences the normal console chatter so stdout carries ONLY JSON;
- *     - emits a header + frames stream (schema_version 2) of line-delimited JSON.
+ *     - emits a header + frames stream of line-delimited JSON.
  *
  *   The stream is ONE `kind:"header"` record first — declaring the run's static
  *   layout once (patch count, the locus table with per-locus allele counts, the
  *   trait count, and which layer-1 estimators are computed) — followed by ONE
  *   compact `kind:"frame"` record per logged generation (every stat_log_time,
  *   plus the final generation) carrying only positional numeric payloads
- *   (allele_freqs, phenotype, stats) read against the header. A reader must
- *   consume the header before it can interpret any frame. Each object is one
- *   line, flushed as it is produced so a reader can consume records while the
- *   run is still going.
- *
- *   When the flag is absent every symbol here is inert and the engine behaves
- *   exactly as without it.
+ *   (allele_freqs, phenotype, stats) read against the header.
  *
  *   This file is part of quantiNemo and is distributed under the GNU General
  *   Public License v3 (or later), like the rest of the program.
