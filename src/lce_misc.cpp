@@ -117,10 +117,10 @@ void LCE_StatServiceNotifier::execute()
     
     assert(_service);
     bool onCadence = !(_popPtr->getCurrentGeneration() % _pStat_db->get_occurrence());
-    // With --emit-json we ALSO emit on the very last generation even when it is
-    // not a multiple of stat_log_time, so the JSON output always covers each
-    // logged generation plus the final one. Native behaviour (cadence only) is
-    // unchanged when the flag is absent.
+    // --emit-json also needs fresh stats on the final generation (the JSON frame
+    // for it is emitted by EmitJsonFH via the FileServices); compute them there
+    // too even when it is not a multiple of stat_log_time. Native behaviour
+    // (cadence only) is unchanged when the flag is absent.
     bool finalGen = g_emit_json &&
                     (_popPtr->getCurrentGeneration() == _popPtr->getGenerations());
 
@@ -128,10 +128,6 @@ void LCE_StatServiceNotifier::execute()
         _service->update_states();
         _service->notify_params();
         _service->notify();
-
-        // --emit-json: emit one flushed JSON record for this generation.
-        // No-op unless --emit-json was set.
-        emit_json_record(_popPtr);
     }
     
 #ifdef _DEBUG
@@ -146,7 +142,9 @@ bool LCE_StatServiceNotifier::init(TMetapop* popPtr) {
     LCE::init(popPtr);
     
     _pStat_db = get_pop_ptr()->get_pStat_db();
-    
+
+    if (g_emit_json) _emitJsonFH.configure(get_pop_ptr(), _pStat_db);
+
     _stat_arg = _paramSet->getArg("stat");
     _param_arg = _paramSet->getArg("param");
     _save_choiceTemp = (unsigned int)_paramSet->getValue("stat_save");

@@ -35,6 +35,7 @@
 
 
 #include "basicsimulation.h"
+#include "emit_json.h"   // g_emit_json: keep the file notifier active for --emit-json
 
 //----------------------------------------------------------------------------------------
 // build_component_list
@@ -503,7 +504,10 @@ SimBuilder::checkLCEconsistency()
 	map< int, LCE* >::iterator iterLCE = _currentLifeCycle.begin();
 	for(; iterLCE != _currentLifeCycle.end();){
 		string name = iterLCE->second->get_event_name();
-		if(!iterLCE->second->get_paramset()->isSet()){
+		// --emit-json drives its output through the file services, so the file
+		// notifier must stay in the cycle even though no file output is set.
+		bool keepForEmitJson = g_emit_json && name == "save_files";
+		if(!iterLCE->second->get_paramset()->isSet() && !keepForEmitJson){
 			_currentLifeCycle.erase(iterLCE++);
 		}
 		else  ++iterLCE;
