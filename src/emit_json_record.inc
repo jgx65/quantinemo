@@ -55,12 +55,6 @@ void ej_put_num(std::ostream& os, double v)
     os << tmp.str();
 }
 
-// Layout decided once when the header is emitted, then reused by every frame so
-// the positional `stats` payload stays aligned to the header's `stats` list.
-bool ej_header_done = false;
-bool ej_have_fst = false, ej_have_qst = false,
-     ej_have_ho  = false, ej_have_hs  = false, ej_have_ht = false;
-
 // canonical locus / genotype ordering: all neutral loci first, then quanti
 const char* const EJ_LOCUS_ORDER[2] = { "ntrl", "quanti" };
 
@@ -73,7 +67,10 @@ unsigned int ej_count_quanti_traits(TMetapop* pop)
 }
 
 // ---- header: static run layout, emitted ONCE, first ---------------------- //
-void ej_emit_header(TMetapop* pop)
+// Sets the have_* flags (which estimators this run computes) so the matching
+// frame `stats` payload stays positionally aligned to the header `stats` list.
+void ej_emit_header(TMetapop* pop, bool& have_fst, bool& have_qst,
+                    bool& have_ho, bool& have_hs, bool& have_ht)
 {
     std::ostringstream rec;
     rec << "{\"schema_version\":\"2\",\"kind\":\"header\""
@@ -111,18 +108,17 @@ void ej_emit_header(TMetapop* pop)
         dynamic_cast<TTraitNeutralProto*>(pop->getFirstPrototype("ntrl"));
     TTraitQuantiProto* quantiProto =
         dynamic_cast<TTraitQuantiProto*>(pop->getFirstPrototype("quanti"));
-    ej_have_fst = ej_have_ho = ej_have_hs = ej_have_ht =
-        (ntrlProto && ntrlProto->_stats);
-    ej_have_qst = (quantiProto && quantiProto->_stats);
+    have_fst = have_ho = have_hs = have_ht = (ntrlProto && ntrlProto->_stats);
+    have_qst = (quantiProto && quantiProto->_stats);
 
     rec << ",\"stats\":[";
     {
         bool first = true;
-        if (ej_have_fst) {                rec << "\"fst\""; first = false; }
-        if (ej_have_qst) { if (!first) rec << ","; rec << "\"qst\""; first = false; }
-        if (ej_have_ho)  { if (!first) rec << ","; rec << "\"ho\"";  first = false; }
-        if (ej_have_hs)  { if (!first) rec << ","; rec << "\"hs\"";  first = false; }
-        if (ej_have_ht)  { if (!first) rec << ","; rec << "\"ht\"";  first = false; }
+        if (have_fst) {                rec << "\"fst\""; first = false; }
+        if (have_qst) { if (!first) rec << ","; rec << "\"qst\""; first = false; }
+        if (have_ho)  { if (!first) rec << ","; rec << "\"ho\"";  first = false; }
+        if (have_hs)  { if (!first) rec << ","; rec << "\"hs\"";  first = false; }
+        if (have_ht)  { if (!first) rec << ","; rec << "\"ht\"";  first = false; }
     }
     rec << "]";
 
@@ -131,7 +127,8 @@ void ej_emit_header(TMetapop* pop)
 }
 
 // ---- frame: one logged generation, compact positional payload ------------ //
-void ej_emit_frame(TMetapop* pop)
+void ej_emit_frame(TMetapop* pop, bool have_fst, bool have_qst,
+                   bool have_ho, bool have_hs, bool have_ht)
 {
     const age_idx AGE = ADLTx;            // stats default to ADULTS
     const sex_t   SEXES[2] = { FEM, MAL };
@@ -239,7 +236,7 @@ void ej_emit_frame(TMetapop* pop)
     }
 
     // ---- stats: bare numbers aligned positionally to header.stats ----
-    if (ej_have_fst || ej_have_qst || ej_have_ho || ej_have_hs || ej_have_ht) {
+    if (have_fst || have_qst || have_ho || have_hs || have_ht) {
         TTraitNeutralProto* ntrlProto =
             dynamic_cast<TTraitNeutralProto*>(pop->getFirstPrototype("ntrl"));
         TTraitQuantiProto* quantiProto =
@@ -259,11 +256,11 @@ void ej_emit_frame(TMetapop* pop)
 
         rec << ",\"stats\":[";
         bool first = true;
-        if (ej_have_fst) {                ej_put_num_or_null(rec, fst); first = false; }
-        if (ej_have_qst) { if (!first) rec << ","; ej_put_num_or_null(rec, qst); first = false; }
-        if (ej_have_ho)  { if (!first) rec << ","; ej_put_num_or_null(rec, ho);  first = false; }
-        if (ej_have_hs)  { if (!first) rec << ","; ej_put_num_or_null(rec, hs);  first = false; }
-        if (ej_have_ht)  { if (!first) rec << ","; ej_put_num_or_null(rec, ht);  first = false; }
+        if (have_fst) {                ej_put_num_or_null(rec, fst); first = false; }
+        if (have_qst) { if (!first) rec << ","; ej_put_num_or_null(rec, qst); first = false; }
+        if (have_ho)  { if (!first) rec << ","; ej_put_num_or_null(rec, ho);  first = false; }
+        if (have_hs)  { if (!first) rec << ","; ej_put_num_or_null(rec, hs);  first = false; }
+        if (have_ht)  { if (!first) rec << ","; ej_put_num_or_null(rec, ht);  first = false; }
         rec << "]";
     }
 
@@ -273,11 +270,24 @@ void ej_emit_frame(TMetapop* pop)
 
 } // namespace
 
-void emit_json_record(TMetapop* pop)
+// Driven once per generation by the FileServices (LCE_FileServicesNotifier, which
+// runs AFTER the stat notifier, so the estimators are already up to date for this
+// generation). We emit on the stat cadence and always on the final generation.
+void EmitJsonFH::update()
 {
-    if (!g_emit_json || !pop) return;
+    if (!_pop || !_statDb) return;
+    unsigned int gen = _pop->getCurrentGeneration();
+    unsigned int occ = _statDb->get_occurrence();
+    if ((occ && !(gen % occ)) || gen == _pop->getGenerations()) FHwrite();
+}
 
+void EmitJsonFH::FHwrite()
+{
+    if (!_pop) return;
     // The header declares the run's static layout ONCE, before any frame.
-    if (!ej_header_done) { ej_emit_header(pop); ej_header_done = true; }
-    ej_emit_frame(pop);
+    if (!_headerDone) {
+        ej_emit_header(_pop, _haveFst, _haveQst, _haveHo, _haveHs, _haveHt);
+        _headerDone = true;
+    }
+    ej_emit_frame(_pop, _haveFst, _haveQst, _haveHo, _haveHs, _haveHt);
 }

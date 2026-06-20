@@ -33,10 +33,8 @@ extern bool g_emit_json;
  *  once from main() before constructing TSimManager. */
 int emit_json_parse_cli(int argc, char** argv);
 
-/** Emit one JSON record (single line, flushed) for the current generation of
- *  \a pop to stdout. No-op when g_emit_json is false. Called from the
- *  stat-notifier hook (LCE_StatServiceNotifier::execute) at the stat_log_time
- *  cadence and on the final generation. */
-void emit_json_record(TMetapop* pop);
+/** The JSON records themselves are produced by EmitJsonFH (declared in
+ *  lce_misc.h), a FileHandler driven by the FileServices once per generation.
+ *  Its method bodies live in emit_json_record.inc. */
 
 #endif

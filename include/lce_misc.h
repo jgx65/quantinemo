@@ -39,6 +39,7 @@
 #include "lifecycleevent.h"
 #include "filehandler.h"
 #include "tstat_db.h"
+#include "emit_json.h"
 
 class TStat_db;
 
@@ -103,11 +104,40 @@ public:
     }
     
     virtual void FHwrite(){}
-    
+
     void set_save_choice(const int& i){_popPtr->get_pStat_db()->set_save_choice(i);}
-    
-    
+
+
     };
+
+// EmitJsonFH
+//
+/**FileHandler used only with --emit-json: prints the header + frame JSON stream
+ * to stdout, driven once per generation by the FileServices (so the emission is
+ * a regular output handler, not a hand-placed hook). Its method bodies live in
+ * emit_json_record.inc (the lce_misc.cpp translation unit) so they can call the
+ * StatHandler<SH> estimators. */
+class EmitJsonFH : public FileHandler {
+    TMetapop* _pop;
+    TStat_db* _statDb;
+    bool _headerDone;
+    bool _haveFst, _haveQst, _haveHo, _haveHs, _haveHt;
+public:
+    EmitJsonFH() : _pop(0), _statDb(0), _headerDone(false),
+        _haveFst(false), _haveQst(false), _haveHo(false), _haveHs(false), _haveHt(false) {}
+
+    // also sets the base FileHandler::_popPtr so the inherited bookkeeping
+    // (print_info, get_tot_occurrence, ...) has a valid metapop to query.
+    void configure(TMetapop* pop, TStat_db* db) { _pop = pop; _popPtr = pop; _statDb = db; _headerDone = false; }
+
+    virtual string getName() { return "EmitJsonFH"; }
+    virtual bool init() { _headerDone = false; return true; }
+    // we write to stdout, not a file: report the logged-generation count from the
+    // stat db instead of the base impl (which assumes a per-file generation param).
+    virtual unsigned int get_tot_occurrence() { return _statDb ? _statDb->get_tot_occurrence() : 0; }
+    virtual void update();    // emit on the stat cadence + the final generation
+    virtual void FHwrite();   // header once, then one frame
+};
 
 // LCE_StatSH
 //
@@ -158,7 +188,8 @@ private:
     
     LCE_StatFH _fileHandler;
     LCE_StatSH _statHandler;
-    
+    EmitJsonFH _emitJsonFH;     // --emit-json only; attached when g_emit_json
+
 public:
     
     LCE_StatServiceNotifier(int rank = my_NAN);
@@ -174,7 +205,10 @@ public:
     virtual bool init (TMetapop* popPtr);
     
     //SimComponent overrides:
-    virtual void loadFileServices ( FileServices* loader ) {loader->attach(&_fileHandler);}
+    virtual void loadFileServices ( FileServices* loader ) {
+        loader->attach(&_fileHandler);
+        if (g_emit_json) loader->attach(&_emitJsonFH);
+    }
     virtual void loadStatServices ( StatServices* loader );
     virtual age_t removeAgeClass ( ) {return 0;}
     virtual age_t addAgeClass ( ) {return 0;}
