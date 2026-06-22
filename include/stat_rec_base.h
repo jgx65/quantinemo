@@ -198,7 +198,15 @@ public:
      **/
     void setStats (age_t AGE,int crnt_gen,int rpl_cntr, S* StatHandler, TMetapop* pop);  // to db
     void setStats (age_t AGE,int crnt_gen,int rpl_cntr, S* StatHandler,  ostream& FH);  // to the stream/file
-   
+
+    /** Compute and RETURN this recorder's value for the current population state,
+     *  using the same getter-function-pointer dispatch as setStats(), without
+     *  storing it anywhere. Used by the --emit-json streaming emitter so it can
+     *  surface ANY scalar stat the run requested (not just a hardcoded few).
+     *  Computed on the recorder's OWN registered age class. Returns my_NAN if the
+     *  recorder has no getter. */
+    double compute (S* StatHandler);
+
     double*         get_stat(){return _stat;}
     void            set_stat(double* a){_stat = a;}
     void            init_stat_rec(TMetapop* pop);
@@ -260,6 +268,24 @@ void StatRecorder<S>::setStats(age_t AGE, int crnt_gen, int rpl_cntr, S* StatHan
         if(statValue==my_NAN) FH << my_NANstr;
         else                  FH << statValue;
     }
+}
+
+// ----------------------------------------------------------------------------------------
+// StatRecorder::compute
+// ----------------------------------------------------------------------------------------
+/** Same getter dispatch as setStats(), but returns the value instead of storing
+ *  it. Used by the --emit-json emitter (emit_json_record.inc). */
+template<class S>
+double StatRecorder<S>::compute(S* StatHandler)
+{
+    age_t age = getAge();
+    if(_getStat)            return (StatHandler->*_getStat)       ();
+    if(_getStatBool)        return (StatHandler->*_getStatBool)   ((bool)getArg());
+    if(_getStatUI)          return (StatHandler->*_getStatUI)     (getArg());
+    if(_getStatAGE)         return (StatHandler->*_getStatAGE)    (age);
+    if(_getStatBoolAGE)     return (StatHandler->*_getStatBoolAGE)((bool)getArg(), age);
+    if(_getStatUIAGE)       return (StatHandler->*_getStatUIAGE)  (getArg(), age);
+    return (double)my_NAN;
 }
 
 

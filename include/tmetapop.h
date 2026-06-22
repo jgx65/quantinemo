@@ -379,7 +379,12 @@ public:
     virtual void loadFileServices ( FileServices* loader ) {}
     
     virtual void loadStatServices ( StatServices* loader ) {loader->attach(&_statHandler);}
-    
+
+    /** The population's own stat handler (demographic / dispersal / fecundity /
+     *  fitness / kinship metapop scalars). Exposed so the --emit-json emitter can
+     *  enumerate its requested scalar recorders. */
+    MetapopSH*   get_popStatHandler   ( ) {return &_statHandler;}
+
   //  vector<TIndividual*>& getIndividuals(const sex_t& SEX, const age_idx& AG);
     unsigned int getGenerations        ( ) {return _generations;}
     unsigned int getPatchNbr           ( ) {return _patchNbr;}

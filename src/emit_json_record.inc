@@ -2,9 +2,10 @@
  *
  *   JSON record emitter for --emit-json mode. This is #included at the END of
  *   lce_misc.cpp (NOT compiled standalone) because it calls the StatHandler<SH>
- *   template methods (getFst_WC, getHsnei, getQst, ...) whose bodies live in
- *   stathandler.cpp, which lce_misc.cpp already pulls in. That guarantees the
- *   concrete TTNeutralSH / TTQuantiSH instantiations are visible.
+ *   template methods (computeStatNow, and the trait/handler accessors) whose
+ *   bodies live in stathandler.cpp / stat_rec_base.h, which lce_misc.cpp already
+ *   pulls in. That guarantees the concrete TTNeutralSH / TTQuantiSH / MetapopSH
+ *   instantiations are visible.
  *
  *   Output is a HEADER + FRAMES stream (schema_version 2):
  *     - ONE `kind:"header"` record is emitted first, declaring the static layout
@@ -16,6 +17,23 @@
  *       against the header. No keys, no repeated identity.
  *   A reader must consume the header before it can interpret any frame.
  *
+ *   STATS (the metapop-wide scalar layer-1 estimators) are NO LONGER a hardcoded
+ *   five. We enumerate the stat recorders the run actually requested (parsed from
+ *   the .ini `stat` tokens into StatRecorder objects) and, for each that is a
+ *   metapop-wide SCALAR, emit its catalog `stream_key` into header.stats and its
+ *   value into frame.stats at the matching position, every logged generation.
+ *
+ *   The recorder->stream_key mapping is keyed on the recorder's NAME, which the
+ *   engine builds to be exactly the .ini `stat` token (e.g. "n.adlt.fst.wc",
+ *   "adlt.nbInd", "q.qst"); see ttneutral/ttquanti/metapop setStatRecorders +
+ *   stathandler.cpp add(). The token->stream_key table below is derived from
+ *   contracts/stats-catalog.json (catalog_version 2) — that catalog is the
+ *   SOURCE OF TRUTH; keep this table in sync with it. Only stats with
+ *   output:"scalar" (i.e. a `stream_key`) appear here. Per-patch/per-locus/
+ *   pairwise recorders carry a name suffix (_p1, _l1, _pair, ...) so they never
+ *   match a bare token key and are skipped. A requested scalar recorder with no
+ *   catalog mapping is skipped gracefully (no key, no value, no crash).
+ *
  *   See emit_json.h for the public API. Distributed under GPL v3 (or later),
  *   like the rest of quantiNemo.
  */
@@ -24,10 +42,13 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "emit_json.h"
 #include "patch.h"
+#include "stat_rec_base.h"
+#include "stathandlerbase.h"
 #include "tindividual.h"
 #include "ttrait.h"
 #include "ttneutral.h"
@@ -66,11 +87,131 @@ unsigned int ej_count_quanti_traits(TMetapop* pop)
     return n;
 }
 
+// --------------------------------------------------------------------------- //
+// token -> stream_key map for the metapop-wide SCALAR stats.
+//
+// DERIVED FROM contracts/stats-catalog.json (catalog_version 2): every stat with
+// output:"scalar" and a `stream_key`. The KEY is the catalog `token`, which the
+// engine uses verbatim as the StatRecorder NAME for the scalar form of that stat
+// (per-patch/per-locus/pairwise forms append a _p/_l/_pair suffix to the name, so
+// they never match here). Keep this in sync with the catalog (the source of
+// truth). If a requested scalar recorder is NOT in this table it is skipped.
+// --------------------------------------------------------------------------- //
+struct EjStatMap { const char* token; const char* stream_key; };
+const EjStatMap EJ_STAT_MAP[] = {
+    // --- NEU (neutral-marker genetic estimators) ---
+    { "n.adlt.fst.wc",    "fst"        },
+    { "n.adlt.fst",       "fst_nei"    },
+    { "n.adlt.fis.wc",    "fis"        },
+    { "n.adlt.fit.wc",    "fit"        },
+    { "n.adlt.ho",        "ho"         },
+    { "n.adlt.hs",        "hs"         },
+    { "n.adlt.ht",        "ht"         },
+    { "n.adlt.hs.p2",     "hs_p2"      },
+    { "n.adlt.ht.p2",     "ht_p2"      },
+    { "n.adlt.nbAll",     "nb_all"     },
+    { "n.adlt.nbAll.tot", "nb_all_tot" },
+    { "n.adlt.nbFixLoc",  "nb_fix_loc" },
+    { "n.adlt.rs",        "rs"         },
+    { "n.adlt.rt",        "rt"         },
+    { "n.adlt.r",         "a_range"    },
+    { "n.adlt.gw",        "gw"         },
+    { "n.adlt.chord",     "chord"      },
+    // --- KIN (kinship / coancestry) ---
+    { "n.adlt.theta",     "theta"      },
+    { "n.adlt.alpha",     "alpha"      },
+    { "n.adlt.coa.fsib",  "coa_fsib"   },
+    { "adlt.fsib",        "fsib_prop"  },
+    // --- QT (quantitative-trait estimators) ---
+    { "q.qst",            "qst"        },
+    { "q.VgB",            "vg_b"       },
+    { "q.VgW",            "vg_w"       },
+    { "q.VpB",            "vp_b"       },
+    { "q.VpW",            "vp_w"       },
+    { "q.VaW",            "va_w"       },
+    // --- DEM (demographic / census) ---
+    { "adlt.nbInd",       "nb_ind"     },
+    { "adlt.meanInd",     "mean_ind"   },
+    { "adlt.sexRatio",    "sex_ratio"  },
+    { "adlt.nbPops",      "nb_pops"    },
+    { "ext.rate",         "ext_rate"   },
+    // --- DISP (dispersal / migration) ---
+    { "emigrants",        "emigrants"  },
+    { "immigrate",        "immigrate"  },
+    { "colonisers",       "colonisers" },
+    // --- FEC (fecundity) ---
+    { "fem.meanFec",      "mean_fec_fem" },
+    // --- FIT (fitness) ---
+    { "VwW",              "vw_w"       },
+    // --- COAL (coalescent) ---
+    { "mrca.mean",        "mrca_mean"  },
+};
+const unsigned int EJ_STAT_MAP_N = sizeof(EJ_STAT_MAP) / sizeof(EJ_STAT_MAP[0]);
+
+// stream_key for a recorder name, or NULL if the name is not a catalog scalar.
+const char* ej_stream_key_for(const std::string& name)
+{
+    for (unsigned int k = 0; k < EJ_STAT_MAP_N; ++k)
+        if (name == EJ_STAT_MAP[k].token) return EJ_STAT_MAP[k].stream_key;
+    return 0;
+}
+
+// One streamed scalar stat: its catalog stream_key, plus the handler + recorder
+// needed to (re)compute its current value for a frame.
+struct EjScalarStat {
+    std::string        key;
+    StatHandlerBase*   handler;
+    StatRecBase*       rec;
+};
+
+// Scan one handler's recorders; append the ones that are catalog scalars.
+void ej_collect_from_handler(StatHandlerBase* sh, std::vector<EjScalarStat>& out)
+{
+    if (!sh) return;
+    std::list<StatRecBase*>& recs = sh->getStats();
+    for (std::list<StatRecBase*>::iterator it = recs.begin(); it != recs.end(); ++it) {
+        StatRecBase* r = *it;
+        if (!r) continue;
+        const char* sk = ej_stream_key_for(r->getName());
+        if (!sk) continue;                 // not a streamable scalar: skip
+        EjScalarStat s;
+        s.key = sk; s.handler = sh; s.rec = r;
+        out.push_back(s);
+    }
+}
+
+// Build the ordered list of streamed scalar stats this run computes. Order is
+// STABLE (neutral handlers, then quanti handlers, then the metapop handler, in
+// prototype/recorder registration order) so header.stats and frame.stats stay
+// positionally aligned across the whole stream.
+std::vector<EjScalarStat> ej_collect_scalar_stats(TMetapop* pop)
+{
+    std::vector<EjScalarStat> out;
+    unsigned int nbProto = pop->getTraitPrototypeSize();
+
+    // neutral trait handlers first, then quanti, matching the locus/stat ordering
+    for (int pass = 0; pass < 2; ++pass) {
+        for (unsigned int t = 0; t < nbProto; ++t) {
+            TTraitProto& proto = pop->getTraitPrototype(t);
+            if (proto.get_type() != EJ_LOCUS_ORDER[pass]) continue;
+            if (proto.get_type() == "ntrl") {
+                TTraitNeutralProto* np = dynamic_cast<TTraitNeutralProto*>(&proto);
+                if (np && np->_stats) ej_collect_from_handler(np->_stats, out);
+            } else { // quanti
+                TTraitQuantiProto* qp = dynamic_cast<TTraitQuantiProto*>(&proto);
+                if (qp && qp->_stats) ej_collect_from_handler(qp->_stats, out);
+            }
+        }
+    }
+
+    // demographic / dispersal / fecundity / fitness / kinship metapop scalars
+    ej_collect_from_handler(pop->get_popStatHandler(), out);
+
+    return out;
+}
+
 // ---- header: static run layout, emitted ONCE, first ---------------------- //
-// Sets the have_* flags (which estimators this run computes) so the matching
-// frame `stats` payload stays positionally aligned to the header `stats` list.
-void ej_emit_header(TMetapop* pop, bool& have_fst, bool& have_qst,
-                    bool& have_ho, bool& have_hs, bool& have_ht)
+void ej_emit_header(TMetapop* pop)
 {
     std::ostringstream rec;
     rec << "{\"schema_version\":\"2\",\"kind\":\"header\""
@@ -102,23 +243,14 @@ void ej_emit_header(TMetapop* pop, bool& have_fst, bool& have_qst,
     // traits: one per quantitative trait prototype (phenotype outer axis).
     rec << ",\"traits\":" << ej_count_quanti_traits(pop);
 
-    // stats: which layer-1 estimators this run computes, in canonical order.
-    // A neutral stat handler provides fst/ho/hs/ht; a quanti one provides qst.
-    TTraitNeutralProto* ntrlProto =
-        dynamic_cast<TTraitNeutralProto*>(pop->getFirstPrototype("ntrl"));
-    TTraitQuantiProto* quantiProto =
-        dynamic_cast<TTraitQuantiProto*>(pop->getFirstPrototype("quanti"));
-    have_fst = have_ho = have_hs = have_ht = (ntrlProto && ntrlProto->_stats);
-    have_qst = (quantiProto && quantiProto->_stats);
-
+    // stats: the stream_key of every metapop-wide SCALAR estimator this run
+    // computes, in the stable order ej_collect_scalar_stats() produces. Frames
+    // carry a parallel `stats` array of values in this same order.
+    std::vector<EjScalarStat> stats = ej_collect_scalar_stats(pop);
     rec << ",\"stats\":[";
-    {
-        bool first = true;
-        if (have_fst) {                rec << "\"fst\""; first = false; }
-        if (have_qst) { if (!first) rec << ","; rec << "\"qst\""; first = false; }
-        if (have_ho)  { if (!first) rec << ","; rec << "\"ho\"";  first = false; }
-        if (have_hs)  { if (!first) rec << ","; rec << "\"hs\"";  first = false; }
-        if (have_ht)  { if (!first) rec << ","; rec << "\"ht\"";  first = false; }
+    for (unsigned int s = 0; s < stats.size(); ++s) {
+        if (s) rec << ",";
+        rec << "\"" << stats[s].key << "\"";
     }
     rec << "]";
 
@@ -127,10 +259,9 @@ void ej_emit_header(TMetapop* pop, bool& have_fst, bool& have_qst,
 }
 
 // ---- frame: one logged generation, compact positional payload ------------ //
-void ej_emit_frame(TMetapop* pop, bool have_fst, bool have_qst,
-                   bool have_ho, bool have_hs, bool have_ht)
+void ej_emit_frame(TMetapop* pop)
 {
-    const age_idx AGE = ADLTx;            // stats default to ADULTS
+    const age_idx AGE = ADLTx;            // allele/phenotype payloads use ADULTS
     const sex_t   SEXES[2] = { FEM, MAL };
 
     unsigned int nbPatch = pop->get_nbPatch();
@@ -236,32 +367,20 @@ void ej_emit_frame(TMetapop* pop, bool have_fst, bool have_qst,
     }
 
     // ---- stats: bare numbers aligned positionally to header.stats ----
-    if (have_fst || have_qst || have_ho || have_hs || have_ht) {
-        TTraitNeutralProto* ntrlProto =
-            dynamic_cast<TTraitNeutralProto*>(pop->getFirstPrototype("ntrl"));
-        TTraitQuantiProto* quantiProto =
-            dynamic_cast<TTraitQuantiProto*>(pop->getFirstPrototype("quanti"));
-
-        double fst = (double)my_NAN, ho = (double)my_NAN,
-               hs = (double)my_NAN, ht = (double)my_NAN, qst = (double)my_NAN;
-        if (ntrlProto && ntrlProto->_stats) {
-            TTNeutralSH* sh = ntrlProto->_stats;
-            fst = sh->getFst_WC(ADULTS);    // Weir & Cockerham theta
-            ho  = sh->getHo(ADULTS);        // observed heterozygosity
-            hs  = sh->getHsnei(ADULTS);     // Nei within-patch expected het
-            ht  = sh->getHtnei(ADULTS);     // Nei total expected het
+    // Recomputed from the SAME ordered recorder list the header declared, so the
+    // i-th value here is the i-th stream_key there. Any scalar stat the run did
+    // not request is simply absent from both (no nulls for missing stats).
+    {
+        std::vector<EjScalarStat> stats = ej_collect_scalar_stats(pop);
+        if (!stats.empty()) {
+            rec << ",\"stats\":[";
+            for (unsigned int s = 0; s < stats.size(); ++s) {
+                if (s) rec << ",";
+                double v = stats[s].handler->computeStatNow(stats[s].rec);
+                ej_put_num_or_null(rec, v);
+            }
+            rec << "]";
         }
-        if (quantiProto && quantiProto->_stats)
-            qst = quantiProto->_stats->getQst(ADULTS);
-
-        rec << ",\"stats\":[";
-        bool first = true;
-        if (have_fst) {                ej_put_num_or_null(rec, fst); first = false; }
-        if (have_qst) { if (!first) rec << ","; ej_put_num_or_null(rec, qst); first = false; }
-        if (have_ho)  { if (!first) rec << ","; ej_put_num_or_null(rec, ho);  first = false; }
-        if (have_hs)  { if (!first) rec << ","; ej_put_num_or_null(rec, hs);  first = false; }
-        if (have_ht)  { if (!first) rec << ","; ej_put_num_or_null(rec, ht);  first = false; }
-        rec << "]";
     }
 
     rec << "}";
@@ -286,8 +405,8 @@ void EmitJsonFH::FHwrite()
     if (!_pop) return;
     // The header declares the run's static layout ONCE, before any frame.
     if (!_headerDone) {
-        ej_emit_header(_pop, _haveFst, _haveQst, _haveHo, _haveHs, _haveHt);
+        ej_emit_header(_pop);
         _headerDone = true;
     }
-    ej_emit_frame(_pop, _haveFst, _haveQst, _haveHo, _haveHs, _haveHt);
+    ej_emit_frame(_pop);
 }

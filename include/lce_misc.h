@@ -121,10 +121,8 @@ class EmitJsonFH : public FileHandler {
     TMetapop* _pop;
     TStat_db* _statDb;
     bool _headerDone;
-    bool _haveFst, _haveQst, _haveHo, _haveHs, _haveHt;
 public:
-    EmitJsonFH() : _pop(0), _statDb(0), _headerDone(false),
-        _haveFst(false), _haveQst(false), _haveHo(false), _haveHs(false), _haveHt(false) {}
+    EmitJsonFH() : _pop(0), _statDb(0), _headerDone(false) {}
 
     // also sets the base FileHandler::_popPtr so the inherited bookkeeping
     // (print_info, get_tot_occurrence, ...) has a valid metapop to query.

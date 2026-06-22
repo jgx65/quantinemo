@@ -128,7 +128,13 @@ public:
     virtual void      execute          (ostream& FH){}
     
     virtual bool      setStatRecorders (const string& token) = 0;
-    
+
+    /** Compute and return the current value of one of this handler's recorders.
+     *  `rec` MUST be one of the StatRecBase* from getStats(). Lets the --emit-json
+     *  emitter read any scalar stat without knowing the concrete handler/recorder
+     *  template type. Implemented in StatHandler<SH>. */
+    virtual double    computeStatNow   (StatRecBase* rec) = 0;
+
     virtual string getName() = 0;
     
     virtual void      clear            ( ) = 0;
