@@ -256,7 +256,14 @@ public:
 	virtual void clear   ( )  {_recorders.clear();}
     
 	virtual unsigned int get_nb_stats ( ){return (unsigned int)_recorders.size();}
-    
+
+	/** Compute the current value of `rec` (which must be one of this handler's
+	 *  recorders) via its getter. Casts to the concrete StatRecorder<SH> and
+	 *  this handler to SH. Used by the --emit-json emitter. */
+	virtual double computeStatNow (StatRecBase* rec) {
+		return static_cast<StatRecorder<SH>*>(rec)->compute(dynamic_cast<SH*>(this));
+	}
+
 	/**Computes the stats by executing the function variables stored in the StatRecorder's.*/
     void execute ( );              // if stats are stored in db
     void execute (ostream& FH);    // if stats are directly written to file
