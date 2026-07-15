@@ -786,8 +786,8 @@ void TGenomeProto::inherit(TIndividual* mother, TIndividual* father, ALLELE** ch
  */
 void TGenomeProto::_inherit_unlinked(TIndividual* mother, TIndividual* father, ALLELE** child)
 {
-	ALLELE** mother_seq = mother->genome.get_sequence();
-	ALLELE** father_seq = father->genome.get_sequence();
+	GenSeq mother_seq = mother->genome.get_sequence();
+	GenSeq father_seq = father->genome.get_sequence();
 	for (unsigned int l = _nb_locus_linked; l < _nb_locus_tot; ++l) {
 		child[l][0] = mother_seq[l][_popPtr->rand().Bool()];
 		child[l][1] = father_seq[l][_popPtr->rand().Bool()];
@@ -827,7 +827,7 @@ void TGenomeProto::_inherit_mixed(TIndividual* mother, TIndividual* father,
  * */
 void TGenomeProto::_recombine_normal(TIndividual* parent, ALLELE** child, int index)
 {
-	ALLELE** parent_seq = parent->genome.get_sequence();
+	GenSeq parent_seq = parent->genome.get_sequence();
 	sex_t SEX = parent->getSex();
     
 	// draw the recombination positions
@@ -870,7 +870,7 @@ void TGenomeProto::_recombine_normal(TIndividual* parent, ALLELE** child, int in
  * */
 void TGenomeProto::_recombine_qtrait(TIndividual* parent, ALLELE** child, int index)
 {
-	ALLELE** parent_seq = parent->genome.get_sequence();
+	GenSeq parent_seq = parent->genome.get_sequence();
 	sex_t SEX = parent->getSex();
     
 	// inherit and recombine for each chromosome SEPARATELY

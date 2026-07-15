@@ -737,7 +737,7 @@ TTrait::ini(TIndividual* ind)
 	unsigned int nbLocus = 	pTraitProto->_nb_locus;
 	TLocus* aLocus       = pTraitProto->_aLocus;
 	sequence             = new ALLELE*[nbLocus];
-	ALLELE** cur_seq = ind->genome.get_sequence();
+	GenSeq cur_seq = ind->genome.get_sequence();
 	for(unsigned int l=0; l<nbLocus; ++l){
 		sequence[l] = cur_seq[aLocus[l].get_locus_id_tot()];
 	}
