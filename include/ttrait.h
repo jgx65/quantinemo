@@ -81,7 +81,11 @@ public:
     
     
     ALLELE** sequence; 			// pointer to the allele of the genetic map sequence[locus][allele]
-    
+
+    // Encapsulated access to this trait's genotype view; replaces the raw
+    // `(ALLELE**)trait->get_sequence()` casts scattered through stats/genotype code.
+    inline GenSeq get_genes() const { return GenSeq(sequence); }
+
     virtual void* get_allele(const unsigned int& loc, const unsigned int& all)  const;
     
 public:

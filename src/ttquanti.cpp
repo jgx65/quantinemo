@@ -2597,13 +2597,13 @@ TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
     unsigned int l, a;
     ALLELE a1, a2;
     double* aGeno = new double[size];
-    ALLELE** genes;
+    GenSeq genes;
     
     // females
     vector<TIndividual*>::iterator curInd, endInd;
     for(curInd= curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd) {
         meanG += G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotype
-        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // sequence
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();  // sequence
         for (l = 0; l < _nb_locus; ++l){
             aTemp[0] = l;
             a1 = genes[l][0];          // 1. allele
@@ -2625,7 +2625,7 @@ TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
     // males
     for(curInd= curMal.begin(), endInd=curMal.end(); curInd!=endInd; ++curInd) {
         meanG += G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotype
-        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // sequence
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();  // sequence
         for (l = 0; l < _nb_locus; ++l){
             aTemp[0] = l;
             a1 = genes[l][0];          // 1. allele
@@ -2702,7 +2702,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     unsigned int i, l;
     double* arrayG = new double[size];
     ALLELE a1, a2;
-    ALLELE** genes;
+    GenSeq genes;
     double G, meanG=0;
     unsigned int nbFailure = 0;
     
@@ -2726,7 +2726,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     for(i=0, curInd= curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd, ++i) {
         // get the genotype and genotypic value
         meanG += arrayG[i] = G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotypic value
-        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // genotype
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();  // genotype
         for (l = 0; l < _nb_locus; ++l){
             a1 = genes[l][0];          // 1. allele
             a2 = genes[l][1];          // 2. allele
@@ -2758,7 +2758,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     for(curInd= curMal.begin(), endInd=curMal.end(); curInd!=endInd; ++curInd, ++i) {
         // get the genotype and genotypic value
         meanG += arrayG[i] = G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotypic value
-        genes = (ALLELE**)(*curInd)->getTrait(_SHLinkedTraitIndex)->get_sequence();  // genotype
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();  // genotype
         for (l = 0; l < _nb_locus; ++l){
             a1 = genes[l][0];          // 1. allele
             a2 = genes[l][1];          // 2. allele
@@ -2974,8 +2974,8 @@ TTQuantiSH::remove_private_alleles_compute_alpha(TPatch* crnt_patch, const unsig
     
     // check each individual if it has two private alleles
     for(i = 0; i < sizeF+sizeM; ++i) {
-        if(i<sizeF) g = (ALLELE*)crnt_patch->get(FEM, age_pos, i)->getTrait(_SHLinkedTraitIndex)->get_sequence()[l];       // get the female
-        else        g = (ALLELE*)crnt_patch->get(MAL, age_pos, i-sizeF)->getTrait(_SHLinkedTraitIndex)->get_sequence()[l]; // get the male
+        if(i<sizeF) g = crnt_patch->get(FEM, age_pos, i)->getTrait(_SHLinkedTraitIndex)->get_genes()[l];       // get the female
+        else        g = crnt_patch->get(MAL, age_pos, i-sizeF)->getTrait(_SHLinkedTraitIndex)->get_genes()[l]; // get the male
         
         assert(allele_freq.find(g[0]) != allele_freq.end() && allele_freq.find(g[1]) != allele_freq.end());
         if(   allele_freq[g[0]] == private_allele_freq   // check if both alleles are private

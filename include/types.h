@@ -93,6 +93,25 @@ inline age_idx age_t2idx(const age_t& AGE){
 
 #define ploidy 2
 
+// ----------------------------------------------------------------------------------------
+// GenSeq: lightweight, copyable view of one individual's diploid genome sequence.
+// It encapsulates per-locus allele access ( seq[locus][copy] ) so that the underlying
+// storage layout can change without touching call sites:
+//   - commit 1 (this): wraps the existing jagged/contiguous  ALLELE**  pointer array.
+//   - commit 2       : wraps a single flat  ALLELE*  block, indexing  base + locus*ploidy.
+// operator[](locus) returns a pointer to that locus' `ploidy` alleles, so writes
+// ( seq[locus][copy] = x ) keep working unchanged.
+// ----------------------------------------------------------------------------------------
+struct GenSeq {
+    ALLELE** rows;                                   // per-locus pointers (each -> ALLELE[ploidy])
+    GenSeq()          : rows(0) {}
+    GenSeq(ALLELE** r): rows(r) {}
+    inline ALLELE*  operator[](size_t locus) const { return rows[locus]; }
+    inline ALLELE** raw()                    const { return rows; }   // escape hatch for legacy APIs
+    inline bool     operator!()              const { return rows == 0; }
+    explicit operator bool()                 const { return rows != 0; }
+};
+
 
 #define my_NAN 9999999
 #define my_NANstr (string)("NaN")

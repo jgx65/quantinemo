@@ -72,7 +72,8 @@ public:
 	void clone(const TGenome& gen);
 
 	TGenomeProto* get_protoGenome() const {return _protoGenome;}
-	ALLELE** get_sequence() const {return sequence;}
+	GenSeq get_sequence() const {return GenSeq(sequence);}
+	ALLELE** get_sequence_raw() const {return sequence;}   // raw pointer array (internal/legacy)
 
 	TGenome& operator=(const TGenome& g);
 };
