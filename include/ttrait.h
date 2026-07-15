@@ -80,11 +80,12 @@ class TTrait{
 public:
     
     
-    ALLELE** sequence; 			// pointer to the allele of the genetic map sequence[locus][allele]
+    GenSeq sequence;   // view of this individual's genotype: flat genome base + trait locus map
+                       //   (no per-locus pointer array; sequence[locus][copy] still works)
 
     // Encapsulated access to this trait's genotype view; replaces the raw
     // `(ALLELE**)trait->get_sequence()` casts scattered through stats/genotype code.
-    inline GenSeq get_genes() const { return GenSeq(sequence); }
+    inline GenSeq get_genes() const { return sequence; }
 
     virtual void* get_allele(const unsigned int& loc, const unsigned int& all)  const;
     
@@ -92,10 +93,10 @@ public:
     TTraitProto* pTraitProto;
     
     // the type has to be set by the inherited class
-    TTrait() : sequence(0){
+    TTrait() : sequence(){
     }
-    
-    TTrait(const TTrait& T) : sequence(0){
+
+    TTrait(const TTrait& T) : sequence(){
         _copyTTraitParameters(T);  // copy the parameters of TTrait
     }
     
@@ -225,9 +226,22 @@ public:
     
     
     TLocus* _aLocus;
-    
+
     TLocus* get_aLocus(){return _aLocus;}
-    
+
+    // Per-trait map: trait-locus -> genome-locus index (built once, shared by all
+    // individuals). Lets a trait view its loci in the flat genome without a per-individual
+    // pointer array.  _seqmap[l] == _aLocus[l].get_locus_id_tot().
+    unsigned int* _seqmap;
+    const unsigned int* get_seqmap() {
+        if (!_seqmap && _nb_locus) {
+            _seqmap = new unsigned int[_nb_locus];
+            for (unsigned int l = 0; l < _nb_locus; ++l)
+                _seqmap[l] = _aLocus[l].get_locus_id_tot();
+        }
+        return _seqmap;
+    }
+
 protected:
     
     // parameters concerning multiple instances of the same class
@@ -242,7 +256,7 @@ public:
     _initAlleleFreq(0), _mutationFreq(0),
     _protoGenome(0), _locus_index(0),
     _nb_allele(0), _nb_locus(0),
-    _absolute_index(0), _aLocus(0), _trait_index(0){}
+    _absolute_index(0), _aLocus(0), _seqmap(0), _trait_index(0){}
     
     
     ~TTraitProto();

@@ -99,7 +99,7 @@ Tree<T>::~Tree()
 // get_value
 // ----------------------------------------------------------------------------------------
 template <class T>
-double Tree<T>::get_value(T** genotype)
+double Tree<T>::get_value(GenSeq genotype)
 {
   /**The genotype is converted in a tree coordinate, each locus receives a value corresponding to
     its genotype's value in the mapper. This coordinate is used to scan the tree to find the phenotype leaf.*/
@@ -117,7 +117,7 @@ double Tree<T>::get_value(T** genotype)
   * If there is no one, it returns my_NAN
   */
 template <class T>
-double Tree<T>::get_first(T** genotype)
+double Tree<T>::get_first(GenSeq genotype)
 {
   // translate the genotype
   for(unsigned int i = 0; i < _nb_locus; i++){
@@ -143,7 +143,7 @@ double Tree<T>::get_first(T** genotype)
   * If there is no one, it returns my_NAN
   */
 template <class T>
-double Tree<T>::get_next(T** genotype)
+double Tree<T>::get_next(GenSeq genotype)
 {
   // translate the genotype
   for(unsigned int i = 0; i < _nb_locus; ++i){
@@ -178,7 +178,7 @@ double Tree<T>::get_next(T** genotype)
 // set_value
 // ----------------------------------------------------------------------------------------
 template <class T>
-void Tree<T>::set_value(T** genotype, double value)
+void Tree<T>::set_value(GenSeq genotype, double value)
 {
   /**The genotype is converted in a tree coordinate, each locus receives a value corresponding to
     its genotype's value in the mapper. This coordinate is used to scan the tree to find the phenotype leaf.*/

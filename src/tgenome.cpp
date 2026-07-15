@@ -58,8 +58,8 @@ TGenome::~TGenome()
 void TGenome::clear()
 {
 	if (sequence) {
-		assert(_protoGenome);
-		ARRAY::delete_2D(sequence, _protoGenome->_nb_locus_tot);
+		delete[] sequence;        // FLAT: single contiguous block
+		sequence = NULL;
 	}
 }
 
@@ -94,8 +94,8 @@ void TGenome::ini_sequence(TPatch* patch)
 void TGenome::ini_sequence(ALLELE* seq_mum, ALLELE* seq_dad)
 {
 	for (unsigned int l = 0; l < _protoGenome->_nb_locus_tot; ++l) {
-		sequence[l][0] = seq_mum[l];
-		sequence[l][1] = seq_dad[l];
+		sequence[l*ploidy + 0] = seq_mum[l];
+		sequence[l*ploidy + 1] = seq_dad[l];
 	}
 }
 
@@ -108,8 +108,8 @@ void TGenome::ini_sequence(ALLELE* seq_mum, ALLELE* seq_dad)
 void TGenome::ini_sequence(ALLELE** seq)
 {
 	for (unsigned int l = 0; l < _protoGenome->_nb_locus_tot; ++l) {
-		sequence[l][0] = seq[0][l];
-		sequence[l][1] = seq[1][l];
+		sequence[l*ploidy + 0] = seq[0][l];
+		sequence[l*ploidy + 1] = seq[1][l];
 	}
 }
 
@@ -122,8 +122,8 @@ void TGenome::ini_sequence(ALLELE** seq)
 void TGenome::ini_sequence_dadFirst(ALLELE** seq)
 {
 	for (unsigned int l = 0; l < _protoGenome->_nb_locus_tot; ++l) {
-		sequence[l][0] = seq[1][l];
-		sequence[l][1] = seq[0][l];
+		sequence[l*ploidy + 0] = seq[1][l];
+		sequence[l*ploidy + 1] = seq[0][l];
 	}
 }
 
@@ -133,7 +133,7 @@ void TGenome::ini_sequence_dadFirst(ALLELE** seq)
 void TGenome::create_sequence()
 {
 	assert(!sequence);
-	ARRAY::create_2D(sequence, _protoGenome->_nb_locus_tot, ploidy);
+	sequence = new ALLELE[(size_t)_protoGenome->_nb_locus_tot * ploidy];   // FLAT
 }
 
 // ----------------------------------------------------------------------------------------
@@ -143,7 +143,7 @@ void TGenome::clone(const TGenome& gen)
 {
 	_protoGenome = gen._protoGenome;
 	assert(!sequence);
-	ARRAY::create_2D(sequence, _protoGenome->_nb_locus_tot, ploidy);
+	sequence = new ALLELE[(size_t)_protoGenome->_nb_locus_tot * ploidy];   // FLAT
 }
 
 // ----------------------------------------------------------------------------------------
@@ -153,13 +153,10 @@ TGenome&
 TGenome::operator=(const TGenome& g)
 {
 	_protoGenome = g._protoGenome;
-	unsigned int l, a, nbLocus = _protoGenome->_nb_locus_tot;
-	if (!sequence) ARRAY::create_2D(sequence, nbLocus, ploidy);
-	for (l = 0; l < nbLocus; ++l) {
-		for (a = 0; a < ploidy; ++a) {
-			sequence[l][a] = g.sequence[l][a];
-		}
-	}
+	unsigned int nbLocus = _protoGenome->_nb_locus_tot;
+	if (!sequence) sequence = new ALLELE[(size_t)nbLocus * ploidy];        // FLAT
+	for (size_t i = 0; i < (size_t)nbLocus * ploidy; ++i)
+		sequence[i] = g.sequence[i];
 	return *this;
 }
 
@@ -773,7 +770,7 @@ void TGenomeProto::printGeneticMapInfo()
 // inherit
 // ----------------------------------------------------------------------------------------
 /** public function for inheritance */
-void TGenomeProto::inherit(TIndividual* mother, TIndividual* father, ALLELE** child)
+void TGenomeProto::inherit(TIndividual* mother, TIndividual* father, GenSeq child)
 {
 	(this->*_inherit_func_ptr)(mother, father, child);
 }
@@ -784,7 +781,7 @@ void TGenomeProto::inherit(TIndividual* mother, TIndividual* father, ALLELE** ch
 /** inheritance with just unlinked loci
  * the genome containes first the linked loci, followed by the unlinked loci
  */
-void TGenomeProto::_inherit_unlinked(TIndividual* mother, TIndividual* father, ALLELE** child)
+void TGenomeProto::_inherit_unlinked(TIndividual* mother, TIndividual* father, GenSeq child)
 {
 	GenSeq mother_seq = mother->genome.get_sequence();
 	GenSeq father_seq = father->genome.get_sequence();
@@ -798,7 +795,7 @@ void TGenomeProto::_inherit_unlinked(TIndividual* mother, TIndividual* father, A
 // _inherit_linked
 // ----------------------------------------------------------------------------------------
 /** inheritance with just linked loci */
-void TGenomeProto::_inherit_linked(TIndividual* mother, TIndividual* father, ALLELE** child)
+void TGenomeProto::_inherit_linked(TIndividual* mother, TIndividual* father, GenSeq child)
 {
 	(this->*_recombine_func_ptr[FEM])(mother, child, 0);
 	(this->*_recombine_func_ptr[MAL])(father, child, 1);
@@ -811,7 +808,7 @@ void TGenomeProto::_inherit_linked(TIndividual* mother, TIndividual* father, ALL
  * the genome contains first the linked loci, followed by the unlinked loci
  */
 void TGenomeProto::_inherit_mixed(TIndividual* mother, TIndividual* father,
-                                  ALLELE** child)
+                                  GenSeq child)
 {
 	_inherit_linked(mother, father, child);
 	_inherit_unlinked(mother, father, child);
@@ -825,7 +822,7 @@ void TGenomeProto::_inherit_mixed(TIndividual* mother, TIndividual* father,
  * - _chromosomeLength_temp: used to specify the total number of recombinations
  * - _locus_position_tot_temp: vector with the locus positions
  * */
-void TGenomeProto::_recombine_normal(TIndividual* parent, ALLELE** child, int index)
+void TGenomeProto::_recombine_normal(TIndividual* parent, GenSeq child, int index)
 {
 	GenSeq parent_seq = parent->genome.get_sequence();
 	sex_t SEX = parent->getSex();
@@ -868,7 +865,7 @@ void TGenomeProto::_recombine_normal(TIndividual* parent, ALLELE** child, int in
  * single crossover per meiosis, on average."
  *
  * */
-void TGenomeProto::_recombine_qtrait(TIndividual* parent, ALLELE** child, int index)
+void TGenomeProto::_recombine_qtrait(TIndividual* parent, GenSeq child, int index)
 {
 	GenSeq parent_seq = parent->genome.get_sequence();
 	sex_t SEX = parent->getSex();
@@ -1192,7 +1189,7 @@ void TGenomeProto::check_pleiotrophic_loci()
  *  - _mutate_equal_mutation_rate
  *  - _mutate_unequal_mutation_rate
  */
-void TGenomeProto::mutate(ALLELE** seq)
+void TGenomeProto::mutate(GenSeq seq)
 {
 	(this->*_mutate_func_ptr)(seq);
 }
@@ -1201,7 +1198,7 @@ void TGenomeProto::mutate(ALLELE** seq)
 /** if the mutation rate is identical for all loci perform a "global" mutation
  * draw randomly the locus and allele to mutate and then call the corresponding mutation function
  */
-void TGenomeProto::_mutate_equal_mutation_rate(ALLELE** seq)
+void TGenomeProto::_mutate_equal_mutation_rate(GenSeq seq)
 {
 	unsigned int NbMut, l;
 	for (NbMut = _popPtr->rand().Poisson(ploidy * _nb_locus_tot * _mut_rate_mean); NbMut != 0; --NbMut) {
@@ -1214,7 +1211,7 @@ void TGenomeProto::_mutate_equal_mutation_rate(ALLELE** seq)
 /** if the mutation rate is identical for all loci perform a "global" mutation
  * draw randomly the locus and allele to mutate and then call the corresponding mutation function
  */
-void TGenomeProto::_mutate_equal_mutation_rate_pleiotrophy(ALLELE** seq)
+void TGenomeProto::_mutate_equal_mutation_rate_pleiotrophy(GenSeq seq)
 {
 	unsigned int NbMut, l, curLocus, end;
 	for (NbMut = _popPtr->rand().Poisson(ploidy * _nb_locus_pleiotropic * _mut_rate_mean); NbMut != 0; --NbMut) {
@@ -1231,7 +1228,7 @@ void TGenomeProto::_mutate_equal_mutation_rate_pleiotrophy(ALLELE** seq)
 /** if the mutation rate is identical for all loci perform a "global" mutation
  * draw randomly the locus and allele to mutate and then call the corresponding mutation function
  */
-void TGenomeProto::_mutate_equal_mutation_rate_pleiotrophy_correl(ALLELE** seq)
+void TGenomeProto::_mutate_equal_mutation_rate_pleiotrophy_correl(GenSeq seq)
 {
     assert(_locus_pleiotropic);
 	unsigned int NbMut, l, curPos, endPos;
@@ -1260,7 +1257,7 @@ void TGenomeProto::_mutate_equal_mutation_rate_pleiotrophy_correl(ALLELE** seq)
 /** if the mutation rate varies between loci the probability to mutate has to be
  * checked for each single locus
  */
-void TGenomeProto::_mutate_unequal_mutation_rate(ALLELE** seq)
+void TGenomeProto::_mutate_unequal_mutation_rate(GenSeq seq)
 {
 	for (unsigned int l = 0; l < _nb_locus_tot; ++l) {
 		_locus_tot[l]->mutate(seq[l]);       // check if a mutation appears here
@@ -1272,7 +1269,7 @@ void TGenomeProto::_mutate_unequal_mutation_rate(ALLELE** seq)
  * checked for each single locus
  */
 void TGenomeProto::_mutate_unequal_mutation_rate_pleiotrophy(
-                                                             ALLELE** seq)
+                                                             GenSeq seq)
 {
     assert(_locus_pleiotropic);
 	unsigned int NbMut, l, curLocus, end;
@@ -1293,7 +1290,7 @@ void TGenomeProto::_mutate_unequal_mutation_rate_pleiotrophy(
  * The mutation between the different loci of a pleiotropic set are correlated,
  * thus the random deviates are drawn simultaneously from the multivariate normal distribution
  */
-void TGenomeProto::_mutate_unequal_mutation_rate_pleiotrophy_correl(ALLELE** seq)
+void TGenomeProto::_mutate_unequal_mutation_rate_pleiotrophy_correl(GenSeq seq)
 {
     assert(_locus_pleiotropic);
 	unsigned int NbMut, l, curPos, endPos;
@@ -1349,7 +1346,7 @@ void TGenomeProto::set_ini_sequence_model(TLocus* aLocus,
 // ini_sequence
 // ----------------------------------------------------------------------------------------
 /** initialize the entire sequence */
-void TGenomeProto::ini_sequence(ALLELE** seq, TPatch* patch)
+void TGenomeProto::ini_sequence(GenSeq seq, TPatch* patch)
 {
 	assert(seq);
     

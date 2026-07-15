@@ -103,13 +103,22 @@ inline age_idx age_t2idx(const age_t& AGE){
 // ( seq[locus][copy] = x ) keep working unchanged.
 // ----------------------------------------------------------------------------------------
 struct GenSeq {
-    ALLELE** rows;                                   // per-locus pointers (each -> ALLELE[ploidy])
-    GenSeq()          : rows(0) {}
-    GenSeq(ALLELE** r): rows(r) {}
-    inline ALLELE*  operator[](size_t locus) const { return rows[locus]; }
-    inline ALLELE** raw()                    const { return rows; }   // escape hatch for legacy APIs
-    inline bool     operator!()              const { return rows == 0; }
-    explicit operator bool()                 const { return rows != 0; }
+    ALLELE*             base;   // flat genome block; locus l, copy c is at base[l*ploidy + c]
+    const unsigned int* map;    // optional trait-locus -> genome-locus remap (NULL = identity)
+    ALLELE**            rows;   // optional jagged view (transient scratch only; NULL for real genomes)
+    GenSeq()                                : base(0), map(0), rows(0) {}
+    GenSeq(ALLELE* b)                       : base(b), map(0), rows(0) {}
+    GenSeq(ALLELE* b, const unsigned int* m): base(b), map(m), rows(0) {}
+    GenSeq(ALLELE** r)                      : base(0), map(0), rows(r) {}   // wrap a jagged scratch buffer
+    // -> pointer to this locus' `ploidy` alleles, so seq[locus][copy] keeps working.
+    // The real per-individual genome/trait views have rows==NULL (fully flat path);
+    // only cold epistasis/output scratch buffers take the jagged branch.
+    inline ALLELE* operator[](size_t locus) const {
+        return rows ? rows[locus] : base + (size_t)(map ? map[locus] : locus) * ploidy;
+    }
+    inline ALLELE* data()       const { return base; }
+    inline bool    operator!()  const { return base == 0 && rows == 0; }
+    explicit operator bool()    const { return base != 0 || rows != 0; }
 };
 
 

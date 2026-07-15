@@ -75,11 +75,8 @@ public:
 	virtual bool    operator!= (const TTrait& T);
 	virtual void    reset                ();
 	virtual void*   set_trait            (void* value)           {return NULL;}
-	virtual void**  get_sequence         ()  const              {return (void**)sequence;}
-	virtual void    set_sequence         (void** seq){
-		reset();
-		sequence = (ALLELE**)seq;
-	}
+	virtual void**  get_sequence         ()  const              {return 0;} // legacy; use get_genes()
+	virtual void    set_sequence         (void** seq){ reset(); } // legacy no-op (unused)
 	virtual void    set_value            (); // set the genotype
 	virtual void    set_value            (double val)          {_phenotype = val+_genotype;}   // set the phenotype
 	virtual double  get_value            ()					   {return _phenotype;}
@@ -158,21 +155,21 @@ public:
 
 	double get_dominance_mean(){return _dominance_mean;}
 
-	double  (TTraitQuantiProto::* get_genotype_func_ptr)(ALLELE** seq);
-	double  get_genotype_additive (ALLELE** seq);
-	double  get_genotype_epistatic (ALLELE** seq);
+	double  (TTraitQuantiProto::* get_genotype_func_ptr)(GenSeq seq);
+	double  get_genotype_additive (GenSeq seq);
+	double  get_genotype_epistatic (GenSeq seq);
 
 	double* get_fitnessFactor_heterozygote(){return _fitnessFactor_heterozygote;}
 	double* get_fitnessFactor_homozygote()  {return _fitnessFactor_homozygote;}
 	double*** get_fitnessFactor_array()  {return _fitnessFactor;}
 	bool    fitnessFactor_used() {return (get_fitnessFactor_func_ptr != NULL || get_fitnessFactor2_func_ptr != NULL);}
 	bool    fitnessFactor_freqDep_used() {return (get_fitnessFactor2_func_ptr != NULL);}
-	double  (TTraitQuantiProto::* get_fitnessFactor_func_ptr)(ALLELE** seq);
-	double  (TTraitQuantiProto::* get_fitnessFactor2_func_ptr)(ALLELE** seq);
-	double  get_fitnessFactor_genome(ALLELE** seq);
-	double  get_fitnessFactor_locus(ALLELE** seq);
-	double  get_fitnessFactor_global(ALLELE** seq);
-    double  get_fitnessFactor_freqDepend(ALLELE** seq);
+	double  (TTraitQuantiProto::* get_fitnessFactor_func_ptr)(GenSeq seq);
+	double  (TTraitQuantiProto::* get_fitnessFactor2_func_ptr)(GenSeq seq);
+	double  get_fitnessFactor_genome(GenSeq seq);
+	double  get_fitnessFactor_locus(GenSeq seq);
+	double  get_fitnessFactor_global(GenSeq seq);
+    double  get_fitnessFactor_freqDepend(GenSeq seq);
     double* get_fitnessFactor_freqDepend(){return _fitnessFactor_freqDepend;}
     
     map<ALLELE, map< ALLELE, double> >*& get_locusFreqs() {return _locusFreqs;}
