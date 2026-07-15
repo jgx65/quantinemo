@@ -82,6 +82,7 @@ TTraitProto::resetTotal(){
 	if(_locus_index) {delete[] _locus_index; _locus_index=NULL;}
 	if(_nb_allele) {delete[] _nb_allele; _nb_allele=NULL;}
 	if(_aLocus){delete[] _aLocus; _aLocus=NULL;}
+	if(_seqmap){delete[] _seqmap; _seqmap=NULL;}
 }
 
 // ----------------------------------------------------------------------------------------
@@ -691,7 +692,7 @@ TTraitProto::isUnequalTTraitProto(const TTraitProto& T){       // for operator!=
 //------------------------------------------------------------------------------
 /** destructor */
 TTrait::~TTrait ( ){
-	if(sequence) delete[] sequence;
+	// FLAT: `sequence` is a non-owning view (genome base + shared map); nothing to free.
 }
 
 //------------------------------------------------------------------------------
@@ -732,15 +733,9 @@ void
 TTrait::ini(TIndividual* ind)
 {
 	assert(ind->genome.get_sequence());
-	if(sequence){delete[] sequence; sequence=NULL;}
-
-	unsigned int nbLocus = 	pTraitProto->_nb_locus;
-	TLocus* aLocus       = pTraitProto->_aLocus;
-	sequence             = new ALLELE*[nbLocus];
-	GenSeq cur_seq = ind->genome.get_sequence();
-	for(unsigned int l=0; l<nbLocus; ++l){
-		sequence[l] = cur_seq[aLocus[l].get_locus_id_tot()];
-	}
+	// FLAT: view the individual's flat genome directly through the trait's shared
+	// locus map (base + map[l]*ploidy); no per-locus pointer array is allocated.
+	sequence = GenSeq(ind->genome.get_sequence().data(), pTraitProto->get_seqmap());
 }
 
 

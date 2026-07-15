@@ -299,7 +299,7 @@ void ej_emit_frame(TMetapop* pop)
                             for (unsigned int i = 0; i < n; ++i) {
                                 TIndividual* ind = patch->get(SEX, AGE, i);
                                 if (!ind) continue;
-                                ALLELE** seq = (ALLELE**)ind->getTrait((int)absIdx)->get_sequence();
+                                GenSeq seq = ind->getTrait((int)absIdx)->get_genes();
                                 if (!seq) continue;
                                 for (unsigned int c = 0; c < ploidy; ++c) {
                                     ALLELE a = seq[l][c];

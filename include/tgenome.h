@@ -54,7 +54,7 @@ class StatServices;
 class TGenome{
 private:
 	TGenomeProto* _protoGenome; // pointer to the prototype (don't delete it)
-	ALLELE** sequence;  // sequence[locus][allele]; allele 0: from mother; allele 1: from father
+	ALLELE* sequence;   // FLAT diploid genome: locus l, copy c at sequence[l*ploidy + c]
 
 public:
 	TGenome();
@@ -73,7 +73,7 @@ public:
 
 	TGenomeProto* get_protoGenome() const {return _protoGenome;}
 	GenSeq get_sequence() const {return GenSeq(sequence);}
-	ALLELE** get_sequence_raw() const {return sequence;}   // raw pointer array (internal/legacy)
+	ALLELE* get_sequence_raw() const {return sequence;}   // flat data block (internal/legacy)
 
 	TGenome& operator=(const TGenome& g);
 };
@@ -140,18 +140,18 @@ protected:
 	virtual void loadStatServices ( StatServices* loader ) {}
 
 	// inheritance functions
-	void (TGenomeProto::*_inherit_func_ptr)(TIndividual* mother, TIndividual* father, ALLELE** child);
-	void _inherit_linked  (TIndividual* mother, TIndividual* father, ALLELE** child);
-	void _inherit_unlinked(TIndividual* mother, TIndividual* father, ALLELE** child);
-	void _inherit_mixed   (TIndividual* mother, TIndividual* father, ALLELE** child);
+	void (TGenomeProto::*_inherit_func_ptr)(TIndividual* mother, TIndividual* father, GenSeq child);
+	void _inherit_linked  (TIndividual* mother, TIndividual* father, GenSeq child);
+	void _inherit_unlinked(TIndividual* mother, TIndividual* father, GenSeq child);
+	void _inherit_mixed   (TIndividual* mother, TIndividual* father, GenSeq child);
     
 	// recombination factor
 	void ini_recombination_factor();
 	bool ini_recombination_factor(string param_name, sex_t SEX);
 	void ini_recombination_qtrait(string param_name, sex_t SEX, double* vec, unsigned int size, TMatrix* m);
-	void (TGenomeProto::*_recombine_func_ptr[2])(TIndividual* parent, ALLELE** child, int index);
-	void _recombine_normal   (TIndividual* parent, ALLELE** child, int index = 0);
-	void _recombine_qtrait   (TIndividual* parent, ALLELE** child, int index = 0);
+	void (TGenomeProto::*_recombine_func_ptr[2])(TIndividual* parent, GenSeq child, int index);
+	void _recombine_normal   (TIndividual* parent, GenSeq child, int index = 0);
+	void _recombine_qtrait   (TIndividual* parent, GenSeq child, int index = 0);
     
 	typedef double (TGenomeProto::*_func_ptr)(TIndividual* parent, sex_t SEX, unsigned int chrom);
 	_func_ptr* _recombination_chrom_func_ptr[2];
@@ -161,14 +161,14 @@ protected:
     
     
 	// mutation functions
-	void  (TGenomeProto::*_mutate_func_ptr)(ALLELE** seq);
-	void  _mutate_zero_mutation_rate   (ALLELE** seq) { }
-	void  _mutate_equal_mutation_rate  (ALLELE** seq);
-	void  _mutate_equal_mutation_rate_pleiotrophy(ALLELE** seq);
-	void  _mutate_equal_mutation_rate_pleiotrophy_correl(ALLELE** seq);
-	void  _mutate_unequal_mutation_rate(ALLELE** seq);
-	void  _mutate_unequal_mutation_rate_pleiotrophy(ALLELE** seq);
-	void  _mutate_unequal_mutation_rate_pleiotrophy_correl(ALLELE** seq);
+	void  (TGenomeProto::*_mutate_func_ptr)(GenSeq seq);
+	void  _mutate_zero_mutation_rate   (GenSeq seq) { }
+	void  _mutate_equal_mutation_rate  (GenSeq seq);
+	void  _mutate_equal_mutation_rate_pleiotrophy(GenSeq seq);
+	void  _mutate_equal_mutation_rate_pleiotrophy_correl(GenSeq seq);
+	void  _mutate_unequal_mutation_rate(GenSeq seq);
+	void  _mutate_unequal_mutation_rate_pleiotrophy(GenSeq seq);
+	void  _mutate_unequal_mutation_rate_pleiotrophy_correl(GenSeq seq);
     
 	void ini();
 	void ini_paramset();
@@ -194,13 +194,13 @@ public:
 
 	TMatrixVar<double>* drawGeneticMapRandom(TMatrix* matrix, unsigned int& nbLocus);
 
-	void inherit(TIndividual* mother, TIndividual* father, ALLELE** child);
+	void inherit(TIndividual* mother, TIndividual* father, GenSeq child);
 
-	void mutate(ALLELE** seq);
+	void mutate(GenSeq seq);
 	void ini_mutate();
 	void set_mutation_of_locus(const unsigned int& l, const double& rate, const mut_model_t& model);
 
-	void ini_sequence(ALLELE** seq, TPatch* patch);
+	void ini_sequence(GenSeq seq, TPatch* patch);
 	void set_ini_sequence_model(TLocus* aLocus, const unsigned int& size, const unsigned int& model);
 	void set_ini_sequence_model(TLocus* aLocus, const unsigned int& size, const ini_model_t& model);
 

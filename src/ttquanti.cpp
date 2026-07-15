@@ -2229,7 +2229,7 @@ TTraitQuantiProto::get_genotype_dominance_k(double a1, double a2, double k)
 // get_genotype
 // ----------------------------------------------------------------------------------------
 double
-TTraitQuantiProto::get_genotype_additive(ALLELE** seq)
+TTraitQuantiProto::get_genotype_additive(GenSeq seq)
 {
     double sum=0;
     for(unsigned int l=0; l<_nb_locus; ++l){
@@ -2239,7 +2239,7 @@ TTraitQuantiProto::get_genotype_additive(ALLELE** seq)
 }
 
 double
-TTraitQuantiProto::get_genotype_epistatic(ALLELE** seq)
+TTraitQuantiProto::get_genotype_epistatic(GenSeq seq)
 {
     double val  = _phenoTree->get_value(seq);
     if(val != my_NAN) return val;
@@ -2256,7 +2256,7 @@ TTraitQuantiProto::get_genotype_epistatic(ALLELE** seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified explicitly for each genome */
 double
-TTraitQuantiProto::get_fitnessFactor_genome(ALLELE** seq)
+TTraitQuantiProto::get_fitnessFactor_genome(GenSeq seq)
 {
     double val  = _fitnessFactorTree->get_value(seq);
     if(val != my_NAN) return val;
@@ -2271,7 +2271,7 @@ TTraitQuantiProto::get_fitnessFactor_genome(ALLELE** seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified at the locus level */
 double
-TTraitQuantiProto::get_fitnessFactor_locus(ALLELE** seq)
+TTraitQuantiProto::get_fitnessFactor_locus(GenSeq seq)
 {
     assert(_fitnessFactor);
     
@@ -2299,7 +2299,7 @@ TTraitQuantiProto::get_fitnessFactor_locus(ALLELE** seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specifed globally for heterozygote/homozygote loci */
 double
-TTraitQuantiProto::get_fitnessFactor_global(ALLELE** seq)
+TTraitQuantiProto::get_fitnessFactor_global(GenSeq seq)
 {
     double product=1;
     for(unsigned int l=0; l<_nb_locus; ++l){
@@ -2316,7 +2316,7 @@ TTraitQuantiProto::get_fitnessFactor_global(ALLELE** seq)
  * Noe: _locusFreqs have to be recomputed at each generation and patch
  */
 double
-TTraitQuantiProto::get_fitnessFactor_freqDepend(ALLELE** seq)
+TTraitQuantiProto::get_fitnessFactor_freqDepend(GenSeq seq)
 {
     assert(_locusFreqs);
     

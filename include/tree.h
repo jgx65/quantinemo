@@ -38,6 +38,7 @@
 //#include <iostream>
 
 #include "node.h"
+#include "types.h"   // GenSeq (genotype view)
 //#include "functions.h"
 //using namespace std;
 
@@ -70,10 +71,10 @@ public:
   Tree (unsigned int nbloc, unsigned int nball);
   ~Tree ();
   /**Gives the phenotype of the genotype given in argument.*/
-  double get_value(T** genotype);
-  double get_first(T** genotype);
-  double get_next (T** genotype);
-  void   set_value(T** genotype, double value);
+  double get_value(GenSeq genotype);
+  double get_first(GenSeq genotype);
+  double get_next (GenSeq genotype);
+  void   set_value(GenSeq genotype, double value);
 
 };
 

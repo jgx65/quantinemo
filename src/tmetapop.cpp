@@ -2327,7 +2327,7 @@ TMetapop::setPopulation_FSTAT(const age_t& requiredAge)
     unsigned int i, l, p, curLocus, nbAllele;
     unsigned int** curGenotype;
     unsigned int** array;
-    ALLELE** seq;
+    GenSeq seq;
     ALLELE a;
     unsigned int *aMax = ARRAY::new_1D<unsigned int>(_patchNbr, (unsigned int)0);   // array for each patch to find the maximal index (only used when infos are present)
     for(i=0; i<nbInd; ++i){                               // for each individual

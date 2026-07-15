@@ -72,9 +72,9 @@ public:
     virtual bool    operator!= (const TTrait& T);
     virtual void    reset                ( ){}
     virtual void*   set_trait            (void* value)           {return NULL;}
-    inline virtual void**  get_sequence  ( )  const              {return (void**)sequence;}
+    inline virtual void**  get_sequence  ( )  const              {return 0;} // legacy; use get_genes()
     inline virtual void*   get_allele    (const unsigned int& loc, const unsigned int& all)  const;
-    virtual void    set_sequence         (void** seq)            {reset();sequence = (ALLELE**)seq;}
+    virtual void    set_sequence         (void** seq)            {reset();} // legacy no-op (unused)
     virtual void    set_value            ( )                     { }
     virtual void    set_value            (double value)          {return;}
     virtual double  get_value            ( )					           {return my_NAN;}
