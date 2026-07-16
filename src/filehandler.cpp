@@ -242,7 +242,7 @@ void FileHandler::write_Fstat(const age_idx& AGE, const sex_t& SEX,
                               const int& position, bool extened)
 {
     
-    GenSeq seq;
+    TTrait* seq;
     unsigned int nb_locus, k, l, t;
     
     vector<TIndividual*>::iterator curInd =
@@ -255,13 +255,13 @@ void FileHandler::write_Fstat(const age_idx& AGE, const sex_t& SEX,
         for (t = 0; t < _nb_trait; ++t) { // for multiple instanciations of a trait
             nb_locus = _trait[t]->get_nb_locus();
             seq =
-            (*curInd)->getTrait(_TTidx[t])->get_genes();
+            (*curInd)->getTrait(_TTidx[t]);
             
             for (k = 0; k < nb_locus; ++k) {
                 for (l = 0; l < ploidy; ++l) {
                     FILE.fill('0');
                     FILE.width(position);
-                    FILE << (unsigned int) (seq[k][l] + 1);
+                    FILE << (unsigned int) (seq->allele(k, l) + 1);
                 }
                 FILE << " ";
             }
@@ -382,7 +382,7 @@ void FileHandler::write_Arlequin(const age_idx& AGE, const sex_t& SEX,
                                  ostream& FILE, TPatch* curPop, const unsigned int& nbIndDigit,
                                  const int& position, bool extened)
 {
-    GenSeq seq;
+    TTrait* seq;
     unsigned int nb_locus, k, l, t;
     
     vector<TIndividual*>::iterator curInd =
@@ -398,13 +398,13 @@ void FileHandler::write_Arlequin(const age_idx& AGE, const sex_t& SEX,
             for (t = 0; t < _nb_trait; ++t) { // for multiple instanciations of a trait
                 nb_locus = _trait[t]->get_nb_locus();
                 seq =
-                (*curInd)->getTrait(_TTidx[t])->get_genes();
+                (*curInd)->getTrait(_TTidx[t]);
                 
                 for (k = 0; k < nb_locus; ++k) {
                     FILE << " ";
                     FILE.fill('0');
                     FILE.width(position);
-                    FILE << (unsigned int) (seq[k][l] + 1);
+                    FILE << (unsigned int) (seq->allele(k, l) + 1);
                 }
             }
             if (!l && extened) {
@@ -512,7 +512,7 @@ void FileHandler::write_Plink_ped(const age_idx& AGE, const sex_t& SEX,
                               const int& position, char sep, bool extended, bool append)
 {
     
-    GenSeq seq;
+    TTrait* seq;
     unsigned int nb_locus, k, l, t;
     
     vector<TIndividual*>::iterator curInd = curPop->get_sampled_inds(SEX, AGE).begin();
@@ -527,7 +527,7 @@ void FileHandler::write_Plink_ped(const age_idx& AGE, const sex_t& SEX,
 
         for (t = 0; t < _nb_trait; ++t) { // for multiple instanciations of a trait
             nb_locus = _trait[t]->get_nb_locus();
-            seq = (*curInd)->getTrait(_TTidx[t])->get_genes();
+            seq = (*curInd)->getTrait(_TTidx[t]);
             
             for (k = 0; k < nb_locus; ++k) {
                 if(_trait[t]->get_nb_allele(k)!=2 && !extended) continue; // not a SNP
@@ -536,7 +536,7 @@ void FileHandler::write_Plink_ped(const age_idx& AGE, const sex_t& SEX,
                     FILE << sep;
                     FILE.fill('0');
                     FILE.width(position);
-                    FILE << (unsigned int) (seq[k][l] + 1);
+                    FILE << (unsigned int) (seq->allele(k, l) + 1);
                 }
             }
         }

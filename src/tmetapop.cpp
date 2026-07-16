@@ -2327,7 +2327,7 @@ TMetapop::setPopulation_FSTAT(const age_t& requiredAge)
     unsigned int i, l, p, curLocus, nbAllele;
     unsigned int** curGenotype;
     unsigned int** array;
-    GenSeq seq;
+    TTrait* seq;
     ALLELE a;
     unsigned int *aMax = ARRAY::new_1D<unsigned int>(_patchNbr, (unsigned int)0);   // array for each patch to find the maximal index (only used when infos are present)
     for(i=0; i<nbInd; ++i){                               // for each individual
@@ -2395,7 +2395,7 @@ TMetapop::setPopulation_FSTAT(const age_t& requiredAge)
             else{                                             // gentoypes are given by the input file
                 pProto = &getTraitPrototype(t);                 // get the trait
                 curGenotype = (*trait_Fstat[t])[i];             // genotype is given by the Fstat file
-                seq = cur_ind->Traits[t]->sequence;
+                seq = cur_ind->Traits[t];
                 if(pProto->get_trait_index()<2) curLocus=6;     // a new type of trait starts: reset the index
                 for(l = 0; l < pProto->get_nb_locus(); ++l, ++curLocus){ // for each locus
                     nbAllele = pProto->get_nb_allele(l);          // get the number of alleles
@@ -2404,7 +2404,7 @@ TMetapop::setPopulation_FSTAT(const age_t& requiredAge)
                         if((unsigned int)a >= nbAllele)
                             error("initial FSTAT files: the allele index (%u) exeeds the maximal number of alleles (%u, individual %u, locus %u, type %s)!",
                                   (unsigned int) a, nbAllele, i+1, curLocus-5, pProto->get_type().c_str());
-                        seq[l][p] = a;
+                        seq->allele(l, p) = a;
                     }
                 }
             }

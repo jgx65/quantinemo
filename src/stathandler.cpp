@@ -1064,7 +1064,7 @@ StatHandler<SH>::set_alleleFreq_ofPatch(TPatch * curPatch,
                                         map<ALLELE, double>*&global_freqs)
 {
     unsigned int l, p, nbAllele;
-    GenSeq genes;
+    TTrait* genes;
     
     // if patch is empty all frequencies are zero
     vector<TIndividual*>&curFem = curPatch->get_sampled_inds(FEM, AGE);
@@ -1078,10 +1078,10 @@ StatHandler<SH>::set_alleleFreq_ofPatch(TPatch * curPatch,
     
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd;
          ++curInd) {
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);
         for (l = 0; l < _nb_locus; ++l) {
             for (p = 0; p < ploidy; ++p) {
-                ++freqs[l][genes[l][p]]; // local freqs (it is initialized with zero)
+                ++freqs[l][genes->allele(l, p)]; // local freqs (it is initialized with zero)
             }
         }
     }
@@ -1090,10 +1090,10 @@ StatHandler<SH>::set_alleleFreq_ofPatch(TPatch * curPatch,
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd;
          ++curInd) {
         genes = (*curInd)->getTrait(_SHLinkedTraitIndex)
-        ->get_genes();
+        ;
         for (l = 0; l < _nb_locus; ++l) {
             for (p = 0; p < ploidy; ++p) {
-                ++freqs[l][genes[l][p]]; // local freqs (it is initialized with zero)
+                ++freqs[l][genes->allele(l, p)]; // local freqs (it is initialized with zero)
             }
         }
     }
@@ -1137,14 +1137,14 @@ StatHandler<SH>::set_locusFreq_ofPatch(TPatch * curPatch,
     map<ALLELE, double>::iterator poss;
     vector<TIndividual*>::iterator curInd, endInd;
     ALLELE a1, a2;
-    GenSeq genes;
+    TTrait* genes;
     
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd;
          ++curInd) {
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);
         for (l = 0; l < _nb_locus; ++l) {
-            a1 = genes[l][0];
-            a2 = genes[l][1];
+            a1 = genes->allele(l, 0);
+            a2 = genes->allele(l, 1);
             if(a1>a2) swap(a1,a2);
             ++freqs[l][a1][a2]; // local freqs (it is initialized with zero)
         }
@@ -1154,10 +1154,10 @@ StatHandler<SH>::set_locusFreq_ofPatch(TPatch * curPatch,
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd;
          ++curInd) {
         genes = (*curInd)->getTrait(_SHLinkedTraitIndex)
-        ->get_genes();
+        ;
         for (l = 0; l < _nb_locus; ++l) {
-            a1 = genes[l][0];
-            a2 = genes[l][1];
+            a1 = genes->allele(l, 0);
+            a2 = genes->allele(l, 1);
             if(a1>a2) swap(a1,a2);
             ++freqs[l][a1][a2]; // local freqs (it is initialized with zero)
         }
@@ -1197,7 +1197,7 @@ StatHandler<SH>::set_alleleFreq_ofPatch_allInds(TPatch * curPatch,
                                                 map<ALLELE, double>*&global_freqs)
 {
     unsigned int l, p, nbAllele;
-    GenSeq genes;
+    TTrait* genes;
     
     // if patch is empty all frequencies are zero
     vector<TIndividual*>&curFem = curPatch->get_all_inds(FEM, AGE);
@@ -1211,10 +1211,10 @@ StatHandler<SH>::set_alleleFreq_ofPatch_allInds(TPatch * curPatch,
     
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd;
          ++curInd) {
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);
         for (l = 0; l < _nb_locus; ++l) {
             for (p = 0; p < ploidy; ++p) {
-                ++freqs[l][genes[l][p]]; // local freqs (it is initialized with zero)
+                ++freqs[l][genes->allele(l, p)]; // local freqs (it is initialized with zero)
             }
         }
     }
@@ -1223,10 +1223,10 @@ StatHandler<SH>::set_alleleFreq_ofPatch_allInds(TPatch * curPatch,
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd;
          ++curInd) {
         genes = (*curInd)->getTrait(_SHLinkedTraitIndex)
-        ->get_genes();
+        ;
         for (l = 0; l < _nb_locus; ++l) {
             for (p = 0; p < ploidy; ++p) {
-                ++freqs[l][genes[l][p]]; // local freqs (it is initialized with zero)
+                ++freqs[l][genes->allele(l, p)]; // local freqs (it is initialized with zero)
             }
         }
     }
@@ -1259,7 +1259,7 @@ StatHandler<SH>::get_locusGenotypeCounts_ofPatch_andSex(TPatch * curPatch,
                                                         map<ALLELE, map<ALLELE, double> >*& freqs)
 {
     unsigned int l;
-    GenSeq genes;
+    TTrait* genes;
     ALLELE a1, a2;
     assert(freqs);
     
@@ -1270,10 +1270,10 @@ StatHandler<SH>::get_locusGenotypeCounts_ofPatch_andSex(TPatch * curPatch,
     // get locus genotype counts
     vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (*curInd)->getTrait(traitID)->get_genes();
+        genes = (*curInd)->getTrait(traitID);
         for (l = 0; l < _nb_locus; ++l) {
-            a1 = genes[l][0];
-            a2 = genes[l][1];
+            a1 = genes->allele(l, 0);
+            a2 = genes->allele(l, 1);
             if(a1<a2) ++freqs[l][a1][a2];
             else      ++freqs[l][a2][a1];
         }
@@ -1376,13 +1376,13 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch_allInds(TPatch * curPatch, const
     
     // get locus genotype counts FEM
     vector<TIndividual*>::iterator curInd, endInd;
-    GenSeq genes;
+    TTrait* genes;
     ALLELE a1, a2;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (*curInd)->getTrait(traitID)->get_genes();
+        genes = (*curInd)->getTrait(traitID);
         for (l = 0; l < _nb_locus; ++l) {
-            a1 = genes[l][0];
-            a2 = genes[l][1];
+            a1 = genes->allele(l, 0);
+            a2 = genes->allele(l, 1);
             if(a1<a2) ++freqs[l][a1][a2];
             else      ++freqs[l][a2][a1];
         }
@@ -1390,10 +1390,10 @@ StatHandler<SH>::get_locusGenotypeFreqs_ofPatch_allInds(TPatch * curPatch, const
     
     // get locus genotype counts MAL
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd; ++curInd) {
-        genes = (*curInd)->getTrait(traitID)->get_genes();
+        genes = (*curInd)->getTrait(traitID);
         for (l = 0; l < _nb_locus; ++l) {
-            a1 = genes[l][0];
-            a2 = genes[l][1];
+            a1 = genes->allele(l, 0);
+            a2 = genes->allele(l, 1);
             if(a1<a2) ++freqs[l][a1][a2];
             else      ++freqs[l][a2][a1];
         }
@@ -1475,24 +1475,24 @@ StatHandler<SH>::get_genotypeFreq(const age_idx & AGE, TPatch* curPop, const uns
 {
     map<ALLELE, map<ALLELE, double> > *freqs = new map<ALLELE, map<ALLELE, double> >;
     unsigned int a;
-    GenSeq genes;
+    TTrait* genes;
     vector<TIndividual*>::iterator curInd, endInd;
     
     // females
     vector<TIndividual*>& curFem = curPop->get_sampled_inds(FEM, AGE);
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);
         for (a = 0; a < ploidy; ++a) {
-            ++(*freqs)[genes[l1][a]][genes[l2][a]]; // it is initialized with zero
+            ++(*freqs)[genes->allele(l1, a)][genes->allele(l2, a)]; // it is initialized with zero
         }
     }
     
     // males
     vector<TIndividual*>&curMal = curPop->get_sampled_inds(MAL, AGE);
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd; ++curInd) {
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);
         for (a = 0; a < ploidy; ++a) {
-            ++(*freqs)[genes[l1][a]][genes[l2][a]]; // it is initialized with zero
+            ++(*freqs)[genes->allele(l1, a)][genes->allele(l2, a)]; // it is initialized with zero
         }
     }
     
@@ -2191,7 +2191,7 @@ template<class SH>
 double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cur_patch, double*array)
 {
     unsigned int l;
-    GenSeq genes;
+    TTrait* genes;
     
     vector<TIndividual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
     vector<TIndividual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
@@ -2211,17 +2211,17 @@ double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cu
     // count heterozygote females
     vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);
         for (l = 0; l < _nb_locus; ++l) {
-            array[l] += (genes[l][0] != genes[l][1]);
+            array[l] += (genes->allele(l, 0) != genes->allele(l, 1));
         }
     }
     
     // count heterozygote males
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd;++curInd) {
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);
         for (l = 0; l < _nb_locus; ++l) {
-            array[l] += (genes[l][0] != genes[l][1]);
+            array[l] += (genes->allele(l, 0) != genes->allele(l, 1));
         }
     }
     
@@ -2241,7 +2241,7 @@ double* StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cu
 template<class SH> double
 StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cur_patch, const unsigned int&l)
 {
-    GenSeq genes;
+    TTrait* genes;
     
     vector<TIndividual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
     vector<TIndividual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
@@ -2254,14 +2254,14 @@ StatHandler<SH>::getHo_ofPatch_andLocus(const age_idx & AGE, TPatch * cur_patch,
     // count heterozygote females
     vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();
-        ho += (genes[l][0] != genes[l][1]);
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);
+        ho += (genes->allele(l, 0) != genes->allele(l, 1));
     }
     
     // count heterozygote males
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd; ++curInd) {
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();
-        ho += (genes[l][0] != genes[l][1]);
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);
+        ho += (genes->allele(l, 0) != genes->allele(l, 1));
     }
     
     return(double)ho / size;
@@ -2279,7 +2279,7 @@ double> *StatHandler<SH>::getHo_ofPatchperAllele(const age_idx & AGE, TPatch * c
     array = new map<ALLELE, double>[_nb_locus];
     
     unsigned int l;
-    GenSeq genes;
+    TTrait* genes;
     
     vector<TIndividual*>&curFem = cur_patch->get_sampled_inds(FEM, AGE);
     vector<TIndividual*>&curMal = cur_patch->get_sampled_inds(MAL, AGE);
@@ -2291,22 +2291,22 @@ double> *StatHandler<SH>::getHo_ofPatchperAllele(const age_idx & AGE, TPatch * c
     // count heterozygote females
     vector<TIndividual*>::iterator curInd, endInd;
     for (curInd = curFem.begin(), endInd = curFem.end(); curInd != endInd; ++curInd) {
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);
         for (l = 0; l < _nb_locus; ++l) {
-            if (genes[l][0] != genes[l][1]) {
-                ++array[l][genes[l][0]]; // auto-initialization with zero
-                ++array[l][genes[l][1]]; // auto-initialization with zero
+            if (genes->allele(l, 0) != genes->allele(l, 1)) {
+                ++array[l][genes->allele(l, 0)]; // auto-initialization with zero
+                ++array[l][genes->allele(l, 1)]; // auto-initialization with zero
             }
         }
     }
     
     // count heterozygote males
     for (curInd = curMal.begin(), endInd = curMal.end(); curInd != endInd; ++curInd) {
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);
         for (l = 0; l < _nb_locus; ++l) {
-            if (genes[l][0] != genes[l][1]) {
-                ++array[l][genes[l][0]]; // auto-initialization with zero
-                ++array[l][genes[l][1]]; // auto-initialization with zero
+            if (genes->allele(l, 0) != genes->allele(l, 1)) {
+                ++array[l][genes->allele(l, 0)]; // auto-initialization with zero
+                ++array[l][genes->allele(l, 1)]; // auto-initialization with zero
             }
         }
     }
@@ -3081,11 +3081,11 @@ double StatHandler<SH>::getChordDist(const age_t& AGE)
 // ----------------------------------------------------------------------------------------
 // coancestry
 // ----------------------------------------------------------------------------------------
-template<class SH>double StatHandler<SH>::Coancestry(GenSeq seq1, GenSeq seq2) {
+template<class SH>double StatHandler<SH>::Coancestry(TTrait* seq1, TTrait* seq2) {
     unsigned int k, p = 0;
     for (k = 0; k < _nb_locus; ++k) {
-        p += !(seq1[k][0] ^ seq2[k][0]) + !(seq1[k][0] ^ seq2[k][1]) + !
-        (seq1[k][1] ^ seq2[k][0]) + !(seq1[k][1] ^ seq2[k][1]);
+        p += !(seq1->allele(k, 0) ^ seq2->allele(k, 0)) + !(seq1->allele(k, 0) ^ seq2->allele(k, 1)) + !
+        (seq1->allele(k, 1) ^ seq2->allele(k, 0)) + !(seq1->allele(k, 1) ^ seq2->allele(k, 1));
     }
     
     return(double)p / (4. * _nb_locus);
@@ -3132,8 +3132,8 @@ StatHandler<SH>::setCoaMatrixTheta(const age_idx & AGE)
             for (curInd1 = curFem.begin(), endInd = curFem.end(); curInd1 != endInd; ++curInd1) {
                 for (curInd2 = curInd1 + 1; curInd2 != endInd; ++curInd2) {
                     coa += Coancestry((*curInd1)->getTrait
-                                      (_SHLinkedTraitIndex)->get_genes(),
-                                      (*curInd2)->getTrait(_SHLinkedTraitIndex)->get_genes());
+                                      (_SHLinkedTraitIndex),
+                                      (*curInd2)->getTrait(_SHLinkedTraitIndex));
                 }
             }
             
@@ -3141,8 +3141,8 @@ StatHandler<SH>::setCoaMatrixTheta(const age_idx & AGE)
             for (curInd1 = curMal.begin(), endInd = curMal.end(); curInd1 != endInd;++curInd1) {
                 for (curInd2 = curInd1 + 1; curInd2 != endInd; ++curInd2) {
                     coa += Coancestry((*curInd1)->getTrait
-                                      (_SHLinkedTraitIndex)->get_genes(),
-                                      (*curInd2)->getTrait(_SHLinkedTraitIndex)->get_genes());
+                                      (_SHLinkedTraitIndex),
+                                      (*curInd2)->getTrait(_SHLinkedTraitIndex));
                 }
             }
             // fem-mal coa
@@ -3257,8 +3257,8 @@ template<class SH>double StatHandler<SH>::get_coancestry(TPatch * P1,
              // for each individual of patch 2
              end2 = P2->get_sampled_inds(SEX2, AGE).end(); cur2 != end2; ++cur2) {
             sum += Coancestry((*cur1)->getTrait(_SHLinkedTraitIndex)
-                              ->get_genes(), (*cur2)->getTrait
-                              (_SHLinkedTraitIndex)->get_genes());
+                              , (*cur2)->getTrait
+                              (_SHLinkedTraitIndex));
         }
     }
     
@@ -3304,9 +3304,9 @@ template<class SH>void StatHandler<SH>::setSexspecific_Theta
                  curInd1 != endInd1; ++curInd1) {
                 for (curInd2 = curInd1 + 1; curInd2 != endInd1; ++curInd2) {
                     mean += Coancestry((*curInd1)->getTrait
-                                       (_SHLinkedTraitIndex)->get_genes(),
+                                       (_SHLinkedTraitIndex),
                                        (*curInd2)->getTrait(_SHLinkedTraitIndex)
-                                       ->get_genes());
+                                       );
                 }
             }
             Theta_FF[AGE] += mean / FFsize;
@@ -3319,9 +3319,9 @@ template<class SH>void StatHandler<SH>::setSexspecific_Theta
                  curInd1 != endInd1; ++curInd1) {
                 for (curInd2 = curInd1 + 1; curInd2 != endInd1; ++curInd2) {
                     mean += Coancestry((*curInd1)->getTrait
-                                       (_SHLinkedTraitIndex)->get_genes(),
+                                       (_SHLinkedTraitIndex),
                                        (*curInd2)->getTrait(_SHLinkedTraitIndex)
-                                       ->get_genes());
+                                       );
                 }
             }
             Theta_MM[AGE] += mean / MMsize;
@@ -3335,9 +3335,9 @@ template<class SH>void StatHandler<SH>::setSexspecific_Theta
                 for (curInd2 = curMal.begin(), endInd2 = curMal.end();
                      curInd2 != endInd2; ++curInd2) {
                     mean += Coancestry((*curInd1)->getTrait
-                                       (_SHLinkedTraitIndex)->get_genes(),
+                                       (_SHLinkedTraitIndex),
                                        (*curInd2)->getTrait(_SHLinkedTraitIndex)
-                                       ->get_genes());
+                                       );
                 }
             }
             Theta_FM[AGE] += mean / FMsize;
@@ -3446,8 +3446,8 @@ template<class SH>void StatHandler<SH>::setSibStats(const age_idx & AGE) {
 template<class SH>void StatHandler<SH>::setSibCoa(TIndividual * I1,
                                                   TIndividual * I2, const age_idx & AGE) {
     double coa = Coancestry(I1->getTrait(_SHLinkedTraitIndex)
-                            ->get_genes(), I2->getTrait(_SHLinkedTraitIndex)
-                            ->get_genes());
+                            , I2->getTrait(_SHLinkedTraitIndex)
+                            );
     if (I1->getMotherID() == I2->getMotherID()) {
         if (I1->getFatherID() == I2->getFatherID()) {
             _sib_prop[AGE][3]++;

@@ -692,7 +692,7 @@ TTraitProto::isUnequalTTraitProto(const TTraitProto& T){       // for operator!=
 //------------------------------------------------------------------------------
 /** destructor */
 TTrait::~TTrait ( ){
-	// FLAT: `sequence` is a non-owning view (genome base + shared map); nothing to free.
+	// a trait is a view into the individual's genome; it owns no allele storage.
 }
 
 //------------------------------------------------------------------------------
@@ -700,7 +700,7 @@ TTrait::~TTrait ( ){
 //------------------------------------------------------------------------------
 void*
 TTrait::get_allele(const unsigned int& loc, const unsigned int& all)  const  {
-	if(loc<pTraitProto->_nb_locus && all<pTraitProto->_nb_allele[loc]) return (void*)&sequence[loc][all];
+	if(loc<pTraitProto->_nb_locus && all<pTraitProto->_nb_allele[loc]) return (void*)&allele(loc, all);
 	return 0;
 }
 
@@ -709,7 +709,7 @@ TTrait::get_allele(const unsigned int& loc, const unsigned int& all)  const  {
 void
 TTrait::_copyTTraitParameters(const TTrait& T)
 {
-	assert(!sequence);
+	assert(!_genome);
 	pTraitProto   = T.pTraitProto;
 }
 
@@ -721,7 +721,7 @@ void
 TTrait::ini_sequence (TPatch* patch)
 {
 	for(unsigned int l=0; l<pTraitProto->_nb_locus; ++l){
-		pTraitProto->_aLocus[l].ini_sequence(sequence[l], patch);
+		pTraitProto->_aLocus[l].ini_sequence(locus_ptr(l), patch);
 	}
 } // ini_sequence
 
@@ -732,10 +732,10 @@ TTrait::ini_sequence (TPatch* patch)
 void
 TTrait::ini(TIndividual* ind)
 {
-	assert(ind->genome.get_sequence());
-	// FLAT: view the individual's flat genome directly through the trait's shared
-	// locus map (base + map[l]*ploidy); no per-locus pointer array is allocated.
-	sequence = GenSeq(ind->genome.get_sequence().data(), pTraitProto->get_seqmap());
+	// bind this trait as a view onto the individual's genome, remapped through the
+	// proto's shared locus map. No per-individual allele storage is allocated.
+	_genome = &ind->genome.alleles();
+	_map    = pTraitProto->get_seqmap();
 }
 
 

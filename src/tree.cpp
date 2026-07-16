@@ -96,12 +96,12 @@ Tree::~Tree()
 // ----------------------------------------------------------------------------------------
 // get_value
 // ----------------------------------------------------------------------------------------
-double Tree::get_value(GenSeq genotype)
+double Tree::get_value(AlleleContainer& genotype, const unsigned int* map)
 {
   /**The genotype is converted in a tree coordinate, each locus receives a value corresponding to
     its genotype's value in the mapper. This coordinate is used to scan the tree to find the phenotype leaf.*/
   for(unsigned int i = 0; i < _nb_locus; i++){
-		_coord[i] = _mapper[ (unsigned int)genotype[i][0] ][ (unsigned int)genotype[i][1] ];
+		_coord[i] = _mapper[ (unsigned int)genotype.allele(map?map[i]:i, 0) ][ (unsigned int)genotype.allele(map?map[i]:i, 1) ];
 	}
 
   return _root.get_value(_coord, _nb_locus-1);
@@ -113,7 +113,7 @@ double Tree::get_value(GenSeq genotype)
 /** returns the first avaiable genotype and its a value (the genotype is altered accordignly).
   * If there is no one, it returns my_NAN
   */
-double Tree::get_first(GenSeq genotype)
+double Tree::get_first(AlleleContainer& genotype)
 {
   // translate the genotype
   for(unsigned int i = 0; i < _nb_locus; i++){
@@ -125,8 +125,8 @@ double Tree::get_first(GenSeq genotype)
 
   // recreate the genotype
   for(unsigned int i = 0; i < _nb_locus; i++){
-    genotype[i][0] = _un_mapper[_coord[i]][0];
-    genotype[i][1] = _un_mapper[_coord[i]][1];
+    genotype.allele(i, 0) = _un_mapper[_coord[i]][0];
+    genotype.allele(i, 1) = _un_mapper[_coord[i]][1];
   }
 
   return value;
@@ -138,11 +138,11 @@ double Tree::get_first(GenSeq genotype)
 /** returns the next avaiable genotype and its value (the genotype is altered accordignly).
   * If there is no one, it returns my_NAN
   */
-double Tree::get_next(GenSeq genotype)
+double Tree::get_next(AlleleContainer& genotype)
 {
   // translate the genotype
   for(unsigned int i = 0; i < _nb_locus; ++i){
-	  _coord[i] = _mapper[ (unsigned int)genotype[i][0] ][ (unsigned int)genotype[i][1] ];
+	  _coord[i] = _mapper[ (unsigned int)genotype.allele(i, 0) ][ (unsigned int)genotype.allele(i, 1) ];
   }
 
   // set it to the next possible genotype
@@ -162,8 +162,8 @@ double Tree::get_next(GenSeq genotype)
 
   // recreate the genotype
   for(unsigned int i = 0; i < _nb_locus; i++){
-    genotype[i][0] = _un_mapper[_coord[i]][0];
-    genotype[i][1] = _un_mapper[_coord[i]][1];
+    genotype.allele(i, 0) = _un_mapper[_coord[i]][0];
+    genotype.allele(i, 1) = _un_mapper[_coord[i]][1];
   }
 
   return value;
@@ -172,12 +172,12 @@ double Tree::get_next(GenSeq genotype)
 // ----------------------------------------------------------------------------------------
 // set_value
 // ----------------------------------------------------------------------------------------
-void Tree::set_value(GenSeq genotype, double value)
+void Tree::set_value(AlleleContainer& genotype, const unsigned int* map, double value)
 {
   /**The genotype is converted in a tree coordinate, each locus receives a value corresponding to
     its genotype's value in the mapper. This coordinate is used to scan the tree to find the phenotype leaf.*/
   for(unsigned int i = 0; i < _nb_locus; i++){
-	  _coord[i] = _mapper[ (unsigned int)genotype[i][0] ][ (unsigned int)genotype[i][1] ];
+	  _coord[i] = _mapper[ (unsigned int)genotype.allele(map?map[i]:i, 0) ][ (unsigned int)genotype.allele(map?map[i]:i, 1) ];
   }
 
   return _root.set_value(_coord, _nb_locus-1, value);

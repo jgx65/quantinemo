@@ -80,23 +80,31 @@ class TTrait{
 public:
     
     
-    GenSeq sequence;   // view of this individual's genotype: flat genome base + trait locus map
-                       //   (no per-locus pointer array; sequence[locus][copy] still works)
+protected:
+    // This individual's genome, owned by its TGenome (not by the trait), and the trait's
+    // locus map (proto-owned). Both are bound in ini(). A trait is a *view*: it reads its
+    // alleles out of the shared genome through the map; it owns no allele storage.
+    AlleleContainer*    _genome;   // NULL until ini()
+    const unsigned int* _map;      // trait-locus -> genome-locus (== pTraitProto->_seqmap)
 
-    // Encapsulated access to this trait's genotype view; replaces the raw
-    // `(ALLELE**)trait->get_sequence()` casts scattered through stats/genotype code.
-    inline GenSeq get_genes() const { return sequence; }
+public:
+    // Access one allele of this trait's locus `l` (mapped into the shared genome).
+    inline const ALLELE& allele(size_t l, size_t c) const { return _genome->allele(_map[l], c); }
+    inline       ALLELE& allele(size_t l, size_t c)       { return _genome->allele(_map[l], c); }
+    inline       ALLELE* locus_ptr(size_t l)              { return _genome->locus_ptr(_map[l]); }
+    inline AlleleContainer&       genome_alleles()        { return *_genome; } // whole container (for the proto genotype/mutation kernels)
+    inline const unsigned int*    locus_map() const       { return _map; }
 
     virtual void* get_allele(const unsigned int& loc, const unsigned int& all)  const;
-    
+
 public:
     TTraitProto* pTraitProto;
-    
+
     // the type has to be set by the inherited class
-    TTrait() : sequence(){
+    TTrait() : _genome(0), _map(0){
     }
 
-    TTrait(const TTrait& T) : sequence(){
+    TTrait(const TTrait& T) : _genome(0), _map(0){
         _copyTTraitParameters(T);  // copy the parameters of TTrait
     }
     
