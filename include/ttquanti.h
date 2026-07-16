@@ -75,8 +75,6 @@ public:
 	virtual bool    operator!= (const TTrait& T);
 	virtual void    reset                ();
 	virtual void*   set_trait            (void* value)           {return NULL;}
-	virtual void**  get_sequence         ()  const              {return 0;} // legacy; use get_genes()
-	virtual void    set_sequence         (void** seq){ reset(); } // legacy no-op (unused)
 	virtual void    set_value            (); // set the genotype
 	virtual void    set_value            (double val)          {_phenotype = val+_genotype;}   // set the phenotype
 	virtual double  get_value            ()					   {return _phenotype;}
@@ -135,9 +133,9 @@ public:
 	double*              _fitnessFactor_freqDepend;     // _fitnessFactor_freqDepend[locus]
 	double***            _fitnessFactor;                // _fitnessFactor[locus][allele1][allele2]
 	map<ALLELE, map< ALLELE, double> >*  _locusFreqs; // _locusFreqs[locus][allele1][allele2] used for _fitnessFactor_freqDepend
-	Tree<ALLELE>* _fitnessFactorTree;            //  fitness factor defined for the entire genome
+	Tree* _fitnessFactorTree;            //  fitness factor defined for the entire genome
 
-	Tree<ALLELE>* _phenoTree;          // only for epistatic effect
+	Tree* _phenoTree;          // only for epistatic effect
 	double               _epistatic_sd;
 
 	// determination of the genotype
