@@ -36,7 +36,6 @@
 #include "tmetapop.h"
 
 #include "stathandler.cpp"
-#include "tree.cpp"
 
 #include "newmatap.h"                // need matrix applications
 #include "newmatio.h"                // need matrix output routines
@@ -1420,7 +1419,7 @@ TTraitQuantiProto::set_epistaticValues(const string& trait)
             for(unsigned int l=0; l<_nb_locus; ++l){
                 if(nb_allele_max<_nb_allele[l]) nb_allele_max=_nb_allele[l];
             }
-            _phenoTree = new Tree<ALLELE>(_nb_locus, nb_allele_max);
+            _phenoTree = new Tree(_nb_locus, nb_allele_max);
         }
     }
     else get_genotype_func_ptr = &TTraitQuantiProto::get_genotype_additive;   // no epistatic effects
@@ -1689,7 +1688,7 @@ TTraitQuantiProto::read_genome_file(string filename)
             for(unsigned int l=0; l<_nb_locus; ++l){
                 if(nb_allele_max<_nb_allele[l]) nb_allele_max=_nb_allele[l];
             }
-            _phenoTree = new Tree<ALLELE>(_nb_locus, nb_allele_max);
+            _phenoTree = new Tree(_nb_locus, nb_allele_max);
         }
         else if(_phenoTree){delete _phenoTree; _phenoTree=NULL;}
         
@@ -1711,7 +1710,7 @@ TTraitQuantiProto::read_genome_file(string filename)
             for(unsigned int l=0; l<_nb_locus; ++l){
                 if(nb_allele_max<_nb_allele[l]) nb_allele_max=_nb_allele[l];
             }
-            _fitnessFactorTree = new Tree<ALLELE>(_nb_locus, nb_allele_max);
+            _fitnessFactorTree = new Tree(_nb_locus, nb_allele_max);
         }
         else if(_fitnessFactorTree){delete _fitnessFactorTree; _fitnessFactorTree=NULL;}
         

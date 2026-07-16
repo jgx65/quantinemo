@@ -41,8 +41,7 @@
 // ----------------------------------------------------------------------------------------
 // Tree
 // ----------------------------------------------------------------------------------------
-template <class T>
-Tree<T>::Tree(unsigned int nbloc, unsigned int nball)
+Tree::Tree(unsigned int nbloc, unsigned int nball)
 {
   _nb_locus = nbloc;
   _nb_all = nball;
@@ -54,19 +53,19 @@ Tree<T>::Tree(unsigned int nbloc, unsigned int nball)
 	for(unsigned int i = 0; i < nball; ++i){
 		_mapper[i]    = new unsigned int [nball];
 	}
-	_un_mapper = new T*[_nb_branches];
+	_un_mapper = new ALLELE*[_nb_branches];
 	for(unsigned int i = 0; i < _nb_branches; ++i){
-    _un_mapper[i] = new T[2];  // ploidy
+    _un_mapper[i] = new ALLELE[2];  // ploidy
   }
 
   unsigned int cntr = 0;
 	for(unsigned int i = 0; i < nball; ++i) {
-		_un_mapper[cntr][0] = (T)i;
-		_un_mapper[cntr][1] = (T)i;
+		_un_mapper[cntr][0] = (ALLELE)i;
+		_un_mapper[cntr][1] = (ALLELE)i;
 		_mapper[i][i] = cntr++;
 		for(unsigned int j = i + 1; j < nball; ++j){
-			_un_mapper[cntr][0] = (T)i;
-			_un_mapper[cntr][1] = (T)j;
+			_un_mapper[cntr][0] = (ALLELE)i;
+			_un_mapper[cntr][1] = (ALLELE)j;
 			_mapper[i][j] = _mapper[j][i] = cntr++;
 		}
 	}
@@ -77,8 +76,7 @@ Tree<T>::Tree(unsigned int nbloc, unsigned int nball)
 // ----------------------------------------------------------------------------------------
 // ~Tree
 // ----------------------------------------------------------------------------------------
-template <class T>
-Tree<T>::~Tree()
+Tree::~Tree()
 {
   if(_coord) delete [] _coord;
   if(_mapper){
@@ -98,8 +96,7 @@ Tree<T>::~Tree()
 // ----------------------------------------------------------------------------------------
 // get_value
 // ----------------------------------------------------------------------------------------
-template <class T>
-double Tree<T>::get_value(GenSeq genotype)
+double Tree::get_value(GenSeq genotype)
 {
   /**The genotype is converted in a tree coordinate, each locus receives a value corresponding to
     its genotype's value in the mapper. This coordinate is used to scan the tree to find the phenotype leaf.*/
@@ -116,8 +113,7 @@ double Tree<T>::get_value(GenSeq genotype)
 /** returns the first avaiable genotype and its a value (the genotype is altered accordignly).
   * If there is no one, it returns my_NAN
   */
-template <class T>
-double Tree<T>::get_first(GenSeq genotype)
+double Tree::get_first(GenSeq genotype)
 {
   // translate the genotype
   for(unsigned int i = 0; i < _nb_locus; i++){
@@ -142,8 +138,7 @@ double Tree<T>::get_first(GenSeq genotype)
 /** returns the next avaiable genotype and its value (the genotype is altered accordignly).
   * If there is no one, it returns my_NAN
   */
-template <class T>
-double Tree<T>::get_next(GenSeq genotype)
+double Tree::get_next(GenSeq genotype)
 {
   // translate the genotype
   for(unsigned int i = 0; i < _nb_locus; ++i){
@@ -177,8 +172,7 @@ double Tree<T>::get_next(GenSeq genotype)
 // ----------------------------------------------------------------------------------------
 // set_value
 // ----------------------------------------------------------------------------------------
-template <class T>
-void Tree<T>::set_value(GenSeq genotype, double value)
+void Tree::set_value(GenSeq genotype, double value)
 {
   /**The genotype is converted in a tree coordinate, each locus receives a value corresponding to
     its genotype's value in the mapper. This coordinate is used to scan the tree to find the phenotype leaf.*/
