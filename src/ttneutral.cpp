@@ -230,7 +230,7 @@ void*
 TTraitNeutral::get_allele(const unsigned int& loc, const unsigned int& all) const
 {
 	return (!(loc < pProto->_nb_locus) || !(all < ploidy) ?
-			0 : (void*) &sequence[loc][all]);
+			0 : (void*) &allele(loc, all));
 }
 
 //----------------------------------------------------------------------------------------
@@ -285,8 +285,8 @@ void TTraitNeutral::show_up()
 			pProto->_nb_locus, pProto->get_nb_allele_max());
 
 	for (unsigned int i = 0; (i < pProto->_nb_locus && i < 10); i++) {
-		message("\n              %i %i", (int) sequence[i][0],
-				(int) sequence[i][1]);
+		message("\n              %i %i", (int) allele(i, 0),
+				(int) allele(i, 1));
 	}
 	message("\n");
 }

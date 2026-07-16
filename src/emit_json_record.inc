@@ -299,10 +299,10 @@ void ej_emit_frame(TMetapop* pop)
                             for (unsigned int i = 0; i < n; ++i) {
                                 TIndividual* ind = patch->get(SEX, AGE, i);
                                 if (!ind) continue;
-                                GenSeq seq = ind->getTrait((int)absIdx)->get_genes();
+                                TTrait* seq = ind->getTrait((int)absIdx);
                                 if (!seq) continue;
                                 for (unsigned int c = 0; c < ploidy; ++c) {
-                                    ALLELE a = seq[l][c];
+                                    ALLELE a = seq->allele(l, c);
                                     if ((unsigned int)a < nAll) { counts[a]++; ++total; }
                                 }
                             }

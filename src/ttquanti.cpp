@@ -69,7 +69,7 @@ void TTraitQuanti::set_from_prototype(TTraitProto* T)
 void
 TTraitQuanti::set_value()
 {
-    _genotype = (pProto->*(pProto->get_genotype_func_ptr))(sequence);
+    _genotype = (pProto->*(pProto->get_genotype_func_ptr))(genome_alleles(), locus_map());
 }   // set the genotype
 
 
@@ -79,7 +79,7 @@ TTraitQuanti::set_value()
 void
 TTraitQuanti::set_fitness_factor()
 {
-    _fitness_factor = (pProto->*(pProto->get_fitnessFactor_func_ptr))(sequence);
+    _fitness_factor = (pProto->*(pProto->get_fitnessFactor_func_ptr))(genome_alleles(), locus_map());
 }   // set the set_fitness_factor
 
 // ----------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ TTraitQuanti::set_fitness_factor()
 double
 TTraitQuanti::set_get_fitness_factor()
 {
-    _fitness_factor = (pProto->*(pProto->get_fitnessFactor_func_ptr))(sequence);
+    _fitness_factor = (pProto->*(pProto->get_fitnessFactor_func_ptr))(genome_alleles(), locus_map());
     return _fitness_factor;
 }   // set the set_fitness_factor
 
@@ -155,7 +155,7 @@ TTraitQuanti::show_up ()
     message("\n  Trait's type: discretequanti\nlocus: %i\nalleles: %i\nsequence:", pProto->_nb_locus,pProto->get_nb_allele_max());
     
     for(unsigned int i = 0; (i < pProto->_nb_locus && i < 10); i++){
-        message("\n              %i %i",(int)sequence[i][0],(int)sequence[i][1]);
+        message("\n              %i %i",(int)allele(i, 0),(int)allele(i, 1));
     }
     message("\n");
 }
@@ -1720,7 +1720,7 @@ TTraitQuantiProto::read_genome_file(string filename)
         
         
         unsigned int length, digit=my_NAN;       // number of characters representing an allele
-        ALLELE** genotype = ARRAY::new_2D<ALLELE>(_nb_locus, ploidy);
+        AlleleContainer genotype; genotype.allocate(_nb_locus);
         double value;
         string text, t;
         unsigned int locus;
@@ -1749,14 +1749,14 @@ TTraitQuantiProto::read_genome_file(string filename)
                 
                 try{
                     // get first allele of locus i
-                    genotype[locus][0] = (ALLELE) (strTo<unsigned int>(text.substr(0, digit))-1);
-                    if((unsigned int)genotype[locus][0] >= (unsigned int)_nb_allele[locus]){
+                    genotype.allele(locus, 0) = (ALLELE) (strTo<unsigned int>(text.substr(0, digit))-1);
+                    if((unsigned int)genotype.allele(locus, 0) >= (unsigned int)_nb_allele[locus]){
                         error("Epistatic values: Allele 1 of locus %i (line %i) is out of range (only %i alleles specified)!\n", locus+1, i+1, _nb_allele);
                     }
                     
                     // get second allele of locus i
-                    genotype[locus][1] = (ALLELE) (strTo<unsigned int>(text.substr(digit, digit))-1);
-                    if((unsigned int)genotype[locus][1] >= (unsigned int)_nb_allele[locus]){
+                    genotype.allele(locus, 1) = (ALLELE) (strTo<unsigned int>(text.substr(digit, digit))-1);
+                    if((unsigned int)genotype.allele(locus, 1) >= (unsigned int)_nb_allele[locus]){
                         error("Epistatic values: Allele 2 of locus %i (line %i) is out of range (only %i alleles specified)!\n", locus+1, i+1, _nb_allele);
                     }
                 }
@@ -1773,27 +1773,27 @@ TTraitQuantiProto::read_genome_file(string filename)
             
             // set the genotype
             if(cols[1] != my_NAN){ // set the epistatic value
-                if(_phenoTree->get_value(genotype) != my_NAN){
+                if(_phenoTree->get_value(genotype, NULL) != my_NAN){
                     error("Epistatic file %s: value for genotype of line %i was already specified!\n", filename.c_str(), i+1);
                 }
                 value = mat.get(i,cols[1]);
                 if(value == my_NAN) error("Epistatic file '%s': epistatic values are not available!\n", filename.c_str());
-                _phenoTree->set_value(genotype, get_genotype_additive(genotype)+value);
+                _phenoTree->set_value(genotype, NULL, get_genotype_additive(genotype, NULL)+value);
             }
             if(cols[2] != my_NAN){ // set directly the genotypic value
-                if(_phenoTree->get_value(genotype) != my_NAN){
+                if(_phenoTree->get_value(genotype, NULL) != my_NAN){
                     error("Epistatic file %s: value for genotype of line %i was already specified!\n", filename.c_str(), i+1);
                 }
                 value = mat.get(i,cols[2]);
                 if(value == my_NAN) error("Epistatic file '%s': genotypic values are not available!\n", filename.c_str());
-                _phenoTree->set_value(genotype, value);
+                _phenoTree->set_value(genotype, NULL, value);
             }
             if(cols[3] != my_NAN){ // set the fitness factor
-                if(_fitnessFactorTree->get_value(genotype) != my_NAN){
+                if(_fitnessFactorTree->get_value(genotype, NULL) != my_NAN){
                     error("Epistatic file %s: value for genotype of line %i was already specified!\n", filename.c_str(), i+1);
                 }
                 value = mat.get(i,cols[3]);
-                if(value != my_NAN) _fitnessFactorTree->set_value(genotype, value);
+                if(value != my_NAN) _fitnessFactorTree->set_value(genotype, NULL, value);
             }
             ++nbValues;
         }
@@ -1808,7 +1808,7 @@ TTraitQuantiProto::read_genome_file(string filename)
                   totValues-nbValues, totValues, filename.c_str());
         }
         
-        ARRAY::delete_2D(genotype, _nb_locus);
+        
         
     }catch(...) {error("Was not able to read file '%s'!\n", filename.c_str());}
     
@@ -2068,14 +2068,14 @@ TTraitQuantiProto::print_epistatic_values(string name)
     if(_fitnessFactorTree) FILE <<"\tfitnessFactor";
     
     // create the first possible genotype to explore all possible genotypes
-    ALLELE** seq = ARRAY::new_2D<ALLELE>(_nb_locus, ploidy, (ALLELE) 0);
+    AlleleContainer seq; seq.allocate(_nb_locus); for(unsigned int _l=0;_l<_nb_locus;++_l){seq.allele(_l,0)=0;seq.allele(_l,1)=0;}
     
     double val_pheno, val_fitness;
     do{
         // get the values, i.e. check if the genotype is set
-        if(_phenoTree)         val_pheno   = _phenoTree->get_value(seq);
+        if(_phenoTree)         val_pheno   = _phenoTree->get_value(seq, NULL);
         else                   val_pheno   = my_NAN;
-        if(_fitnessFactorTree) val_fitness = _fitnessFactorTree->get_value(seq);
+        if(_fitnessFactorTree) val_fitness = _fitnessFactorTree->get_value(seq, NULL);
         else                   val_fitness = my_NAN;
         
         // if genotype is not set do not plot it
@@ -2087,7 +2087,7 @@ TTraitQuantiProto::print_epistatic_values(string name)
             
             // print the values
             if(_phenoTree){
-                if(_allelicValues) FILE << "\t" << val_pheno - get_genotype_additive(seq);
+                if(_allelicValues) FILE << "\t" << val_pheno - get_genotype_additive(seq, NULL);
                 FILE << "\t" << val_pheno;
             }
             if(_fitnessFactorTree) FILE << "\t" << val_fitness;
@@ -2096,14 +2096,14 @@ TTraitQuantiProto::print_epistatic_values(string name)
     
     FILE.close();
     
-    ARRAY::delete_2D(seq, _nb_locus);
+    
 }
 
 //----------------------------------------------------------------------------------------
 // operator=
 // ----------------------------------------------------------------------------------------
 void
-TTraitQuantiProto::print_gentoype(ostream& FILE, ALLELE** seq, const unsigned int& digit)
+TTraitQuantiProto::print_gentoype(ostream& FILE, AlleleContainer& seq, const unsigned int& digit)
 {
     unsigned int l, a;
     for(l=0; l<_nb_locus; ++l){
@@ -2111,7 +2111,7 @@ TTraitQuantiProto::print_gentoype(ostream& FILE, ALLELE** seq, const unsigned in
         for(a=0; a<ploidy; ++a){
             FILE.fill('0');
             FILE.width(digit);
-            FILE<<(unsigned int)(seq[l][a]+1);
+            FILE<<(unsigned int)(seq.allele(l, a)+1);
         }
     }
 }
@@ -2123,24 +2123,24 @@ TTraitQuantiProto::print_gentoype(ostream& FILE, ALLELE** seq, const unsigned in
  * returns true if this was possible and false if the last possible genotype is reached
  */
 bool
-TTraitQuantiProto::get_next_gentoype(ALLELE** seq)
+TTraitQuantiProto::get_next_gentoype(AlleleContainer& seq)
 {
     int l;
     
     for(l=(int)_nb_locus-1; l>=0; --l){
         // increment the last allele and check if it is valable
-        ++seq[l][1];
-        if((unsigned int)seq[l][1] < (unsigned int)_nb_allele[l]) return true;
+        ++seq.allele(l, 1);
+        if((unsigned int)seq.allele(l, 1) < (unsigned int)_nb_allele[l]) return true;
         
         // increment the second allele and reset the least allele to the same one (note 0102 = 0201!!!)
-        ++seq[l][0];
-        if((unsigned int)seq[l][0] < (unsigned int)_nb_allele[l]){
-            seq[l][1] = seq[l][0];
+        ++seq.allele(l, 0);
+        if((unsigned int)seq.allele(l, 0) < (unsigned int)_nb_allele[l]){
+            seq.allele(l, 1) = seq.allele(l, 0);
             return true;
         }
         
         // the locus has to be switched: reset both alleles to zero
-        seq[l][0] = seq[l][1] = 0;
+        seq.allele(l, 0) = seq.allele(l, 1) = 0;
     }
     return false;
 }
@@ -2228,25 +2228,25 @@ TTraitQuantiProto::get_genotype_dominance_k(double a1, double a2, double k)
 // get_genotype
 // ----------------------------------------------------------------------------------------
 double
-TTraitQuantiProto::get_genotype_additive(GenSeq seq)
+TTraitQuantiProto::get_genotype_additive(AlleleContainer& seq, const unsigned int* map)
 {
     double sum=0;
     for(unsigned int l=0; l<_nb_locus; ++l){
-        sum += (this->*get_locus_genotype_func_ptr)(l, seq[l][0], seq[l][1]);
+        sum += (this->*get_locus_genotype_func_ptr)(l, seq.allele(map?map[l]:l, 0), seq.allele(map?map[l]:l, 1));
     }
     return sum;
 }
 
 double
-TTraitQuantiProto::get_genotype_epistatic(GenSeq seq)
+TTraitQuantiProto::get_genotype_epistatic(AlleleContainer& seq, const unsigned int* map)
 {
-    double val  = _phenoTree->get_value(seq);
+    double val  = _phenoTree->get_value(seq, map);
     if(val != my_NAN) return val;
     
     // if not yet computed compute it
-    val = get_genotype_additive(seq);
+    val = get_genotype_additive(seq, map);
     val += get_popPtr()->rand().Normal(0, _epistatic_sd);
-    _phenoTree->set_value(seq, val);
+    _phenoTree->set_value(seq, map, val);
     return val;
 }
 
@@ -2255,14 +2255,14 @@ TTraitQuantiProto::get_genotype_epistatic(GenSeq seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified explicitly for each genome */
 double
-TTraitQuantiProto::get_fitnessFactor_genome(GenSeq seq)
+TTraitQuantiProto::get_fitnessFactor_genome(AlleleContainer& seq, const unsigned int* map)
 {
-    double val  = _fitnessFactorTree->get_value(seq);
+    double val  = _fitnessFactorTree->get_value(seq, map);
     if(val != my_NAN) return val;
     
     // if not set for the genome get the explicit fitness factor
-    if(_fitnessFactor) return get_fitnessFactor_locus(seq);
-    return get_fitnessFactor_global(seq);
+    if(_fitnessFactor) return get_fitnessFactor_locus(seq, map);
+    return get_fitnessFactor_global(seq, map);
 }
 
 // ----------------------------------------------------------------------------------------
@@ -2270,15 +2270,15 @@ TTraitQuantiProto::get_fitnessFactor_genome(GenSeq seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified at the locus level */
 double
-TTraitQuantiProto::get_fitnessFactor_locus(GenSeq seq)
+TTraitQuantiProto::get_fitnessFactor_locus(AlleleContainer& seq, const unsigned int* map)
 {
     assert(_fitnessFactor);
     
     double product=1, value;
     ALLELE a1, a2;
     for(unsigned int l=0; l<_nb_locus; ++l){
-        a1 = seq[l][0];     // get allele 1
-        a2 = seq[l][1];     // get allele 2
+        a1 = seq.allele(map?map[l]:l, 0);     // get allele 1
+        a2 = seq.allele(map?map[l]:l, 1);     // get allele 2
         if(a1 > a2) value = _fitnessFactor[l][a2][a1];
         else        value = _fitnessFactor[l][a1][a2];
         
@@ -2298,11 +2298,11 @@ TTraitQuantiProto::get_fitnessFactor_locus(GenSeq seq)
 // ----------------------------------------------------------------------------------------
 /** fitness factor specifed globally for heterozygote/homozygote loci */
 double
-TTraitQuantiProto::get_fitnessFactor_global(GenSeq seq)
+TTraitQuantiProto::get_fitnessFactor_global(AlleleContainer& seq, const unsigned int* map)
 {
     double product=1;
     for(unsigned int l=0; l<_nb_locus; ++l){
-        if(seq[l][0]==seq[l][1]) product *= _fitnessFactor_homozygote   ? _fitnessFactor_homozygote[l]   : 1;
+        if(seq.allele(map?map[l]:l, 0)==seq.allele(map?map[l]:l, 1)) product *= _fitnessFactor_homozygote   ? _fitnessFactor_homozygote[l]   : 1;
         else                     product *= _fitnessFactor_heterozygote ? _fitnessFactor_heterozygote[l] : 1;
     }
     return product;
@@ -2315,12 +2315,12 @@ TTraitQuantiProto::get_fitnessFactor_global(GenSeq seq)
  * Noe: _locusFreqs have to be recomputed at each generation and patch
  */
 double
-TTraitQuantiProto::get_fitnessFactor_freqDepend(GenSeq seq)
+TTraitQuantiProto::get_fitnessFactor_freqDepend(AlleleContainer& seq, const unsigned int* map)
 {
     assert(_locusFreqs);
     
     // first get it without frequency dependent selection
-    double product = get_fitnessFactor2_func_ptr ? (this->*get_fitnessFactor2_func_ptr)(seq) : 1;
+    double product = get_fitnessFactor2_func_ptr ? (this->*get_fitnessFactor2_func_ptr)(seq, map) : 1;
     
     // and now add the frequency depend part on it (since it is multiplicate the order does not matter)
     double freqDependFactor;
@@ -2329,8 +2329,8 @@ TTraitQuantiProto::get_fitnessFactor_freqDepend(GenSeq seq)
         freqDependFactor = _fitnessFactor_freqDepend[l];
         if(!freqDependFactor) continue; // if zero it is not set
         
-        a1 = seq[l][0];     // get allele 1
-        a2 = seq[l][1];     // get allele 2
+        a1 = seq.allele(map?map[l]:l, 0);     // get allele 1
+        a2 = seq.allele(map?map[l]:l, 1);     // get allele 2
         
         if(a1 < a2){
             assert(_locusFreqs[l].find(a1)!=_locusFreqs[l].end());
@@ -2596,17 +2596,17 @@ TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
     unsigned int l, a;
     ALLELE a1, a2;
     double* aGeno = new double[size];
-    GenSeq genes;
+    TTrait* genes;
     
     // females
     vector<TIndividual*>::iterator curInd, endInd;
     for(curInd= curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd) {
         meanG += G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotype
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();  // sequence
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);  // sequence
         for (l = 0; l < _nb_locus; ++l){
             aTemp[0] = l;
-            a1 = genes[l][0];          // 1. allele
-            a2 = genes[l][1];          // 2. allele
+            a1 = genes->allele(l, 0);          // 1. allele
+            a2 = genes->allele(l, 1);          // 2. allele
             
             if(a1<a2){
                 aTemp[1]=a1;
@@ -2624,11 +2624,11 @@ TTQuantiSH::get_Va_ofPatch_random_mating(TPatch* curPop, const age_idx& AGE,
     // males
     for(curInd= curMal.begin(), endInd=curMal.end(); curInd!=endInd; ++curInd) {
         meanG += G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotype
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();  // sequence
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);  // sequence
         for (l = 0; l < _nb_locus; ++l){
             aTemp[0] = l;
-            a1 = genes[l][0];          // 1. allele
-            a2 = genes[l][1];          // 2. allele
+            a1 = genes->allele(l, 0);          // 1. allele
+            a2 = genes->allele(l, 1);          // 2. allele
             
             if(a1<a2){
                 aTemp[1]=a1;
@@ -2701,7 +2701,7 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     unsigned int i, l;
     double* arrayG = new double[size];
     ALLELE a1, a2;
-    GenSeq genes;
+    TTrait* genes;
     double G, meanG=0;
     unsigned int nbFailure = 0;
     
@@ -2725,10 +2725,10 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     for(i=0, curInd= curFem.begin(), endInd=curFem.end(); curInd!=endInd; ++curInd, ++i) {
         // get the genotype and genotypic value
         meanG += arrayG[i] = G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotypic value
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();  // genotype
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);  // genotype
         for (l = 0; l < _nb_locus; ++l){
-            a1 = genes[l][0];          // 1. allele
-            a2 = genes[l][1];          // 2. allele
+            a1 = genes->allele(l, 0);          // 1. allele
+            a2 = genes->allele(l, 1);          // 2. allele
             
             if(a1<a2){
                 condMeanGG[l][a1][a2] += G;
@@ -2757,10 +2757,10 @@ TTQuantiSH::get_Va_ofPatch_regression(TPatch* curPop, const age_idx& AGE,
     for(curInd= curMal.begin(), endInd=curMal.end(); curInd!=endInd; ++curInd, ++i) {
         // get the genotype and genotypic value
         meanG += arrayG[i] = G = (*curInd)->getTraitGenotype(_SHLinkedTraitIndex);          // genotypic value
-        genes = (*curInd)->getTrait(_SHLinkedTraitIndex)->get_genes();  // genotype
+        genes = (*curInd)->getTrait(_SHLinkedTraitIndex);  // genotype
         for (l = 0; l < _nb_locus; ++l){
-            a1 = genes[l][0];          // 1. allele
-            a2 = genes[l][1];          // 2. allele
+            a1 = genes->allele(l, 0);          // 1. allele
+            a2 = genes->allele(l, 1);          // 2. allele
             
             if(a1<a2){
                 condMeanGG[l][a1][a2] += G;
@@ -2973,8 +2973,8 @@ TTQuantiSH::remove_private_alleles_compute_alpha(TPatch* crnt_patch, const unsig
     
     // check each individual if it has two private alleles
     for(i = 0; i < sizeF+sizeM; ++i) {
-        if(i<sizeF) g = crnt_patch->get(FEM, age_pos, i)->getTrait(_SHLinkedTraitIndex)->get_genes()[l];       // get the female
-        else        g = crnt_patch->get(MAL, age_pos, i-sizeF)->getTrait(_SHLinkedTraitIndex)->get_genes()[l]; // get the male
+        if(i<sizeF) g = crnt_patch->get(FEM, age_pos, i)->getTrait(_SHLinkedTraitIndex)->locus_ptr(l);       // get the female
+        else        g = crnt_patch->get(MAL, age_pos, i-sizeF)->getTrait(_SHLinkedTraitIndex)->locus_ptr(l); // get the male
         
         assert(allele_freq.find(g[0]) != allele_freq.end() && allele_freq.find(g[1]) != allele_freq.end());
         if(   allele_freq[g[0]] == private_allele_freq   // check if both alleles are private

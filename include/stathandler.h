@@ -40,6 +40,7 @@
 #include "types.h"
 
 class TTraitProto;
+class TTrait;
 class TIndividual;
 class TPatch;
 /**A class to compute and store the summary statistics associated with a SimComponent.
@@ -123,7 +124,7 @@ protected:
      @param ind1 first sequence, treated as of type (ALLELE**)
      @param ind2 second sequence, treated as of type (ALLELE**)
      */
-    double Coancestry               (GenSeq seq1, GenSeq seq2);
+    double Coancestry               (TTrait* seq1, TTrait* seq2);
     
     /**Computes the within and between patches coancestry coefficients.
      @param age_pos the age class index

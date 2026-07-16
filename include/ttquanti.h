@@ -153,21 +153,21 @@ public:
 
 	double get_dominance_mean(){return _dominance_mean;}
 
-	double  (TTraitQuantiProto::* get_genotype_func_ptr)(GenSeq seq);
-	double  get_genotype_additive (GenSeq seq);
-	double  get_genotype_epistatic (GenSeq seq);
+	double  (TTraitQuantiProto::* get_genotype_func_ptr)(AlleleContainer& seq, const unsigned int* map);
+	double  get_genotype_additive (AlleleContainer& seq, const unsigned int* map);
+	double  get_genotype_epistatic (AlleleContainer& seq, const unsigned int* map);
 
 	double* get_fitnessFactor_heterozygote(){return _fitnessFactor_heterozygote;}
 	double* get_fitnessFactor_homozygote()  {return _fitnessFactor_homozygote;}
 	double*** get_fitnessFactor_array()  {return _fitnessFactor;}
 	bool    fitnessFactor_used() {return (get_fitnessFactor_func_ptr != NULL || get_fitnessFactor2_func_ptr != NULL);}
 	bool    fitnessFactor_freqDep_used() {return (get_fitnessFactor2_func_ptr != NULL);}
-	double  (TTraitQuantiProto::* get_fitnessFactor_func_ptr)(GenSeq seq);
-	double  (TTraitQuantiProto::* get_fitnessFactor2_func_ptr)(GenSeq seq);
-	double  get_fitnessFactor_genome(GenSeq seq);
-	double  get_fitnessFactor_locus(GenSeq seq);
-	double  get_fitnessFactor_global(GenSeq seq);
-    double  get_fitnessFactor_freqDepend(GenSeq seq);
+	double  (TTraitQuantiProto::* get_fitnessFactor_func_ptr)(AlleleContainer& seq, const unsigned int* map);
+	double  (TTraitQuantiProto::* get_fitnessFactor2_func_ptr)(AlleleContainer& seq, const unsigned int* map);
+	double  get_fitnessFactor_genome(AlleleContainer& seq, const unsigned int* map);
+	double  get_fitnessFactor_locus(AlleleContainer& seq, const unsigned int* map);
+	double  get_fitnessFactor_global(AlleleContainer& seq, const unsigned int* map);
+    double  get_fitnessFactor_freqDepend(AlleleContainer& seq, const unsigned int* map);
     double* get_fitnessFactor_freqDepend(){return _fitnessFactor_freqDepend;}
     
     map<ALLELE, map< ALLELE, double> >*& get_locusFreqs() {return _locusFreqs;}
@@ -222,8 +222,8 @@ public:
 	void print_allelic_values (string name);
 	void print_dominance_values (string name);
 	void print_epistatic_values (string name);
-	void print_gentoype(ostream& FILE, ALLELE** seq, const unsigned int& digit);
-	bool get_next_gentoype(ALLELE** seq);
+	void print_gentoype(ostream& FILE, AlleleContainer& seq, const unsigned int& digit);
+	bool get_next_gentoype(AlleleContainer& seq);
 
 	virtual void temporal_change(const unsigned int& gen);
 	virtual void executeAfterEachReplicate(const unsigned int& rep);

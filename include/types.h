@@ -94,31 +94,39 @@ inline age_idx age_t2idx(const age_t& AGE){
 #define ploidy 2
 
 // ----------------------------------------------------------------------------------------
-// GenSeq: lightweight, copyable view of one individual's diploid genome sequence.
-// It encapsulates per-locus allele access ( seq[locus][copy] ) so that the underlying
-// storage layout can change without touching call sites:
-//   - commit 1 (this): wraps the existing jagged/contiguous  ALLELE**  pointer array.
-//   - commit 2       : wraps a single flat  ALLELE*  block, indexing  base + locus*ploidy.
-// operator[](locus) returns a pointer to that locus' `ploidy` alleles, so writes
-// ( seq[locus][copy] = x ) keep working unchanged.
-// ----------------------------------------------------------------------------------------
-struct GenSeq {
-    ALLELE*             base;   // flat genome block; locus l, copy c is at base[l*ploidy + c]
-    const unsigned int* map;    // optional trait-locus -> genome-locus remap (NULL = identity)
-    ALLELE**            rows;   // optional jagged view (transient scratch only; NULL for real genomes)
-    GenSeq()                                : base(0), map(0), rows(0) {}
-    GenSeq(ALLELE* b)                       : base(b), map(0), rows(0) {}
-    GenSeq(ALLELE* b, const unsigned int* m): base(b), map(m), rows(0) {}
-    GenSeq(ALLELE** r)                      : base(0), map(0), rows(r) {}   // wrap a jagged scratch buffer
-    // -> pointer to this locus' `ploidy` alleles, so seq[locus][copy] keeps working.
-    // The real per-individual genome/trait views have rows==NULL (fully flat path);
-    // only cold epistasis/output scratch buffers take the jagged branch.
-    inline ALLELE* operator[](size_t locus) const {
-        return rows ? rows[locus] : base + (size_t)(map ? map[locus] : locus) * ploidy;
+// AlleleContainer owns one individual's diploid allele block and is the single place
+// that knows the storage layout (locus l, copy c at _data[l*ploidy + c]). Everything
+// else accesses alleles through allele()/locus_ptr() and stays agnostic of the layout.
+class AlleleContainer {
+    ALLELE*      _data;
+    unsigned int _nb_locus;
+public:
+    AlleleContainer()                       : _data(0), _nb_locus(0) {}
+    AlleleContainer(const AlleleContainer& o): _data(0), _nb_locus(0) { *this = o; }
+    ~AlleleContainer()                      { delete[] _data; }
+    AlleleContainer& operator=(const AlleleContainer& o){
+        if(this != &o){
+            if(_nb_locus != o._nb_locus){
+                delete[] _data;
+                _nb_locus = o._nb_locus;
+                _data = _nb_locus ? new ALLELE[(size_t)_nb_locus*ploidy] : 0;
+            }
+            for(size_t i = 0, n = (size_t)_nb_locus*ploidy; i < n; ++i) _data[i] = o._data[i];
+        }
+        return *this;
     }
-    inline ALLELE* data()       const { return base; }
-    inline bool    operator!()  const { return base == 0 && rows == 0; }
-    explicit operator bool()    const { return base != 0 || rows != 0; }
+    void allocate(unsigned int nb_locus){ delete[] _data; _nb_locus = nb_locus;
+                                          _data = new ALLELE[(size_t)nb_locus*ploidy]; }
+    void clear()               { delete[] _data; _data = 0; _nb_locus = 0; }
+    bool         allocated() const { return _data != 0; }
+    unsigned int nb_locus()  const { return _nb_locus; }
+
+    // access by genome-locus index; write and read overloads
+    inline ALLELE&       allele(size_t locus, size_t copy)       { return _data[locus*ploidy + copy]; }
+    inline const ALLELE& allele(size_t locus, size_t copy) const { return _data[locus*ploidy + copy]; }
+    // pointer to a locus' `ploidy` alleles (for per-locus init/mutation kernels)
+    inline ALLELE*       locus_ptr(size_t locus)       { return _data + locus*ploidy; }
+    inline const ALLELE* locus_ptr(size_t locus) const { return _data + locus*ploidy; }
 };
 
 
