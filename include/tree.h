@@ -47,7 +47,6 @@
 	* diploid genotype of l loci. It takes into account that the order of the alleles at a locus
 	* does not play a role.
 	*/
-template <class T>
 class Tree {
 
 private:
@@ -62,7 +61,7 @@ private:
   /**A  nb_all x nb_all matrix used to convert a locus genotype into a unique value (the coordinate of that locus).*/
   unsigned int** _mapper;
   /**a _nb_branches*ploidy matrix to get back the allelic combination from the _coord.*/
-  T** _un_mapper;
+  ALLELE** _un_mapper;
   /**A table of length = number of locus, the coordinate of the genotype in the tree after its mapping.*/
   unsigned int * _coord;
 
