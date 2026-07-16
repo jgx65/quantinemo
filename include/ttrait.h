@@ -130,11 +130,6 @@ public:
     /**Called at the start of each replicate, sets the initial genotypes. Called by \c TIndividual::create(). **/
     virtual   void            ini_sequence (TPatch* patch);
     
-    /** Called to set the sequence pointer to an existing trait
-     * @param seq the existing sequence pointer
-     **/
-    virtual   void            set_sequence (void** seq) = 0;
-    
     /**Tells the trait to set its phenotype from genotype, should be used instead of get_value().**/
     virtual   void            set_value () = 0;
     virtual   void            set_value (double value) = 0;
@@ -147,12 +142,7 @@ public:
     virtual   double          get_fitness (){return my_NAN;}
     virtual   double          get_fitnessFactor(){return 1;}
     virtual   double          get_genotype (){return my_NAN;}
-    
-    /** sequence accessor.
-     * @return the sequence pointer
-     **/
-    virtual   void**          get_sequence () const = 0;
-    
+
     /** Called to read one allele value at a particular locus.
      * @return the allelic value at position 'all' at locus 'loc'
      * @param loc locus position in the sequence
