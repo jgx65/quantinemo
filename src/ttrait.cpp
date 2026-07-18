@@ -82,7 +82,7 @@ TTraitProto::resetTotal(){
 	if(_locus_index) {delete[] _locus_index; _locus_index=NULL;}
 	if(_nb_allele) {delete[] _nb_allele; _nb_allele=NULL;}
 	if(_aLocus){delete[] _aLocus; _aLocus=NULL;}
-	if(_seqmap){delete[] _seqmap; _seqmap=NULL;}
+	if(_trait_to_genome_locus){delete[] _trait_to_genome_locus; _trait_to_genome_locus=NULL;}
 }
 
 // ----------------------------------------------------------------------------------------
@@ -732,10 +732,11 @@ TTrait::ini_sequence (TPatch* patch)
 void
 TTrait::ini(TIndividual* ind)
 {
-	// bind this trait as a view onto the individual's genome, remapped through the
-	// proto's shared locus map. No per-individual allele storage is allocated.
+	// bind this trait as a view onto the individual's genome. The trait reads its alleles
+	// through the prototype's shared trait_to_genome_locus[] table (built here on first use);
+	// no per-individual allele storage or mapping is allocated.
 	_genome = &ind->genome.alleles();
-	_map    = pTraitProto->get_seqmap();
+	pTraitProto->get_trait_to_genome_locus();   // ensure the shared mapping table is built
 }
 
 

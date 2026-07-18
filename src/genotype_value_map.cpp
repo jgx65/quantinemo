@@ -83,11 +83,11 @@ GenotypeValueMap::~GenotypeValueMap()
 // ----------------------------------------------------------------------------------------
 // get_value
 // ----------------------------------------------------------------------------------------
-double GenotypeValueMap::get_value(AlleleContainer& genotype, const unsigned int* genome_locus)
+double GenotypeValueMap::get_value(AlleleContainer& genotype, const unsigned int* trait_to_genome_locus)
 {
   // compress each locus genotype to its coordinate, then walk the trie to the leaf
   for(unsigned int i = 0; i < _nb_locus; i++){
-		_coord[i] = _pair_to_coord[ (unsigned int)genotype.allele(genome_locus?genome_locus[i]:i, 0) ][ (unsigned int)genotype.allele(genome_locus?genome_locus[i]:i, 1) ];
+		_coord[i] = _pair_to_coord[ (unsigned int)genotype.allele(trait_to_genome_locus?trait_to_genome_locus[i]:i, 0) ][ (unsigned int)genotype.allele(trait_to_genome_locus?trait_to_genome_locus[i]:i, 1) ];
 	}
 
   return _root.get_value(_coord, _nb_locus-1);
@@ -96,10 +96,10 @@ double GenotypeValueMap::get_value(AlleleContainer& genotype, const unsigned int
 // ----------------------------------------------------------------------------------------
 // set_value
 // ----------------------------------------------------------------------------------------
-void GenotypeValueMap::set_value(AlleleContainer& genotype, const unsigned int* genome_locus, double value)
+void GenotypeValueMap::set_value(AlleleContainer& genotype, const unsigned int* trait_to_genome_locus, double value)
 {
   for(unsigned int i = 0; i < _nb_locus; i++){
-	  _coord[i] = _pair_to_coord[ (unsigned int)genotype.allele(genome_locus?genome_locus[i]:i, 0) ][ (unsigned int)genotype.allele(genome_locus?genome_locus[i]:i, 1) ];
+	  _coord[i] = _pair_to_coord[ (unsigned int)genotype.allele(trait_to_genome_locus?trait_to_genome_locus[i]:i, 0) ][ (unsigned int)genotype.allele(trait_to_genome_locus?trait_to_genome_locus[i]:i, 1) ];
   }
 
   return _root.set_value(_coord, _nb_locus-1, value);
