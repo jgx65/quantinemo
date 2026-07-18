@@ -68,9 +68,9 @@ public:
 
   GenotypeValueMap(unsigned int nbloc, unsigned int nball);
   ~GenotypeValueMap();
-  /**Value stored for `genotype` (read through `genome_locus`, NULL = identity), or my_NAN.*/
-  double get_value(AlleleContainer& genotype, const unsigned int* genome_locus);
-  void   set_value(AlleleContainer& genotype, const unsigned int* genome_locus, double value);
+  /**Value stored for `genotype` (read through `trait_to_genome_locus`, NULL = identity), or my_NAN.*/
+  double get_value(AlleleContainer& genotype, const unsigned int* trait_to_genome_locus);
+  void   set_value(AlleleContainer& genotype, const unsigned int* trait_to_genome_locus, double value);
 
 };
 

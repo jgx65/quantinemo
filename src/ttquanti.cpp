@@ -69,7 +69,7 @@ void TTraitQuanti::set_from_prototype(TTraitProto* T)
 void
 TTraitQuanti::set_value()
 {
-    _genotype = (pProto->*(pProto->get_genotype_func_ptr))(genome_alleles(), locus_map());
+    _genotype = (pProto->*(pProto->get_genotype_func_ptr))(genome_alleles(), trait_to_genome_locus());
 }   // set the genotype
 
 
@@ -79,7 +79,7 @@ TTraitQuanti::set_value()
 void
 TTraitQuanti::set_fitness_factor()
 {
-    _fitness_factor = (pProto->*(pProto->get_fitnessFactor_func_ptr))(genome_alleles(), locus_map());
+    _fitness_factor = (pProto->*(pProto->get_fitnessFactor_func_ptr))(genome_alleles(), trait_to_genome_locus());
 }   // set the set_fitness_factor
 
 // ----------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ TTraitQuanti::set_fitness_factor()
 double
 TTraitQuanti::set_get_fitness_factor()
 {
-    _fitness_factor = (pProto->*(pProto->get_fitnessFactor_func_ptr))(genome_alleles(), locus_map());
+    _fitness_factor = (pProto->*(pProto->get_fitnessFactor_func_ptr))(genome_alleles(), trait_to_genome_locus());
     return _fitness_factor;
 }   // set the set_fitness_factor
 
@@ -2228,25 +2228,25 @@ TTraitQuantiProto::get_genotype_dominance_k(double a1, double a2, double k)
 // get_genotype
 // ----------------------------------------------------------------------------------------
 double
-TTraitQuantiProto::get_genotype_additive(AlleleContainer& seq, const unsigned int* genome_locus)
+TTraitQuantiProto::get_genotype_additive(AlleleContainer& seq, const unsigned int* trait_to_genome_locus)
 {
     double sum=0;
     for(unsigned int l=0; l<_nb_locus; ++l){
-        sum += (this->*get_locus_genotype_func_ptr)(l, seq.allele(genome_locus?genome_locus[l]:l, 0), seq.allele(genome_locus?genome_locus[l]:l, 1));
+        sum += (this->*get_locus_genotype_func_ptr)(l, seq.allele(trait_to_genome_locus?trait_to_genome_locus[l]:l, 0), seq.allele(trait_to_genome_locus?trait_to_genome_locus[l]:l, 1));
     }
     return sum;
 }
 
 double
-TTraitQuantiProto::get_genotype_epistatic(AlleleContainer& seq, const unsigned int* genome_locus)
+TTraitQuantiProto::get_genotype_epistatic(AlleleContainer& seq, const unsigned int* trait_to_genome_locus)
 {
-    double val  = _epistaticValues->get_value(seq, genome_locus);
+    double val  = _epistaticValues->get_value(seq, trait_to_genome_locus);
     if(val != my_NAN) return val;
     
     // if not yet computed compute it
-    val = get_genotype_additive(seq, genome_locus);
+    val = get_genotype_additive(seq, trait_to_genome_locus);
     val += get_popPtr()->rand().Normal(0, _epistatic_sd);
-    _epistaticValues->set_value(seq, genome_locus, val);
+    _epistaticValues->set_value(seq, trait_to_genome_locus, val);
     return val;
 }
 
@@ -2255,14 +2255,14 @@ TTraitQuantiProto::get_genotype_epistatic(AlleleContainer& seq, const unsigned i
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified explicitly for each genome */
 double
-TTraitQuantiProto::get_fitnessFactor_genome(AlleleContainer& seq, const unsigned int* genome_locus)
+TTraitQuantiProto::get_fitnessFactor_genome(AlleleContainer& seq, const unsigned int* trait_to_genome_locus)
 {
-    double val  = _fitnessFactorValues->get_value(seq, genome_locus);
+    double val  = _fitnessFactorValues->get_value(seq, trait_to_genome_locus);
     if(val != my_NAN) return val;
     
     // if not set for the genome get the explicit fitness factor
-    if(_fitnessFactor) return get_fitnessFactor_locus(seq, genome_locus);
-    return get_fitnessFactor_global(seq, genome_locus);
+    if(_fitnessFactor) return get_fitnessFactor_locus(seq, trait_to_genome_locus);
+    return get_fitnessFactor_global(seq, trait_to_genome_locus);
 }
 
 // ----------------------------------------------------------------------------------------
@@ -2270,15 +2270,15 @@ TTraitQuantiProto::get_fitnessFactor_genome(AlleleContainer& seq, const unsigned
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified at the locus level */
 double
-TTraitQuantiProto::get_fitnessFactor_locus(AlleleContainer& seq, const unsigned int* genome_locus)
+TTraitQuantiProto::get_fitnessFactor_locus(AlleleContainer& seq, const unsigned int* trait_to_genome_locus)
 {
     assert(_fitnessFactor);
     
     double product=1, value;
     ALLELE a1, a2;
     for(unsigned int l=0; l<_nb_locus; ++l){
-        a1 = seq.allele(genome_locus?genome_locus[l]:l, 0);     // get allele 1
-        a2 = seq.allele(genome_locus?genome_locus[l]:l, 1);     // get allele 2
+        a1 = seq.allele(trait_to_genome_locus?trait_to_genome_locus[l]:l, 0);     // get allele 1
+        a2 = seq.allele(trait_to_genome_locus?trait_to_genome_locus[l]:l, 1);     // get allele 2
         if(a1 > a2) value = _fitnessFactor[l][a2][a1];
         else        value = _fitnessFactor[l][a1][a2];
         
@@ -2298,11 +2298,11 @@ TTraitQuantiProto::get_fitnessFactor_locus(AlleleContainer& seq, const unsigned 
 // ----------------------------------------------------------------------------------------
 /** fitness factor specifed globally for heterozygote/homozygote loci */
 double
-TTraitQuantiProto::get_fitnessFactor_global(AlleleContainer& seq, const unsigned int* genome_locus)
+TTraitQuantiProto::get_fitnessFactor_global(AlleleContainer& seq, const unsigned int* trait_to_genome_locus)
 {
     double product=1;
     for(unsigned int l=0; l<_nb_locus; ++l){
-        if(seq.allele(genome_locus?genome_locus[l]:l, 0)==seq.allele(genome_locus?genome_locus[l]:l, 1)) product *= _fitnessFactor_homozygote   ? _fitnessFactor_homozygote[l]   : 1;
+        if(seq.allele(trait_to_genome_locus?trait_to_genome_locus[l]:l, 0)==seq.allele(trait_to_genome_locus?trait_to_genome_locus[l]:l, 1)) product *= _fitnessFactor_homozygote   ? _fitnessFactor_homozygote[l]   : 1;
         else                     product *= _fitnessFactor_heterozygote ? _fitnessFactor_heterozygote[l] : 1;
     }
     return product;
@@ -2315,12 +2315,12 @@ TTraitQuantiProto::get_fitnessFactor_global(AlleleContainer& seq, const unsigned
  * Noe: _locusFreqs have to be recomputed at each generation and patch
  */
 double
-TTraitQuantiProto::get_fitnessFactor_freqDepend(AlleleContainer& seq, const unsigned int* genome_locus)
+TTraitQuantiProto::get_fitnessFactor_freqDepend(AlleleContainer& seq, const unsigned int* trait_to_genome_locus)
 {
     assert(_locusFreqs);
     
     // first get it without frequency dependent selection
-    double product = get_fitnessFactor2_func_ptr ? (this->*get_fitnessFactor2_func_ptr)(seq, genome_locus) : 1;
+    double product = get_fitnessFactor2_func_ptr ? (this->*get_fitnessFactor2_func_ptr)(seq, trait_to_genome_locus) : 1;
     
     // and now add the frequency depend part on it (since it is multiplicate the order does not matter)
     double freqDependFactor;
@@ -2329,8 +2329,8 @@ TTraitQuantiProto::get_fitnessFactor_freqDepend(AlleleContainer& seq, const unsi
         freqDependFactor = _fitnessFactor_freqDepend[l];
         if(!freqDependFactor) continue; // if zero it is not set
         
-        a1 = seq.allele(genome_locus?genome_locus[l]:l, 0);     // get allele 1
-        a2 = seq.allele(genome_locus?genome_locus[l]:l, 1);     // get allele 2
+        a1 = seq.allele(trait_to_genome_locus?trait_to_genome_locus[l]:l, 0);     // get allele 1
+        a2 = seq.allele(trait_to_genome_locus?trait_to_genome_locus[l]:l, 1);     // get allele 2
         
         if(a1 < a2){
             assert(_locusFreqs[l].find(a1)!=_locusFreqs[l].end());

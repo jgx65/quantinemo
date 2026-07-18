@@ -81,19 +81,19 @@ public:
     
     
 protected:
-    // This individual's genome, owned by its TGenome (not by the trait), and the trait's
-    // locus map (proto-owned). Both are bound in ini(). A trait is a *view*: it reads its
-    // alleles out of the shared genome through the map; it owns no allele storage.
-    AlleleContainer*    _genome;   // NULL until ini()
-    const unsigned int* _map;      // trait-locus -> genome-locus (== pTraitProto->_seqmap)
+    // A trait is a *view*: it reads its alleles out of the individual's shared genome, remapped
+    // through the prototype's trait_to_genome_locus table (which the prototype owns). The trait
+    // itself owns no allele storage. `_genome` is bound in ini().
+    AlleleContainer* _genome;   // this individual's genome (owned by TGenome); NULL until ini()
 
 public:
-    // Access one allele of this trait's locus `l` (mapped into the shared genome).
-    inline const ALLELE& allele(size_t l, size_t c) const { return _genome->allele(_map[l], c); }
-    inline       ALLELE& allele(size_t l, size_t c)       { return _genome->allele(_map[l], c); }
-    inline       ALLELE* locus_ptr(size_t l)              { return _genome->locus_ptr(_map[l]); }
-    inline AlleleContainer&       genome_alleles()        { return *_genome; } // whole container (for the proto genotype/mutation kernels)
-    inline const unsigned int*    locus_map() const       { return _map; }
+    // Access one allele of this trait's locus `l`, remapped into the shared genome through the
+    // prototype's trait_to_genome_locus[]. (Defined after TTraitProto, at the end of this header.)
+    inline const ALLELE& allele(size_t l, size_t c) const;
+    inline       ALLELE& allele(size_t l, size_t c);
+    inline       ALLELE* locus_ptr(size_t l);
+    inline AlleleContainer&       genome_alleles()        { return *_genome; } // whole container (for the proto kernels)
+    inline const unsigned int*    trait_to_genome_locus() const;               // the prototype's mapping table
 
     virtual void* get_allele(const unsigned int& loc, const unsigned int& all)  const;
 
@@ -101,10 +101,10 @@ public:
     TTraitProto* pTraitProto;
 
     // the type has to be set by the inherited class
-    TTrait() : _genome(0), _map(0){
+    TTrait() : _genome(0){
     }
 
-    TTrait(const TTrait& T) : _genome(0), _map(0){
+    TTrait(const TTrait& T) : _genome(0){
         _copyTTraitParameters(T);  // copy the parameters of TTrait
     }
     
@@ -229,15 +229,15 @@ public:
 
     // Per-trait map: trait-locus -> genome-locus index (built once, shared by all
     // individuals). Lets a trait view its loci in the flat genome without a per-individual
-    // pointer array.  _seqmap[l] == _aLocus[l].get_locus_id_tot().
-    unsigned int* _seqmap;
-    const unsigned int* get_seqmap() {
-        if (!_seqmap && _nb_locus) {
-            _seqmap = new unsigned int[_nb_locus];
+    // pointer array.  _trait_to_genome_locus[l] == _aLocus[l].get_locus_id_tot().
+    unsigned int* _trait_to_genome_locus;
+    const unsigned int* get_trait_to_genome_locus() {
+        if (!_trait_to_genome_locus && _nb_locus) {
+            _trait_to_genome_locus = new unsigned int[_nb_locus];
             for (unsigned int l = 0; l < _nb_locus; ++l)
-                _seqmap[l] = _aLocus[l].get_locus_id_tot();
+                _trait_to_genome_locus[l] = _aLocus[l].get_locus_id_tot();
         }
-        return _seqmap;
+        return _trait_to_genome_locus;
     }
 
 protected:
@@ -254,7 +254,7 @@ public:
     _initAlleleFreq(0), _mutationFreq(0),
     _protoGenome(0), _locus_index(0),
     _nb_allele(0), _nb_locus(0),
-    _absolute_index(0), _aLocus(0), _seqmap(0), _trait_index(0){}
+    _absolute_index(0), _aLocus(0), _trait_to_genome_locus(0), _trait_index(0){}
     
     
     ~TTraitProto();
@@ -349,6 +349,25 @@ public:
     virtual double get_model_value(){return my_NAN;}
 };
 
+
+// ----------------------------------------------------------------------------------------
+// TTrait allele access: read this trait's alleles out of its individual's genome, remapped
+// through the prototype's trait_to_genome_locus[] table. Defined here (out of the class body)
+// because they reach into TTraitProto, which is only complete at this point. The table is
+// built in ini() before any access.
+// ----------------------------------------------------------------------------------------
+inline const ALLELE& TTrait::allele(size_t l, size_t c) const {
+    return _genome->allele(pTraitProto->_trait_to_genome_locus[l], c);
+}
+inline ALLELE& TTrait::allele(size_t l, size_t c) {
+    return _genome->allele(pTraitProto->_trait_to_genome_locus[l], c);
+}
+inline ALLELE* TTrait::locus_ptr(size_t l) {
+    return _genome->locus_ptr(pTraitProto->_trait_to_genome_locus[l]);
+}
+inline const unsigned int* TTrait::trait_to_genome_locus() const {
+    return pTraitProto->_trait_to_genome_locus;
+}
 
 
 #endif //TTRAIT_H
