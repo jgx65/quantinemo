@@ -1,4 +1,4 @@
-/** @file tree.h
+/** @file genotype_value_map.h
 *
 *   Copyright (C) 2006 Frederic Guillaume    <guillaum@zoology.ubc.ca>
 *   Copyright (C) 2008 Samuel Neuenschwander <samuel.neuenschwander@unil.ch>
@@ -32,8 +32,8 @@
 *   along with quantiNemo.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef treeH
-#define treeH
+#ifndef genotypeValueMapH
+#define genotypeValueMapH
 
 //#include <iostream>
 
@@ -43,39 +43,36 @@
 //using namespace std;
 
 
-/** This tree allows to store efficiently a value (epistatic value,..) for a specific
-	* diploid genotype of l loci. It takes into account that the order of the alleles at a locus
-	* does not play a role.
-	*/
-class Tree {
+/** Sparse, lazily-grown trie that stores a value (an epistatic contribution, a genome-wide
+  * fitness factor, ...) for a whole diploid multi-locus genotype. The order of the two alleles
+  * at a locus does not matter, so each locus genotype is first compressed to a compact
+  * coordinate. Values are authoritative (drawn/read once, then stored), not a recomputable cache.
+  */
+class GenotypeValueMap {
 
 private:
-  /**The depth of the tree as determined by the number of locus of the trait*/
+  /**The depth of the tree, = the number of loci of the trait.*/
   unsigned int _nb_locus;
-  /**The number of branches per node, determined by the number of possible genotypes at a locus.*/
+  /**The number of branches per node, = the number of possible genotypes at a locus.*/
   unsigned int _nb_branches;
   /**The number of allelic states of the trait.*/
   unsigned int _nb_all;
-  /**The first Node, root of the tree.*/
+  /**The root node of the trie.*/
   Node _root;
-  /**A  nb_all x nb_all matrix used to convert a locus genotype into a unique value (the coordinate of that locus).*/
-  unsigned int** _mapper;
-  /**a _nb_branches*ploidy matrix to get back the allelic combination from the _coord.*/
-  ALLELE** _un_mapper;
-  /**A table of length = number of locus, the coordinate of the genotype in the tree after its mapping.*/
+  /**nb_all x nb_all matrix mapping an (unordered) locus genotype to its compact coordinate.*/
+  unsigned int** _pair_to_coord;
+  /**Scratch of length _nb_locus: the current genotype's coordinate at each locus.*/
   unsigned int * _coord;
 
 public:
 
-  Tree (unsigned int nbloc, unsigned int nball);
-  ~Tree ();
-  /**Gives the phenotype of the genotype given in argument.*/
-  double get_value(AlleleContainer& genotype, const unsigned int* map);
-  double get_first(AlleleContainer& genotype);
-  double get_next (AlleleContainer& genotype);
-  void   set_value(AlleleContainer& genotype, const unsigned int* map, double value);
+  GenotypeValueMap(unsigned int nbloc, unsigned int nball);
+  ~GenotypeValueMap();
+  /**Value stored for `genotype` (read through `genome_locus`, NULL = identity), or my_NAN.*/
+  double get_value(AlleleContainer& genotype, const unsigned int* genome_locus);
+  void   set_value(AlleleContainer& genotype, const unsigned int* genome_locus, double value);
 
 };
 
-#endif //TREE_H
+#endif //genotypeValueMapH
 

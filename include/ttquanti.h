@@ -38,7 +38,7 @@
 #include "ttrait.h"
 #include "filehandler.h"
 #include "stathandler.h"
-#include "tree.h"
+#include "genotype_value_map.h"
 
 class TTQuantiFHvalue;
 class TTraitQuantiProto;
@@ -133,9 +133,9 @@ public:
 	double*              _fitnessFactor_freqDepend;     // _fitnessFactor_freqDepend[locus]
 	double***            _fitnessFactor;                // _fitnessFactor[locus][allele1][allele2]
 	map<ALLELE, map< ALLELE, double> >*  _locusFreqs; // _locusFreqs[locus][allele1][allele2] used for _fitnessFactor_freqDepend
-	Tree* _fitnessFactorTree;            //  fitness factor defined for the entire genome
+	GenotypeValueMap* _fitnessFactorValues;            //  fitness factor defined for the entire genome
 
-	Tree* _phenoTree;          // only for epistatic effect
+	GenotypeValueMap* _epistaticValues;          // only for epistatic effect
 	double               _epistatic_sd;
 
 	// determination of the genotype
@@ -153,21 +153,21 @@ public:
 
 	double get_dominance_mean(){return _dominance_mean;}
 
-	double  (TTraitQuantiProto::* get_genotype_func_ptr)(AlleleContainer& seq, const unsigned int* map);
-	double  get_genotype_additive (AlleleContainer& seq, const unsigned int* map);
-	double  get_genotype_epistatic (AlleleContainer& seq, const unsigned int* map);
+	double  (TTraitQuantiProto::* get_genotype_func_ptr)(AlleleContainer& seq, const unsigned int* genome_locus);
+	double  get_genotype_additive (AlleleContainer& seq, const unsigned int* genome_locus);
+	double  get_genotype_epistatic (AlleleContainer& seq, const unsigned int* genome_locus);
 
 	double* get_fitnessFactor_heterozygote(){return _fitnessFactor_heterozygote;}
 	double* get_fitnessFactor_homozygote()  {return _fitnessFactor_homozygote;}
 	double*** get_fitnessFactor_array()  {return _fitnessFactor;}
 	bool    fitnessFactor_used() {return (get_fitnessFactor_func_ptr != NULL || get_fitnessFactor2_func_ptr != NULL);}
 	bool    fitnessFactor_freqDep_used() {return (get_fitnessFactor2_func_ptr != NULL);}
-	double  (TTraitQuantiProto::* get_fitnessFactor_func_ptr)(AlleleContainer& seq, const unsigned int* map);
-	double  (TTraitQuantiProto::* get_fitnessFactor2_func_ptr)(AlleleContainer& seq, const unsigned int* map);
-	double  get_fitnessFactor_genome(AlleleContainer& seq, const unsigned int* map);
-	double  get_fitnessFactor_locus(AlleleContainer& seq, const unsigned int* map);
-	double  get_fitnessFactor_global(AlleleContainer& seq, const unsigned int* map);
-    double  get_fitnessFactor_freqDepend(AlleleContainer& seq, const unsigned int* map);
+	double  (TTraitQuantiProto::* get_fitnessFactor_func_ptr)(AlleleContainer& seq, const unsigned int* genome_locus);
+	double  (TTraitQuantiProto::* get_fitnessFactor2_func_ptr)(AlleleContainer& seq, const unsigned int* genome_locus);
+	double  get_fitnessFactor_genome(AlleleContainer& seq, const unsigned int* genome_locus);
+	double  get_fitnessFactor_locus(AlleleContainer& seq, const unsigned int* genome_locus);
+	double  get_fitnessFactor_global(AlleleContainer& seq, const unsigned int* genome_locus);
+    double  get_fitnessFactor_freqDepend(AlleleContainer& seq, const unsigned int* genome_locus);
     double* get_fitnessFactor_freqDepend(){return _fitnessFactor_freqDepend;}
     
     map<ALLELE, map< ALLELE, double> >*& get_locusFreqs() {return _locusFreqs;}
