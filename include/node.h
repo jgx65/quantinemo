@@ -74,7 +74,6 @@ public:
     @param depth the depth of the tree, used to determine if we are at a leaf
   */
   double get_value(unsigned int *coord, unsigned int depth);
-  double get_next(unsigned int *coord, unsigned int depth);
   void   set_value(unsigned int *coord, unsigned int depth, double value);
 };
 #endif //NODE_H

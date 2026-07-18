@@ -1,4 +1,4 @@
-/** @file node.cpp
+/** @file tree.cpp
 *
 *   Copyright (C) 2006 Frederic Guillaume    <guillaum@zoology.ubc.ca>
 *   Copyright (C) 2008 Samuel Neuenschwander <samuel.neuenschwander@unil.ch>
@@ -31,92 +31,77 @@
 *   along with quantiNemo.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "node.h"
+#include "genotype_value_map.h"
 #include "types.h"
-//#include "functions.h"
 
 /*_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/*/
 
-//                                ******** Node ********
+//                          ******** GenotypeValueMap ********
 
 // ----------------------------------------------------------------------------------------
-// Node
+// GenotypeValueMap
 // ----------------------------------------------------------------------------------------
-Node::Node(unsigned int depth, unsigned int rank, unsigned int size)
+GenotypeValueMap::GenotypeValueMap(unsigned int nbloc, unsigned int nball)
 {
-  set(depth, rank, size);
+  _nb_locus = nbloc;
+  _nb_all = nball;
+  _nb_branches = nball*(nball+1) / 2;
+
+  _root.set(nbloc-1, 0, _nb_branches);
+
+  // _pair_to_coord[a1][a2]: unordered locus genotype -> compact coordinate (branch index)
+  _pair_to_coord = new unsigned int* [nball];
+  for(unsigned int i = 0; i < nball; ++i){
+    _pair_to_coord[i] = new unsigned int [nball];
+  }
+
+  unsigned int cntr = 0;
+  for(unsigned int i = 0; i < nball; ++i) {
+    _pair_to_coord[i][i] = cntr++;
+    for(unsigned int j = i + 1; j < nball; ++j){
+      _pair_to_coord[i][j] = _pair_to_coord[j][i] = cntr++;
+    }
+  }
+
+  _coord = new unsigned int[nbloc];
 }
 
 // ----------------------------------------------------------------------------------------
-// set
+// ~GenotypeValueMap
 // ----------------------------------------------------------------------------------------
-void Node::set(unsigned int depth, unsigned int rank, unsigned int size)
+GenotypeValueMap::~GenotypeValueMap()
 {
-  _myrank = rank;
-  _nb_branches = size;
-
-  if(rank == depth) {      // is a terminal leaf
-  	_branches = NULL;
-	  _values = new double [size];
-	  for(unsigned int i = 0; i < size; ++i){
-	    _values[i] = my_NAN;
+  if(_coord) delete [] _coord;
+  if(_pair_to_coord){
+    for(unsigned int i = 0; i < _nb_all; ++i){
+	    delete [] _pair_to_coord[i];
     }
-  }
-  else {                  // is a node
-	  _values = NULL;
-	  _branches = new Node* [size];
-	  for(unsigned int i = 0; i < size; ++i){
-	    _branches[i] = NULL;
-    }
-  }
-}
-
-// ----------------------------------------------------------------------------------------
-// ~Node
-// ----------------------------------------------------------------------------------------
-Node::~Node()
-{
-  if(_values) delete[]_values;
-  if(_branches) {
-	  for(unsigned int i = 0; i < _nb_branches; ++i){
-	    if(_branches[i]) delete _branches[i];
-    }
-	  delete [] _branches;
+    delete [] _pair_to_coord;
   }
 }
 
 // ----------------------------------------------------------------------------------------
 // get_value
 // ----------------------------------------------------------------------------------------
-double Node::get_value(unsigned int *coord, unsigned int depth)
+double GenotypeValueMap::get_value(AlleleContainer& genotype, const unsigned int* genome_locus)
 {
-  // if it is the leave
-  if(depth == _myrank){
-	  return _values[coord[_myrank]];
-  }
+  // compress each locus genotype to its coordinate, then walk the trie to the leaf
+  for(unsigned int i = 0; i < _nb_locus; i++){
+		_coord[i] = _pair_to_coord[ (unsigned int)genotype.allele(genome_locus?genome_locus[i]:i, 0) ][ (unsigned int)genotype.allele(genome_locus?genome_locus[i]:i, 1) ];
+	}
 
-  //if the node does not exist
-  if(!_branches[ coord[_myrank]]) return my_NAN;
-
-  // if the node exists
-  return _branches[coord[_myrank]]->get_value(coord, depth);
+  return _root.get_value(_coord, _nb_locus-1);
 }
 
 // ----------------------------------------------------------------------------------------
 // set_value
 // ----------------------------------------------------------------------------------------
-void Node::set_value(unsigned int *coord, unsigned int depth, double value)
+void GenotypeValueMap::set_value(AlleleContainer& genotype, const unsigned int* genome_locus, double value)
 {
-  // if it is the leave
-  if(depth == _myrank){
-	  _values[coord[_myrank]] = value;
-    return;
-  }
-  // if the node does not exist create it
-  if(!_branches[ coord[_myrank]]){
-	  _branches[coord[_myrank]] = new Node(depth, _myrank+1, _nb_branches);
+  for(unsigned int i = 0; i < _nb_locus; i++){
+	  _coord[i] = _pair_to_coord[ (unsigned int)genotype.allele(genome_locus?genome_locus[i]:i, 0) ][ (unsigned int)genotype.allele(genome_locus?genome_locus[i]:i, 1) ];
   }
 
-  // go to the node
-  return _branches[coord[_myrank]]->set_value(coord, depth, value);
+  return _root.set_value(_coord, _nb_locus-1, value);
 }
+

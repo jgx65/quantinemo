@@ -167,7 +167,7 @@ TTraitQuantiProto::TTraitQuantiProto( ):
 _stats(0), _allelicValues(0), _allelic_file(0),
 _dominanceValues(0),
 _fitnessFactor_heterozygote(0), _fitnessFactor_homozygote(0), _fitnessFactor_freqDepend(0),
-_fitnessFactor(0), _locusFreqs(0), _fitnessFactorTree(0), _phenoTree(0), get_genotype_func_ptr(0), _phenotyper(0), _writer(0), _genotyper(0), 
+_fitnessFactor(0), _locusFreqs(0), _fitnessFactorValues(0), _epistaticValues(0), get_genotype_func_ptr(0), _phenotyper(0), _writer(0), _genotyper(0), 
 get_fitnessFactor_func_ptr(0), get_fitnessFactor2_func_ptr(0)
 {
     _type = "quanti";
@@ -182,8 +182,8 @@ _stats(0), _allelicValues(0), _allelic_file(0),
 _dominanceValues(0),
 _fitnessFactor_heterozygote(0), _fitnessFactor_homozygote(0),
 _fitnessFactor_freqDepend(0), _fitnessFactor(0), _locusFreqs(0),
-_fitnessFactorTree(0), _phenotyper(0), _writer(0), _genotyper(0),
-_phenoTree(0), get_genotype_func_ptr(0), get_fitnessFactor_func_ptr(0),
+_fitnessFactorValues(0), _phenotyper(0), _writer(0), _genotyper(0),
+_epistaticValues(0), get_genotype_func_ptr(0), get_fitnessFactor_func_ptr(0),
 get_fitnessFactor2_func_ptr(0)
 {
     _trait_index = i;
@@ -202,7 +202,7 @@ _fitnessFactor_homozygote(T._fitnessFactor_homozygote),
 _fitnessFactor_freqDepend(T._fitnessFactor_freqDepend),
 _fitnessFactor(T._fitnessFactor),
 _locusFreqs(T._locusFreqs),
-_fitnessFactorTree(0), _phenoTree(0),
+_fitnessFactorValues(0), _epistaticValues(0),
 get_genotype_func_ptr(T.get_genotype_func_ptr),
 get_fitnessFactor_func_ptr(T.get_fitnessFactor_func_ptr),
 get_fitnessFactor2_func_ptr(T.get_fitnessFactor2_func_ptr),
@@ -564,9 +564,9 @@ void TTraitQuantiProto::reset()
     
     //----------------------------------------------------------------------------
     // epistatic values
-    if(_phenoTree || _fitnessFactorTree){
-        if(_phenoTree)        {delete _phenoTree; _phenoTree=NULL;}
-        if(_fitnessFactorTree){delete _fitnessFactorTree; _fitnessFactorTree=NULL;}
+    if(_epistaticValues || _fitnessFactorValues){
+        if(_epistaticValues)        {delete _epistaticValues; _epistaticValues=NULL;}
+        if(_fitnessFactorValues){delete _fitnessFactorValues; _fitnessFactorValues=NULL;}
         string epistaticFile = get_parameter("quanti_epistatic_file"+trait)->get_arg();
         if(!epistaticFile.empty()){       // epistatic effects set by file
             if(STRING::file_exists(epistaticFile, get_popPtr()->get_iniFile_directory())) read_genome_file(epistaticFile);
@@ -640,8 +640,8 @@ void TTraitQuantiProto::delete_locusFreqs()
 // used between simulations
 void TTraitQuantiProto::resetTotal()
 {
-    if(_phenoTree)        {delete _phenoTree;		_phenoTree=NULL;}
-    if(_fitnessFactorTree){delete _fitnessFactorTree;		_fitnessFactorTree=NULL;}
+    if(_epistaticValues)        {delete _epistaticValues;		_epistaticValues=NULL;}
+    if(_fitnessFactorValues){delete _fitnessFactorValues;		_fitnessFactorValues=NULL;}
     delete_dominanceValues();
     delete_fitnessFactor();
     delete_locusFreqs();
@@ -716,7 +716,7 @@ void TTraitQuantiProto::init (TMetapop* pMetapop)
     // set the fitness factor
     set_fitnessFactor(trait, "quanti_fitness_factor_heterozygote", _fitnessFactor_heterozygote);
     set_fitnessFactor(trait, "quanti_fitness_factor_homozygote", _fitnessFactor_homozygote);
-    if(_fitnessFactorTree)  get_fitnessFactor_func_ptr = &TTraitQuantiProto::get_fitnessFactor_genome;
+    if(_fitnessFactorValues)  get_fitnessFactor_func_ptr = &TTraitQuantiProto::get_fitnessFactor_genome;
     else if(_fitnessFactor) get_fitnessFactor_func_ptr = &TTraitQuantiProto::get_fitnessFactor_locus;
     else if(_fitnessFactor_homozygote || _fitnessFactor_heterozygote){
         get_fitnessFactor_func_ptr = &TTraitQuantiProto::get_fitnessFactor_global;
@@ -1409,17 +1409,17 @@ void
 TTraitQuantiProto::set_epistaticValues(const string& trait)
 {
     _epistatic_sd = sqrt(get_parameter_value("quanti_epistatic_var"+trait));
-    if(_phenoTree){                 // epistatic effects are set explicitly by the file
+    if(_epistaticValues){                 // epistatic effects are set explicitly by the file
         get_genotype_func_ptr = &TTraitQuantiProto::get_genotype_epistatic;
     }
     else if(_epistatic_sd){          // epistatic effects set by its variance (reset at each replicate!)
         get_genotype_func_ptr = &TTraitQuantiProto::get_genotype_epistatic;
-        if(!_phenoTree){
+        if(!_epistaticValues){
             unsigned int nb_allele_max = 0;             // get the max number of alleles
             for(unsigned int l=0; l<_nb_locus; ++l){
                 if(nb_allele_max<_nb_allele[l]) nb_allele_max=_nb_allele[l];
             }
-            _phenoTree = new Tree(_nb_locus, nb_allele_max);
+            _epistaticValues = new GenotypeValueMap(_nb_locus, nb_allele_max);
         }
     }
     else get_genotype_func_ptr = &TTraitQuantiProto::get_genotype_additive;   // no epistatic effects
@@ -1683,14 +1683,14 @@ TTraitQuantiProto::read_genome_file(string filename)
         if(cols[0] == my_NAN) error("Epistatic file of trait '%s' (%s): Genotype column is missing!", get_type_index().c_str(), filename.c_str());
         
         if(cols[1] != my_NAN || cols[2] != my_NAN){      // epistatic or genotypic value
-            if(_phenoTree)  delete _phenoTree;
+            if(_epistaticValues)  delete _epistaticValues;
             unsigned int nb_allele_max = 0;             // get the max number of alleles
             for(unsigned int l=0; l<_nb_locus; ++l){
                 if(nb_allele_max<_nb_allele[l]) nb_allele_max=_nb_allele[l];
             }
-            _phenoTree = new Tree(_nb_locus, nb_allele_max);
+            _epistaticValues = new GenotypeValueMap(_nb_locus, nb_allele_max);
         }
-        else if(_phenoTree){delete _phenoTree; _phenoTree=NULL;}
+        else if(_epistaticValues){delete _epistaticValues; _epistaticValues=NULL;}
         
         if(cols[1] != my_NAN && cols[2] != my_NAN){
             warning("Epistatic file of trait '%s' (%s): Both genotypic and epistatic values are present: only the genotypic values are considered!", get_type_index().c_str(), filename.c_str());
@@ -1705,14 +1705,14 @@ TTraitQuantiProto::read_genome_file(string filename)
         }
         
         if(cols[3] != my_NAN){        // fitness factor
-            if(_fitnessFactorTree)  delete _fitnessFactorTree;
+            if(_fitnessFactorValues)  delete _fitnessFactorValues;
             unsigned int nb_allele_max = 0;             // get the max number of alleles
             for(unsigned int l=0; l<_nb_locus; ++l){
                 if(nb_allele_max<_nb_allele[l]) nb_allele_max=_nb_allele[l];
             }
-            _fitnessFactorTree = new Tree(_nb_locus, nb_allele_max);
+            _fitnessFactorValues = new GenotypeValueMap(_nb_locus, nb_allele_max);
         }
-        else if(_fitnessFactorTree){delete _fitnessFactorTree; _fitnessFactorTree=NULL;}
+        else if(_fitnessFactorValues){delete _fitnessFactorValues; _fitnessFactorValues=NULL;}
         
         for (i=0; i<colsSize; ++i){
             if(cols[i] != my_NAN && cols[i] > nbCols) error("Epistatic file of trait '%s' (%s): File info is wrong: matrix has only %i columns and not %i!\n", get_type_index().c_str(), filename.c_str(), nbCols, cols[i]);
@@ -1773,27 +1773,27 @@ TTraitQuantiProto::read_genome_file(string filename)
             
             // set the genotype
             if(cols[1] != my_NAN){ // set the epistatic value
-                if(_phenoTree->get_value(genotype, NULL) != my_NAN){
+                if(_epistaticValues->get_value(genotype, NULL) != my_NAN){
                     error("Epistatic file %s: value for genotype of line %i was already specified!\n", filename.c_str(), i+1);
                 }
                 value = mat.get(i,cols[1]);
                 if(value == my_NAN) error("Epistatic file '%s': epistatic values are not available!\n", filename.c_str());
-                _phenoTree->set_value(genotype, NULL, get_genotype_additive(genotype, NULL)+value);
+                _epistaticValues->set_value(genotype, NULL, get_genotype_additive(genotype, NULL)+value);
             }
             if(cols[2] != my_NAN){ // set directly the genotypic value
-                if(_phenoTree->get_value(genotype, NULL) != my_NAN){
+                if(_epistaticValues->get_value(genotype, NULL) != my_NAN){
                     error("Epistatic file %s: value for genotype of line %i was already specified!\n", filename.c_str(), i+1);
                 }
                 value = mat.get(i,cols[2]);
                 if(value == my_NAN) error("Epistatic file '%s': genotypic values are not available!\n", filename.c_str());
-                _phenoTree->set_value(genotype, NULL, value);
+                _epistaticValues->set_value(genotype, NULL, value);
             }
             if(cols[3] != my_NAN){ // set the fitness factor
-                if(_fitnessFactorTree->get_value(genotype, NULL) != my_NAN){
+                if(_fitnessFactorValues->get_value(genotype, NULL) != my_NAN){
                     error("Epistatic file %s: value for genotype of line %i was already specified!\n", filename.c_str(), i+1);
                 }
                 value = mat.get(i,cols[3]);
-                if(value != my_NAN) _fitnessFactorTree->set_value(genotype, NULL, value);
+                if(value != my_NAN) _fitnessFactorValues->set_value(genotype, NULL, value);
             }
             ++nbValues;
         }
@@ -2013,7 +2013,7 @@ void
 TTraitQuantiProto::print_epistatic_values(string name)
 {
     
-    if(!(_phenoTree || _fitnessFactorTree)) return;   // if not used don't make the output
+    if(!(_epistaticValues || _fitnessFactorValues)) return;   // if not used don't make the output
     
     string rpl = _popPtr->getReplicateCounter();
     
@@ -2046,14 +2046,14 @@ TTraitQuantiProto::print_epistatic_values(string name)
     int col = 1;
     FILE << "\n[FILE_INFO]{";
     FILE << "\n    col_genotype " << col++;
-    if(_phenoTree){
+    if(_epistaticValues){
         if(_allelicValues){
             FILE << "\n    col_epistatic_value " << col++;
             FILE << "\n    # col_genotypic_value " << col++;
         }
         else FILE << "\n    col_genotypic_value " << col++;
     }
-    if(_fitnessFactorTree)   FILE << "\n    col_fitness_factor " << col;
+    if(_fitnessFactorValues)   FILE << "\n    col_fitness_factor " << col;
     FILE << "\n}";
     
     FILE << "\n\n# " << _nb_locus  << " loci"
@@ -2061,11 +2061,11 @@ TTraitQuantiProto::print_epistatic_values(string name)
     
     // write heading
     FILE << "\n\n#genotype";
-    if(_phenoTree){
+    if(_epistaticValues){
         if(_allelicValues) FILE << "\tepistaticVal";
         FILE << "\tgenotypicVal";
     }
-    if(_fitnessFactorTree) FILE <<"\tfitnessFactor";
+    if(_fitnessFactorValues) FILE <<"\tfitnessFactor";
     
     // create the first possible genotype to explore all possible genotypes
     AlleleContainer seq; seq.allocate(_nb_locus); for(unsigned int _l=0;_l<_nb_locus;++_l){seq.allele(_l,0)=0;seq.allele(_l,1)=0;}
@@ -2073,9 +2073,9 @@ TTraitQuantiProto::print_epistatic_values(string name)
     double val_pheno, val_fitness;
     do{
         // get the values, i.e. check if the genotype is set
-        if(_phenoTree)         val_pheno   = _phenoTree->get_value(seq, NULL);
+        if(_epistaticValues)         val_pheno   = _epistaticValues->get_value(seq, NULL);
         else                   val_pheno   = my_NAN;
-        if(_fitnessFactorTree) val_fitness = _fitnessFactorTree->get_value(seq, NULL);
+        if(_fitnessFactorValues) val_fitness = _fitnessFactorValues->get_value(seq, NULL);
         else                   val_fitness = my_NAN;
         
         // if genotype is not set do not plot it
@@ -2086,11 +2086,11 @@ TTraitQuantiProto::print_epistatic_values(string name)
             FILE << "}";
             
             // print the values
-            if(_phenoTree){
+            if(_epistaticValues){
                 if(_allelicValues) FILE << "\t" << val_pheno - get_genotype_additive(seq, NULL);
                 FILE << "\t" << val_pheno;
             }
-            if(_fitnessFactorTree) FILE << "\t" << val_fitness;
+            if(_fitnessFactorValues) FILE << "\t" << val_fitness;
         }
     }while(get_next_gentoype(seq));      // get the next genotype
     
@@ -2228,25 +2228,25 @@ TTraitQuantiProto::get_genotype_dominance_k(double a1, double a2, double k)
 // get_genotype
 // ----------------------------------------------------------------------------------------
 double
-TTraitQuantiProto::get_genotype_additive(AlleleContainer& seq, const unsigned int* map)
+TTraitQuantiProto::get_genotype_additive(AlleleContainer& seq, const unsigned int* genome_locus)
 {
     double sum=0;
     for(unsigned int l=0; l<_nb_locus; ++l){
-        sum += (this->*get_locus_genotype_func_ptr)(l, seq.allele(map?map[l]:l, 0), seq.allele(map?map[l]:l, 1));
+        sum += (this->*get_locus_genotype_func_ptr)(l, seq.allele(genome_locus?genome_locus[l]:l, 0), seq.allele(genome_locus?genome_locus[l]:l, 1));
     }
     return sum;
 }
 
 double
-TTraitQuantiProto::get_genotype_epistatic(AlleleContainer& seq, const unsigned int* map)
+TTraitQuantiProto::get_genotype_epistatic(AlleleContainer& seq, const unsigned int* genome_locus)
 {
-    double val  = _phenoTree->get_value(seq, map);
+    double val  = _epistaticValues->get_value(seq, genome_locus);
     if(val != my_NAN) return val;
     
     // if not yet computed compute it
-    val = get_genotype_additive(seq, map);
+    val = get_genotype_additive(seq, genome_locus);
     val += get_popPtr()->rand().Normal(0, _epistatic_sd);
-    _phenoTree->set_value(seq, map, val);
+    _epistaticValues->set_value(seq, genome_locus, val);
     return val;
 }
 
@@ -2255,14 +2255,14 @@ TTraitQuantiProto::get_genotype_epistatic(AlleleContainer& seq, const unsigned i
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified explicitly for each genome */
 double
-TTraitQuantiProto::get_fitnessFactor_genome(AlleleContainer& seq, const unsigned int* map)
+TTraitQuantiProto::get_fitnessFactor_genome(AlleleContainer& seq, const unsigned int* genome_locus)
 {
-    double val  = _fitnessFactorTree->get_value(seq, map);
+    double val  = _fitnessFactorValues->get_value(seq, genome_locus);
     if(val != my_NAN) return val;
     
     // if not set for the genome get the explicit fitness factor
-    if(_fitnessFactor) return get_fitnessFactor_locus(seq, map);
-    return get_fitnessFactor_global(seq, map);
+    if(_fitnessFactor) return get_fitnessFactor_locus(seq, genome_locus);
+    return get_fitnessFactor_global(seq, genome_locus);
 }
 
 // ----------------------------------------------------------------------------------------
@@ -2270,15 +2270,15 @@ TTraitQuantiProto::get_fitnessFactor_genome(AlleleContainer& seq, const unsigned
 // ----------------------------------------------------------------------------------------
 /** fitness factor specified at the locus level */
 double
-TTraitQuantiProto::get_fitnessFactor_locus(AlleleContainer& seq, const unsigned int* map)
+TTraitQuantiProto::get_fitnessFactor_locus(AlleleContainer& seq, const unsigned int* genome_locus)
 {
     assert(_fitnessFactor);
     
     double product=1, value;
     ALLELE a1, a2;
     for(unsigned int l=0; l<_nb_locus; ++l){
-        a1 = seq.allele(map?map[l]:l, 0);     // get allele 1
-        a2 = seq.allele(map?map[l]:l, 1);     // get allele 2
+        a1 = seq.allele(genome_locus?genome_locus[l]:l, 0);     // get allele 1
+        a2 = seq.allele(genome_locus?genome_locus[l]:l, 1);     // get allele 2
         if(a1 > a2) value = _fitnessFactor[l][a2][a1];
         else        value = _fitnessFactor[l][a1][a2];
         
@@ -2298,11 +2298,11 @@ TTraitQuantiProto::get_fitnessFactor_locus(AlleleContainer& seq, const unsigned 
 // ----------------------------------------------------------------------------------------
 /** fitness factor specifed globally for heterozygote/homozygote loci */
 double
-TTraitQuantiProto::get_fitnessFactor_global(AlleleContainer& seq, const unsigned int* map)
+TTraitQuantiProto::get_fitnessFactor_global(AlleleContainer& seq, const unsigned int* genome_locus)
 {
     double product=1;
     for(unsigned int l=0; l<_nb_locus; ++l){
-        if(seq.allele(map?map[l]:l, 0)==seq.allele(map?map[l]:l, 1)) product *= _fitnessFactor_homozygote   ? _fitnessFactor_homozygote[l]   : 1;
+        if(seq.allele(genome_locus?genome_locus[l]:l, 0)==seq.allele(genome_locus?genome_locus[l]:l, 1)) product *= _fitnessFactor_homozygote   ? _fitnessFactor_homozygote[l]   : 1;
         else                     product *= _fitnessFactor_heterozygote ? _fitnessFactor_heterozygote[l] : 1;
     }
     return product;
@@ -2315,12 +2315,12 @@ TTraitQuantiProto::get_fitnessFactor_global(AlleleContainer& seq, const unsigned
  * Noe: _locusFreqs have to be recomputed at each generation and patch
  */
 double
-TTraitQuantiProto::get_fitnessFactor_freqDepend(AlleleContainer& seq, const unsigned int* map)
+TTraitQuantiProto::get_fitnessFactor_freqDepend(AlleleContainer& seq, const unsigned int* genome_locus)
 {
     assert(_locusFreqs);
     
     // first get it without frequency dependent selection
-    double product = get_fitnessFactor2_func_ptr ? (this->*get_fitnessFactor2_func_ptr)(seq, map) : 1;
+    double product = get_fitnessFactor2_func_ptr ? (this->*get_fitnessFactor2_func_ptr)(seq, genome_locus) : 1;
     
     // and now add the frequency depend part on it (since it is multiplicate the order does not matter)
     double freqDependFactor;
@@ -2329,8 +2329,8 @@ TTraitQuantiProto::get_fitnessFactor_freqDepend(AlleleContainer& seq, const unsi
         freqDependFactor = _fitnessFactor_freqDepend[l];
         if(!freqDependFactor) continue; // if zero it is not set
         
-        a1 = seq.allele(map?map[l]:l, 0);     // get allele 1
-        a2 = seq.allele(map?map[l]:l, 1);     // get allele 2
+        a1 = seq.allele(genome_locus?genome_locus[l]:l, 0);     // get allele 1
+        a2 = seq.allele(genome_locus?genome_locus[l]:l, 1);     // get allele 2
         
         if(a1 < a2){
             assert(_locusFreqs[l].find(a1)!=_locusFreqs[l].end());
