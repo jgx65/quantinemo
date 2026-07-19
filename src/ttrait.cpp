@@ -698,12 +698,6 @@ TTrait::~TTrait ( ){
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-void*
-TTrait::get_allele(const unsigned int& loc, const unsigned int& all)  const  {
-	if(loc<pTraitProto->_nb_locus && all<pTraitProto->_nb_allele[loc]) return (void*)&allele(loc, all);
-	return 0;
-}
-
 //------------------------------------------------------------------------------
 /** same as the copy constructor */
 void
@@ -721,7 +715,9 @@ void
 TTrait::ini_sequence (TPatch* patch)
 {
 	for(unsigned int l=0; l<pTraitProto->_nb_locus; ++l){
-		pTraitProto->_aLocus[l].ini_sequence(locus_ptr(l), patch);
+		ALLELE tmp[ploidy];
+		pTraitProto->_aLocus[l].ini_sequence(tmp, patch);
+		write_locus(l, tmp);
 	}
 } // ini_sequence
 

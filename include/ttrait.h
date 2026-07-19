@@ -89,13 +89,14 @@ protected:
 public:
     // Access one allele of this trait's locus `l`, remapped into the shared genome through the
     // prototype's trait_to_genome_locus[]. (Defined after TTraitProto, at the end of this header.)
-    inline const ALLELE& allele(size_t l, size_t c) const;
-    inline       ALLELE& allele(size_t l, size_t c);
-    inline       ALLELE* locus_ptr(size_t l);
+    inline ALLELE    allele(size_t l, size_t c) const;
+    inline AlleleRef allele(size_t l, size_t c);
+    // a packed allele has no address, so per-locus kernels copy in and out
+    inline void read_locus (size_t l, ALLELE* out) const;
+    inline void write_locus(size_t l, const ALLELE* in);
     inline AlleleContainer&       genome_alleles()        { return *_genome; } // whole container (for the proto kernels)
     inline const unsigned int*    trait_to_genome_locus() const;               // the prototype's mapping table
 
-    virtual void* get_allele(const unsigned int& loc, const unsigned int& all)  const;
 
 public:
     TTraitProto* pTraitProto;
@@ -356,14 +357,17 @@ public:
 // because they reach into TTraitProto, which is only complete at this point. The table is
 // built in ini() before any access.
 // ----------------------------------------------------------------------------------------
-inline const ALLELE& TTrait::allele(size_t l, size_t c) const {
+inline ALLELE TTrait::allele(size_t l, size_t c) const {
     return _genome->allele(pTraitProto->_trait_to_genome_locus[l], c);
 }
-inline ALLELE& TTrait::allele(size_t l, size_t c) {
+inline AlleleRef TTrait::allele(size_t l, size_t c) {
     return _genome->allele(pTraitProto->_trait_to_genome_locus[l], c);
 }
-inline ALLELE* TTrait::locus_ptr(size_t l) {
-    return _genome->locus_ptr(pTraitProto->_trait_to_genome_locus[l]);
+inline void TTrait::read_locus(size_t l, ALLELE* out) const {
+    _genome->read_locus(pTraitProto->_trait_to_genome_locus[l], out);
+}
+inline void TTrait::write_locus(size_t l, const ALLELE* in) {
+    _genome->write_locus(pTraitProto->_trait_to_genome_locus[l], in);
 }
 inline const unsigned int* TTrait::trait_to_genome_locus() const {
     return pTraitProto->_trait_to_genome_locus;

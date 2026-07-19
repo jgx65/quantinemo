@@ -33,6 +33,51 @@
 #include "tgenome.h"
 #include "tmetapop.h"
 
+// run-wide allele storage layout; see AlleleContainer in types.h
+bool AlleleContainer::_packed = false;
+
+// ----------------------------------------------------------------------------------------
+// ini_packed_mode
+// ----------------------------------------------------------------------------------------
+/** Decide whether this run may store alleles as single bits instead of bytes.
+ * The packed layout can only represent the allelic states 0 and 1, so it is used only
+ * when every locus is diallelic AND every mutation model is bounded by the locus'
+ * allele count. KAM and SSM stay within [0, nb_allele-1]; RMM and IMM can reach states
+ * beyond it, so they disqualify the run even at nb_allele == 2.
+ * Falling back to the byte layout is always safe - it is the general representation.
+ */
+void TGenomeProto::ini_packed_mode()
+{
+	bool ok = (_nb_locus_tot != 0);
+	for (unsigned int l = 0; ok && l < _nb_locus_tot; ++l) {
+		if (_locus_tot[l]->get_nb_allele() > 2) ok = false;
+		else {
+			mut_model_t m = _locus_tot[l]->get_mutationModel();
+			if (m != KAM && m != SSM && m != NO) ok = false;
+		}
+	}
+	AlleleContainer::set_packed(ok);
+#ifdef _SHOW_MEMORY
+	message("\nAllele storage: %s (%u loci)\n",
+	        ok ? "packed, 1 bit/allele (all loci diallelic)"
+	           : "byte, 1 ALLELE/allele (general)", _nb_locus_tot);
+#endif
+}
+
+// ----------------------------------------------------------------------------------------
+// resolve the recombination kernel matching the layout chosen for this run
+// ----------------------------------------------------------------------------------------
+TGenomeProto::recombine_func_t TGenomeProto::recombine_normal_ptr() const
+{
+	return AlleleContainer::packed() ? &TGenomeProto::_recombine_normal<PackedAccess>
+	                                 : &TGenomeProto::_recombine_normal<ByteAccess>;
+}
+
+TGenomeProto::recombine_func_t TGenomeProto::recombine_qtrait_ptr() const
+{
+	return AlleleContainer::packed() ? &TGenomeProto::_recombine_qtrait<PackedAccess>
+	                                 : &TGenomeProto::_recombine_qtrait<ByteAccess>;
+}
 
 //---------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------
@@ -651,12 +696,20 @@ void TGenomeProto::ini_genetic_map()
 	if (_nb_locus_linked) create_locus_position_tot(); // _locus_tot    => _locus_position_tot
 	create_pleiotrophy(); // _locus_tot    => _locus_pleiotropic
 	
-    // set the inheritance function
+    // decide the allele storage layout for this run (needs _locus_tot, must happen
+    // before any individual genome is allocated and before the kernels are bound)
+    ini_packed_mode();
+
+    // set the inheritance function (the kernel matching the chosen layout)
     if(_nb_locus_linked){
-        if (_nb_locus_unlinked) _inherit_func_ptr = &TGenomeProto::_inherit_mixed;
+        if (_nb_locus_unlinked) _inherit_func_ptr = AlleleContainer::packed()
+                                    ? &TGenomeProto::_inherit_mixed<PackedAccess>
+                                    : &TGenomeProto::_inherit_mixed<ByteAccess>;
         else _inherit_func_ptr = &TGenomeProto::_inherit_linked;
     }
-    else _inherit_func_ptr = &TGenomeProto::_inherit_unlinked;
+    else _inherit_func_ptr = AlleleContainer::packed()
+                                    ? &TGenomeProto::_inherit_unlinked<PackedAccess>
+                                    : &TGenomeProto::_inherit_unlinked<ByteAccess>;
 
 	// dump the genome to file if requested
 	print_genome();
@@ -774,13 +827,15 @@ void TGenomeProto::inherit(TIndividual* mother, TIndividual* father, AlleleConta
 /** inheritance with just unlinked loci
  * the genome containes first the linked loci, followed by the unlinked loci
  */
+template<class ACCESS>
 void TGenomeProto::_inherit_unlinked(TIndividual* mother, TIndividual* father, AlleleContainer& child)
 {
 	const AlleleContainer& mother_seq = mother->genome.alleles();
 	const AlleleContainer& father_seq = father->genome.alleles();
 	for (unsigned int l = _nb_locus_linked; l < _nb_locus_tot; ++l) {
-		child.allele(l, 0) = mother_seq.allele(l, _popPtr->rand().Bool());
-		child.allele(l, 1) = father_seq.allele(l, _popPtr->rand().Bool());
+		size_t i = (size_t)l*ploidy;
+		ACCESS::set(child, i,   ACCESS::get(mother_seq, i + _popPtr->rand().Bool()));
+		ACCESS::set(child, i+1, ACCESS::get(father_seq, i + _popPtr->rand().Bool()));
 	}
 }
 
@@ -800,11 +855,12 @@ void TGenomeProto::_inherit_linked(TIndividual* mother, TIndividual* father, All
 /** inheritance where linked an unlinked loci are present
  * the genome contains first the linked loci, followed by the unlinked loci
  */
+template<class ACCESS>
 void TGenomeProto::_inherit_mixed(TIndividual* mother, TIndividual* father,
                                   AlleleContainer& child)
 {
 	_inherit_linked(mother, father, child);
-	_inherit_unlinked(mother, father, child);
+	_inherit_unlinked<ACCESS>(mother, father, child);
 }
 
 // ----------------------------------------------------------------------------------------
@@ -815,6 +871,7 @@ void TGenomeProto::_inherit_mixed(TIndividual* mother, TIndividual* father,
  * - _chromosomeLength_temp: used to specify the total number of recombinations
  * - _locus_position_tot_temp: vector with the locus positions
  * */
+template<class ACCESS>
 void TGenomeProto::_recombine_normal(TIndividual* parent, AlleleContainer& child, int index)
 {
 	const AlleleContainer& parent_seq = parent->genome.alleles();
@@ -838,7 +895,8 @@ void TGenomeProto::_recombine_normal(TIndividual* parent, AlleleContainer& child
 				curChrom = !curChrom;
 				++nextRecomb;
 			}
-			child.allele(l, index) = parent_seq.allele(l, curChrom); // set the gamete for the locus
+			ACCESS::set(child, (size_t)l*ploidy + index,
+			            ACCESS::get(parent_seq, (size_t)l*ploidy + curChrom)); // set the gamete for the locus
 		}
 	}
 }
@@ -858,6 +916,7 @@ void TGenomeProto::_recombine_normal(TIndividual* parent, AlleleContainer& child
  * single crossover per meiosis, on average."
  *
  * */
+template<class ACCESS>
 void TGenomeProto::_recombine_qtrait(TIndividual* parent, AlleleContainer& child, int index)
 {
 	const AlleleContainer& parent_seq = parent->genome.alleles();
@@ -889,7 +948,8 @@ void TGenomeProto::_recombine_qtrait(TIndividual* parent, AlleleContainer& child
 				curChrom = !curChrom;
 				++nextRecomb;
 			}
-			child.allele(l, index) = parent_seq.allele(l, curChrom); // set the gamete for the locus
+			ACCESS::set(child, (size_t)l*ploidy + index,
+			            ACCESS::get(parent_seq, (size_t)l*ploidy + curChrom)); // set the gamete for the locus
 		}
 	}
 }
@@ -936,11 +996,11 @@ void TGenomeProto::ini_recombination_factor()
 			ini_recombination_factor("recombination_factor", MAL);// male and female have the same recombination factor
 		}
 		else {	// no recombination factor used
-			_recombine_func_ptr[FEM] = &TGenomeProto::_recombine_normal;
+			_recombine_func_ptr[FEM] = recombine_normal_ptr();
 			_chromosomeLength_temp[FEM] = _chromosomeLength[FEM];
 			_locus_position_tot_temp[FEM] = _locus_position_tot[FEM];
             
-			_recombine_func_ptr[MAL] = &TGenomeProto::_recombine_normal;
+			_recombine_func_ptr[MAL] = recombine_normal_ptr();
 			_chromosomeLength_temp[MAL] = _chromosomeLength[MAL];
 			_locus_position_tot_temp[MAL] = _locus_position_tot[MAL];
 		}
@@ -998,7 +1058,7 @@ bool TGenomeProto::ini_recombination_factor(string param_name, sex_t SEX)
             startChrom = _locus_position_tot[SEX][l - 1];
         }
         _chromosomeLength_temp[SEX] = startChrom_temp;
-        _recombine_func_ptr[SEX] = &TGenomeProto::_recombine_normal;
+        _recombine_func_ptr[SEX] = recombine_normal_ptr();
         delete m;
         return true;
 	}
@@ -1012,7 +1072,7 @@ bool TGenomeProto::ini_recombination_factor(string param_name, sex_t SEX)
         * _locus_position_tot[SEX][l];
     }
     _chromosomeLength_temp[SEX] = _locus_position_tot_temp[SEX][l - 1];
-    _recombine_func_ptr[SEX] = &TGenomeProto::_recombine_normal;
+    _recombine_func_ptr[SEX] = recombine_normal_ptr();
 	return true;
 }
 
@@ -1070,7 +1130,7 @@ void TGenomeProto::ini_recombination_qtrait(string param_name, sex_t SEX,
 			_recombination_factor_chrom[SEX][c] = recombFactor;
 		}
 	}
-	_recombine_func_ptr[SEX] = &TGenomeProto::_recombine_qtrait;
+	_recombine_func_ptr[SEX] = recombine_qtrait_ptr();
 }
 
 // ----------------------------------------------------------------------------------------
@@ -1191,12 +1251,31 @@ void TGenomeProto::mutate(AlleleContainer& seq)
 /** if the mutation rate is identical for all loci perform a "global" mutation
  * draw randomly the locus and allele to mutate and then call the corresponding mutation function
  */
+/** apply the locus' mutation model to one randomly drawn copy of locus l.
+ * The copy is drawn first, so the random number sequence is the same as when the
+ * mutation kernels were handed a pointer straight into the allele block. */
+void TGenomeProto::mutate_one(AlleleContainer& seq, unsigned int l)
+{
+	size_t c = _popPtr->rand().Uniform((unsigned int)ploidy);
+	ALLELE a = seq.get(l, c);
+	_locus_tot[l]->mutate_now(&a);
+	seq.set(l, c, a);
+}
+
+void TGenomeProto::mutate_one(AlleleContainer& seq, unsigned int l, double deviate)
+{
+	size_t c = _popPtr->rand().Uniform((unsigned int)ploidy);
+	ALLELE a = seq.get(l, c);
+	_locus_tot[l]->mutate_now(&a, deviate);
+	seq.set(l, c, a);
+}
+
 void TGenomeProto::_mutate_equal_mutation_rate(AlleleContainer& seq)
 {
 	unsigned int NbMut, l;
 	for (NbMut = _popPtr->rand().Poisson(ploidy * _nb_locus_tot * _mut_rate_mean); NbMut != 0; --NbMut) {
 		l = _popPtr->rand().Uniform(_nb_locus_tot);
-		_locus_tot[l]->mutate_now(&seq.allele(l, _popPtr->rand().Uniform((unsigned int)ploidy))); // a mutation has to occur
+		mutate_one(seq, l); // a mutation has to occur
 	}
 }
 
@@ -1212,7 +1291,7 @@ void TGenomeProto::_mutate_equal_mutation_rate_pleiotrophy(AlleleContainer& seq)
 		curLocus = _locus_pleiotropic[l];           // get the starting position
 		end = _locus_pleiotropic[l + 1];            // get the after last position
 		for (; curLocus < end; ++curLocus) {
-			_locus_tot[curLocus]->mutate_now(&seq.allele(curLocus, _popPtr->rand().Uniform((unsigned int)ploidy))); // a mutation has to occur
+			mutate_one(seq, curLocus); // a mutation has to occur
 		}
 	}
 }
@@ -1235,12 +1314,12 @@ void TGenomeProto::_mutate_equal_mutation_rate_pleiotrophy_correl(AlleleContaine
 		if (MNR_params) {    // if the mutations are correlated
 			deviates = _popPtr->rand().get_MNR_deviates_fromParam(MNR_params, endPos - curPos);   // draw the random numbers
 			for (; curPos < endPos; ++curPos) {
-				_locus_tot[curPos]->mutate_now(&seq.allele(curPos, _popPtr->rand().Uniform((unsigned int)ploidy)),*deviates++); // a mutation has to occur
+				mutate_one(seq, curPos, *deviates++); // a mutation has to occur
 			}
 		}
 		else {	// if they are uncorrelated the mutations are independent
 			for (; curPos < endPos; ++curPos) {
-				_locus_tot[curPos]->mutate_now(&seq.allele(curPos, _popPtr->rand().Uniform((unsigned int)ploidy))); // a mutation has to occur
+				mutate_one(seq, curPos); // a mutation has to occur
 			}
 		}
 	}
@@ -1253,7 +1332,13 @@ void TGenomeProto::_mutate_equal_mutation_rate_pleiotrophy_correl(AlleleContaine
 void TGenomeProto::_mutate_unequal_mutation_rate(AlleleContainer& seq)
 {
 	for (unsigned int l = 0; l < _nb_locus_tot; ++l) {
-		_locus_tot[l]->mutate(seq.locus_ptr(l));       // check if a mutation appears here
+		if(AlleleContainer::packed()){                 // a bit has no address: round-trip
+			ALLELE tmp[ploidy];
+			seq.read_locus(l, tmp);
+			_locus_tot[l]->mutate(tmp);                // check if a mutation appears here
+			seq.write_locus(l, tmp);
+		}
+		else _locus_tot[l]->mutate(seq.locus_ptr(l));  // check if a mutation appears here
 	}
 }
 
@@ -1271,7 +1356,7 @@ void TGenomeProto::_mutate_unequal_mutation_rate_pleiotrophy(
 			curLocus = _locus_pleiotropic[l];
 			end = _locus_pleiotropic[l + 1];
 			for (; curLocus < end; ++curLocus) {
-				_locus_tot[curLocus]->mutate_now(&seq.allele(curLocus, _popPtr->rand().Uniform((unsigned int)ploidy))); // a mutation has to occur
+				mutate_one(seq, curLocus); // a mutation has to occur
 			}
 		}
 	}
@@ -1298,12 +1383,12 @@ void TGenomeProto::_mutate_unequal_mutation_rate_pleiotrophy_correl(AlleleContai
 				deviates = _popPtr->rand().get_MNR_deviates_fromParam(MNR_params,
                                                                    endPos - curPos);   // draw the random numbers
 				for (; curPos < endPos; ++curPos) {
-					_locus_tot[curPos]->mutate_now(&seq.allele(curPos, _popPtr->rand().Uniform((unsigned int)ploidy)), *deviates++); // a mutation has to occur
+					mutate_one(seq, curPos, *deviates++); // a mutation has to occur
 				}
 			}
 			else {	// if they are uncorrelated the mutations are independent
 				for (; curPos < endPos; ++curPos) {
-					_locus_tot[curPos]->mutate_now(&seq.allele(curPos, _popPtr->rand().Uniform((unsigned int)ploidy))); // a mutation has to occur
+					mutate_one(seq, curPos); // a mutation has to occur
 				}
 			}
 		}
@@ -1344,7 +1429,12 @@ void TGenomeProto::ini_sequence(AlleleContainer& seq, TPatch* patch)
 	assert(seq.allocated());
     
 	for (unsigned int l = 0; l < _nb_locus_tot; ++l) {
-		_locus_tot[l]->ini_sequence(seq.locus_ptr(l), patch);
+		if(AlleleContainer::packed()){                 // a bit has no address: round-trip
+			ALLELE tmp[ploidy];
+			_locus_tot[l]->ini_sequence(tmp, patch);
+			seq.write_locus(l, tmp);
+		}
+		else _locus_tot[l]->ini_sequence(seq.locus_ptr(l), patch);
 	}
 }
 
@@ -1401,7 +1491,7 @@ void TGenomeProto::clear()
 	}
     
 	// only delete array if recombination factor was used
-	if (_recombine_func_ptr[FEM] != &TGenomeProto::_recombine_normal) {
+	if (_recombine_func_ptr[FEM] != recombine_normal_ptr()) {
 		if (_locus_position_tot_temp[FEM]) {
 			if (_locus_position_tot_temp[FEM]
                 == _locus_position_tot_temp[MAL]) {
@@ -1414,7 +1504,7 @@ void TGenomeProto::clear()
 		}
 	}
     
-	if (_recombine_func_ptr[MAL] != &TGenomeProto::_recombine_normal) {
+	if (_recombine_func_ptr[MAL] != recombine_normal_ptr()) {
 		if (_locus_position_tot_temp[MAL]) {
 			delete[] _locus_position_tot_temp[MAL];
 			_locus_position_tot_temp[MAL] = NULL;

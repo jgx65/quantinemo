@@ -140,18 +140,32 @@ protected:
 	virtual void loadStatServices ( StatServices* loader ) {}
 
 	// inheritance functions
+	// The kernels that walk every locus are templated on the storage access policy
+	// (ByteAccess / PackedAccess) and the matching instantiation is bound to the
+	// function pointer once per run, so the layout is never tested inside the loop.
 	void (TGenomeProto::*_inherit_func_ptr)(TIndividual* mother, TIndividual* father, AlleleContainer& child);
 	void _inherit_linked  (TIndividual* mother, TIndividual* father, AlleleContainer& child);
+	template<class ACCESS>
 	void _inherit_unlinked(TIndividual* mother, TIndividual* father, AlleleContainer& child);
+	template<class ACCESS>
 	void _inherit_mixed   (TIndividual* mother, TIndividual* father, AlleleContainer& child);
     
 	// recombination factor
 	void ini_recombination_factor();
 	bool ini_recombination_factor(string param_name, sex_t SEX);
 	void ini_recombination_qtrait(string param_name, sex_t SEX, double* vec, unsigned int size, TMatrix* m);
-	void (TGenomeProto::*_recombine_func_ptr[2])(TIndividual* parent, AlleleContainer& child, int index);
+	typedef void (TGenomeProto::*recombine_func_t)(TIndividual* parent, AlleleContainer& child, int index);
+	recombine_func_t _recombine_func_ptr[2];
+	template<class ACCESS>
 	void _recombine_normal   (TIndividual* parent, AlleleContainer& child, int index = 0);
+	template<class ACCESS>
 	void _recombine_qtrait   (TIndividual* parent, AlleleContainer& child, int index = 0);
+	// resolve the kernel matching the layout picked for this run
+	recombine_func_t recombine_normal_ptr() const;
+	recombine_func_t recombine_qtrait_ptr() const;
+
+	// decides once per run whether the packed (1 bit/allele) layout may be used
+	void ini_packed_mode();
     
 	typedef double (TGenomeProto::*_func_ptr)(TIndividual* parent, sex_t SEX, unsigned int chrom);
 	_func_ptr* _recombination_chrom_func_ptr[2];
@@ -161,6 +175,11 @@ protected:
     
     
 	// mutation functions
+	// mutate_one() draws the copy to hit and applies the locus' mutation model to it.
+	// It reads the allele into a scratch value and writes it back, because a packed
+	// allele is a single bit and cannot be handed to the kernels as an ALLELE*.
+	void mutate_one(AlleleContainer& seq, unsigned int l);
+	void mutate_one(AlleleContainer& seq, unsigned int l, double deviate);
 	void  (TGenomeProto::*_mutate_func_ptr)(AlleleContainer& seq);
 	void  _mutate_zero_mutation_rate   (AlleleContainer& seq) { }
 	void  _mutate_equal_mutation_rate  (AlleleContainer& seq);

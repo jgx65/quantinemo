@@ -2971,11 +2971,16 @@ TTQuantiSH::remove_private_alleles_compute_alpha(TPatch* crnt_patch, const unsig
     bool stop = false;
     double private_allele_freq = 1.0/2.0/(sizeM+sizeF); 	// allele frequency of a private allele
     
+    // stable backing for the per-individual locus genotypes: `geno` below keeps pointers
+    // to them, and a packed allele cannot be pointed into directly
+    vector<ALLELE> geno_store((size_t)(sizeF+sizeM)*ploidy);
+
     // check each individual if it has two private alleles
     for(i = 0; i < sizeF+sizeM; ++i) {
-        if(i<sizeF) g = crnt_patch->get(FEM, age_pos, i)->getTrait(_SHLinkedTraitIndex)->locus_ptr(l);       // get the female
-        else        g = crnt_patch->get(MAL, age_pos, i-sizeF)->getTrait(_SHLinkedTraitIndex)->locus_ptr(l); // get the male
-        
+        g = &geno_store[(size_t)i*ploidy];
+        if(i<sizeF) crnt_patch->get(FEM, age_pos, i)->getTrait(_SHLinkedTraitIndex)->read_locus(l, g);       // get the female
+        else        crnt_patch->get(MAL, age_pos, i-sizeF)->getTrait(_SHLinkedTraitIndex)->read_locus(l, g); // get the male
+
         assert(allele_freq.find(g[0]) != allele_freq.end() && allele_freq.find(g[1]) != allele_freq.end());
         if(   allele_freq[g[0]] == private_allele_freq   // check if both alleles are private
            && allele_freq[g[1]] == private_allele_freq){

@@ -52,6 +52,7 @@ typedef unsigned char ALLELE;
 
 #include <string>
 #include <assert.h>
+#include <stdint.h>
 
 using namespace std;
 
@@ -93,40 +94,140 @@ inline age_idx age_t2idx(const age_t& AGE){
 
 #define ploidy 2
 
+class AlleleRef;
+
 // ----------------------------------------------------------------------------------------
 // AlleleContainer owns one individual's diploid allele block and is the single place
-// that knows the storage layout (locus l, copy c at _data[l*ploidy + c]). Everything
-// else accesses alleles through allele()/locus_ptr() and stays agnostic of the layout.
+// that knows the storage layout. Two layouts exist and the choice is made once per run:
+//
+//   byte mode   (default)  one ALLELE per allele at _data[l*ploidy + c].
+//                          The general case: supports up to 255 allelic states.
+//   packed mode            one *bit* per allele at bit (l*ploidy + c) of _bits.
+//                          Only valid when every locus is diallelic, which is checked
+//                          once at initialisation (see TGenomeProto::ini_packed_mode).
+//                          Uses 8x less memory for the allele block.
+//
+// The mode is a static because it is a property of the run and not of the individual:
+// keeping it out of the object avoids growing the per-individual footprint, and lets
+// the hot inheritance kernels be selected once (see the templated kernels in tgenome.cpp)
+// instead of branching per allele access.
 class AlleleContainer {
-    ALLELE*      _data;
+    static bool  _packed;      // run-wide layout choice; false = byte mode
+    ALLELE*      _data;        // byte mode storage   (0 in packed mode)
+    uint64_t*    _bits;        // packed mode storage (0 in byte mode)
     unsigned int _nb_locus;
+
+    static size_t nb_words(unsigned int nb_locus){
+        return ((size_t)nb_locus*ploidy + 63) / 64;
+    }
 public:
-    AlleleContainer()                       : _data(0), _nb_locus(0) {}
-    AlleleContainer(const AlleleContainer& o): _data(0), _nb_locus(0) { *this = o; }
-    ~AlleleContainer()                      { delete[] _data; }
+    // -- run-wide layout selection (must be set before any genome is allocated) --
+    static void set_packed(bool p){ _packed = p; }
+    static bool packed()          { return _packed; }
+
+    AlleleContainer()                        : _data(0), _bits(0), _nb_locus(0) {}
+    AlleleContainer(const AlleleContainer& o): _data(0), _bits(0), _nb_locus(0) { *this = o; }
+    ~AlleleContainer()                       { delete[] _data; delete[] _bits; }
     AlleleContainer& operator=(const AlleleContainer& o){
         if(this != &o){
             if(_nb_locus != o._nb_locus){
-                delete[] _data;
-                _nb_locus = o._nb_locus;
-                _data = _nb_locus ? new ALLELE[(size_t)_nb_locus*ploidy] : 0;
+                clear();
+                allocate(o._nb_locus);
             }
-            for(size_t i = 0, n = (size_t)_nb_locus*ploidy; i < n; ++i) _data[i] = o._data[i];
+            if(_packed){
+                for(size_t w = 0, n = nb_words(_nb_locus); w < n; ++w) _bits[w] = o._bits[w];
+            }
+            else {
+                for(size_t i = 0, n = (size_t)_nb_locus*ploidy; i < n; ++i) _data[i] = o._data[i];
+            }
         }
         return *this;
     }
-    void allocate(unsigned int nb_locus){ delete[] _data; _nb_locus = nb_locus;
-                                          _data = new ALLELE[(size_t)nb_locus*ploidy]; }
-    void clear()               { delete[] _data; _data = 0; _nb_locus = 0; }
-    bool         allocated() const { return _data != 0; }
+    void allocate(unsigned int nb_locus){
+        delete[] _data; _data = 0;
+        delete[] _bits; _bits = 0;
+        _nb_locus = nb_locus;
+        if(_packed) _bits = new uint64_t[nb_words(nb_locus)]();
+        else        _data = new ALLELE[(size_t)nb_locus*ploidy];
+    }
+    void clear(){ delete[] _data; _data = 0; delete[] _bits; _bits = 0; _nb_locus = 0; }
+    bool         allocated() const { return _packed ? _bits != 0 : _data != 0; }
     unsigned int nb_locus()  const { return _nb_locus; }
 
-    // access by genome-locus index; write and read overloads
-    inline ALLELE&       allele(size_t locus, size_t copy)       { return _data[locus*ploidy + copy]; }
-    inline const ALLELE& allele(size_t locus, size_t copy) const { return _data[locus*ploidy + copy]; }
-    // pointer to a locus' `ploidy` alleles (for per-locus init/mutation kernels)
-    inline ALLELE*       locus_ptr(size_t locus)       { return _data + locus*ploidy; }
-    inline const ALLELE* locus_ptr(size_t locus) const { return _data + locus*ploidy; }
+    // -- layout-agnostic value access (used everywhere outside the hot kernels) --
+    inline ALLELE get(size_t locus, size_t copy) const {
+        size_t i = locus*ploidy + copy;
+        return _packed ? (ALLELE)((_bits[i>>6] >> (i&63)) & 1ULL) : _data[i];
+    }
+    inline void set(size_t locus, size_t copy, ALLELE v){
+        size_t i = locus*ploidy + copy;
+        if(_packed){
+            uint64_t m = 1ULL << (i&63);
+            if(v) _bits[i>>6] |=  m;
+            else  _bits[i>>6] &= ~m;
+        }
+        else _data[i] = v;
+    }
+
+    // allele() keeps the original `seq.allele(l,c)` read/write syntax working by
+    // returning a proxy; see AlleleRef below.
+    inline AlleleRef allele(size_t locus, size_t copy);
+    inline ALLELE    allele(size_t locus, size_t copy) const { return get(locus, copy); }
+
+    // -- direct, unbranched accessors for the mode-specialised hot kernels --
+    inline ALLELE byte_at(size_t i) const        { return _data[i]; }
+    inline void   set_byte_at(size_t i, ALLELE v){ _data[i] = v; }
+    inline ALLELE bit_at(size_t i) const         { return (ALLELE)((_bits[i>>6] >> (i&63)) & 1ULL); }
+    inline void   set_bit_at(size_t i, ALLELE v){
+        uint64_t m = 1ULL << (i&63);
+        if(v) _bits[i>>6] |=  m;
+        else  _bits[i>>6] &= ~m;
+    }
+
+    // -- per-locus kernels (mutation / initialisation) operate on a small scratch copy --
+    // In byte mode locus_ptr() still hands out the real storage so those kernels work in
+    // place exactly as before; in packed mode callers must round-trip through
+    // read_locus()/write_locus() because a bit has no address.
+    inline ALLELE*       locus_ptr(size_t locus)       { assert(!_packed); return _data + locus*ploidy; }
+    inline const ALLELE* locus_ptr(size_t locus) const { assert(!_packed); return _data + locus*ploidy; }
+    inline void read_locus (size_t locus, ALLELE* out) const {
+        for(size_t c = 0; c < ploidy; ++c) out[c] = get(locus, c);
+    }
+    inline void write_locus(size_t locus, const ALLELE* in){
+        for(size_t c = 0; c < ploidy; ++c) set(locus, c, in[c]);
+    }
+};
+
+// Proxy standing in for an ALLELE lvalue. A packed allele is a single bit and therefore
+// has no address, so allele() cannot return ALLELE&; this restores assignment and
+// implicit read at the call sites that used the reference.
+class AlleleRef {
+    AlleleContainer* _c;
+    size_t           _locus, _copy;
+public:
+    AlleleRef(AlleleContainer* c, size_t l, size_t cp): _c(c), _locus(l), _copy(cp) {}
+    operator ALLELE() const { return _c->get(_locus, _copy); }
+    AlleleRef& operator=(ALLELE v)          { _c->set(_locus, _copy, v); return *this; }
+    AlleleRef& operator=(const AlleleRef& o){ _c->set(_locus, _copy, (ALLELE)o); return *this; }
+    AlleleRef& operator++()                 { _c->set(_locus, _copy,
+                                                      (ALLELE)(_c->get(_locus, _copy) + 1)); return *this; }
+};
+
+inline AlleleRef AlleleContainer::allele(size_t locus, size_t copy){
+    return AlleleRef(this, locus, copy);
+}
+
+// Access policies for the hot inheritance/recombination kernels. Those kernels are
+// templated on one of these and the right instantiation is bound once per run to the
+// existing _inherit_func_ptr/_recombine_func_ptr, so the inner loop never tests the
+// layout: the byte instantiation compiles to exactly the code that ran before.
+struct ByteAccess {
+    static inline ALLELE get(const AlleleContainer& c, size_t i)        { return c.byte_at(i); }
+    static inline void   set(AlleleContainer& c, size_t i, ALLELE v)    { c.set_byte_at(i, v); }
+};
+struct PackedAccess {
+    static inline ALLELE get(const AlleleContainer& c, size_t i)        { return c.bit_at(i); }
+    static inline void   set(AlleleContainer& c, size_t i, ALLELE v)    { c.set_bit_at(i, v); }
 };
 
 
