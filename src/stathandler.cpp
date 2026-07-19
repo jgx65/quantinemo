@@ -680,17 +680,16 @@ StatHandler<SH>::~StatHandler()
     ARRAY::delete_2D(_het1_locus, NB_AGE_CLASSES);
     ARRAY::delete_2D(_fst_bn_locus, NB_AGE_CLASSES);
     
-    if(_popPtr){
-        if(!get_current_nbSamplePatch()) _popPtr->_current_nbSamplePatch = get_last_nbSamplePatch(); // since the stats were not made at the last generation
-        ARRAY::delete_3D(_fst_matrix_wc, NB_AGE_CLASSES, get_current_nbSamplePatch());
-        ARRAY::delete_3D(_fst_matrix, NB_AGE_CLASSES, get_current_nbSamplePatch());
-        ARRAY::delete_3D(_coa_matrix, NB_AGE_CLASSES, get_current_nbSamplePatch());
-        ARRAY::delete_3D(_alleleFreq_local, NB_AGE_CLASSES, get_current_nbSamplePatch());
-        ARRAY::delete_2D(_alleleFreq_global, NB_AGE_CLASSES);
-        ARRAY::delete_3D(_locusFreq_local, NB_AGE_CLASSES, get_current_nbSamplePatch());
-        ARRAY::delete_2D(_locusFreq_global, NB_AGE_CLASSES);
-    }
-    
+    // Free each per-age matrix with the row count it was allocated with (see the *_rows members).
+    // Nothing here may touch _popPtr: the metapop is destroyed before its stat handlers.
+    ARRAY::delete_3D(_fst_matrix_wc, NB_AGE_CLASSES, _fst_matrix_wc_rows);
+    ARRAY::delete_3D(_fst_matrix, NB_AGE_CLASSES, _fst_matrix_rows);
+    ARRAY::delete_3D(_coa_matrix, NB_AGE_CLASSES, _coa_matrix_rows);
+    ARRAY::delete_3D(_alleleFreq_local, NB_AGE_CLASSES, _alleleFreq_local_rows);
+    ARRAY::delete_2D(_alleleFreq_global, NB_AGE_CLASSES);
+    ARRAY::delete_3D(_locusFreq_local, NB_AGE_CLASSES, _locusFreq_local_rows);
+    ARRAY::delete_2D(_locusFreq_global, NB_AGE_CLASSES);
+
     for (REC_IT pos = _recorders.begin(); pos != _recorders.end(); ++pos) {
         delete *pos;
     }
@@ -932,6 +931,7 @@ StatHandler<SH>::set_alleleFreq(const age_idx & AGE)
     if (!_alleleFreq_global[AGE]) { // first time this age class
         ARRAY::create_1D<map<ALLELE, double> >(_alleleFreq_global[AGE], _nb_locus); // [age][locus][allele]
         ARRAY::create_2D<map<ALLELE, double> >(_alleleFreq_local[AGE],get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
+        _alleleFreq_local_rows[AGE] = get_current_nbSamplePatch();
     }
     else { // reset
         // global freqs
@@ -941,8 +941,9 @@ StatHandler<SH>::set_alleleFreq(const age_idx & AGE)
         
         // local freqs
         if (get_current_nbSamplePatch() != get_last_nbSamplePatch()) { // number of sampled and populated patches change over time
-            ARRAY::delete_2D<map<ALLELE, double> >(_alleleFreq_local[AGE],get_last_nbSamplePatch());
+            ARRAY::delete_2D<map<ALLELE, double> >(_alleleFreq_local[AGE],_alleleFreq_local_rows[AGE]);
             ARRAY::create_2D<map<ALLELE, double> >(_alleleFreq_local[AGE],get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
+            _alleleFreq_local_rows[AGE] = get_current_nbSamplePatch();
         }
         else { // the number of sampled patches has not changed
             for (p = 0; p < get_current_nbSamplePatch(); ++p) {
@@ -1002,6 +1003,7 @@ StatHandler<SH>::set_locusFreq(const age_idx & AGE)
     if (!_locusFreq_global[AGE]) { // first time this age class
         ARRAY::create_1D<map<ALLELE, map<ALLELE, double> > >(_locusFreq_global[AGE], _nb_locus); // [age][locus][allele]
         ARRAY::create_2D<map<ALLELE, map<ALLELE, double> > >(_locusFreq_local[AGE],	get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
+        _locusFreq_local_rows[AGE] = get_current_nbSamplePatch();
     }
     else { // reset
         // global freqs
@@ -1011,8 +1013,9 @@ StatHandler<SH>::set_locusFreq(const age_idx & AGE)
         
         // local freqs
         if (get_current_nbSamplePatch() != get_last_nbSamplePatch()) { // number of sampled and populated patches change over time
-            ARRAY::delete_2D<map<ALLELE, map<ALLELE, double> > >(_locusFreq_local[AGE],get_last_nbSamplePatch());
+            ARRAY::delete_2D<map<ALLELE, map<ALLELE, double> > >(_locusFreq_local[AGE],_locusFreq_local_rows[AGE]);
             ARRAY::create_2D<map<ALLELE, map<ALLELE, double> > >(_locusFreq_local[AGE],get_current_nbSamplePatch(), _nb_locus); // [age][sampleID][locus][allele]
+            _locusFreq_local_rows[AGE] = get_current_nbSamplePatch();
         }
         else { // the number of sampled patches has not changed
             for (p = 0; p < get_current_nbSamplePatch(); ++p) {
@@ -1568,11 +1571,12 @@ template<class SH>void StatHandler<SH>::setFstat_Nei_Chesser_perPatchPair(const 
     if (!_fst_matrix) ARRAY::create_1D<double**>(_fst_matrix, NB_AGE_CLASSES, NULL); // first time
     if (!_fst_matrix[AGE]) 	ARRAY::create_2D(_fst_matrix[AGE], get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
     else if (get_current_nbSamplePatch() != get_last_nbSamplePatch()) { // number of sampeld patches may change over time
-        ARRAY::delete_2D(_fst_matrix[AGE], get_last_nbSamplePatch());
+        ARRAY::delete_2D(_fst_matrix[AGE], _fst_matrix_rows[AGE]);
         ARRAY::create_2D(_fst_matrix[AGE], get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
     }
     else ARRAY::reset_2D(_fst_matrix[AGE], get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
-    
+    _fst_matrix_rows[AGE] = get_current_nbSamplePatch();
+
     double * hs_pop = new double[get_current_nbSamplePatch()];
     double * ho_pop = new double[get_current_nbSamplePatch()];
     vector<TPatch*>::iterator curPop1, curPop2, endPop = get_vSamplePatch().end();
@@ -2643,11 +2647,12 @@ StatHandler<SH>::setFstat_Weir_Cockerham_perPatchPair(const age_idx & AGE)
     // first time
     if (!_fst_matrix_wc[AGE]) ARRAY::create_2D(_fst_matrix_wc[AGE], get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
     else if (get_current_nbSamplePatch() != get_last_nbSamplePatch()) {
-        ARRAY::delete_2D(_fst_matrix_wc[AGE], get_last_nbSamplePatch());
+        ARRAY::delete_2D(_fst_matrix_wc[AGE], _fst_matrix_wc_rows[AGE]);
         ARRAY::create_2D(_fst_matrix_wc[AGE], get_current_nbSamplePatch(),	get_current_nbSamplePatch(), (double)my_NAN);
     }
     else ARRAY::reset_2D(_fst_matrix_wc[AGE], get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
-    
+    _fst_matrix_wc_rows[AGE] = get_current_nbSamplePatch();
+
     unsigned int* pop_sizes = new unsigned int[get_current_nbSamplePatch()];
     map<ALLELE, double> **ho_patch_allele = new map<ALLELE, double> *[get_current_nbSamplePatch()]; // ho_patch_allele[p][l][a]
     unsigned int tot_size, l, i, j, cur_pop_sizes[2];
@@ -3106,11 +3111,15 @@ StatHandler<SH>::setCoaMatrixTheta(const age_idx & AGE)
     
     // create the matrix if not present
     if(!_coa_matrix) ARRAY::create_1D<double**>(_coa_matrix, NB_AGE_CLASSES, NULL); // first time
-    if(!_coa_matrix[AGE]) 	ARRAY::create_2D(_coa_matrix[AGE], get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
+    if(!_coa_matrix[AGE]) {
+        ARRAY::create_2D(_coa_matrix[AGE], get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
+        _coa_matrix_rows[AGE] = get_current_nbSamplePatch();
+    }
     else if(get_last_nbSamplePatch() != get_current_nbSamplePatch() && !already_computed(_computed[17], AGE)) { // the number of sampled patches may change over time
-        ARRAY::delete_2D(_coa_matrix[AGE], get_last_nbSamplePatch());
+        ARRAY::delete_2D(_coa_matrix[AGE], _coa_matrix_rows[AGE]);
         ARRAY::create_2D(_coa_matrix[AGE], get_current_nbSamplePatch(),
                          get_current_nbSamplePatch(), (double)my_NAN);
+        _coa_matrix_rows[AGE] = get_current_nbSamplePatch();
     }
     else { // reset
         for (i = 0; i < get_current_nbSamplePatch(); ++i) {
@@ -3181,14 +3190,17 @@ template<class SH>void StatHandler<SH>::setCoaMatrixAlpha(const age_idx & AGE) {
     // create the matrix if not present
     if (!_coa_matrix)
         ARRAY::create_1D<double**>(_coa_matrix, NB_AGE_CLASSES, NULL); // first time
-    if (!_coa_matrix[AGE])
+    if (!_coa_matrix[AGE]) {
         ARRAY::create_2D(_coa_matrix[AGE], get_current_nbSamplePatch(),
                          get_current_nbSamplePatch(), (double)my_NAN);
+        _coa_matrix_rows[AGE] = get_current_nbSamplePatch();
+    }
     else if (get_last_nbSamplePatch() != get_current_nbSamplePatch() && !already_computed
              (_computed[16], AGE)) { // the number of sampled patches may change over time
-        ARRAY::delete_2D(_coa_matrix[AGE], get_last_nbSamplePatch());
+        ARRAY::delete_2D(_coa_matrix[AGE], _coa_matrix_rows[AGE]);
         ARRAY::create_2D(_coa_matrix[AGE], get_current_nbSamplePatch(),
                          get_current_nbSamplePatch(), (double)my_NAN);
+        _coa_matrix_rows[AGE] = get_current_nbSamplePatch();
     }
     else { // just reset upper half (without diagonal)
         for (i = 0; i < get_current_nbSamplePatch(); ++i) {

@@ -314,13 +314,19 @@ private:
 	double** _qst_matrix;        // Qst matrix for pairwise values
 	double** _qstF_matrix;       // Qst matrix for pairwise values corrected for inbreeding
 
+	// Rows each matrix above was allocated with; the number of sampled patches may change between
+	// generations, and the destructor must not ask the metapop (it is destroyed first).
+	unsigned int _qst_matrix_rows;
+	unsigned int _qstF_matrix_rows;
+
 //	double Theta_FF, Theta_MM, Theta_FM;
 //	double _mean_theta, _mean_alpha;
 
 public:
 
 	TTQuantiSH (TTraitQuantiProto* TT) :  _varA(0), _varA2(0),/* _h2(0),*/ _meanG(0), _varG(0),
-	_meanP(0), _varP(0), _meanW(0), _varW(0), _qst_matrix(0), _qstF_matrix(0)
+	_meanP(0), _varP(0), _meanW(0), _varW(0), _qst_matrix(0), _qstF_matrix(0),
+	_qst_matrix_rows(0), _qstF_matrix_rows(0)
 {
 		set(TT);
 
@@ -343,9 +349,10 @@ public:
 		ARRAY::delete_2D(_varP, 3);
 		ARRAY::delete_2D(_meanW, 3);
 		ARRAY::delete_2D(_varW, 3);
-        assert(_popPtr);
-		ARRAY::delete_2D(_qst_matrix, get_current_nbSamplePatch());
-		ARRAY::delete_2D(_qstF_matrix, get_current_nbSamplePatch());
+		// Free with the row counts recorded at allocation: the metapop is already destroyed here,
+		// so _popPtr dangles and must not be dereferenced.
+		ARRAY::delete_2D(_qst_matrix, _qst_matrix_rows);
+		ARRAY::delete_2D(_qstF_matrix, _qstF_matrix_rows);
 
 	}
 
