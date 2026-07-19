@@ -212,7 +212,17 @@ protected:
     _fst[NB_AGE_CLASSES], _fis[NB_AGE_CLASSES], _fit[NB_AGE_CLASSES];
 	double _fst_wc[NB_AGE_CLASSES], _fis_wc[NB_AGE_CLASSES], _fit_wc[NB_AGE_CLASSES];
 	double*** _fst_matrix_wc, ***_fst_matrix;
-    
+
+	// Number of rows each per-age matrix above was allocated with. The number of sampled patches
+	// may change between generations, so the allocation-time count has to be kept around to free
+	// the right number of rows. It also keeps ~StatHandler() from having to ask the metapop, which
+	// may already be destroyed by the time the stat handlers are torn down.
+	unsigned int _alleleFreq_local_rows[NB_AGE_CLASSES];
+	unsigned int _locusFreq_local_rows[NB_AGE_CLASSES];
+	unsigned int _coa_matrix_rows[NB_AGE_CLASSES];
+	unsigned int _fst_matrix_rows[NB_AGE_CLASSES];
+	unsigned int _fst_matrix_wc_rows[NB_AGE_CLASSES];
+
 	double **_hsnei_locus, **_htnei_locus, **_fst_locus, **_fis_locus, **_fit_locus,  // for Nei and Chesser
     **_ho_locus, **_hs_locus, **_ht_locus;
     
@@ -234,7 +244,15 @@ public:
     _hsnei_locus(0), _htnei_locus(0), _fst_locus(0), _fis_locus(0), _fit_locus(0),
     _ho_locus(0), _hs_locus(0), _ht_locus(0), _fst_WC_locus(0), _fis_WC_locus(0), _fit_WC_locus(0),
     _het0_locus(0), _het1_locus(0), _fst_bn_locus(0){
-        
+
+		for(unsigned int a=0; a<NB_AGE_CLASSES; ++a){
+			_alleleFreq_local_rows[a] = 0;
+			_locusFreq_local_rows[a]  = 0;
+			_coa_matrix_rows[a]       = 0;
+			_fst_matrix_rows[a]       = 0;
+			_fst_matrix_wc_rows[a]    = 0;
+		}
+
 		_computed_size = 35;
 		_computed = new unsigned int*[_computed_size];
 		for(unsigned int i=0; i<_computed_size; ++i){

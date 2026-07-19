@@ -3496,11 +3496,12 @@ TTQuantiSH::setQst_perPatchPair(const age_idx& AGE)
 {
     if(!_qst_matrix) ARRAY::create_2D(_qst_matrix, get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
     else if(get_current_nbSamplePatch()!=get_last_nbSamplePatch()){ // number of sampled patches may change over time
-        ARRAY::delete_2D(_qst_matrix, get_last_nbSamplePatch());
+        ARRAY::delete_2D(_qst_matrix, _qst_matrix_rows);
         ARRAY::create_2D(_qst_matrix, get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
     }
     else ARRAY::reset_2D(_qst_matrix, get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
-    
+    _qst_matrix_rows = get_current_nbSamplePatch();
+
     setVar_Va(AGE);
     setMeanAndVar_Vp();
     
@@ -3571,11 +3572,12 @@ TTQuantiSH::setQstF_perPatchPair(const age_idx& AGE)
 {
     if(!_qstF_matrix) ARRAY::create_2D(_qstF_matrix, get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
     else if(get_current_nbSamplePatch()!=get_last_nbSamplePatch()){ // number of sampled patches may change over time
-        ARRAY::delete_2D(_qstF_matrix, get_current_nbSamplePatch());
+        ARRAY::delete_2D(_qstF_matrix, _qstF_matrix_rows);
         ARRAY::create_2D(_qstF_matrix, get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
     }
     else ARRAY::reset_2D(_qstF_matrix, get_current_nbSamplePatch(), get_current_nbSamplePatch(), (double)my_NAN);
-    
+    _qstF_matrix_rows = get_current_nbSamplePatch();
+
     setVar_Va(AGE);
     setMeanAndVar_Vp();
     
