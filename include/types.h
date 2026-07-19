@@ -178,6 +178,12 @@ public:
     inline ALLELE byte_at(size_t i) const        { return _data[i]; }
     inline void   set_byte_at(size_t i, ALLELE v){ _data[i] = v; }
     inline ALLELE bit_at(size_t i) const         { return (ALLELE)((_bits[i>>6] >> (i&63)) & 1ULL); }
+    // merge a whole 64-bit word in one go: `acc` holds the new bits, `mask` marks the
+    // positions this write owns. Lets a kernel build a word in a register instead of
+    // doing one read-modify-write per bit on the same word.
+    inline void   merge_word(size_t w, uint64_t mask, uint64_t acc){
+        _bits[w] = (_bits[w] & ~mask) | acc;
+    }
     inline void   set_bit_at(size_t i, ALLELE v){
         uint64_t m = 1ULL << (i&63);
         if(v) _bits[i>>6] |=  m;

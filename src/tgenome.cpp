@@ -69,7 +69,7 @@ void TGenomeProto::ini_packed_mode()
 // ----------------------------------------------------------------------------------------
 TGenomeProto::recombine_func_t TGenomeProto::recombine_normal_ptr() const
 {
-	return AlleleContainer::packed() ? &TGenomeProto::_recombine_normal<PackedAccess>
+	return AlleleContainer::packed() ? &TGenomeProto::_recombine_normal_packed
 	                                 : &TGenomeProto::_recombine_normal<ByteAccess>;
 }
 
@@ -703,12 +703,12 @@ void TGenomeProto::ini_genetic_map()
     // set the inheritance function (the kernel matching the chosen layout)
     if(_nb_locus_linked){
         if (_nb_locus_unlinked) _inherit_func_ptr = AlleleContainer::packed()
-                                    ? &TGenomeProto::_inherit_mixed<PackedAccess>
+                                    ? &TGenomeProto::_inherit_mixed_packed
                                     : &TGenomeProto::_inherit_mixed<ByteAccess>;
         else _inherit_func_ptr = &TGenomeProto::_inherit_linked;
     }
     else _inherit_func_ptr = AlleleContainer::packed()
-                                    ? &TGenomeProto::_inherit_unlinked<PackedAccess>
+                                    ? &TGenomeProto::_inherit_unlinked_packed
                                     : &TGenomeProto::_inherit_unlinked<ByteAccess>;
 
 	// dump the genome to file if requested
@@ -840,6 +840,43 @@ void TGenomeProto::_inherit_unlinked(TIndividual* mother, TIndividual* father, A
 }
 
 // ----------------------------------------------------------------------------------------
+// _inherit_unlinked_packed
+// ----------------------------------------------------------------------------------------
+/** packed-layout variant of _inherit_unlinked.
+ * Same results and same random number sequence; the difference is that the two bits of a
+ * locus always sit in the same 64-bit word, so a run of 32 loci is accumulated in a
+ * register and merged into the word once instead of 64 read-modify-writes on it.
+ */
+void TGenomeProto::_inherit_unlinked_packed(TIndividual* mother, TIndividual* father,
+                                            AlleleContainer& child)
+{
+	const AlleleContainer& mother_seq = mother->genome.alleles();
+	const AlleleContainer& father_seq = father->genome.alleles();
+	uint64_t acc = 0, msk = 0;
+	size_t   cur_w = (size_t)-1;
+	for (unsigned int l = _nb_locus_linked; l < _nb_locus_tot; ++l) {
+		size_t i = (size_t)l*ploidy;          // even, so both copies share a word
+		size_t w = i >> 6;
+		if (w != cur_w) {
+			if (cur_w != (size_t)-1) child.merge_word(cur_w, msk, acc);
+			acc = 0; msk = 0; cur_w = w;
+		}
+		size_t b0 = i & 63, b1 = (i+1) & 63;
+		if (mother_seq.bit_at(i + _popPtr->rand().Bool())) acc |= 1ULL << b0;
+		if (father_seq.bit_at(i + _popPtr->rand().Bool())) acc |= 1ULL << b1;
+		msk |= (1ULL << b0) | (1ULL << b1);
+	}
+	if (cur_w != (size_t)-1) child.merge_word(cur_w, msk, acc);
+}
+
+void TGenomeProto::_inherit_mixed_packed(TIndividual* mother, TIndividual* father,
+                                         AlleleContainer& child)
+{
+	_inherit_linked(mother, father, child);
+	_inherit_unlinked_packed(mother, father, child);
+}
+
+// ----------------------------------------------------------------------------------------
 // _inherit_linked
 // ----------------------------------------------------------------------------------------
 /** inheritance with just linked loci */
@@ -899,6 +936,55 @@ void TGenomeProto::_recombine_normal(TIndividual* parent, AlleleContainer& child
 			            ACCESS::get(parent_seq, (size_t)l*ploidy + curChrom)); // set the gamete for the locus
 		}
 	}
+}
+
+// ----------------------------------------------------------------------------------------
+// _recombine_normal_packed
+// ----------------------------------------------------------------------------------------
+/** packed-layout variant of _recombine_normal.
+ * This call owns only every other bit of the child (stride ploidy at offset `index`), so
+ * 32 loci share one 64-bit word. Writing them individually is a read-modify-write chain
+ * on that word; here the gamete is built in a register and merged once per word. OWN
+ * marks the bits this call owns so the other parent's copies are left untouched.
+ * Random number usage is identical to the generic kernel.
+ */
+void TGenomeProto::_recombine_normal_packed(TIndividual* parent, AlleleContainer& child, int index)
+{
+	const AlleleContainer& parent_seq = parent->genome.alleles();
+	sex_t SEX = parent->getSex();
+
+	// draw the recombination positions (identical draws to the generic kernel)
+	vector<double> vecRecombs;
+	for (int i = _popPtr->rand().Poisson(_chromosomeLength_temp[SEX] / 100); i > 0; --i) {
+		vecRecombs.push_back(_chromosomeLength_temp[SEX] * _popPtr->rand().Uniform());
+	}
+	sort(vecRecombs.begin(), vecRecombs.end());
+	vecRecombs.push_back(_chromosomeLength_temp[SEX]);
+
+	// every ploidy-th bit starting at `index`
+	const uint64_t OWN = 0x5555555555555555ULL << index;
+	uint64_t acc = 0;
+	size_t   cur_w = (size_t)-1;
+
+	unsigned int c, l, curChrom;
+	vector<double>::iterator nextRecomb = vecRecombs.begin();
+	for (l = 0, c = 0; c < _nb_chromosome; ++c) {
+		curChrom = (unsigned int) _popPtr->rand().Bool();
+		for (; l < _nb_locus_per_chromosome[c]; ++l) {
+			while (_locus_position_tot_temp[SEX][l] > *nextRecomb) {
+				curChrom = !curChrom;
+				++nextRecomb;
+			}
+			size_t bit = (size_t)l*ploidy + index;
+			size_t w   = bit >> 6;
+			if (w != cur_w) {
+				if (cur_w != (size_t)-1) child.merge_word(cur_w, OWN, acc);
+				acc = 0; cur_w = w;
+			}
+			if (parent_seq.bit_at((size_t)l*ploidy + curChrom)) acc |= 1ULL << (bit & 63);
+		}
+	}
+	if (cur_w != (size_t)-1) child.merge_word(cur_w, OWN, acc);
 }
 
 // ----------------------------------------------------------------------------------------

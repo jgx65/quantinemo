@@ -149,6 +149,10 @@ protected:
 	void _inherit_unlinked(TIndividual* mother, TIndividual* father, AlleleContainer& child);
 	template<class ACCESS>
 	void _inherit_mixed   (TIndividual* mother, TIndividual* father, AlleleContainer& child);
+	// packed-layout variants: identical results and identical random number usage,
+	// but they accumulate a whole 64-bit word before writing it (see merge_word)
+	void _inherit_unlinked_packed(TIndividual* mother, TIndividual* father, AlleleContainer& child);
+	void _inherit_mixed_packed   (TIndividual* mother, TIndividual* father, AlleleContainer& child);
     
 	// recombination factor
 	void ini_recombination_factor();
@@ -160,6 +164,7 @@ protected:
 	void _recombine_normal   (TIndividual* parent, AlleleContainer& child, int index = 0);
 	template<class ACCESS>
 	void _recombine_qtrait   (TIndividual* parent, AlleleContainer& child, int index = 0);
+	void _recombine_normal_packed(TIndividual* parent, AlleleContainer& child, int index = 0);
 	// resolve the kernel matching the layout picked for this run
 	recombine_func_t recombine_normal_ptr() const;
 	recombine_func_t recombine_qtrait_ptr() const;
