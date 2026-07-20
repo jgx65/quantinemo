@@ -17,12 +17,6 @@
  *       header. No keys, no repeated identity.
  *   A reader must consume the header before it can interpret any frame.
  *
- *   schema_version 3 (decision 12) REMOVED the per-frame allele_freqs payload
- *   [locus][patch][allele]: it dominated stream/storage cost yet had no consumer.
- *   Marker/allele-level output is now export-only (request_full_genotypes +
- *   export_formats -> a verbatim FSTAT/Arlequin/PLINK/NEXUS file). The header
- *   locus table (type + n_alleles) is retained as static run layout.
- *
  *   STATS (the metapop-wide scalar layer-1 estimators) are NO LONGER a hardcoded
  *   five. We enumerate the stat recorders the run actually requested (parsed from
  *   the .ini `stat` tokens into StatRecorder objects) and, for each that is a
@@ -225,8 +219,7 @@ void ej_emit_header(TMetapop* pop)
         << ",\"patches\":" << pop->get_nbPatch();
 
     // loci: ntrl first then quanti; each declares its (declared) allele count.
-    // Retained as static locus layout (schema_version 3 dropped frame allele_freqs
-    // but keeps this table); it is the locus ordering referenced by genotype exports.
+    // This is the locus ordering referenced by genotype exports.
     rec << ",\"loci\":[";
     {
         bool first = true;
@@ -277,12 +270,6 @@ void ej_emit_frame(TMetapop* pop)
     std::ostringstream rec;
     rec << "{\"schema_version\":\"3\",\"kind\":\"frame\",\"generation\":"
         << pop->getCurrentGeneration();
-
-    // NOTE (schema_version 3, decision 12): the per-frame allele_freqs payload
-    // [locus][patch][allele] was REMOVED. It dominated stream/storage cost yet had
-    // no consumer; marker/allele-level output is now export-only (request_full_
-    // genotypes + export_formats -> a verbatim FSTAT/Arlequin/PLINK/NEXUS file in
-    // full_genotypes). Frames now carry only phenotype moments and scalar stats.
 
     // ---- phenotype[trait][patch][mean,var] (omitted when no quanti traits) ----
     {
