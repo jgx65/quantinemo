@@ -7,15 +7,21 @@
  *   pulls in. That guarantees the concrete TTNeutralSH / TTQuantiSH / MetapopSH
  *   instantiations are visible.
  *
- *   Output is a HEADER + FRAMES stream (schema_version 2):
+ *   Output is a HEADER + FRAMES stream (schema_version 3):
  *     - ONE `kind:"header"` record is emitted first, declaring the static layout
  *       of the run (patch count, the locus table in canonical order with the
  *       per-locus allele counts, the trait count, and which layer-1 estimators
  *       this run computes).
  *     - then ONE compact `kind:"frame"` record per logged generation, carrying
- *       only positional numeric payloads (allele_freqs, phenotype, stats) read
- *       against the header. No keys, no repeated identity.
+ *       only positional numeric payloads (phenotype, stats) read against the
+ *       header. No keys, no repeated identity.
  *   A reader must consume the header before it can interpret any frame.
+ *
+ *   schema_version 3 (decision 12) REMOVED the per-frame allele_freqs payload
+ *   [locus][patch][allele]: it dominated stream/storage cost yet had no consumer.
+ *   Marker/allele-level output is now export-only (request_full_genotypes +
+ *   export_formats -> a verbatim FSTAT/Arlequin/PLINK/NEXUS file). The header
+ *   locus table (type + n_alleles) is retained as static run layout.
  *
  *   STATS (the metapop-wide scalar layer-1 estimators) are NO LONGER a hardcoded
  *   five. We enumerate the stat recorders the run actually requested (parsed from
@@ -214,12 +220,13 @@ std::vector<EjScalarStat> ej_collect_scalar_stats(TMetapop* pop)
 void ej_emit_header(TMetapop* pop)
 {
     std::ostringstream rec;
-    rec << "{\"schema_version\":\"2\",\"kind\":\"header\""
+    rec << "{\"schema_version\":\"3\",\"kind\":\"header\""
         << ",\"replicate\":1"
         << ",\"patches\":" << pop->get_nbPatch();
 
-    // loci: ntrl first then quanti; each declares its (declared) allele count,
-    // which is the RAGGED inner length of that locus's frame allele_freqs.
+    // loci: ntrl first then quanti; each declares its (declared) allele count.
+    // Retained as static locus layout (schema_version 3 dropped frame allele_freqs
+    // but keeps this table); it is the locus ordering referenced by genotype exports.
     rec << ",\"loci\":[";
     {
         bool first = true;
@@ -268,61 +275,14 @@ void ej_emit_frame(TMetapop* pop)
     unsigned int nbProto = pop->getTraitPrototypeSize();
 
     std::ostringstream rec;
-    rec << "{\"schema_version\":\"2\",\"kind\":\"frame\",\"generation\":"
+    rec << "{\"schema_version\":\"3\",\"kind\":\"frame\",\"generation\":"
         << pop->getCurrentGeneration();
 
-    // ---- allele_freqs[locus][patch][allele] (ntrl loci first, then quanti) ----
-    rec << ",\"allele_freqs\":[";
-    {
-        bool firstLocus = true;
-        for (int pass = 0; pass < 2; ++pass) {
-            for (unsigned int t = 0; t < nbProto; ++t) {
-                TTraitProto& proto = pop->getTraitPrototype(t);
-                if (proto.get_type() != EJ_LOCUS_ORDER[pass]) continue;
-                unsigned int absIdx  = proto.get_absolute_index();
-                unsigned int nbLocus = proto.get_nb_locus();
-
-                for (unsigned int l = 0; l < nbLocus; ++l) {
-                    unsigned int nAll = proto.get_nb_allele(l);
-                    if (!firstLocus) rec << ",";
-                    firstLocus = false;
-
-                    rec << "[";                      // patch axis
-                    for (unsigned int p = 0; p < nbPatch; ++p) {
-                        TPatch* patch = pop->get_vPatch(p);
-                        std::vector<unsigned int> counts(nAll, 0);
-                        unsigned int total = 0;
-
-                        for (int s = 0; s < 2; ++s) {
-                            sex_t SEX = SEXES[s];
-                            unsigned int n = patch->size(SEX, AGE);
-                            for (unsigned int i = 0; i < n; ++i) {
-                                TIndividual* ind = patch->get(SEX, AGE, i);
-                                if (!ind) continue;
-                                TTrait* seq = ind->getTrait((int)absIdx);
-                                if (!seq) continue;
-                                for (unsigned int c = 0; c < ploidy; ++c) {
-                                    ALLELE a = seq->allele(l, c);
-                                    if ((unsigned int)a < nAll) { counts[a]++; ++total; }
-                                }
-                            }
-                        }
-
-                        if (p) rec << ",";
-                        rec << "[";                  // allele axis (length nAll)
-                        for (unsigned int a = 0; a < nAll; ++a) {
-                            if (a) rec << ",";
-                            double f = (total > 0) ? (double)counts[a] / (double)total : 0.0;
-                            ej_put_num(rec, f);
-                        }
-                        rec << "]";
-                    }
-                    rec << "]";
-                }
-            }
-        }
-    }
-    rec << "]";
+    // NOTE (schema_version 3, decision 12): the per-frame allele_freqs payload
+    // [locus][patch][allele] was REMOVED. It dominated stream/storage cost yet had
+    // no consumer; marker/allele-level output is now export-only (request_full_
+    // genotypes + export_formats -> a verbatim FSTAT/Arlequin/PLINK/NEXUS file in
+    // full_genotypes). Frames now carry only phenotype moments and scalar stats.
 
     // ---- phenotype[trait][patch][mean,var] (omitted when no quanti traits) ----
     {

@@ -12,7 +12,8 @@
  *   trait count, and which layer-1 estimators are computed) — followed by ONE
  *   compact `kind:"frame"` record per logged generation (every stat_log_time,
  *   plus the final generation) carrying only positional numeric payloads
- *   (allele_freqs, phenotype, stats) read against the header.
+ *   (phenotype, stats) read against the header. schema_version "3" (decision 12)
+ *   dropped the per-frame allele_freqs payload; marker data is export-only.
  *
  *   This file is part of quantiNemo and is distributed under the GNU General
  *   Public License v3 (or later), like the rest of the program.
