@@ -567,12 +567,18 @@ stdout, so it suits notebooks, pipelines, or any other tooling. It is **inert un
   than silently picking one (checked in `TSimManager::run()` and `TSimulation::ini_stats()`).
 - stdout carries **only JSON**: `verbose_message` and `verbose_warning` are zeroed;
   `error()` still goes to stderr.
-- Output is a **header + frames** stream (`schema_version "2"`), one flushed line each:
+- Output is a **header + frames** stream (`schema_version "3"`), one flushed line each:
   - **one `kind:"header"` record first**, declaring the run's static layout once (patch
     count, the locus table, the quantitative-trait count, which estimators are computed);
   - then **one `kind:"frame"` record per logged generation** (every `stat_log_time`, plus
     always the final generation), carrying only positional numeric payloads read against the
     header — no keys, no repeated identity.
+
+  `schema_version "3"` (decision 12) **removed the per-frame `allele_freqs` payload**
+  (`[locus][patch][allele]` frequency arrays): it dominated stream/storage cost yet had no
+  consumer. Marker/allele-level output is now obtained **only** on explicit export request
+  (`request_full_genotypes` + `export_formats`), carried verbatim in `full_genotypes`. The
+  header locus table (`type` + `n_alleles`) is retained as static run layout.
 
 **How it is driven.** The emitter is a regular `FileHandler` (`EmitJsonFH`) registered with
 the `FileServices`, *not* a hand-placed hook. `LCE_StatServiceNotifier::loadFileServices`
@@ -601,8 +607,7 @@ sequenceDiagram
     FN->>E: update()
     alt cadence or final generation
       E->>E: FHwrite() → header once, then a frame
-      E->>E: count allele freqs from live ADULTS
-      E->>E: read FST, Ho, Hs, Ht, QST from StatHandlers
+      E->>E: read requested scalar stats + phenotype moments from live ADULTS
       E->>OUT: one flushed JSON line
     end
   end
@@ -624,22 +629,24 @@ notifier has refreshed the estimators for that generation.*
 **What the records contain**
 
 ```json
-{"schema_version":"2","kind":"header","replicate":1,"patches":2,
+{"schema_version":"3","kind":"header","replicate":1,"patches":2,
  "loci":[{"type":"ntrl","n_alleles":3},{"type":"quanti","n_alleles":255}],
  "traits":1,"stats":["fst","qst","ho","hs","ht"]}
-{"schema_version":"2","kind":"frame","generation":3,
- "allele_freqs":[[[0.4,0.3,0.3],[0.5,0.2,0.3]], ...],
+{"schema_version":"3","kind":"frame","generation":3,
  "phenotype":[[[0.23,5.58],[0.83,7.22]]],
  "stats":[0.094,null,0.125,0.63,0.66]}
 ```
 
-- **header.loci** is the locus table in canonical order (ntrl loci first, then quanti); each
-  entry's `n_alleles` is the (ragged) inner length of that locus's `allele_freqs`.
+- **header.loci** is the locus table in canonical order (ntrl loci first, then quanti);
+  `n_alleles` is retained as static locus metadata (it was the ragged inner length of the
+  removed frame `allele_freqs`) and is the locus ordering referenced by genotype exports.
 - **header.stats** lists which layer-1 estimators this run computes, in a fixed order; the
   frame's `stats` array is positionally aligned to it (so a not-computed stat is simply
   absent from both).
-- **frame.allele_freqs** is `[locus][patch][allele]`, counted directly from the live ADULT
-  population, independent of the stat handler's internal tables.
+- **frame `allele_freqs` was REMOVED in `schema_version "3"`** (decision 12). It was the
+  dominant stream/storage cost yet had no consumer; marker/allele-level output is now
+  export-only (`request_full_genotypes` + `export_formats` → a verbatim `full_genotypes`
+  file). Frames now carry only `phenotype` and `stats`.
 - **frame.stats** are the *real* layer-1 estimators (§8). A value the engine cannot reach is
   emitted as JSON `null` (via `ej_put_num_or_null`), never a fake number — the `my_NAN`
   sentinel and non-finite values both map to `null`.
