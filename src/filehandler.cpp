@@ -167,20 +167,9 @@ void FileHandler::FHwrite()
 /** Writes genotype in a FSTAT-like format, the age class and the sex are added after the pop id.*/
 void FileHandler::write_Fstat(bool extened)
 {
-    unsigned int t, l;
-    
     // get the number of occupied patches
     if (!_popPtr->get_nbSamplePatch()) return; // if no patches are sampled
-    
-    // get the number of digits to visualize
-    unsigned int max_allele = 0; // find the max number of alleles across all traits
-    for (t = 0; t < _nb_trait; ++t) {
-        for (l = 0; l < _trait[t]->get_nb_locus(); ++l) {
-            if (max_allele < _trait[t]->get_nb_allele(l))
-                max_allele = _trait[t]->get_nb_allele(l);
-        }
-    }
-    
+
     // open the file
     string filename = get_path() + getGenerationReplicateFileName()
     + get_extension();
@@ -190,7 +179,34 @@ void FileHandler::write_Fstat(bool extened)
     ofstream FILE(filename.c_str(), ios::out);
     if (!FILE)
         error("Could not open FSTAT output file '%s'!\n", filename.c_str());
-    
+
+    write_Fstat_body(FILE, extened);
+
+    FILE.close();
+
+    // call an external program and pass the name of this file
+    if (!_script.empty()) execute_script(_script, filename);
+}
+
+// ----------------------------------------------------------------------------------------
+// write_Fstat_body
+// ----------------------------------------------------------------------------------------
+/** Renders the FSTAT genotype content to an arbitrary stream (a disk file for the
+ *  classic writer, an ostringstream for --emit-json). Content is byte-for-byte
+ *  identical to the pre-refactor writer for a single-trait-type handler. */
+void FileHandler::write_Fstat_body(ostream& FILE, bool extened)
+{
+    unsigned int t, l;
+
+    // get the number of digits to visualize
+    unsigned int max_allele = 0; // find the max number of alleles across all traits
+    for (t = 0; t < _nb_trait; ++t) {
+        for (l = 0; l < _trait[t]->get_nb_locus(); ++l) {
+            if (max_allele < _trait[t]->get_nb_allele(l))
+                max_allele = _trait[t]->get_nb_allele(l);
+        }
+    }
+
     // write the heading line
     unsigned int position = getNbDigits(max_allele);
     unsigned int tot_nb_loci = 0;
@@ -201,15 +217,18 @@ void FileHandler::write_Fstat(bool extened)
     + 1;
     FILE << maxID << " " << tot_nb_loci << " " << max_allele << " " << position
     << "\n";
-    
-    // write the names of the loci
-    string type = _trait[0]->_type;
+
+    // write the names of the loci. Use EACH trait's own type letter (n/q) so a
+    // combined ntrl+quanti export (the --emit-json single-payload case) labels
+    // every locus by its real type. For a single-type handler this is identical
+    // to the original `_trait[0]->_type` behaviour.
     for (t = 0; t < _nb_trait; ++t) {
+        string type = _trait[t]->_type;
         for (l = 0; l < _trait[t]->get_nb_locus(); ++l) {
             FILE << type[0] << (t + 1) << "_l" << (l + 1) << "\n";
         }
     }
-    
+
     // write all individuals of all patches
     unsigned int nbPatchDigits = getNbDigits(maxID);
     unsigned int a, mask;
@@ -227,11 +246,6 @@ void FileHandler::write_Fstat(bool extened)
             }
         }
     }
-    
-    FILE.close();
-    
-    // call an external program and pass the name of this file
-    if (!_script.empty()) execute_script(_script, filename);
 }
 
 // ----------------------------------------------------------------------------------------
@@ -292,20 +306,9 @@ void FileHandler::write_individual_info_to_stream(ostream& FILE,
 /** Writes genotype in a Areqluin format, the age class and the sex are added after the pop id.*/
 void FileHandler::write_Arlequin(bool extened)
 {
-    unsigned int t, l;
-    
     // get the number of occupied patches
     if (!_popPtr->get_nbSamplePatch()) return; // if no patches are sampled
-    
-    // get the number of digits to visualize
-    unsigned int max_allele = 0; // find the max number of alleles across all traits
-    for (t = 0; t < _nb_trait; ++t) {
-        for (l = 0; l < _trait[t]->get_nb_locus(); ++l) {
-            if (max_allele < _trait[t]->get_nb_allele(l))
-                max_allele = _trait[t]->get_nb_allele(l);
-        }
-    }
-    
+
     // open the file
     string filename = get_path() + getGenerationReplicateFileName() + ".arp";
 #ifdef _DEBUG
@@ -314,7 +317,33 @@ void FileHandler::write_Arlequin(bool extened)
     ofstream FILE(filename.c_str(), ios::out);
     if (!FILE)
         error("Could not open Arlequin output file '%s'!\n", filename.c_str());
-    
+
+    write_Arlequin_body(FILE, extened);
+
+    FILE.close();
+
+    // call an external program and pass the name of this file
+    if (!_script.empty()) execute_script(_script, filename);
+}
+
+// ----------------------------------------------------------------------------------------
+// write_Arlequin_body
+// ----------------------------------------------------------------------------------------
+/** Renders the Arlequin genotype content to an arbitrary stream (a disk file for
+ *  the classic writer, an ostringstream for --emit-json). */
+void FileHandler::write_Arlequin_body(ostream& FILE, bool extened)
+{
+    unsigned int t, l;
+
+    // get the number of digits to visualize
+    unsigned int max_allele = 0; // find the max number of alleles across all traits
+    for (t = 0; t < _nb_trait; ++t) {
+        for (l = 0; l < _trait[t]->get_nb_locus(); ++l) {
+            if (max_allele < _trait[t]->get_nb_allele(l))
+                max_allele = _trait[t]->get_nb_allele(l);
+        }
+    }
+
     char curTime[20];
     time_t tt = time(NULL);
     strftime(curTime, 20, "%d-%m-%Y %H:%M:%S", localtime(&tt));
@@ -369,10 +398,6 @@ void FileHandler::write_Arlequin(bool extened)
         
         FILE << "\n    }\n";
     }
-    FILE.close();
-    
-    // call an external program and pass the name of this file
-    if (!_script.empty()) execute_script(_script, filename);
 }
 
 // ----------------------------------------------------------------------------------------
@@ -704,23 +729,39 @@ void FileHandler::write_Plink_map(string filename, sex_t SEX, bool extended)
     strftime(curTime, 20, "%d-%m-%Y %H:%M:%S", localtime(&tt));
     FILE << "# file created at " << curTime;
     if(extended) FILE << " (listing also multi-allele loci)";
-    
+
+    write_Plink_map_body(FILE, SEX, extended);
+
+    FILE.close();
+
+    // call an external program and pass the name of this file
+    if (!_script.empty()) execute_script(_script, filename);
+}
+
+// ----------------------------------------------------------------------------------------
+// write_Plink_map_body
+// ----------------------------------------------------------------------------------------
+/** Writes the PLINK .map locus records (one per SNP, or per locus when extended)
+ *  to an arbitrary stream. Factored out of write_Plink_map so the --emit-json
+ *  path can render the map into the combined in-memory PLINK payload. */
+void FileHandler::write_Plink_map_body(ostream& FILE, sex_t SEX, bool extended)
+{
     unsigned int t, l, nb_locus;
     char sep= ' ';
     TLocus* curLocus;
-    
+
     // get the max conromosome index (to be able to correctly label the unlinked loci
     TGenomeProto* pGenome = _popPtr->get_protoGenome();
     unsigned int unlinkedChrom = 0;
     if(pGenome->get_nb_locus_linked()) unlinkedChrom = pGenome->get_locus_tot(pGenome->get_nb_locus_linked()-1).get_chromosomePosition()+1;
-    
+
     for (t = 0; t < _nb_trait; ++t) { // for multiple instanciations of a trait
         nb_locus = _trait[t]->get_nb_locus();
-        
+
         for (l = 0; l < nb_locus; ++l) {
             curLocus = &_trait[t]->get_aLocus()[l];
             if(curLocus->get_nb_allele() != 2 && !extended) continue; // not a SNP
-            
+
             if(curLocus->get_chromosomePosition()==my_NAN){ // unlinked locus
                 FILE << "\n" << ++unlinkedChrom
                 << sep << curLocus->get_locus_id_tot()+1
@@ -736,11 +777,88 @@ void FileHandler::write_Plink_map(string filename, sex_t SEX, bool extended)
         }
     }
     FILE << "\n";
-    
-    FILE.close();
-    
-    // call an external program and pass the name of this file
-    if (!_script.empty()) execute_script(_script, filename);
+}
+
+// ----------------------------------------------------------------------------------------
+// write_Plink_body
+// ----------------------------------------------------------------------------------------
+/** Renders a PLINK export as ONE in-memory payload for --emit-json.
+ *
+ *  PLINK is natively a MULTI-FILE format (.map + .ped, plus a .pheno for quanti
+ *  traits), but the streaming contract's `full_genotypes.data` is a single
+ *  verbatim string. We therefore concatenate the sections into one payload with
+ *  explicit `####`-prefixed banner lines (PLINK/quantiNemo already emit
+ *  `#`-comment lines, so these are inert to a lenient reader and let a consumer
+ *  split the payload back into the individual files). Sex-specific recombination
+ *  maps are collapsed to the female map here (the common non-sex-specific case is
+ *  unaffected). This combined-payload shape is an engine-cpp decision for M2; see
+ *  the report / emit_json_record.inc for the rationale. */
+void FileHandler::write_Plink_body(ostream& FILE, bool extended)
+{
+    if (!_popPtr->get_nbSamplePatch()) return;
+    char sep = ' ';
+
+    // ---- .map section ----
+    FILE << "#### PLINK .map ####";
+    write_Plink_map_body(FILE, FEM, extended);
+
+    // ---- .ped section ----
+    FILE << "#### PLINK .ped ####\n";
+    unsigned int maxID = (*_popPtr->get_vSamplePatch().rbegin())->get_ID() + 1;
+    unsigned int nbPatchDigits = getNbDigits(maxID);
+    unsigned int a, mask;
+    vector<TPatch*>::iterator curPop, endPop = _popPtr->get_vSamplePatch().end();
+    for (curPop = _popPtr->get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
+        for (a = 0, mask = 1; a < NB_AGE_CLASSES; ++a, mask <<= 1) {
+            if (mask & _age) {
+                // append=false: single-generation dump, no cross-generation parents.
+                if (_sex != 2)
+                    write_Plink_ped(static_cast<age_idx>(a), FEM, FILE, *curPop,
+                                    nbPatchDigits, 1, sep, extended, false);
+                if (_sex != 1)
+                    write_Plink_ped(static_cast<age_idx>(a), MAL, FILE, *curPop,
+                                    nbPatchDigits, 1, sep, extended, false);
+            }
+        }
+    }
+
+    // ---- .pheno section (only when quantitative traits are present) ----
+    _quantiTraitIndexes = _popPtr->getTraitIndex("quanti");
+    if (!_quantiTraitIndexes.empty()) {
+        FILE << "#### PLINK .pheno ####\n";
+        for (curPop = _popPtr->get_vSamplePatch().begin(); curPop != endPop; ++curPop) {
+            for (a = 0, mask = 1; a < NB_AGE_CLASSES; ++a, mask <<= 1) {
+                if (mask & _age) {
+                    if (_sex != 2)
+                        write_Plink_pheno(static_cast<age_idx>(a), FEM, FILE, *curPop,
+                                          nbPatchDigits, 1, sep);
+                    if (_sex != 1)
+                        write_Plink_pheno(static_cast<age_idx>(a), MAL, FILE, *curPop,
+                                          nbPatchDigits, 1, sep);
+                }
+            }
+        }
+    }
+}
+
+// ----------------------------------------------------------------------------------------
+// write_genotype_to_stream
+// ----------------------------------------------------------------------------------------
+/** emit-json single-run streaming entry point. Samples the current generation
+ *  (adults, per _age) and renders the requested export format to `out`. */
+bool FileHandler::write_genotype_to_stream(ostream& out, unsigned int choice)
+{
+    _popPtr->set_sampledInds(_age);      // update the sampling (as FHwrite does)
+
+    switch (choice) {
+        case 1: write_Fstat_body   (out, false); return true;  // FSTAT
+        case 2: write_Fstat_body   (out, true ); return true;  // FSTAT extended
+        case 3: write_Arlequin_body(out, false); return true;  // Arlequin
+        case 4: write_Arlequin_body(out, true ); return true;  // Arlequin extended
+        case 5: write_Plink_body   (out, false); return true;  // PLINK
+        case 6: write_Plink_body   (out, true ); return true;  // PLINK extended
+        default: return false;
+    }
 }
 
 // ----------------------------------------------------------------------------------------

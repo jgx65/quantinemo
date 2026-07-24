@@ -81,7 +81,18 @@ protected:
     void write_Plink_pheno (const age_idx& cur_age, const sex_t& cur_sex, ostream& FILE,
                           TPatch* current_patch, const int& nbPatchDigit, const int& position,
                           char sep);
-    
+
+    // --- emit-json single-run streaming: render the genotype export to an
+    //     arbitrary ostream (an in-memory ostringstream) instead of a disk file.
+    //     The disk-writing write_Fstat/write_Arlequin(bool) wrappers now delegate
+    //     their content to these body functions, so on-disk and streamed output
+    //     are produced by the SAME code path. write_Plink_body combines PLINK's
+    //     natively-separate .map/.ped(/.pheno) files into one delimited payload.
+    void write_Fstat_body    (ostream& FILE, bool extended);
+    void write_Arlequin_body (ostream& FILE, bool extended);
+    void write_Plink_body    (ostream& FILE, bool extended);
+    void write_Plink_map_body(ostream& FILE, sex_t SEX, bool extended);
+
 protected:
     string _script;       // a script name which should be executed after the write of a file
     vector<TTraitProto*> _trait;
@@ -201,6 +212,15 @@ public:
         }
     }
     
+    /** emit-json single-run streaming entry point: render the requested genotype
+     *  export (all attached traits, in attach order — the caller attaches ntrl
+     *  loci first, then quanti, matching the stream contract's canonical locus
+     *  ordering) to `out` as one in-memory payload. `choice` is the 1..6 selector
+     *  used by ntrl_save_genotype/quanti_save_genotype (1/2 FSTAT, 3/4 Arlequin,
+     *  5/6 PLINK; even values = the "extended" variant). Returns false for an
+     *  unknown choice. The handler must already have its traits, age and sex set. */
+    bool write_genotype_to_stream(ostream& out, unsigned int choice);
+
     /**Default behaviour of the class, called by Handler::update().**/
     virtual void  FHwrite();
     void (FileHandler::*writeGenotype_func_ptr)(bool);

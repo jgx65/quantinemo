@@ -45,7 +45,10 @@
 #include <utility>
 #include <vector>
 
+#include <cstdio>
+
 #include "emit_json.h"
+#include "filehandler.h"
 #include "patch.h"
 #include "stat_rec_base.h"
 #include "stathandlerbase.h"
@@ -68,6 +71,35 @@ void ej_put_num_or_null(std::ostream& os, double v)
     os << tmp.str();
 }
 
+// Write `s` as a JSON string literal (quotes + escaping). REQUIRED for the
+// verbatim genotype payload: FSTAT/Arlequin/PLINK text is full of newlines, and
+// Arlequin embeds double-quotes (SampleName="pop_1"), so it must be escaped.
+void ej_put_json_string(std::ostream& os, const std::string& s)
+{
+    os << '"';
+    for (std::string::size_type i = 0; i < s.size(); ++i) {
+        unsigned char c = (unsigned char)s[i];
+        switch (c) {
+            case '"':  os << "\\\""; break;
+            case '\\': os << "\\\\"; break;
+            case '\n': os << "\\n";  break;
+            case '\r': os << "\\r";  break;
+            case '\t': os << "\\t";  break;
+            case '\b': os << "\\b";  break;
+            case '\f': os << "\\f";  break;
+            default:
+                if (c < 0x20) {                 // other control chars -> \u00XX
+                    char buf[8];
+                    std::snprintf(buf, sizeof buf, "\\u%04x", (unsigned int)c);
+                    os << buf;
+                } else {
+                    os << (char)c;
+                }
+        }
+    }
+    os << '"';
+}
+
 void ej_put_num(std::ostream& os, double v)
 {
     std::ostringstream tmp;
@@ -85,6 +117,79 @@ unsigned int ej_count_quanti_traits(TMetapop* pop)
     for (unsigned int t = 0; t < nbProto; ++t)
         if (pop->getTraitPrototype(t).get_type() == "quanti") ++n;
     return n;
+}
+
+// --------------------------------------------------------------------------- //
+// GENOTYPE EXPORT (full_genotypes)
+//
+// A run requests a genotype export via ntrl_save_genotype / quanti_save_genotype
+// (the .ini params build_ini emits for SimParams.export_format; decision 14).
+// Both are set to the SAME choice — 1 FSTAT, 3 Arlequin, 5 PLINK (the
+// non-"extended" variants) — for every trait type that actually has loci.
+//
+// ntrl/quanti MERGE POLICY (the open question decision 14 left to engine-cpp):
+// the two writers are historically SEPARATE per-trait-type FileHandlers producing
+// SEPARATE files, but the stream contract wants ONE combined payload ordered
+// "all neutral loci first, then all quanti loci". We resolve this WITHOUT merging
+// two files: the FSTAT/Arlequin/PLINK writers iterate _trait[] GENERICALLY over
+// all loci regardless of type, so we attach BOTH trait types to a SINGLE
+// FileHandler (neutral protos first, then quanti — the contract's canonical
+// order) and invoke the writer ONCE. That yields one well-formed file whose loci
+// span ntrl-then-quanti, exactly matching header.loci. A one-type-only run
+// (neutral-only or quanti-only) is just the degenerate case with one type
+// attached. See filehandler.cpp write_genotype_to_stream / write_Plink_body.
+// --------------------------------------------------------------------------- //
+
+// The genotype-export format choice (1..6) requested for this run, or 0 if none.
+// build_ini sets ntrl_save_genotype on neutral protos and quanti_save_genotype on
+// quanti protos to the same value; we read whichever matching param is non-zero.
+unsigned int ej_genotype_choice(TMetapop* pop)
+{
+    unsigned int nbProto = pop->getTraitPrototypeSize();
+    for (unsigned int t = 0; t < nbProto; ++t) {
+        TTraitProto& proto = pop->getTraitPrototype(t);
+        unsigned int c = 0;
+        if (proto.get_type() == "ntrl")
+            c = (unsigned int)proto.get_parameter_value("ntrl_save_genotype");
+        else if (proto.get_type() == "quanti")
+            c = (unsigned int)proto.get_parameter_value("quanti_save_genotype");
+        if (c) return c;
+    }
+    return 0;
+}
+
+// The stream/contract format name for a 1..6 choice, or NULL if not a genotype
+// export choice.
+const char* ej_genotype_format_name(unsigned int choice)
+{
+    switch (choice) {
+        case 1: case 2: return "FSTAT";
+        case 3: case 4: return "Arlequin";
+        case 5: case 6: return "PLINK";
+        default:        return 0;
+    }
+}
+
+// Render the combined genotype export (ntrl loci first, then quanti) to a string.
+std::string ej_render_genotypes(TMetapop* pop, unsigned int choice)
+{
+    FileHandler fh;
+    fh.set_age(0);      // adults (matches build_ini's *_genot_age 0 and the emitter)
+    fh.set_sex(0);      // both sexes (matches build_ini's *_genot_sex 0)
+
+    // attach ntrl trait protos first, then quanti — the contract's locus order.
+    unsigned int nbProto = pop->getTraitPrototypeSize();
+    for (int pass = 0; pass < 2; ++pass) {
+        for (unsigned int t = 0; t < nbProto; ++t) {
+            TTraitProto& proto = pop->getTraitPrototype(t);
+            if (proto.get_type() != EJ_LOCUS_ORDER[pass]) continue;
+            fh.set(&proto);
+        }
+    }
+
+    std::ostringstream out;
+    fh.write_genotype_to_stream(out, choice);
+    return out.str();
 }
 
 // --------------------------------------------------------------------------- //
@@ -254,6 +359,18 @@ void ej_emit_header(TMetapop* pop)
     }
     rec << "]";
 
+    // genotypes: declared ONCE here iff the run requested a genotype export. The
+    // payload itself rides on the frame for the final generation only (see
+    // ej_emit_frame). generation = the final generation (build_ini sets
+    // *_genot_logtime = generations, so the writer fires there, and the emitter
+    // always emits a frame on the final generation).
+    unsigned int gchoice = ej_genotype_choice(pop);
+    const char* gfmt = gchoice ? ej_genotype_format_name(gchoice) : 0;
+    if (gfmt) {
+        rec << ",\"genotypes\":{\"format\":\"" << gfmt
+            << "\",\"generation\":" << pop->getGenerations() << "}";
+    }
+
     rec << "}";
     std::cout << rec.str() << "\n" << std::flush;
 }
@@ -327,6 +444,22 @@ void ej_emit_frame(TMetapop* pop)
                 ej_put_num_or_null(rec, v);
             }
             rec << "]";
+        }
+    }
+
+    // ---- full_genotypes: ONLY on the final generation, only when requested ----
+    // header.genotypes.generation == getGenerations(); the emitter always emits a
+    // frame on the final generation (LCE_StatServiceNotifier forces it), so this
+    // fires exactly once. The captured export text is embedded VERBATIM as a
+    // JSON-escaped string; pyquantinemo relays it byte-for-byte to the download.
+    {
+        unsigned int gchoice = ej_genotype_choice(pop);
+        const char* gfmt = gchoice ? ej_genotype_format_name(gchoice) : 0;
+        if (gfmt && pop->getCurrentGeneration() == pop->getGenerations()) {
+            std::string data = ej_render_genotypes(pop, gchoice);
+            rec << ",\"full_genotypes\":{\"format\":\"" << gfmt << "\",\"data\":";
+            ej_put_json_string(rec, data);
+            rec << "}";
         }
     }
 
