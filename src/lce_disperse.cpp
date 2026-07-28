@@ -1195,7 +1195,7 @@ void LCE_DisperseCoalescence::migrate_8_neighbours(TPatch* curPatch,
 // ----------------------------------------------------------------------------------------
 // LCE_Disperse
 // ----------------------------------------------------------------------------------------
-/** select model of disersal depending on the number of populated patches */
+/** select model of dispersal depending on the number of populated patches */
 void LCE_Disperse::migrate_1D_ss() {
 	if (_popPtr->get_fullPatch_ratio() < 0.8)
 		migrate_1D_ss_full();
@@ -1810,14 +1810,14 @@ void LCE_Disperse::_get_lattice_dims() {
 		// check if the dimensions of the matrix are correct
 		if (m->get_dims(NULL) != 2)
 			error(
-                  "The parameter disersal_lattice_dims should have a matrix with two values!\n");
+                  "The parameter dispersal_lattice_dims should have a matrix with two values!\n");
         
 		// get the dimension of the lattice
 		_x_size = (unsigned int) m->get(0, 0);
 		_y_size = (unsigned int) m->get(0, 1);
 		if (_x_size * _y_size != _nb_patch) {
 			error(
-                  "Parameter disersal_lattice_dims: The dimension of the lattice (%ix%i) does not mach the number of patches (%i)!\n",
+                  "Parameter dispersal_lattice_dims: The dimension of the lattice (%ix%i) does not match the number of patches (%i)!\n",
                   _x_size, _y_size, _nb_patch);
 		}
 		delete m;
@@ -1827,7 +1827,7 @@ void LCE_Disperse::_get_lattice_dims() {
         
 		if (_x_size * _y_size != _nb_patch) {
 			error(
-                  "Parameter disersal_lattice_dims: The dimension of the lattice (%ix%i) does not mach the number of patches (%i)!\n",
+                  "Parameter dispersal_lattice_dims: The dimension of the lattice (%ix%i) does not match the number of patches (%i)!\n",
                   _x_size, _y_size, _nb_patch);
 		}
 	}
